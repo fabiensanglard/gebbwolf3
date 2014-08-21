@@ -1,0 +1,33 @@
+\documentclass[10pt]{book}
+
+% All styles and package and commands are defined here.
+% This allow to have one preambule used in all |/subfile| .
+\usepackage{mystyle}
+
+
+  \begin{document}
+    \title{Game Engine Black Book}
+    \author{Fabien Sanglard}
+    \date{\today }
+    \maketitle
+    \tableofcontents
+    \listoffigures
+    \listoftables
+    
+    \pagebreak
+    \subsection*{Preface}
+      \subfile{preface}
+
+    \addcontentsline{toc}{subsection}{Preface}
+    \chapter{Introduction}
+    \chapter{Hardware}
+      \subfile{hardware}
+    \chapter{Team}
+      \subfile{team}
+    \chapter{Software}
+    \chapter{Postmortem}
+    \appendix
+    \chapter{Let's compile like it's 1992}
+    \chapter{The 640KB Barrier}
+    \chapter{Letter from a war veteran}
+\end{document}
