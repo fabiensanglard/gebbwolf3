@@ -1,7 +1,6 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-This chapter describes the target hardware of Wolfenstein 3D. For simplicity I chose to describe it as
-a pipeline taking user commands as entries and outputting images and audio.
+This chapter describes the target hardware of Wolfenstein 3D. For simplicity it is abstracted as a pipeline taking user commands as entry and outputting images and audio at the exit point.
 
 \begin{figure}[H]
 \centering
@@ -12,8 +11,9 @@ a pipeline taking user commands as entries and outputting images and audio.
 \label{fig:digraph}
 \end{figure}
 
-The pipeline is made of five parts, some of them were huge bottleneck for game development while others were unexpectedly
-good:
+The pipeline comprise five stages. Some of them are bottlenecks for 3D game development while some are surprisingly good:
+
+ \bigskip
 
 \begin{figure}[H]
 \centering
@@ -26,14 +26,14 @@ good:
   Audio & Good \\ 
   Inputs & Good \\ \bottomrule
 \end{tabularx}
-\label{fig:Pipeline stages}
+\caption{Pipeline stages.}  \label{fig:Pipeline stages}
 \end{figure}
 
 Overall, the pipeline offered a lot of friction: hardware manufacturers had not embraced the game industry yet. Personal computers were designed to display static images and crunch integers. Real-time 3D, fractions and smooth 60 fps animations were not part of the blueprints.
 
 \section{CPU}
-  \subsection{History}
-  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors.  The i286 machines released in 1982 were declining and replaced by Intel's first 32 bits processor: The i386. Moore's law was in full effect and the high end i386-DX 33Mhz was a beast. The power increase is obvious when plotted on a MIPs\footnote{Million Instructions Per Second.} histogram:
+  \subsection{Landscape}
+  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors.  The i286 machines released in 1982 were on the decline and replaced by Intel's first 32 bits processor: The 386. The 1970 Moore's law was in full effect as can be seen on a MIPS\footnote{Million Instructions Per Second.} histogram:
 
 
 \definecolor{skyblue1}{rgb}{0.1,0.624,0.812}
@@ -66,90 +66,259 @@ Overall, the pipeline offered a lot of friction: hardware manufacturers had not 
     \end{axis}
     
    \end{tikzpicture}
-   \caption{Processor speeds comparaison.} \label{fig:mips}
+   \caption{Processor speeds comparison.} \label{fig:mips}
  \end{figure}
 
- \textbf{\underline{Trivia :}} To keep things into perspective, a modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 Mips: Five orders of magnitude faster!
+ \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 Mips: Five orders of magnitude faster!
 
  \bigskip
 
-\textbf{\underline{Trivia :}}  Two other companies were producing 386 clones: AMD and Cyrix. The mediocre performances did not justify the lower cost and as a result they never gathered a significant market share. Interestingly AMD evolved to become a serious challenger while Cyrix merged with National Semiconductor in 1997.
+\textbf{\underline{Trivia :}}  Two other companies were producing Intel clones: AMD and Cyrix. The mediocre performances did not justify the lower cost and as a result they never gathered a significant market share. Interestingly AMD evolved to become a serious challenger while Cyrix merged with National Semiconductor in 1997.
+
+
+
+
+
+
+
+
+
+
   \subsection{Floating Point}
   
-  Since the 286 systems were progressively being replaced with 386, it was decided Wolfenstein 3D target machine would be a low-end 386 machine (while still being playable on a 286 with reduced view). 
-  \bigskip
+  Wolfenstein 3D target machines were high-end 286 and low-end 386 machine. As seen previous, those were powerful machines that outperformed any game console on the market by an order of magnitude. But there was still a major issue on the way to 3D.
 
-  In order to perform all the trigonometric operations, the C language offered the types \emph{float} and \emph{double} which kept track of the fractional part of each operations.
-
-
-  
-
-  Unfortunately if Intel CPUs were good at crunching integers, they were not good at all for the calculations necessary in a 3D game: Trigonometric functions need to keep track of fractions. Developers could use C language's  when writing software but the problem came from the hardware:\bigskip
-
-  CPUs had no floating point unit.
    \bigskip
-   As a result, those operations were emulated by the compiler and therefore impossibly slow. At first sight it looked like fractions and 3D were out of the picture. A workaround had to be found.
+ 
+  In order to perform all the 3D calculations, the machines had to keep track of the fractional part of each operations. This is usually not an issue since the C language offers the types \codeword{float} and \codeword{double} precisely for that.
 
-
-    slow: higher precision
+  \bigskip
+  DRAWING
+  slow: higher precision
           same window
           all registers were 16 bits.
-\bigskip
+  \bigskip
+
+  Unfortunately \emph{float} could not be used for the good reason that Intel CPUs did not have a hardware Floating Point Unit. Those operations were emulated in software by the compiler and therefore impossibly slow. At first sight it looked like fractions and 3D were out of the picture. A workaround had to be found.
+
+  \bigskip
+
+ \textbf{\underline{Trivia :}} Since floating point unit where so rare and expensive, why did the C language end up with a \codeword{float} type ? The machine used to invent it (PDP-11) did not have one either but the manufacturer (DEC) had promised Dennis Ritchie and Ken Thompson the next model would have one!
 
 
-  
-     Floating point are god sent format to 3D programmers.
+
+
+
+
+
+
+
+
+
+
+
 
   \subsection{Fixed Point}
-  Integers were not accurate enough and floating point too slow. How could one perform operation while preserving the fractional part of a number ? The answer was to re-purpose the hardware via Fixed Point arithmetic.
+  If integers were not accurate enough and floating points were too slow, how could trigonometry be done on those machines? The solution was to re-purpose the hardware via Fixed Points!
+
+   \bigskip
+
+Fixed Point is a method that allows to keep track of fractions while still using the integer operations of the CPU. The machine manipulates what are supposed to be integer numbers but the programmers sees them as a real numbers. As usual it is easier to describe with a drawing. Integer are encoded following figure \ref{fig:int_layout}:
 \begin{figure}[H]
 \centering
  \input{int.tex}
- \caption{Integer layout.} \label{fig:mips}
+ \caption{Integer layout.} \label{fig:int_layout}
  \end{figure}
 
+So the value of the sequence of bits \emph{0010010010010010}:
 \begin{figure}[H]
 \centering
 \input{int_example.tex}
  \caption{Integer example.} \label{fig:mips}
  \end{figure}
 
+ Is equal to $ 2^{13} + 2^9 + 2^5 + 2^1 =  8738 $.
+
+\bigskip
+
+Fixed Point arithmetic works by simply shifting the layout 8 bits to the left:
 \begin{figure}[H]
  \centering
   \input{fp.tex}
  \caption{Fixed point layout.} \label{fig:mips}
 \end{figure}
 
+So the same sequence of bits \emph{0010010010010010}:
 \begin{figure}[H]
  \centering
    \input{fp_example.tex}
   \caption{Fixed point example.} \label{fig:mips}
 \end{figure} 
 
- \textbf{\underline{Trivia :}} Fixed Point has its own notation called “Q”. A Q1.14 number has 1 integer bit and 14 fractional bits.
+Now represents:\\
+\\
+$ 2^5 + 2^1 = 34 $ for the integer part.\\
+$ 2^{-3}+2^{-7} = 0.1328125 $ for the fractional part.\\
+$ = 34.1328125$\\
 
 \bigskip
 
- \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game console manufactured later still had no hardware floating point unit: Sony's original PlayStation (1994) and Sega's Saturn (1994) are few examples among many with a design choice that not only reduced the production cost but also maximized the CPU pipeline throughput. 
+The beauty of this method is that addition and subtraction work exactly like integers from the CPU instruction side:
+  \bigskip
+  DRAWING
+  \bigskip
+
+
+ The only special case is when performing operation.
 
 \bigskip
+  DRAWING
+  \bigskip
+
+ \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game console manufactured in the 90s and later had no hardware floating point unit: Sony's original PlayStation (1994) and Sega's Saturn (1994) are few examples among many with a design choice that not only reduced the production cost but also maximized the CPU pipeline throughput. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{RAM}
-  386 very powerful (run Linux 4GB, MMU) buy a major obstacle stood between the programmer and the machine. It was the operating system and its name was DOS 4.0.
-  \bigskip
+The goal of the CPU stage was to manipulate values in RAM. The target machines had an address bus 32 bits wide with a MMU\footnote{Memory management Unit} offering up to 4 GB of linear RAM in Protected Mode. Unfortunately, there was a major obstacle between the programmer and the machine. It was the operating system and its name was MS-DOS 5.0 by Microsoft Corporation.
+  
+
+
+
+
+
+
   \subsection{DOS limitations}
+DOS 5.0 was released by Microsoft in 1991. It was the \emph{de-facto} operating system that came with every machine sold. It was universal and unavoidable. Since Microsoft was extremely protective of its software base, it was fully backward compatible with previous versions. Which mean it kept the CPU in Real Mode: An abomination that matched the early 
+Intel 8086 CPU from ... 1976.
+
+\bigskip
+
+ \textbf{\underline{Trivia :}} One year earlier, in 1991, a student from Finland started working on a "hobby" of his: An operating system able to use the CPU in Protected Mode. It was Linus Torvalds starting what would become Linux.
+
+
 
   \subsection{16 bits Segmented RAM}
+  Real-Mode was the way RAM was layed out in 1976: A 20 bits wide address bus offering up to 1MB of RAM. No matter how much memory was installed on the machine in 1992, only 1MB could be addressed. Addressing was done by combining 16 bits register together. One being a segment, the other the offset within that segment. Hence the name: '16 bits programming'.
 
-\begin{verbatim}
+  \bigskip
+
+Figure \ref{fig:RealMode_RAM_layout} shows the area in the 1MB:
+  \begin{itemize}
+  
+
+\item From 0 to 3FFh was the Interrupt Vector Table.
+\item From 400h to 4FFh was BIOS data.
+\item From 500h to 5FFh was command.com+io.sys.
+\item From 600h to 9FFFFh  was the game program. 
+\item From A0000h to FFFFFh was a zone called UMA (Upper Memory Area): Reserved to bios ROM, video card and sound card mapped I/O.
+\end{itemize}
+
+Out of 1024KB only 640KB (the Conventional Memory) were usable since 384KB were reserved for the UMA. The more drivers (.SYS and .COM) an user loaded on a system at startup, the less was available for the game.
+
+\bigskip
+
+\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard would work properly. That driver consumed a whopping 5KB.
+
+  \begin{figure}[H]
+\centering
+ \input{real_mode.tex}
+ \caption{RealMode RAM layout.} \label{fig:RealMode_RAM_layout}
+ \end{figure}
+
+
+
+
+It gets worse. Since two 16 bits register were combined to form a RAM address, two pointers could point to the same RAM location but fail an equality test:
+\bigskip
+With pointer A defined as:
+\begin{Verbatim}[fontsize=\relsize{-1}]
     0110 1000 1000 0111 0000  Segment, 16 bits shifted 4 bits left  
   +      0011 0100 1010 1001  Offet,   16 bits
 ============================
     0110 1011 1101 0001 1001  Address, 20 bits
-\end{verbatim}
+\end{Verbatim}
+
+\bigskip
+
+Pointer B defined as:
+\begin{Verbatim}[fontsize=\relsize{-1}]
+    0000 0000 0001 0000 0000  Segment, 16 bits shifted 4 bits left  
+  +      0000 0000 0010 0000  Offet,   16 bits
+============================
+    0000 0000 0001 0010 0000  Address, 20 bits
+\end{Verbatim}
+
+\bigskip
+
+Pointer C defined as:
+\begin{Verbatim}[fontsize=\relsize{-1}]
+    0000 0000 0001 0010 0000  Segment, 16 bits shifted 4 bits left  
+  +      0000 0000 0000 0000  Offet,   16 bits
+============================
+    0000 0000 0001 0010 0000  Address, 20 bits
+\end{Verbatim}
+
+As defined A, B and C all points to the same memory location but however would fail a comparison test in the following code.\\
+
+\begin{Verbatim}[fontsize=\relsize{-1}]
+far void* a = FP_SEG(0x0000) + FP_OFF(0x0120);
+far void* b = FP_SEG(0x0010) + FP_OFF(0x0020);
+far void* c = FP_SEG(0x0012) + FP_OFF(0x0000);
+\end{Verbatim}
+
+\bigskip
+
+\begin{Verbatim}[fontsize=\relsize{-1}]
+
+a == b  -> false
+a == c  -> false
+b == c  -> false
+\end{Verbatim}
+
+\bigskip
+
+{\underline{Trivia :}} The 640KB barrier was so complex that id Software provided a special tech suport executable: w3dhelp.exe which provides extensive description of the 640KB barrier\footnote{You can read it in the annexe \ref{640barrier} of this book.}.
+
+\bigskip
+
+{\underline{Trivia :}} The original C language did not have near and far keyboard because the PDP computer they worked with had 32 bits registers and MMU (Memory Managment Unit) that make the RAM appear linear even within a process.
+
+
+
 
   \subsection{Extended Memory}
-  
+
+In Real-Mode the processor could access 1MB no matter what. But machines of 1992 can equipped with up to 2MB. 
+
+  \begin{figure}[H]
+\centering
+ \input{expanded_ram.tex}
+ \caption{Extended Memory.}
+ \end{figure}
+
+
+{\underline{Trivia :}}  As of 2014, thirty five years after the introduction of the 8086, most PC in the world start in  real mode. Then a bootloader switch them to protected mode, load the kernel and then real startup can begin. Mac computers don’t have this problem.
+
+\bigskip
+
+{\underline{Trivia :}}  As of 2014, thirty five years after the introduction of the 8086, most PC in the world still use segmented addressing.
+
+
+
+
 \section{Video}
   \subsection{VGA Architecture}
   \subsection{VGA setup}
