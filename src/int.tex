@@ -1,0 +1,16 @@
+\begin{tikzpicture}[scale=0.8, every node/.style={scale=0.99}]
+\draw[thick] (0,0) -- (16,0);
+\draw[thick] (0,1) -- (16,1);
+\foreach \i in {0,...,16}
+{
+     \draw[thick] (\i,1) -- (\i,0);
+}
+
+\foreach \i in {0,...,15}
+{
+     \node[] at (15-\i+0.5,1.3){$2^{\i}$}  ;
+       
+       
+     
+}
+\end{tikzpicture}

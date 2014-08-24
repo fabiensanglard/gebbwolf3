@@ -3,15 +3,15 @@
   % provides a way to compile sections of a document using the same preamble as the main document.
   \usepackage{subfiles}
 
-  % Allow to import eps figures
-  \usepackage{graphicx}
-
-  % So pdflatex can convert eps to pdf
-  \usepackage{epstopdf}
-  \epstopdfsetup{outdir=./}
-
   % Set the dimensions of the pages.
-  \usepackage[paperheight=9.2in, paperwidth = 7.2in]{geometry}
+  \usepackage[paperheight=9.2in, paperwidth = 7.2in,top=1in,bottom=1in]{geometry}
+  %\usepackage{calc}
+  %\setlength\paperwidth{7.2in}
+  %\setlength\paperheight{9.2in}
+  %\setlength\textwidth{5.2in}
+  %\setlength\textheight{7.2in}
+  %\setlength\oddsidemargin{(\paperwidth-\textwidth)/2 - 2in}
+  %\setlength\topmargin{(\paperheight-\textheight -\headheight-\headsep-\footskip)/2 - 1in}
 
   %Header is clear, but the footer contains the page number in the center.
   \pagestyle{plain}
@@ -48,4 +48,18 @@
   xlabel near ticks,
   ylabel near ticks
 }
+
+
+% for appendix
+\usepackage[toc,page]{appendix}
+
+% so figure are really where i want them.
+\usepackage{float}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+
+\usepackage{tikz}
+
 

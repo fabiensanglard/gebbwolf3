@@ -1,32 +1,45 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-This chapter describes the target hardware of Wolfenstein 3D. Each stage in the pipeline is detailed :
-\begin{itemize} 
-  \item CPU fasfasd fasdfasdf asfas asdf asdf asd fasf asdf sdf asf asf asf asf asdfsafasfasfasf a dsf asdf sdf 
-  \item RAM
-  \item Video
-  \item Audio
-  \item Inputs
-\end{itemize}
+This chapter describes the target hardware of Wolfenstein 3D. For simplicity I chose to describe it as
+a pipeline taking user commands as entries and outputting images and audio.
 
-\begin{figure}[!htb]
+\begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{../imgs/fun_pipeline.eps}
-\caption{Fun pipeline.}
+\includegraphics[scale=0.7]{imgs/fun_pipeline.eps}
+%\def\svgscale{1.5}
+%\input{imgs/fun_pipeline.pdf_tex}
+\caption{Hardware pipeline.}
 \label{fig:digraph}
 \end{figure}
-           
 
-With a few exceptions, hardware mannufacturers had not embrased the game industry yet: Those machines were designed to display static images and crunch integers. Real-time 3D, fractions and smooth 60 fps animations were not part of the blueprints.
+The pipeline is made of five parts, some of them were huge bottleneck for game development while others were unexpectedly
+good:
+
+\begin{figure}[H]
+\centering
+\begin{tabularx}{\textwidth}{ X X  }
+  \toprule
+  \textbf{Stage} & \textbf{Quality} \\ \bottomrule
+  CPU & Poor \\ 
+  RAM & Very Poor \\ 
+  Video & Poor \\ 
+  Audio & Good \\ 
+  Inputs & Good \\ \bottomrule
+\end{tabularx}
+\label{fig:Pipeline stages}
+\end{figure}
+
+Overall, the pipeline offered a lot of friction: hardware manufacturers had not embraced the game industry yet. Personal computers were designed to display static images and crunch integers. Real-time 3D, fractions and smooth 60 fps animations were not part of the blueprints.
 
 \section{CPU}
   \subsection{History}
-  The ubiquitous manufacturer was Intel and its x86 line of microprocessors. Two other companies were also producing Intel clones: AMD and Cyrix but their mediocre performances denied then any significant market shares. Intel's 80286 processors from 1982 were dissapearing and were being replaced by their first 32bits processor: The i386 released in 1985. Moore's law was in full effect and the high end 386-DX 33Mhz was an obvious beast when plotten on a MIPs\footnote{Million Instructions per Second.} histogram  :
+  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors.  The i286 machines released in 1982 were declining and replaced by Intel's first 32 bits processor: The i386. Moore's law was in full effect and the high end i386-DX 33Mhz was a beast. The power increase is obvious when plotted on a MIPs\footnote{Million Instructions Per Second.} histogram:
+
 
 \definecolor{skyblue1}{rgb}{0.1,0.624,0.812}
 
 
-\begin{figure}[!htb]
+\begin{figure}[H]
 \centering
   \begin{tikzpicture}[font=\small]
     \begin{axis}[
@@ -56,34 +69,77 @@ With a few exceptions, hardware mannufacturers had not embrased the game industr
    \caption{Processor speeds comparaison.} \label{fig:mips}
  \end{figure}
 
-Include comparaison with NES, C64 and Amiga  ?
- 
- \textbf{\underline{Note :}} The huge performance difference between the 386-SX and the 386-DX is due to their bus width: The DX bus is twice as wide (32 bits) as the SX (16 bits) and therefore can retrieve data faster.
- \\
+ \textbf{\underline{Trivia :}} To keep things into perspective, a modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 Mips: Five orders of magnitude faster!
 
-To keep things into perspective, a modern 2014 processor such as Intel Sandy Bridge operates at close to 30,000 Mips:
+ \bigskip
 
-COMPARE WITH TODAY MIPS
-
-  Wolfenstein 3D recommended configuration would end up being a 386 processor (while still being playable on a 286). It may be surprising after descriving how powerful
-  But all that power was not useful for a 3D engine and it had to do with how calculations are done in a 3D game. In order to do trigonometry, operations need
-  to keep track of fractions. Noawadays, developers are commonly using \emph{float} or 
-  \emph{double} which are floating point types. Floating point are great, since they keep track of the fractionnal part of a number and the operations on it:
-
-
-  But there was a huge problem with the hardware of 1992: CPU had no floating point unit. Which means that even though you could use floating point, those operations were emulated in software and therefore impossibly slow: Floating Point could not be used.
-
-  Without the ability to do proper trigonometry, the perspective of building a 3D engine looked bleak.
-
+\textbf{\underline{Trivia :}}  Two other companies were producing 386 clones: AMD and Cyrix. The mediocre performances did not justify the lower cost and as a result they never gathered a significant market share. Interestingly AMD evolved to become a serious challenger while Cyrix merged with National Semiconductor in 1997.
   \subsection{Floating Point}
+  
+  Since the 286 systems were progressively being replaced with 386, it was decided Wolfenstein 3D target machine would be a low-end 386 machine (while still being playable on a 286 with reduced view). 
+  \bigskip
+
+  In order to perform all the trigonometric operations, the C language offered the types \emph{float} and \emph{double} which kept track of the fractional part of each operations.
+
+
+  
+
+  Unfortunately if Intel CPUs were good at crunching integers, they were not good at all for the calculations necessary in a 3D game: Trigonometric functions need to keep track of fractions. Developers could use C language's  when writing software but the problem came from the hardware:\bigskip
+
+  CPUs had no floating point unit.
+   \bigskip
+   As a result, those operations were emulated by the compiler and therefore impossibly slow. At first sight it looked like fractions and 3D were out of the picture. A workaround had to be found.
+
+
+    slow: higher precision
+          same window
+          all registers were 16 bits.
+\bigskip
+
+
+  
+     Floating point are god sent format to 3D programmers.
+
   \subsection{Fixed Point}
+  Integers were not accurate enough and floating point too slow. How could one perform operation while preserving the fractional part of a number ? The answer was to re-purpose the hardware via Fixed Point arithmetic.
+\begin{figure}[H]
+\centering
+ \input{int.tex}
+ \caption{Integer layout.} \label{fig:mips}
+ \end{figure}
+
+\begin{figure}[H]
+\centering
+\input{int_example.tex}
+ \caption{Integer example.} \label{fig:mips}
+ \end{figure}
+
+\begin{figure}[H]
+ \centering
+  \input{fp.tex}
+ \caption{Fixed point layout.} \label{fig:mips}
+\end{figure}
+
+\begin{figure}[H]
+ \centering
+   \input{fp_example.tex}
+  \caption{Fixed point example.} \label{fig:mips}
+\end{figure} 
+
+ \textbf{\underline{Trivia :}} Fixed Point has its own notation called “Q”. A Q1.14 number has 1 integer bit and 14 fractional bits.
+
+\bigskip
+
+ \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game console manufactured later still had no hardware floating point unit: Sony's original PlayStation (1994) and Sega's Saturn (1994) are few examples among many with a design choice that not only reduced the production cost but also maximized the CPU pipeline throughput. 
+
+\bigskip
 
 \section{RAM}
-  386 very powerful (run linux 4GB, MMU) buy a major obstable stood between the programmer and the machine. It was the operating system and its name was DOS 4.0.
-  \\
+  386 very powerful (run Linux 4GB, MMU) buy a major obstacle stood between the programmer and the machine. It was the operating system and its name was DOS 4.0.
+  \bigskip
   \subsection{DOS limitations}
 
-  \subsection{Infamous 16 bits segmented RAM}
+  \subsection{16 bits Segmented RAM}
 
 \begin{verbatim}
     0110 1000 1000 0111 0000  Segment, 16 bits shifted 4 bits left  
