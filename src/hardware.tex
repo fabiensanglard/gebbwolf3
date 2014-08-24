@@ -320,8 +320,49 @@ In Real-Mode the processor could access 1MB no matter what. But machines of 1992
 
 
 \section{Video}
+
+PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curved surface, deep and incredibly heavy devices. Most had a tiny 13” diagonal and all had a 4:3 ratio. Figure \ref{fig:int_layout} shows a comparison with a 28” LCD display from 2014.
+
+  \begin{figure}[H]
+\centering
+ \input{crt_lcd.tex}
+ \caption{Comparaison CRT vs LCD.}\label{fig:lcd_vs_crt}
+ \end{figure}
+
+{\underline{Trivia :}} How big and heavy could a CRT be ? Integraph InterView 28hd96 weighted 45kg (99.5lb). Compared to 7.8kg (17lb). Used for Doom 3 ?! Details about pictures.
+\bigskip
+The VGA (Video Graphic Array) was the chipset in charge of interfacing the CPU and the CRT:
+\bigskip
+DRAWING
+\bigskip
+That chip was a blessing and a curse: It was universally deployed on every single IBM PC on the market but it was also poorly documented and complicated to program with more than 300 internal registers.
+
+
+
+  \subsection{History}
+
+  Q: CGA and EGA \# chips ?
+
+
   \subsection{VGA Architecture}
+
+  Four parts were interacting around 256Kb of RAM:
+
+\begin{itemize}
+\item The Graphic Controller and Sequence Controller controlled how the RAM was populated.
+\item The CRTC Controller and the DAC (Digital To Analog Converter) took care of sending the content of the RAM to the monitor.
+\end{itemize}
+
+ \begin{figure}[H]
+\centering
+ \input{vga.tex}
+ \caption{Video Graphic Array Architecture.}\label{fig:vga_arch}
+ \end{figure}
+
+ {\underline{Note :}} The clean pipeline architecture in Figure \ref{fig:vga_arch} is an oversimplication. In reality each Controller interacted with the rest of the system. The Sequece Controller for example could not only interact with the RAM but also gdgdfgegdfg...
+
   \subsection{VGA setup}
+
   \subsection{VGA Programming}
   \subsection{VGA Mode Y}
 \section{Audio}

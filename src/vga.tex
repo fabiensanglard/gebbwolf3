@@ -1,0 +1,83 @@
+\begin{tikzpicture}
+
+%Defining grey color
+\colorlet{LighterMark}{black!25}
+
+\def\planeWidth{2}% plane width
+\def\planeHeight{4}% plane height
+\def\firstBank{0}
+\def\planeSpace{0.1}
+
+
+%Title
+\node[above] at (2.5,16.76){$\mathtt{\Huge{\underline{Video\ Graphic\ Array}}}$}  ;
+
+%Bus
+\draw[ultra thick] (0,15.5) -- (5,15.5);
+\node[above] at (2.52,15.5){$\mathtt{Bus\ connected\ to\ CPU}$}  ;
+
+\draw [thick,fill=LighterMark,rounded corners] (0,14.85) rectangle (5,13.9);
+\node[] at (2.5,14.375){$\mathtt{Graphic\ Controller}$}  ;
+
+\draw [thick,fill=LighterMark,rounded corners] (0,13.5) rectangle (5,12.55);
+\node[] at (2.5,13){$\mathtt{Sequence\ Controller}$}  ;
+
+\draw [thick,fill=LighterMark] (0,11.5)   rectangle (1,8);
+\node[] at (0.5,9.75){$\mathtt{64kB}$}  ;
+
+\draw [thick,fill=LighterMark] (1.3,11.5) rectangle (2.3,8);
+\node[] at (1.8,9.75){$\mathtt{64kB}$}  ;
+
+\draw [thick,fill=LighterMark] (2.6,11.5)   rectangle (3.6,8);
+\node[] at (3.15,9.75){$\mathtt{64kB}$}  ;
+
+\draw [thick,fill=LighterMark] (3.9,11.5)   rectangle (5,8);
+\node[] at (4.5,9.75){$\mathtt{64kB}$}  ;
+
+\draw [thick,fill=LighterMark,rounded corners] (0,7) rectangle (5,6);
+\node[] at (2.5,6.5){$\mathtt{CRTC\ Controller}$}  ;
+
+\draw [thick,fill=LighterMark,rounded corners] (0,4.5) rectangle (5,5.5);
+\node[] at (2.5,5){$\mathtt{DAC}$}  ;
+
+%Connect everything
+
+% bus to GC
+\draw[ultra thick] (2.5,15.5) -- (2.5,14.85);
+
+% GC to SC
+\draw[ultra thick] (2.5,13.9) -- (2.5,13.5);
+
+% SC to RAM
+\draw[ultra thick] (2.5,12) -- (2.5,12.55);
+
+% RAM multiplexer
+\draw[ultra thick] (0.5,12) -- (4.5,12);
+\draw[ultra thick] (0.5,12) -- (0.5,11.5);
+\draw[ultra thick] (1.8,12) -- (1.8,11.5);
+\draw[ultra thick] (3.1,12) -- (3.1,11.5);
+\draw[ultra thick] (4.5,12) -- (4.5,11.5);
+
+% RAM to CRTC
+\draw[ultra thick] (0.5,8) -- (0.5,7);
+\draw[ultra thick] (1.8,8) -- (1.8,7);
+\draw[ultra thick] (3.1,8) -- (3.1,7);
+\draw[ultra thick] (4.5,8) -- (4.5,7);
+
+% CRTC to DAC
+\draw[ultra thick] (2.5,6) -- (2.5,5.5);
+
+% CRTC to DAC
+
+\draw[ultra thick,->] (2.5,4.5) -- (2.5,4);
+\node[below] at (2.5,4){$\mathtt{To\ Monitor}$}  ;
+
+% Draw text on the side
+\draw[dotted] (0,15.2) -- (10,15.2); 
+
+
+%
+\draw[dotted] (0,11.8) -- (10,11.8);
+
+
+\end{tikzpicture}
