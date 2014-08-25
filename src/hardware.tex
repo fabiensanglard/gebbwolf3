@@ -52,16 +52,16 @@ Overall, the pipeline offered a lot of friction: hardware manufacturers had not 
       axis x line=bottom,
       axis y line=left,
       enlarge x limits=0.15,
-      symbolic x coords={86,188,286,386-SX,386-DX},
+      symbolic x coords={86,188,286,386SX,386DX},
       xticklabel style={anchor=base,yshift=-\baselineskip},
       nodes near coords={\pgfmathprintnumber\pgfplotspointmeta}
     ]
-      \addplot[fill={rgb:red,0.5;green,0.5;blue,0.5}] coordinates {
+      \addplot[fill=black!20,draw=black] coordinates {
         (86,0.75)
         (188,1)
         (286,2.6)
-        (386-SX,5.1)
-        (386-DX,9.9)
+        (386SX,5.1)
+        (386DX,9.9)
       };
     \end{axis}
     
@@ -202,7 +202,7 @@ The goal of the CPU stage was to manipulate values in RAM. The target machines h
 
   \subsection{DOS limitations}
 DOS 5.0 was released by Microsoft in 1991. It was the \emph{de-facto} operating system that came with every machine sold. It was universal and unavoidable. Since Microsoft was extremely protective of its software base, it was fully backward compatible with previous versions. Which mean it kept the CPU in Real Mode: An abomination that matched the early 
-Intel 8086 CPU from ... 1976.
+Intel 8086 CPU from 1976.
 
 \bigskip
 
@@ -341,16 +341,51 @@ That chip was a blessing and a curse: It was universally deployed on every singl
 
   \subsection{History}
 
-  Q: CGA and EGA \# chips ?
+The VGA\footnote{Video Graphic Adapter} was the chip interfacing between the PC RAM and the CRT\footnote{Cathode Ray Tube} screen. Released in 1987, it was installed on every single machine on the market. 
+
+\bigskip
+  
+ \begin{figure}[H]
+\centering  
+\begin{tabular}{ l | c | l }
+  \toprule
+  \textbf{Name} &  \textbf{Year Released} \\
+  \toprule \codeword{MDA}
+   (\textbf{M}onochrome
+   \textbf{D}isplay
+   \textbf{A}dapater) & 1981 
+   \\ \codeword{CGA}
+   (\textbf{C}olor
+   \textbf{G}raphics
+   \textbf{A}dapter) & 1981 
+    \\ \codeword{EGA}
+   (\textbf{E}nhanced
+   \textbf{G}raphics
+   \textbf{A}dapter) & 1985
+   \\ \codeword{VGA}
+   (\textbf{V}ideo
+   \textbf{G}raphics
+   \textbf{A}rray)  & 1987
+    \\
+  \toprule
+\end{tabular}
+\caption{Video interface history.}\label{fig:vga_history}
+\end{figure}
+
+The universality of VGA was a two edged sword. One one side, developers did not have to deal with hereogeneity. One the other side, the shortcoming of the Adapater were the same for everybody.
 
 
-  \subsection{VGA Architecture}
+
+
+\subsection{VGA Architecture}
 
   Four parts were interacting around 256Kb of RAM:
 
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlled how the RAM was populated.
+\item The Sequence Controller
 \item The CRTC Controller and the DAC (Digital To Analog Converter) took care of sending the content of the RAM to the monitor.
+\item The DAC
 \end{itemize}
 
  \begin{figure}[H]
@@ -361,6 +396,47 @@ That chip was a blessing and a curse: It was universally deployed on every singl
 
  {\underline{Note :}} The clean pipeline architecture in Figure \ref{fig:vga_arch} is an oversimplication. In reality each Controller interacted with the rest of the system. The Sequece Controller for example could not only interact with the RAM but also gdgdfgegdfg...
 
+
+
+The most surprising part of the architecture is the frame buffer (the RAM that contain the image before it is sent to the screen) which is not one big linear array but four parallel memory banks (called planes). The design raison d’etre is twofold :
+
+\begin{itemize}
+
+
+
+\item Backward compatibility: EGA (the precursor of VGA) had only 64kB of RAM.
+\item Hardware limitations: A CRT running at 60Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of second . That mean one pixel each 54ns. The problem was the RAM access time was 200ns so that was not possible. But if latency could not be reduced, the throughput could be improved by fetching 1 pixel + 3 others in advance. Therefore the memory banks were read in parallel: 4 bytes at a time and the CRTC had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
+\end{itemize}
+
+\bigskip
+To help configure automatically the 300 registers of the VGA, the IBM BIOS had a preset number of mode with an associated resolution and color space :
+
+\begin{figure}[H]
+\centering
+\begin{table}[H]
+\begin{tabular}{llllr}
+\hline
+\textbf{Mode} & \textbf{Type} & \textbf{Format} & \textbf{Colors}          & \multicolumn{1}{l}{\textbf{Segment}} \\ \hline
+0             & text          & 40x25           & 16 gradient (monochrome) & b800h                                \\ \hline
+1             & text          & 40x25           & 16                       & b800h                                \\ \hline
+2             & text          & 80x25           & 16 gradient (monochrome) & b800h                                \\ \hline
+3             & text          & 80x25           & 16                       & b800h                                \\ \hline
+4             & CGA Graphics  & 320x200         & 4                        & b800h                                \\ \hline
+5             & CGA Graphics  & 320x200         & 4 gradient (monochrome)  & b800h                                \\ \hline
+6             & CGA Graphics  & 640x200         & 2                        & b800h                                \\ \hline
+7             & MDA text      & 9x14            & 3 gradient (monochrome   & b000h                                \\ \hline
+0Dh           & EGA graphic   & 320x200         & 16                       & A000h                                \\ \hline
+0Eh           & EGA graphic   & 640x200         & 16                       & A000h                                \\ \hline
+0Fh           & EGA graphic   & 640x350         & 3                        & A000h                                \\ \hline
+10h           & EGA graphic   & 640x350         & 16                       & A000h                                \\ \hline
+11h           & VGA graphic   & 640x480         & 2                        & A000h                                \\ \hline
+12h           & VGA graphic   & 640x480         & 16                       & A000h                                \\ \hline
+13h           & VGA graphic   & 320x200         & 256                      & A000h                                \\ \hline
+\end{tabular}
+\end{table}
+\caption{VGA Modes available from BIOS.}\label{fig:vga_modes}
+ \end{figure}
+ 
   \subsection{VGA setup}
 
   \subsection{VGA Programming}
