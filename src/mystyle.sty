@@ -14,7 +14,7 @@
   %\setlength\topmargin{(\paperheight-\textheight -\headheight-\headsep-\footskip)/2 - 1in}
 
   %Header is clear, but the footer contains the page number in the center.
-  \pagestyle{plain}
+  %\pagestyle{plain} Using fancyhdr instead
 
    % FONT FAMILY
    % \rmdefault, selects a roman font family
@@ -110,4 +110,9 @@
 \node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) {''};
 \endtikzpicture}
 
-
+%Nice header with pages numbers
+\usepackage{fancyhdr}
+% Make page number appear on botton right
+\pagestyle{fancy}
+\fancyfoot{}
+\fancyfoot[LO,RE]{\thepage}
