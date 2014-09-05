@@ -34,11 +34,11 @@
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="0.79242239"
-     inkscape:cx="494.72419"
-     inkscape:cy="177.92529"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:zoom="1.0406077"
+     inkscape:cx="1152.6114"
+     inkscape:cy="191.00837"
+     inkscape:window-x="-6"
+     inkscape:window-y="24"
      inkscape:window-maximized="0"
      inkscape:current-layer="g16" /><g
      id="g10"
@@ -61,7 +61,7 @@
        transform="translate(-37.678,-8.626)"
        id="g480" /></g></g><g
    id="g4531"
-   transform="translate(-2.3315137,45.030685)"><g
+   transform="translate(-1.3219511,10.705557)"><g
      transform="translate(19.2,46.4)"
      id="g4275"><g
        id="g18"><path
@@ -216,43 +216,46 @@
        id="g4515" /></g></g><text
    xml:space="preserve"
    style="font-size:11.19999981px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-   x="23.421322"
-   y="-98.724754"
+   x="24.430885"
+   y="-64.399628"
    id="text7651"
    sodipodi:linespacing="125%"
    transform="scale(1,-1)"><tspan
      sodipodi:role="line"
      id="tspan7653"
-     x="23.421322"
-     y="-98.724754"
-     style="font-size:25.60000038000000089px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier New;-inkscape-font-specification:Courier New Bold">S</tspan></text>
+     x="24.430885"
+     y="-64.399628"
+     style="font-size:25.60000038px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier New;-inkscape-font-specification:Courier New Bold">S</tspan></text>
+
 
 <text
    xml:space="preserve"
    style="font-size:11.19999981px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-   x="94.503586"
-   y="-99.248993"
+   x="95.513145"
+   y="-64.923866"
    id="text7655"
    sodipodi:linespacing="125%"
    transform="scale(1,-1)"><tspan
      sodipodi:role="line"
      id="tspan7657"
-     x="94.503586"
-     y="-99.248993"
+     x="95.513145"
+     y="-64.923866"
      style="font-size:25.60000038px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier New;-inkscape-font-specification:Courier New Bold">EXPONENT</tspan></text>
+
 
 <text
    transform="scale(1,-1)"
    sodipodi:linespacing="125%"
    id="text7659"
-   y="-99.248993"
-   x="526.56732"
+   y="-64.923866"
+   x="527.5769"
    style="font-size:11.19999981px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
    xml:space="preserve"><tspan
      style="font-size:25.60000038px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier New;-inkscape-font-specification:Courier New Bold"
-     y="-99.248993"
-     x="526.56732"
+     y="-64.923866"
+     x="527.5769"
      id="tspan7661"
      sodipodi:role="line">MANTISSA</tspan></text>
+
 
 </g></g></g></svg>

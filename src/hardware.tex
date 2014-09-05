@@ -1,6 +1,6 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-This chapter describes the target hardware of Wolfenstein 3D. For simplicity it is abstracted as a pipeline taking user commands as entry and outputting images and audio at the exit point.
+This chapter describes the target hardware of Wolfenstein 3D. For simplicity it is abstracted as a pipeline taking user commands as entry and outputting images and audio at hopefully result into fun things.
 
 \begin{figure}[H]
 \centering
@@ -11,7 +11,7 @@ This chapter describes the target hardware of Wolfenstein 3D. For simplicity it 
 \label{fig:digraph}
 \end{figure}
 
-The pipeline comprise five stages. Some of them are bottlenecks for 3D game development while some are surprisingly good:
+The pipeline comprises five stages. Some of them are bottlenecks for 3D game development while some are surprisingly good:
 
  \bigskip
 
@@ -29,11 +29,11 @@ The pipeline comprise five stages. Some of them are bottlenecks for 3D game deve
 \caption{Pipeline stages.}  \label{fig:Pipeline stages}
 \end{figure}
 
-Overall, the pipeline offered a lot of friction: hardware manufacturers had not embraced the game industry yet. Personal computers were designed to display static images and crunch integers. Real-time 3D, fractions and smooth 60 fps animations were not part of the blueprints.
+Overall, the pipeline offered a lot of resistance: hardware manufacturers had not embraced the game industry yet and it showed a lot. Ever since their inception in the 70s, Personal Computers were designed to display static images and crunch integers. Real-time 3D, fractions and smooth sixty-frames-per-seconds animations were not on the blueprints.
 
-\section{CPU}
+\section{Central Processing Unit}
   \subsection{Landscape}
-  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors.  The i286 machines released in 1982 were on the decline and replaced by Intel's first 32 bits processor: The 386. The 1970 Moore's law was in full effect as can be seen on a MIPS\footnote{Million Instructions Per Second.} histogram:
+  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors.  The machines based on the 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor: The 80386. Moore's law was in full effect as can be seen on a MIPS\footnote{Million Instructions Per Second.} histogram:
 
 
 \definecolor{skyblue1}{rgb}{0.1,0.624,0.812}
@@ -75,6 +75,12 @@ Overall, the pipeline offered a lot of friction: hardware manufacturers had not 
 
 \textbf{\underline{Trivia :}}  Two other companies were producing Intel clones: AMD and Cyrix. The mediocre performances did not justify the lower cost and as a result they never gathered a significant market share. Interestingly AMD evolved to become a serious challenger while Cyrix merged with National Semiconductor in 1997.
 
+ \bigskip
+ 
+ \textbf{\underline{Trivia :}} The 386SX and 386DX were identical processor. Yet the DX is twice faster than the SX thanks to a bus twice as wide (32 bits vs 16 bits) !
+
+
+
 
 
 
@@ -86,96 +92,124 @@ Overall, the pipeline offered a lot of friction: hardware manufacturers had not 
 
   \subsection{Floating Point}
   
-  Wolfenstein 3D target machines were high-end 286 and low-end 386 machine. As seen previous, those were powerful machines that outperformed any game console on the market by an order of magnitude. But there was still a major issue on the way to 3D.
-
-   \bigskip
- 
-  In order to perform all the 3D calculations, the machines had to keep track of the fractional part of each operations. This is usually not an issue since the C language offers the types \codeword{float} and \codeword{double} precisely for that.
-
-  \bigskip
-  DRAWING
-  slow: higher precision
-          same window
-          all registers were 16 bits.
-  \bigskip
-
-  Unfortunately \emph{float} could not be used for the good reason that Intel CPUs did not have a hardware Floating Point Unit. Those operations were emulated in software by the compiler and therefore impossibly slow. At first sight it looked like fractions and 3D were out of the picture. A workaround had to be found.
-
-  \bigskip
-
- \textbf{\underline{Trivia :}} Since floating point unit where so rare and expensive, why did the C language end up with a \codeword{float} type ? The machine used to invent it (PDP-11) did not have one either but the manufacturer (DEC) had promised Dennis Ritchie and Ken Thompson the next model would have one!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  \subsection{Fixed Point}
-  If integers were not accurate enough and floating points were too slow, how could trigonometry be done on those machines? The solution was to re-purpose the hardware via Fixed Points!
-
-   \bigskip
-
-Fixed Point is a method that allows to keep track of fractions while still using the integer operations of the CPU. The machine manipulates what are supposed to be integer numbers but the programmers sees them as a real numbers. As usual it is easier to describe with a drawing. Integer are encoded following figure \ref{fig:int_layout}:
-\begin{figure}[H]
-\centering
- \input{int.tex}
- \caption{Integer layout.} \label{fig:int_layout}
- \end{figure}
-
-So the value of the sequence of bits \emph{0010010010010010}:
-\begin{figure}[H]
-\centering
-\input{int_example.tex}
- \caption{Integer example.} \label{fig:mips}
- \end{figure}
-
- Is equal to $ 2^{13} + 2^9 + 2^5 + 2^1 =  8738 $.
-
-\bigskip
-
-Fixed Point arithmetic works by simply shifting the layout 8 bits to the left:
-\begin{figure}[H]
- \centering
-  \input{fp.tex}
- \caption{Fixed point layout.} \label{fig:mips}
-\end{figure}
-
-So the same sequence of bits \emph{0010010010010010}:
-\begin{figure}[H]
- \centering
-   \input{fp_example.tex}
-  \caption{Fixed point example.} \label{fig:mips}
-\end{figure} 
-
-Now represents:\\
+  Wolfenstein 3D target machines were high-end 286 and low-end 386 machine. As seen previous, those were powerful machines far outperforming any game console on the market. But all that power was not necessarely useful. In order to perform all the trigonometry necessary to perspective effect, the machines had to keep track of the fractional part of each operations. This is usually not an issue since the C language offers the types \codeword{float} and \codeword{double} precisely for that.\\
 \\
-$ 2^5 + 2^1 = 34 $ for the integer part.\\
-$ 2^{-3}+2^{-7} = 0.1328125 $ for the fractional part.\\
-$ = 34.1328125$\\
+It is important to understand what floating point is and how it works to fully grasp how useful it is when doing trigonometry. Most of the time it is explained as follow. Take 32 bits and divide them into three parts:
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{imgs/floating_point_layout.eps}
+\caption{Floating Point internals}
+\label{fig:fp_internals}
+\end{figure}
+  \bigskip
+
+\begin{itemize}
+  \item One bit S for the sign.
+  \item Seven bits E for the exponent.
+  \item Twenty four bits for the mantissa.
+\end{itemize}  
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{imgs/floating_point_math.eps}
+\caption{Floating Point internals}
+\label{fig:fp_internals}
+\end{figure}
+  \bigskip  
+
+
+Those three parts are usually explained by text books with formula \ref{eq:fp}.\\
+
+
+\begin{equation}\label{eq:fp}
+\large
+(-1)^S * 1.M * 2^{(E-127)}
+\end{equation}
+ 
+\bigskip  
+
+Which I personnaly hate and find cryptic. I personnaly blame this notation for discouraging generations of programmers, scaring them to never look back and really understand how it works. There is a better way to explain it with a nice drawing and a slightly difference approach. Instead of Exponent, think of a floating window between two consecutive power of two. And instead of a Mantissa think of an Offset within that window as in Figure \ref{fig:fp_internals}:
+  
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{imgs/floating_point_intuitive.eps}
+\caption{Floating Point internals}
+\label{fig:fp_internals}
+\end{figure}
+  \bigskip  
+
+Figure \ref{fig:fp_internals_window} illustrate how the number 6.7 would be encoded, with the window starting at 4 (and therefore spanning up to next power of two: 8). The offset about 3/4 along the window.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{imgs/floating_point_window.eps}
+
+\caption{Floating Point internals}
+\label{fig:fp_internals_window}
+\end{figure}
+  \bigskip
+  
+Here is a detailled example which calculate the floating point representation of the number 3.14.
+\begin{itemize}
+ \item The number is positive  $\rightarrow S=0$.
+ \item The number is between the power of two 2 and 4 so the floating window must start at $2^1$  $\rightarrow E=128$.
+ \item Finally there are $2^{23}$ offsets available so 3.14 is at $\frac{4-3.14}{2} = 0.43 $. The mantissa/offset $\rightarrow M = 2^{23}*0.43 = 4781506$
+\end{itemize}
+
+Which in binary translate to:
+
+\begin{itemize}
+\item S = 0.
+\item E = 10000000
+\item M = 1001000111101111000011
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{imgs/floating_point_layout_pi.eps}
+\caption{Floating Point internals}
+\label{fig:fp_internals}
+\end{figure}
+  \bigskip
+
+The value 3.14 is best approximated as 3.140000104904175.\\
+
+The corresponding value with the ugly and useless formula:
+
+\begin{equation}
+3.14 = (-1)^0 * 1.57 * 2^{(128-127)}
+\end{equation}
 
 \bigskip
 
-The beauty of this method is that addition and subtraction work exactly like integers from the CPU instruction side:
+And finally the graphic representation:\\
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{imgs/floating_point_window.eps}
+
+\caption{3.14 window and offset.}
+\label{fig:fp_internals}
+\end{figure}
   \bigskip
-  DRAWING
+
+If you understand Floating Point, you can understand how handy it is to a 3D engine.
+Not only it approximate number very well, it also protect from overflow by floating floating the window when necessary.\\
+\\
+The representation is neat but performing operation are inherently computational intensive. In order to add, substract,multiply or divide two numbers, operations have to be carried at a higher precision than 32 bits (80 bits in Intel CPU). With 16 bits registers you can easily understand the gynmastic necessary. On top of that, the representation have to be modified in order to use the same floating window.
+\\
+This is not a problem when everything is hardwired...but it was a big problem for the 286 and the 386: \emph{They did not have a hardware Floating Point Unit}. Those operations were emulated in software by the compiler and therefore impossibly slow. At first sight it looked like fractions and 3D were out of the picture. A workaround had to be found.
+
   \bigskip
 
+ \textbf{\underline{Trivia :}} Since floating point units where so rare, why did the C language end up with a \codeword{float} type ? The machine used to invent it (PDP-11) did not have one either but the manufacturer (DEC) had promised Dennis Ritchie and Ken Thompson the next model would have one\footnote{The Development of the C Language by Dennis M. Ritchie}!
 
- The only special case is when performing operation.
+\textbf{\underline{Trivia :}} Intel did offer FPUs. Show image here.
 
-\bigskip
-  DRAWING
-  \bigskip
+At first sight, \emph{int} were fast but not accurate enough and \emph{float} were accurate but not fast enough. It looked like there was not way to do real-time trigonometry.
 
- \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game console manufactured in the 90s and later had no hardware floating point unit: Sony's original PlayStation (1994) and Sega's Saturn (1994) are few examples among many with a design choice that not only reduced the production cost but also maximized the CPU pipeline throughput. 
+   
 
 
 
@@ -440,7 +474,7 @@ To help configure automatically the 300 registers of the VGA, the IBM BIOS had a
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.4]{imgs/ibm_vga.eps}
+\includegraphics[scale=0.38]{imgs/ibm_vga.eps}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
 \caption{IBM's VGA Documentation}

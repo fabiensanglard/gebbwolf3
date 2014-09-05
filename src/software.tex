@@ -21,10 +21,71 @@ It’s “COLUMN”, you dumb \@\#\$\% !
 \subsection{User Manager (US)}
 \subsection{Input Manager (IN)}
 
+
 \section{2D Renderer}
 
 \section{3D Renderer}
+\section{Fixed Point}
+If integers were not accurate enough and floating points were too slow, how could trigonometry be done on those machines? The solution was to re-purpose the hardware via Fixed Points!
 
+   \bigskip
+
+Fixed Point is a method that allows to keep track of fractions while still using the integer operations of the CPU. The machine manipulates what are supposed to be integer numbers but the programmers sees them as a real numbers. As usual it is easier to describe with a drawing. Integer are encoded following figure \ref{fig:int_layout}:
+\begin{figure}[H]
+\centering
+ \input{int.tex}
+ \caption{Integer layout.} \label{fig:int_layout}
+ \end{figure}
+
+So the value of the sequence of bits \emph{0010010010010010}:
+\begin{figure}[H]
+\centering
+\input{int_example.tex}
+ \caption{Integer example.} \label{fig:mips}
+ \end{figure}
+
+ Is equal to $ 2^{13} + 2^9 + 2^5 + 2^1 =  8738 $.
+
+\bigskip
+
+Fixed Point arithmetic works by simply shifting the layout 8 bits to the left:
+\begin{figure}[H]
+ \centering
+  \input{fp.tex}
+ \caption{Fixed point layout.} \label{fig:mips}
+\end{figure}
+
+So the same sequence of bits \emph{0010010010010010}:
+\begin{figure}[H]
+ \centering
+   \input{fp_example.tex}
+  \caption{Fixed point example.} \label{fig:mips}
+\end{figure} 
+
+Now represents:\\
+\\
+$ 2^5 + 2^1 = 34 $ for the integer part.\\
+$ 2^{-3}+2^{-7} = 0.1328125 $ for the fractional part.\\
+$ = 34.1328125$\\
+
+\bigskip
+
+The beauty of this method is that addition and subtraction work exactly like integers from the CPU instruction side:
+  \bigskip
+  DRAWING
+  \bigskip
+
+
+ The only special case is when performing operation.
+
+\bigskip
+  DRAWING
+  \bigskip
+
+ \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game console manufactured in the 90s and later had no hardware floating point unit: Sony's original PlayStation (1994) and Sega's Saturn (1994) are few examples among many with a design choice that not only reduced the production cost but also maximized the CPU pipeline throughput.
+ 
+ 
+ 
 \begin{fancyquotes}
 Much was made about the “ray casting” used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacombs 3D.  C3D (and Hovertank before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn’t really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel “rock solid”.
  \bigskip \\
