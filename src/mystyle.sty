@@ -103,12 +103,12 @@
 \newenvironment{fancyquotes}[1][]{%
 \noindent
 \tikzpicture[fancy quotes background]
-\node[fancy quotes opening,anchor=north west] (fq@ul) at (0,0) {``};
+\node[fancy quotes opening,anchor=north west] (fq@ul) at (0,0) {\tiny ``};
 \tikz@scan@one@point\pgfutil@firstofone(fq@ul.east)
-\pgfmathsetmacro{\fq@width}{\textwidth - 2*\pgf@x}
+\pgfmathsetmacro{\fq@width}{\textwidth - 3*\pgf@x}
 \node[fancy quotes,#1] (fq@txt) at (fq@ul.north west) \bgroup}
 {\egroup;
-\node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) {''};
+\node[overlay,fancy quotes closing,anchor=east] at (fq@txt.south east) {\tiny ''};
 \endtikzpicture}
 
 %Nice header with pages numbers

@@ -3,9 +3,9 @@
 \section{Source Code}
 
  \begin{fancyquotes}
-   We didn’t have spell checkers in our editors back then, and I always had poor spelling.  The word “collumn” appears in the source code dozens of times.  After I released the source code, one of the emails that stands out in memory read:
+   We didn't have spell checkers in our editors back then, and I always had poor spelling.  The word “collumn” appears in the source code dozens of times.  After I released the source code, one of the emails that stands out in memory read:
  \bigskip \\
-It’s “COLUMN”, you dumb \@\#\$\% !
+It's "COLUMN", you dumb @\#\$\% !\\
  \bigskip \\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
@@ -87,7 +87,7 @@ The beauty of this method is that addition and subtraction work exactly like int
  
  
 \begin{fancyquotes}
-Much was made about the “ray casting” used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacombs 3D.  C3D (and Hovertank before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn’t really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel “rock solid”.
+Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacombs 3D.  C3D (and Hovertank before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn’t really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel “rock solid”.
  \bigskip \\
 There was a clear performance cost to it – doing 320 traces through a tile map and treating each column independently is much slower than looping through a few long wall segments.  However, the resulting code was small and very regular compared to the hairball of my wall span renderers, and it did deliver the rock-solid feel I wanted.
  \bigskip \\
