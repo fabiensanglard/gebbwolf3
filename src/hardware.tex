@@ -32,7 +32,7 @@ The pipeline comprises five stages. Some of them are bottlenecks for 3D game dev
 Overall, the pipeline offered a lot of resistance: hardware manufacturers had not embraced the game industry yet and it showed a lot. Ever since their inception in the 70s, Personal Computers were designed to display static images and crunch integers. Real-time 3D, fractions and smooth sixty-frames-per-seconds animations were not on the blueprints.
 
 \section{Central Processing Unit}
-  \subsection{Landscape}
+  \subsection{Overview}
   The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors.  The machines based on the 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor: The 80386. Moore's law was in full effect as can be seen on a MIPS\footnote{Million Instructions Per Second.} histogram:
 
 
@@ -129,7 +129,7 @@ Those three parts are usually explained by text books with formula \ref{eq:fp}.\
  
 \bigskip  
 
-Which I personnaly hate and find cryptic. I personnaly blame this notation for discouraging generations of programmers, scaring them to never look back and really understand how it works. There is a better way to explain it with a nice drawing and a slightly difference approach. Instead of Exponent, think of a floating window between two consecutive power of two. And instead of a Mantissa think of an Offset within that window as in Figure \ref{fig:fp_internals}:
+Which I hate and find cryptic. I blame this ignoble notation for discouraging generations of programmers, scaring them to the point they never looked back to understand how it actually works. It is sad becayse there is a better way to explain it which involves a drawing and a slightly difference nomenclature. Instead of Exponent, think of a floating window between two consecutive power of two. And instead of a Mantissa think of an Offset within that window as in Figure \ref{fig:fp_internals}:
   
 \begin{figure}[H]
 \centering
@@ -205,6 +205,8 @@ This is not a problem when everything is hardwired...but it was a big problem fo
 
  \textbf{\underline{Trivia :}} Since floating point units where so rare, why did the C language end up with a \codeword{float} type ? The machine used to invent it (PDP-11) did not have one either but the manufacturer (DEC) had promised Dennis Ritchie and Ken Thompson the next model would have one\footnote{The Development of the C Language by Dennis M. Ritchie}!
 
+\bigskip  
+
 \textbf{\underline{Trivia :}} Intel did offer FPUs. Show image here.
 
 At first sight, \emph{int} were fast but not accurate enough and \emph{float} were accurate but not fast enough. It looked like there was not way to do real-time trigonometry.
@@ -226,7 +228,7 @@ At first sight, \emph{int} were fast but not accurate enough and \emph{float} we
 
 
 \section{RAM}
-The goal of the CPU stage was to manipulate values in RAM. The target machines had an address bus 32 bits wide with a MMU\footnote{Memory management Unit} offering up to 4 GB of linear RAM in Protected Mode. Unfortunately, there was a major obstacle between the programmer and the machine. It was the operating system and its name was MS-DOS 5.0 by Microsoft Corporation.
+The target machine had an address bus 32 bits wide with a MMU\footnote{Memory management Unit} offering up to 4 GB of linear RAM in Protected Mode. Unfortunately, there was a major obstacle between this nice feature and the programmer. It was the operating system and its name was MS-DOS 5.0 by Microsoft Corporation.
   
 
 
@@ -235,21 +237,21 @@ The goal of the CPU stage was to manipulate values in RAM. The target machines h
 
 
   \subsection{DOS limitations}
-DOS 5.0 was released by Microsoft in 1991. It was the \emph{de-facto} operating system that came with every machine sold. It was universal and unavoidable. Since Microsoft was extremely protective of its software base, it was fully backward compatible with previous versions. Which mean it kept the CPU in Real Mode: An abomination that matched the early 
+  Since if emergence, Microsoft always highly valued its existing applications.  Since most application written during the 80s were using Real-Mode, DOS 5.0 released by Microsoft in 1991 kept running that way. This created an awkward situation. The \emph{de-facto} operating system that came with every machine sold prevented programmers from using Protected Mode. They were forced to discard all the neat feature and had to use the machine like a super fast
 Intel 8086 CPU from 1976.
 
 \bigskip
 
- \textbf{\underline{Trivia :}} One year earlier, in 1991, a student from Finland started working on a "hobby" of his: An operating system able to use the CPU in Protected Mode. It was Linus Torvalds starting what would become Linux.
+ \textbf{\underline{Trivia :}} One year earlier, in 1991, a student from University of Helsinki started working on a "hobby" of his: An operating system able to use the CPU in Protected Mode taking advantage of the MMU and the 32 bits registers. It would become Microsoft worse nightmare: Linus Torvalds had just started what would become Linux.
 
 
 
   \subsection{16 bits Segmented RAM}
-  Real-Mode was the way RAM was layed out in 1976: A 20 bits wide address bus offering up to 1MB of RAM. No matter how much memory was installed on the machine in 1992, only 1MB could be addressed. Addressing was done by combining 16 bits register together. One being a segment, the other the offset within that segment. Hence the name: '16 bits programming'.
+  Protected mode was unavailable. What had the Real-Mode to offer ? Essentially a trip back in time to 1976: A 20 bits wide address bus offering up to 1MB of RAM and 16 bits wide registers. No matter how much memory was installed on the machine in 1992, only 1MB could be addressed. And to top it all, addressing was done by combining two 16 bits register together. One being a segment, the other the offset within that segment. Hence the name: '16 bits programming'.
 
   \bigskip
 
-Figure \ref{fig:RealMode_RAM_layout} shows the area in the 1MB:
+Figure \ref{fig:RealMode_RAM_layout} shows the areas within those 1MB:
   \begin{itemize}
   
 
@@ -260,12 +262,6 @@ Figure \ref{fig:RealMode_RAM_layout} shows the area in the 1MB:
 \item From A0000h to FFFFFh was a zone called UMA (Upper Memory Area): Reserved to bios ROM, video card and sound card mapped I/O.
 \end{itemize}
 
-Out of 1024KB only 640KB (the Conventional Memory) were usable since 384KB were reserved for the UMA. The more drivers (.SYS and .COM) an user loaded on a system at startup, the less was available for the game.
-
-\bigskip
-
-\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard would work properly. That driver consumed a whopping 5KB.
-
   \begin{figure}[H]
 \centering
  \input{real_mode.tex}
@@ -273,7 +269,13 @@ Out of 1024KB only 640KB (the Conventional Memory) were usable since 384KB were 
  \end{figure}
 
 
+As a result, out of the original 1024KB, only 640KB (the Conventional Memory) were usable since 384KB were reserved for the UMA\footnote{Upper Memory Area}. On top of it, every single driver installed (.SYS and .COM)  took away more of the 640KB.
 
+\bigskip
+
+\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard would work properly. That driver consumed a whopping 5KB.
+\bigskip
+\textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why even though they had many MB installed on their machine, they could not use it. id Software had to publish an explanation (Appendice "\nameref{chap:barrier640}") valong with the game to make it clear that it was not their falut.
 
 It gets worse. Since two 16 bits register were combined to form a RAM address, two pointers could point to the same RAM location but fail an equality test:
 \bigskip
@@ -307,20 +309,12 @@ Pointer C defined as:
 
 As defined A, B and C all points to the same memory location but however would fail a comparison test in the following code.\\
 
-\begin{Verbatim}[fontsize=\relsize{-1}]
-far void* a = FP_SEG(0x0000) + FP_OFF(0x0120);
-far void* b = FP_SEG(0x0010) + FP_OFF(0x0020);
-far void* c = FP_SEG(0x0012) + FP_OFF(0x0000);
-\end{Verbatim}
+\lstinputlisting[language=C]{pointer_madness.c}
 
-\bigskip
+Woud ouput:
 
-\begin{Verbatim}[fontsize=\relsize{-1}]
 
-a == b  -> false
-a == c  -> false
-b == c  -> false
-\end{Verbatim}
+\lstinputlisting{pointer_madness_output.txt}
 
 \bigskip
 
@@ -355,7 +349,7 @@ In Real-Mode the processor could access 1MB no matter what. But machines of 1992
 
 \section{Video}
 
-PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curved surface, deep and incredibly heavy devices. Most had a tiny 13” diagonal and all had a 4:3 ratio. Figure \ref{fig:int_layout} shows a comparison with a 28” LCD display from 2014.
+PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curved surface, deep and incredibly heavy devices. Most had a tiny 13” diagonal and all had a 4:3 ratio. Figure \ref{fig:int_layout} shows a comparison with a 28" LCD display from 2014.
 
   \begin{figure}[H]
 \centering

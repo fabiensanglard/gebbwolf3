@@ -4,12 +4,57 @@
 % This allow to have one preambule used in all |/subfile| .
 \usepackage{mystyle}
 
+\begin{document}
 
-  \begin{document}
-    \title{Game Engine Black Book}
-    \author{Fabien Sanglard}
-    \date{\today }
-    \maketitle
+
+\def\GE{} % Title
+\def\BB{} % Title
+\title{\GE \BB}
+
+\def\Me{Fabien Sanglard} % Title
+\author\Me
+
+\definecolor{title_white}{rgb}{1,1,1}
+\definecolor{title_grey}{rgb}{0.7,0.7,0.7}
+       
+\def\Version{0.1}
+
+    %Cover page
+    
+       %\onepagecolor{black}
+       \newpagecolor{black}
+       \vspace{\fill}
+       \begingroup
+       
+       
+       
+        \bf
+        
+         \centering
+           \setstretch{19.0}
+           {\color{title_white} \scalebox{5.2}[14]{GAME ENGINE}}\\
+           \setstretch{8.0}
+           {\color{title_grey} \scalebox{5.5}[12]{BLACK BOOK}}  \\ 
+\setstretch{13.0}
+           {\color{title_white} \scalebox{4.5}[5]{Wolfenstein 3D}}\\
+\setstretch{10.0}
+       \endgroup
+       \setstretch{11.0}
+       \begin{flushleft}
+       {\color{title_white} \scalebox{2}[2]{\Me}}\\
+       \end{flushleft}
+       \setstretch{-1}
+       \begin{flushright}
+       {\color{title_white} Version: 0.1  }
+       \end{flushright}       
+       
+       
+       \pagebreak
+       \restorepagecolor
+    
+   %After title we restore all margins. 
+   \newgeometry{top=1in,bottom=1in}
+    
     \tableofcontents
     \listoffigures
     \listoftables
@@ -36,7 +81,7 @@
     \appendixpage
 
     \chapter{Let's compile like it's 1992}
-    \chapter{The 640KB Barrier}\label{640barrier}
+    \chapter{The 640KB Barrier}\label{chap:barrier640}
     \chapter{CONFIG.SYS and AUTOEXEC.BAT}
     \chapter{Letter from a war veteran}
     \chapter{Chocolate Wolfenstein 3D}

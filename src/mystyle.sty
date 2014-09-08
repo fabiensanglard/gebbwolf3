@@ -3,8 +3,9 @@
   % provides a way to compile sections of a document using the same preamble as the main document.
   \usepackage{subfiles}
 
+
   % Set the dimensions of the pages.
-  \usepackage[paperheight=9.2in, paperwidth = 7.2in,top=1in,bottom=1in]{geometry}
+  \usepackage[margin=1in]{geometry}
   %\usepackage{calc}
   %\setlength\paperwidth{7.2in}
   %\setlength\paperheight{9.2in}
@@ -119,3 +120,43 @@
 
 %For pretty equations
 \usepackage{amsmath}
+
+%For pretty source code
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.8,0.8,0.8}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour}, 
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numbers=none,
+    basicstyle=\ttfamily,
+    stringstyle=\color{codepurple},
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                                   
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    frame=single,
+    tabsize=2,
+    basicstyle=\footnotesize,
+    numbers=left,                   % where to put the line-numbers
+    numberstyle=\footnotesize,  
+}
+ 
+\lstset{style=mystyle}
+
+%For front page.
+\usepackage{pagecolor}
+\usepackage{graphicx} %to resize title
+\usepackage{setspace} %for vertical spacing in title (\setstretch)
+
+\usepackage[scaled]{helvet}
+\usepackage[T1]{fontenc}
