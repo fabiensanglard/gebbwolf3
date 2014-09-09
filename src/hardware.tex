@@ -230,7 +230,12 @@ At first sight, \emph{int} were fast but not accurate enough and \emph{float} we
 
 
 \section{RAM}
-The target machine had an address bus 32 bits wide with a MMU\footnote{Memory management Unit} offering up to 4 GB of linear RAM in Protected Mode. Unfortunately, there was a major obstacle between this nice feature and the programmer. It was the operating system and its name was MS-DOS 5.0 by Microsoft Corporation.
+The target machines could have their CPU set in two modes:
+\begin{itemize}
+  \item The Protected Mode was the last addition of Intel with an address bus 32 bits wide and a MMU\footnote{Memory management Unit} offering up to 4 GB of memory protected linear RAM.
+  \item The Real Mode was \emph{just} a backward compatibility mode so old software written for 8086 could still run. 
+\end{itemize}
+  You may assume that programers of the 90s switched the CPU in Protected Mode to unleash the full potential of their 286 and 386. Unfortunately, there was a major obstacle between this nice feature and the programmer. It was the operating system: The infamous MS-DOS 5.0 by Microsoft Corporation.
   
 
 
@@ -239,8 +244,7 @@ The target machine had an address bus 32 bits wide with a MMU\footnote{Memory ma
 
 
   \subsection{DOS limitations}
-  Since if emergence, Microsoft always highly valued its existing applications.  Since most application written during the 80s were using Real-Mode, DOS 5.0 released by Microsoft in 1991 kept running that way. This created an awkward situation. The \emph{de-facto} operating system that came with every machine sold prevented programmers from using Protected Mode. They were forced to discard all the neat feature and had to use the machine like a super fast
-Intel 8086 CPU from 1976.
+  Since if emergence, Microsoft highly valued the applications running on their operating system. They took great care to never ever break anything with a new system.  Since many application were written during the 80s on machine having only Real-Mode, DOS 5.0 kept running that way. This created an awkward situation where the \emph{de-facto} operating system that came with every machine sold prevented programmers from using Protected Mode. They were forced to discard all the neat feature of their 1992 PC and use the machine like it was a very fast Intel 8086 CPU from 1976.
 
 \bigskip
 
@@ -252,15 +256,12 @@ Intel 8086 CPU from 1976.
   Protected mode was unavailable. What had the Real-Mode to offer ? Essentially a trip back in time to 1976: A 20 bits wide address bus offering up to 1MB of RAM and 16 bits wide registers. No matter how much memory was installed on the machine in 1992, only 1MB could be addressed. And to top it all, addressing was done by combining two 16 bits register together. One being a segment, the other the offset within that segment. Hence the name: '16 bits programming'.
 
   \bigskip
-
-Figure \ref{fig:RealMode_RAM_layout} shows the areas within those 1MB:
-  \begin{itemize}
-  
-
+We can start the horror museum visit with a "nice" layout of the 1 MB of RAM available in Figure \ref{fig:RealMode_RAM_layout}.\\
+\begin{itemize}
 \item From 0 to 3FFh was the Interrupt Vector Table.
 \item From 400h to 4FFh was BIOS data.
 \item From 500h to 5FFh was command.com+io.sys.
-\item From 600h to 9FFFFh  was the game program. 
+\item From 600h to 9FFFFh  was the area actually usable by a program (around 620KB). 
 \item From A0000h to FFFFFh was a zone called UMA (Upper Memory Area): Reserved to bios ROM, video card and sound card mapped I/O.
 \end{itemize}
 
@@ -271,15 +272,15 @@ Figure \ref{fig:RealMode_RAM_layout} shows the areas within those 1MB:
  \end{figure}
 
 
-As a result, out of the original 1024KB, only 640KB (the Conventional Memory) were usable since 384KB were reserved for the UMA\footnote{Upper Memory Area}. On top of it, every single driver installed (.SYS and .COM)  took away more of the 640KB.
+As a result, out of the original 1024KB, only 640KB (called Conventional Memory) were usable since 384KB were reserved for the UMA\footnote{Upper Memory Area}. On top of it, every single driver installed (.SYS and .COM)  took away more of the 640KB.
 
 \bigskip
 
-\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard would work properly. That driver consumed a whopping 5KB.
-\bigskip
-\textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why even though they had many MB installed on their machine, they could not use it. id Software had to publish an explanation (Appendice "\nameref{chap:barrier640}") valong with the game to make it clear that it was not their falut.
+\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys woud be properly mapped. That driver consumed a whopping 5KB.\\
+\\
+\textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why even though they had many MB installed on their machine, they could not use it. id Software had to publish an explanation (Appendice "\nameref{chap:barrier640}") along with the game to make it clear that it was not their falut.
 
-It gets worse. Since two 16 bits register were combined to form a RAM address, two pointers could point to the same RAM location but fail an equality test:
+It gets worse. Since two 16 bits register were combined to form a RAM address, two pointers could point to the same RAM location but fail an equality test:\\
 \bigskip
 With pointer A defined as:
 \begin{Verbatim}[fontsize=\relsize{-1}]
