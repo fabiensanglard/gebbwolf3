@@ -1,0 +1,32 @@
+\documentclass[book.tex]{subfiles}
+\begin{document}
+Upon startup, the operating system read two files automatically from the booting device (which could be either the hard-drive(C:) or floppy disk (A:)
+CONFIG.SYS:\\
+ \begin{breakable_box}
+   \begin{verbatim}
+DEVICE=C:\WINDOWS\HIMEM.SYS
+DOS=HIGH,UMB
+DEVICEHIGH=C:\WINDOWS\EMM386.EXE AUTO RAM
+DEVICE=C:\WINDOWS\MOUSE.SYS
+\end{verbatim}
+\end{document}
+\\
+AUTOEXEC.BAT:\\
+ \begin{breakable_box}
+   \begin{verbatim}
+@echo off
+SET SOUND=C:\PROGRA~1\CREATIVE\CTSND
+SET BLASTER=A220 I5 D1 H5 P330 E620 T6
+SET PATH=C:\Windows;C:\ 
+LH C:\Windows\COMMAND\MSCDEX.EXE /D:123
+\end{verbatim}
+\end{document}
+
+Trivia: To this day, the old way to refer to drives is still in Windows (C:):
+\begin{itemize}
+\item A: used to be the floppy drive containing the program code.
+\item B: the floppy drive containing the data.
+\item C: became used when hard drives became more wide-spread.
+\item D: was adopter when CD-ROM reader apperared later.
+\end{itemize}
+\end{document}

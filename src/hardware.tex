@@ -4,7 +4,7 @@ This chapter describes the target hardware of Wolfenstein 3D. For simplicity it 
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{imgs/fun_pipeline.eps}
+\includegraphics[scale=1]{imgs/fun_pipeline.eps}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
 \caption{Hardware pipeline.}
@@ -43,6 +43,8 @@ Overall, the pipeline offered a lot of resistance: hardware manufacturers had no
 \centering
   \begin{tikzpicture}[font=\small]
     \begin{axis}[
+      width=0.9\textwidth,
+      height=0.6\textwidth,
       ybar,
       bar width=20pt,
       ylabel={MIPS},
@@ -51,7 +53,7 @@ Overall, the pipeline offered a lot of resistance: hardware manufacturers had no
       xtick=data,
       axis x line=bottom,
       axis y line=left,
-      enlarge x limits=0.15,
+      enlarge x limits=0.11,
       symbolic x coords={86,188,286,386SX,386DX},
       xticklabel style={anchor=base,yshift=-\baselineskip},
       nodes near coords={\pgfmathprintnumber\pgfplotspointmeta}
@@ -375,7 +377,7 @@ The VGA\footnote{Video Graphic Adapter} was the chip interfacing between the PC 
   
  \begin{figure}[H]
 \centering  
-\begin{tabular}{ l  c }
+\begin{tabularx}{0.9\textwidth}{ X  Y }
   \toprule
   \textbf{Name} &  \textbf{Year Released} \\
   \toprule \codeword{MDA}
@@ -396,7 +398,7 @@ The VGA\footnote{Video Graphic Adapter} was the chip interfacing between the PC 
    \textbf{A}rray)  & 1987
     \\
   \toprule
-\end{tabular}
+\end{tabularx}
 \caption{Video interface history.}\label{fig:vga_history}
 \end{figure}
 
@@ -442,7 +444,7 @@ To help configure automatically the 300 registers of the VGA, the IBM BIOS had a
 \begin{figure}[H]
 \centering
 \begin{table}[H]
-\begin{tabular}{llllr}
+\begin{tabular}[c]{llllr}
 \hline
 \textbf{Mode} & \textbf{Type} & \textbf{Format} & \textbf{Colors}          & \multicolumn{1}{l}{\textbf{Segment}} \\ \hline
 0             & text          & 40x25           & 16 gradient (monochrome) & b800h                                \\ \hline

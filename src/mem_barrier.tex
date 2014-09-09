@@ -1,0 +1,94 @@
+\documentclass[book.tex]{subfiles}
+\begin{document}
+The problem with conventionnal memory limitation was so bad that most games has to ship with explanations about how everything worked: Here is an extract from W3DHELP.EXE.\\
+
+ \begin{breakable_box}
+   \begin{verbatim}
+THE 640K BARRIER
+================
+
+This section isn't actually needed in order to get our programs running.
+What is contained in here is for the most part background information to
+better assist our customers in understanding why they need to make more
+conventional memory available.
+
+When MicroSoft first made DOS 1.0, 640 kilobytes (KB) was set aside as
+the highest amount of memory that a computer could have. The 640KB of
+memory is what is called "conventional memory". To maintain compatibi-
+lity with older versions, this was never changed. Advances in memory 
+management have made access to memory beyond 640KB, but this memory can
+only hold data; the program actually has to run in the first 640KB. 
+This first 640k is called "Conventional Memory".
+
+Here is a brief discussion of the different types of memory available
+on your computer. The most important one is Conventional memory.
+
+CONVENTIONNAL MEMORY starts at 0k and normally ends at 640k. (The 
+instances where this is not the case are EXTREMELY rare) If you are not
+using some sort of memory manager (such as DOS's EMM386, Quarterdeck's
+ QEMM or Qualitas'386MAX), this is the only type of memory you have.
+Conventional memory is used by DOS as well as device drivers and TSR's
+(Terminate and Stay Resident Programs). A TSR is a program that is loaded
+into your computer's memory (usually from the CONFIG.SYS or AUTOEXEC.BAT
+files) and stays there. Host programs remove themselves from memory after
+execution, a TSR does not. Device drivers and TSR's are programs that
+enable the computer to use additional hardware such as a mouse, scanner,
+CD-ROM, expanded or extended memory, etc. A program such as an Apogee 
+game is NOT a program that can be loaded as a TSR. If all you have is
+conventional memory, anything that you would load as a TSR would come out
+of this section of memory. Take too much away, and you're not left over
+withenough memory to run our product. 
+
+If you are getting an out of memory error from our program, it is this
+memory that you are running out of. Whether you have 1 meg, 8 meg of
+memory, or 32 meg of memory, it's irrelevant. Only the first 640k of
+memory is available for program execution. Please do not confuse this
+with hard drive space. Your hard drive space is not memory, and is not
+relevant nor should be considered in this example.
+
+UPPER MEMORY starts at 640k and ends at 1024k. Normally, this area is
+used for things such as system ROM, video and hardware cards, and the
+like. On most PC's hardware does not use the entire upper memory area,
+and with the use of the aforementioned memory managers, (EMM386, QEMM,
+386MAX, etc.) you can move some TSR's into this memory area. These 
+unused areas are called Upper Memory Blocks (UME'S), and this is where
+some TSR's can be loaded.
+
+EXTENDED MEMORY (XMS) is the memory addressed above 1024k. Extended 
+memory requires the use of a memory manager, such as MS/DOS's HIMEM.SYS.
+This region of memory is not usable for standard program execution; it
+can only be used for data storage. Aogee programs that use this type of
+memory(such as Wolfenstein & Blake Stone), only use this to store level
+or graphic data. The actual program itself is running in conventional
+memory. 
+
+HIGH MEMORY HREH (HMH) is the first 64k of extended memory. This is a
+special region of memory that is most commonly used to load DOS high. 
+When you issue the DOS:HIGH command in your config.sys file, the amount 
+of conventional memory that was previously being occupied by DOS itself 
+is moved into this region.
+
+EXPANDED MEMORY (EMS) is another type of memory that some MS/DOS programs
+can make use of. Like XMS, this memory is not available for program
+execution, it's only used for data storage due to it's nature. An
+explanation of this type of memory is rather technical, so it will not be
+delved into here. If you're curious, check your DOS manual, or your memory
+manager manual.
+
+
+When you first start up your computer, there are two files that your
+computer looks at: CONFIG.SYS and AUTUEXEC.BAT. These two files contain
+lists of device drivers and TSR's that are automatically run when starting
+your computer. Each of these takes up space, and it is taken away from the
+640k of conventional memory. As more and more programs are loaded from the
+autoexec.bat and config.sys files, you have less and less available from
+the original 640k. Since it is this memory that programs run in, you can
+see that the amount taken away from the programs executed in config.sys
+and autoexec.bat would want to be kept to a minimum. This can be
+accomplished by either reducing the amount of programs loaded in from 
+config.sys and autoexec.bat, or moving them to high memory via the use of
+EMM386, QEMM, 386MAX, or some other memory management program.   
+   \end{verbatim}
+
+ \end{breakable_box}
+\end{document}

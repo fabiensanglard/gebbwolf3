@@ -18,13 +18,15 @@ Sharing their hard gained knowledge enabled unumberable programers to become bet
 \\
 Opening the source allowed the software to live and run well after the dedicated hardware died. Twenty years after the release of Wolfenstein 3D you can still play the game on anything with a CPU and some RAM. To have the source code available had the unexpected side effect of opening a window back in time.\\
 \\
-As the techincal writer on \emph{fabiensanglard.net} I thought i would never take a look at this old thing that is Wolfenstein 3D code. When out of curiosity I took a peek, I could not stop reading, I was mezmerized. Because reading it made me realize one very important thing: The IBM PC was designed for office work, not gaming. It was meant to crunch integers and display static images. It would be an easy mistake to look at a mips graph such as Figure \ref{fig:game_console_vs_PC} and conclude that because PC were so powerful, it was ''easy'' to write a game for this machine. \\
+As the techincal writer on \emph{fabiensanglard.net} I thought i would never take a look at this old thing that is Wolfenstein 3D code. When out of curiosity I took a peek, I could not stop reading: I was mezmerized. The more I read, the more I came to realize one very important thing: The IBM PC was designed for office work, not gaming. It was meant to crunch integers and display static images. Wolfenstein 3D made the hardware perform something it was not meant to do.\\
+\\
+It would be an easy mistake to look at a mips graph such as Figure \ref{fig:game_console_vs_PC} comparing the power of a PC and the gaming system of the time to conclude that because PC were so powerful it was ''easy'' to write a game for this machine. \\
 \\
 \begin{figure}[H]
 \centering
   \begin{tikzpicture}[font=\small]
     \begin{axis}[
-      width=1.0\textwidth,
+      width=0.9\textwidth,
       height=0.6\textwidth,
       ybar=6pt,
       bar width=20pt,
@@ -34,7 +36,7 @@ As the techincal writer on \emph{fabiensanglard.net} I thought i would never tak
       xtick=data,
       axis x line=bottom,
       axis y line=left,
-      enlarge x limits=0.075,
+      enlarge x limits=0.11,
       symbolic x coords={Super NES,Genesis,Amiga 500,Neo Geo,386SX-16},
       xticklabel style={anchor=base,yshift=-\baselineskip},
       nodes near coords={\pgfmathprintnumber\pgfplotspointmeta}
@@ -51,7 +53,7 @@ As the techincal writer on \emph{fabiensanglard.net} I thought i would never tak
    \caption{Game Console Vs PC.} \label{fig:game_console_vs_PC}
  \end{figure}
  
-But Game console were designed around animation. They all had coprocessors and Graphic Unit relying on tile engine. Animating a sprite on the screen was just about to update its $(x,y)$ coordinates.\\
+But game console were designed around animation. They all featured coprocessors and Graphic Processing Unit relying on tile engine. Animating a sprite on the screen was just about to update its $(x,y)$ coordinates.\\
 \\
 On the contrary, IBM PC animation was next to impossible. Not even to mention many many other obstacles. This is where the root of my admiration for Wolfenstein 3D started: id Software achieved the impossible by building a game engine able to not only workaround the many limitations of the machine but sometimes turn them into an advantage.\\
 \\

@@ -20,53 +20,17 @@
 \def\Version{0.1}
 
     %Cover page
+    \subfile{cover}
     
-       %\onepagecolor{black}
-       \addtolength{\topmargin}{1in}
-       \newpagecolor{black}
-       \vspace{\fill}
-       \begingroup
-       
-       
-       
-        \bf
-        
-         \centering
-         
-           \vspace{10cm}
-           {\color{title_white} \scalebox{5.2}[14]{GAME ENGINE}}\\
-           \setstretch{8.0}
-           {\color{title_grey} \scalebox{5.5}[12]{BLACK BOOK}}  \\ 
-\setstretch{13.0}
-           {\color{title_white} \scalebox{4.9}[5]{Wolfenstein 3D}}\\
-\setstretch{10.0}
-       \endgroup
-       
-       \setstretch{10.0}
-       
-       \begin{minipage}[t]{7cm}
-          \flushleft  
-         {\color{title_white} \scalebox{2}[2]{\textsc{\Me}}}
-       \end{minipage}
-       %\begin{minipage}[t]{7cm}
-       %\flushright
-       %{\color{title_white} \scalebox{1}[1]{\textsc{Version: 0.1}}}
-       %\end{minipage}       
-       
-       
-       \pagebreak
-       \restorepagecolor
-           \addtolength{\topmargin}{-1in}
-   %After title we restore all margins. 
-   \newgeometry{top=1in,bottom=1in}
-    \setstretch{1.0}
+    \renewcommand{\rmdefault}{cmss} 
+    \renewcommand{\familydefault}{\sfdefault}
     
     \tableofcontents
     \listoffigures
     \listoftables
     
     \pagebreak
-    \subsection*{Preface}
+    \chapter*{Preface}
       \subfile{preface}
 
     \addcontentsline{toc}{subsection}{Preface}
@@ -88,9 +52,12 @@
 
     \chapter{Let's compile like it's 1992}
     \chapter{The 640KB Barrier}\label{chap:barrier640}
+        \subfile{mem_barrier}
     \chapter{CONFIG.SYS and AUTOEXEC.BAT}
+         \subfile{config_autoexec}
     \chapter{Letter from a war veteran}
     \chapter{Chocolate Wolfenstein 3D}
     \chapter{Release Notes by John Carmack}
+        \subfile{release}
     \chapter{20 years anniversary commentary by John Carmack}
 \end{document}
