@@ -1,0 +1,129 @@
+\documentclass[book.tex]{subfiles}
+\begin{document}
+For the 20 years anniversary, JOhn Carmack revisited and played the game with commentaries. Here is the transcript :
+
+\begin{breakable_box}
+   \begin{verbatim}
+   
+The engine (4mn mark) :
+=======================
+
+
+The two previous 3D games Hovertank and catacombs 3D were done in an 
+object space rendering where it drew limited polygons. They were One
+-dimensional in terms that they were just line segments that were 
+restricted on axises.
+
+We had something that resembled a polygon rasterizer and a polygon 
+clipper and those were both done in four to six weeks a piece. I 
+had really quite a bit difficulty with it. Going back in time twenty
+years, there weren't all of the references in existence,books and 
+tutorials on this subject.
+
+I was having a hard time getting some of that stuff to be as robust
+and reliable as it needed to be. You could get a few freak out cases
+in Catacombs 3D and one of my real goals was to simplify it enough
+that it would be really rock solid and robust.
+
+
+The fact that Wolfenstein 3D came out with a speedup have more to 
+do with the poor quality of my previous implementation because when 
+Wolfenstein  needed to gain some speed on much poorer platforms like
+the Super Nintendo I went back to more of a rasterization approach 
+with BSP trees rather than ray casting.
+
+
+Wolfenstein did wind up being both more efficient and more robust 
+than my previous implementations but it was all wild-west for me 
+back then :I was figuring it  all out as I went along and there were
+a lot of things to kinda look at.
+
+
+As example I remember that we had the first level running at about
+three months in. We followed it up with spear destiny on there before
+moving to doom.
+
+It was very short amount of time. We leveraged the toolset that we 
+were using to create the 2d games the Commander Keen series where we 
+had a good tile editor that John Romero had developed and since the 
+Wolfenstein maps were basically simple tile maps we were able to make 
+things happen really quickly on that and also the maps were just so 
+quick to create: we had several maps in shipping products that were 
+literally done in one day somebody would go scrub out a map we played 
+a bunch of times tweak things a little bit and it would go in the 
+project there. and it's  always interesting looking back  at  the games 
+there where you look at the source code and it all fits in one directory 
+its one handful C files and a few ASM files and there's just not that 
+much to it when we look at what we're doing today and it seems that you 
+know we can't throw a dialogue up on the screen without invoking ten 
+different frameworks and fifty thousand lines of code.
+
+
+
+Modding :
+=========
+
+The thing that stands out a lot was the first (and it influenced a lot
+of what iD Software did afterwards) was that people kinda tweaking with
+the projects. People figuring out how to unpacked the levels. That 
+wasn't straightforward because We were trying to fit on floppy disks 
+at this time and I had developed all this compression technology course:
+The funny thing is in hindsight I independently reinvented LZSS coding 
+(in very ad hoc ways). 
+
+People figured all these out extracted everything and started making 
+character editors and  level editors. Neither of those were designed 
+to be done and they weren't straightforward. The characters were in 
+this column packed format that made it more efficient to draw without 
+transparency test but made it really difficult to figure out what these
+ original pictures looked like. 
+
+These people started doing these really neat things with it. Once we 
+just recognized that there was a large body of people that wanted to 
+do this, it influenced a lot of our future decisions in Doom and Quake 
+about making it actually easy and straightforward and encouraging people 
+to undertake modding.
+
+I have cleared recollections to this day and especially at that time 
+about thinking back to when I was getting into gaming when I was a 
+teenager about how I wish that I could have that kinda access to the 
+inside and guts of the games that I played. I can remember breaking 
+out the Apple II sector editors to give myself lots of gold in 
+Ultima III and that type of stuff and wishing that I had the ability 
+to look at the source code for those old titles and being able to make 
+that type of things come true as we were later able to later release  
+the full source code as well as the modding tools for the games has 
+been something that am really proud of in my career.
+
+
+
+
+Texture mapping (13:30 mark) :
+==============================
+
+Normally when you're decent distance from things everything smoothly 
+expands on there but if you notice when you get up close and start 
+going off the edge of the screen you start getting more quantization 
+in that. That is a result for the fact that the core graphics technology 
+behind the texture mapping in this timeframe was compiled scalars: 
+There is actually a different little section of assembly language 
+code that was programmatically generated to draw a 64 tall piece of 
+graphics:
+
+
+two  pixels tall 
+four pixels tall 
+six  pixels tall
+
+and so on...
+
+
+all the way up to the full height of the screen but it started taking 
+up too much memory and would run out in a 640k system if I let them 
+stretch all the way up to the largest possible scale you get there in 
+steps by one so it started taking some shortcuts and saving a little 
+bit has it got bigger
+   
+   \end{verbatim}
+\end{breakable_box}
+\end{document}

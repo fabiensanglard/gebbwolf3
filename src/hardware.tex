@@ -1,6 +1,6 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-This chapter describes the target hardware of Wolfenstein 3D. For simplicity it is abstracted as a pipeline taking user commands as entry and outputting images and audio at hopefully result into fun things.
+This chapter describes the target hardware of Wolfenstein 3D. I thought it would be important to details the hardware limitations and assets of the machine. For simplicity it is abstracted as a pipeline taking user commands as entry and outputting images and audio hopefully resulting in soemthing fun.
 
 \begin{figure}[H]
 \centering
@@ -29,7 +29,7 @@ The pipeline comprises five stages. Some of them are bottlenecks for 3D game dev
 \caption{Pipeline stages.}  \label{fig:Pipeline stages}
 \end{figure}
 
-Overall, the pipeline offered a lot of resistance: hardware manufacturers had not embraced the game industry yet and it showed a lot. Ever since their inception in the 70s, Personal Computers were designed to display static images and crunch integers. Real-time 3D, fractions and smooth sixty-frames-per-seconds animations were not on the blueprints.
+Overall, the pipeline offered a lot of resistance: hardware manufacturers had not embraced the game industry yet and it showed a lot. Ever since their inception in the 70s, IBM Personal Computers were designed to display static images and crunch integers. Real-time 3D, fractions and smooth sixty-frames-per-seconds animations were not on the blueprints.
 
 \section{Central Processing Unit}
   \subsection{Overview}
@@ -94,10 +94,14 @@ Overall, the pipeline offered a lot of resistance: hardware manufacturers had no
 
   \subsection{Floating Point}
   
-  Wolfenstein 3D target machines were high-end 286 and low-end 386 machine. As seen previous, those were powerful machines far outperforming any game console on the market. But all that power was not necessarely useful. In order to perform all the trigonometry necessary to perspective effect, the machines had to keep track of the fractional part of each operations. This is usually not an issue since the C language offers the types \codeword{float} and \codeword{double} precisely for that.\\
+  Wolfenstein 3D target machines were high-end 286 and low-end 386 machine. As seen previous, those were powerful machines far outperforming any game console on the market. But all that power was not necessarely useful. In order to perform all the trigonometry it takes to perform three dimensional effects, the machines had to keep track of the fractional part of each operations. This is usually not an issue since the C language offers the types \codeword{float} and \codeword{double} precisely for that.\\
 \\
-It is important to understand what floating point is and how it works to fully grasp how useful it is when doing trigonometry. Most of the time it is explained as follow. Take 32 bits and divide them into three parts:
-
+It is important to understand what floating point is and how it works to fully grasp how useful it is when doing "mathematics". \codeword{float} are 32bits values following the I.EEEE 584935983 standard. The wikipedia explanation is: 32 bits divided in three sections:\\
+\begin{itemize}
+  \item One bit S for the sign.
+  \item Seven bits E for the exponent.
+  \item Twenty four bits for the mantissa.
+\end{itemize}  
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.4]{imgs/floating_point_layout.eps}
@@ -106,22 +110,18 @@ It is important to understand what floating point is and how it works to fully g
 \end{figure}
   \bigskip
 
-\begin{itemize}
-  \item One bit S for the sign.
-  \item Seven bits E for the exponent.
-  \item Twenty four bits for the mantissa.
-\end{itemize}  
+
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.4]{imgs/floating_point_math.eps}
-\caption{Floating Point internals}
-\label{fig:fp_internals}
+\caption{Floating Point three sections}
+\label{fig:fp_regions}
 \end{figure}
   \bigskip  
 
 
-Those three parts are usually explained by text books with formula \ref{eq:fp}.\\
+How numbers are stored and intepreted is usually explained with the trivial formula \ref{eq:fp}).\
 
 
 \begin{equation}\label{eq:fp}
@@ -130,13 +130,12 @@ Those three parts are usually explained by text books with formula \ref{eq:fp}.\
 \end{equation}
  
 \bigskip  
-
-Which I hate and find cryptic. I blame this ignoble notation for discouraging generations of programmers, scaring them to the point they never looked back to understand how it actually works. It is sad becayse there is a better way to explain it which involves a drawing and a slightly difference nomenclature. Instead of Exponent, think of a floating window between two consecutive power of two. And instead of a Mantissa think of an Offset within that window as in Figure \ref{fig:fp_internals}:
+Although correct, this way to explain floating point is horrible. I blame this ignoble notation for discouraging generations of programmers, scaring them to the point they never looked back to understand how floating point actually works. Fortunately, I found a better way to explain it which involves a drawing and a slightly difference nomenclature. Instead of Exponent, think of a floating window between two consecutive power of two integers. And instead of a Mantissa think of an Offset within that window as in Figure \ref{fig:fp_internals}:
   
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.4]{imgs/floating_point_intuitive.eps}
-\caption{Floating Point internals}
+\caption{ALternative Floating Point internals}
 \label{fig:fp_internals}
 \end{figure}
   \bigskip  
@@ -147,7 +146,7 @@ Figure \ref{fig:fp_internals_window} illustrate how the number 6.7 would be enco
 \centering
 \includegraphics[scale=0.7]{imgs/floating_point_window.eps}
 
-\caption{Floating Point internals}
+\caption{Value 6.7 approximated with floating point}
 \label{fig:fp_internals_window}
 \end{figure}
   \bigskip
@@ -244,35 +243,37 @@ The target machines could have their CPU set in two modes:
 
 
   \subsection{DOS limitations}
-  Since if emergence, Microsoft highly valued the applications running on their operating system. They took great care to never ever break anything with a new system.  Since many application were written during the 80s on machine having only Real-Mode, DOS 5.0 kept running that way. This created an awkward situation where the \emph{de-facto} operating system that came with every machine sold prevented programmers from using Protected Mode. They were forced to discard all the neat feature of their 1992 PC and use the machine like it was a very fast Intel 8086 CPU from 1976.
+  Since its creation, Microsoft highly valued the existing applications running on their operating system. They took great care to never ever break anything with a new system release.  Since many application were written during the 80s on machine having only Real-Mode, DOS 5.0 kept running that way. This created an awkward situation where the \emph{de-facto} operating system that came with every machine sold prevented programmers from using Protected Mode. They were forced to discard all the neat features of their 1992 PC to instead use the machine like it was a very fast Intel 8086 CPU from 1976.
 
 \bigskip
 
- \textbf{\underline{Trivia :}} One year earlier, in 1991, a student from University of Helsinki started working on a "hobby" of his: An operating system able to use the CPU in Protected Mode taking advantage of the MMU and the 32 bits registers. It would become Microsoft worse nightmare: Linus Torvalds had just started what would become Linux.
+ \textbf{\underline{Trivia :}} One year earlier, in 1991, a student from University of Helsinki started working on a "hobby" of his: An operating system able to use the CPU in Protected Mode taking advantage of the MMU and the 32 bits registers. It would become Microsoft worse nightmare. Linus Torvalds had just started what would become Linux.
 
 
 
   \subsection{16 bits Segmented RAM}
-  Protected mode was unavailable. What had the Real-Mode to offer ? Essentially a trip back in time to 1976: A 20 bits wide address bus offering up to 1MB of RAM and 16 bits wide registers. No matter how much memory was installed on the machine in 1992, only 1MB could be addressed. And to top it all, addressing was done by combining two 16 bits register together. One being a segment, the other the offset within that segment. Hence the name: '16 bits programming'.
+  Protected mode was unavailable. What had the Real-Mode to offer ? Essentially a trip back in time to 1976: A 20 bits wide address bus offering only 1MB of adressable RAM. No matter how much memory was installed on the machine in 1992, only 1MB could be addressed. And to top it all, addressing was done by combining two 16 bits register together. One being a segment, the other the offset within that segment. Hence the name: '16 bits programming'.
 
   \bigskip
-We can start the horror museum visit with a "nice" layout of the 1 MB of RAM available in Figure \ref{fig:RealMode_RAM_layout}.\\
+Here is a bried yet representative layout of how the 1 MB of RAM made itself avaible with Figure \ref{fig:RealMode_RAM_layout}.\\
 \begin{itemize}
-\item From 0 to 3FFh was the Interrupt Vector Table.
-\item From 400h to 4FFh was BIOS data.
-\item From 500h to 5FFh was command.com+io.sys.
-\item From 600h to 9FFFFh  was the area actually usable by a program (around 620KB). 
+\item From 00000h to 003FFh was the Interrupt Vector Table.
+\item From 00400h to 004FFh was BIOS data.
+\item From 00500h to 005FFh was command.com+io.sys.
+\item From 00600h to 9FFFFh  was the area actually usable by a program (around 620KB). 
 \item From A0000h to FFFFFh was a zone called UMA (Upper Memory Area): Reserved to bios ROM, video card and sound card mapped I/O.
 \end{itemize}
 
-  \begin{figure}[H]
+\begin{figure}[H]
 \centering
- \input{real_mode.tex}
- \caption{RealMode RAM layout.} \label{fig:RealMode_RAM_layout}
- \end{figure}
+\includegraphics[scale=1]{imgs/real_mode}
+
+\caption{3.14 window and offset.}
+\label{fig:fp_internals}
+\end{figure}
 
 
-As a result, out of the original 1024KB, only 640KB (called Conventional Memory) were usable since 384KB were reserved for the UMA\footnote{Upper Memory Area}. On top of it, every single driver installed (.SYS and .COM)  took away more of the 640KB.
+As a result, out of the original 1024KB, only 640KB (called Conventional Memory) were usable since 384KB were reserved for the UMA\footnote{Upper Memory Area}. On top of it, every single driver installed (\codeword{.SYS} and \codeword{.COM})  took away more of the 640KB.
 
 \bigskip
 
@@ -321,27 +322,23 @@ Woud ouput:
 
 \bigskip
 
-{\underline{Trivia :}} The 640KB barrier was so complex that id Software provided a special tech suport executable: w3dhelp.exe which provides extensive description of the 640KB barrier\footnote{You can read it in the annexe \ref{640barrier} of this book.}.
-
-\bigskip
-
-{\underline{Trivia :}} The original C language did not have near and far keyboard because the PDP computer they worked with had 32 bits registers and MMU (Memory Managment Unit) that make the RAM appear linear even within a process.
+{\underline{Trivia :}} The original C language did not have \codeword{near} and \codeword{far} keyboard because the PDP computer they worked with had 32 bits registers and MMU (Memory Managment Unit) that make the RAM appear linear even within a process. \codeword{near} and \codeword{far} were added by compiler makers for PC so they could deal with segments.
 
 
 
 
   \subsection{Extended Memory}
 
-In Real-Mode the processor could access 1MB no matter what. But machines of 1992 can equipped with up to 2MB. 
+In Real-Mode the processor could access 1MB no matter what. But machines of 1992 came equipped with more. From 2MB to 4MB was very common. 
 
-  \begin{figure}[H]
+\begin{figure}[H]
 \centering
- \input{expanded_ram.tex}
- \caption{Extended Memory.}
- \end{figure}
+\includegraphics[scale=1]{imgs/expanded_ram.eps}
+\caption{Expanded memory layout}
+\label{fig:em_layout}
+\end{figure}
 
-
-{\underline{Trivia :}}  As of 2014, thirty five years after the introduction of the 8086, most PC in the world start in  real mode. Then a bootloader switch them to protected mode, load the kernel and then real startup can begin. Mac computers don’t have this problem.
+{\underline{Trivia :}}  As of 2014, thirty five years after the introduction of the 8086, most PC in the world start in  real mode. Then a bootloader switch them to protected mode, load the kernel and then real startup can begin. Mac computers don't have this problem.
 
 \bigskip
 
@@ -352,13 +349,15 @@ In Real-Mode the processor could access 1MB no matter what. But machines of 1992
 
 \section{Video}
 
-PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curved surface, deep and incredibly heavy devices. Most had a tiny 13” diagonal and all had a 4:3 ratio. Figure \ref{fig:int_layout} shows a comparison with a 28" LCD display from 2014.
+PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curved surface, deep and incredibly heavy devices. Most had a tiny 13" diagonal and all had a 4:3 ratio. Figure \ref{fig:int_layout} shows a comparison with a 28" LCD display from 2014.
 
-  \begin{figure}[H]
+
+\begin{figure}[H]
 \centering
- \input{crt_lcd.tex}
- \caption{Comparaison CRT vs LCD.}\label{fig:lcd_vs_crt}
- \end{figure}
+\includegraphics[scale=1.2]{imgs/crt_lcd.eps}
+\caption{CRT vs LCD screen surfaces.}
+\label{fig:lcd_vs_crt}
+\end{figure}
 
 {\underline{Trivia :}} How big and heavy could a CRT be ? Integraph InterView 28hd96 weighted 45kg (99.5lb). Compared to 7.8kg (17lb). Used for Doom 3 ?! Details about pictures.
 \bigskip
@@ -419,11 +418,15 @@ The universality of VGA was a two edged sword. One one side, developers did not 
 \item The DAC
 \end{itemize}
 
- \begin{figure}[H]
+
+
+\begin{figure}[H]
 \centering
- \input{vga.tex}
- \caption{Video Graphic Array Architecture.}\label{fig:vga_arch}
- \end{figure}
+\includegraphics[scale=1.2]{imgs/vga.eps}
+\caption{Video Graphic Array Architecture.}
+\label{fig:lcd_vs_crt}
+\end{figure}
+
 
  {\underline{Note :}} The clean pipeline architecture in Figure \ref{fig:vga_arch} is an oversimplication. In reality each Controller interacted with the rest of the system. The Sequece Controller for example could not only interact with the RAM but also gdgdfgegdfg...
 
