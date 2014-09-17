@@ -130,12 +130,12 @@ How numbers are stored and intepreted is usually explained with the trivial form
 \end{equation}
  
 \bigskip  
-This way to explain floating point is so bad and cryptic. I blame this ignoble notation for discouraging generations of programmers, scaring them to the point they never looked back to understand how it actually works. It is sad becayse there is a better way to explain it which involves a drawing and a slightly difference nomenclature. Instead of Exponent, think of a floating window between two consecutive power of two. And instead of a Mantissa think of an Offset within that window as in Figure \ref{fig:fp_internals}:
+Although correct, this way to explain floating point is horrible. I blame this ignoble notation for discouraging generations of programmers, scaring them to the point they never looked back to understand how floating point actually works. Fortunately, I found a better way to explain it which involves a drawing and a slightly difference nomenclature. Instead of Exponent, think of a floating window between two consecutive power of two integers. And instead of a Mantissa think of an Offset within that window as in Figure \ref{fig:fp_internals}:
   
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.4]{imgs/floating_point_intuitive.eps}
-\caption{Floating Point internals}
+\caption{ALternative Floating Point internals}
 \label{fig:fp_internals}
 \end{figure}
   \bigskip  
@@ -264,11 +264,13 @@ Here is a bried yet representative layout of how the 1 MB of RAM made itself ava
 \item From A0000h to FFFFFh was a zone called UMA (Upper Memory Area): Reserved to bios ROM, video card and sound card mapped I/O.
 \end{itemize}
 
-  \begin{figure}[H]
+\begin{figure}[H]
 \centering
- \input{real_mode.tex}
- \caption{RealMode RAM layout.} \label{fig:RealMode_RAM_layout}
- \end{figure}
+\includegraphics[scale=1]{imgs/real_mode}
+
+\caption{3.14 window and offset.}
+\label{fig:fp_internals}
+\end{figure}
 
 
 As a result, out of the original 1024KB, only 640KB (called Conventional Memory) were usable since 384KB were reserved for the UMA\footnote{Upper Memory Area}. On top of it, every single driver installed (\codeword{.SYS} and \codeword{.COM})  took away more of the 640KB.
@@ -329,12 +331,12 @@ Woud ouput:
 
 In Real-Mode the processor could access 1MB no matter what. But machines of 1992 came equipped with more. From 2MB to 4MB was very common. 
 
-  \begin{figure}[H]
+\begin{figure}[H]
 \centering
- \input{expanded_ram.tex}
- \caption{Extended Memory.}
- \end{figure}
-
+\includegraphics[scale=1]{imgs/expanded_ram.eps}
+\caption{Expanded memory layout}
+\label{fig:em_layout}
+\end{figure}
 
 {\underline{Trivia :}}  As of 2014, thirty five years after the introduction of the 8086, most PC in the world start in  real mode. Then a bootloader switch them to protected mode, load the kernel and then real startup can begin. Mac computers don't have this problem.
 
@@ -347,13 +349,15 @@ In Real-Mode the processor could access 1MB no matter what. But machines of 1992
 
 \section{Video}
 
-PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curved surface, deep and incredibly heavy devices. Most had a tiny 13” diagonal and all had a 4:3 ratio. Figure \ref{fig:int_layout} shows a comparison with a 28" LCD display from 2014.
+PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curved surface, deep and incredibly heavy devices. Most had a tiny 13" diagonal and all had a 4:3 ratio. Figure \ref{fig:int_layout} shows a comparison with a 28" LCD display from 2014.
 
-  \begin{figure}[H]
+
+\begin{figure}[H]
 \centering
- \input{crt_lcd.tex}
- \caption{Comparaison CRT vs LCD.}\label{fig:lcd_vs_crt}
- \end{figure}
+\includegraphics[scale=1.2]{imgs/crt_lcd.eps}
+\caption{CRT vs LCD screen surfaces.}
+\label{fig:lcd_vs_crt}
+\end{figure}
 
 {\underline{Trivia :}} How big and heavy could a CRT be ? Integraph InterView 28hd96 weighted 45kg (99.5lb). Compared to 7.8kg (17lb). Used for Doom 3 ?! Details about pictures.
 \bigskip
@@ -414,11 +418,15 @@ The universality of VGA was a two edged sword. One one side, developers did not 
 \item The DAC
 \end{itemize}
 
- \begin{figure}[H]
+
+
+\begin{figure}[H]
 \centering
- \input{vga.tex}
- \caption{Video Graphic Array Architecture.}\label{fig:vga_arch}
- \end{figure}
+\includegraphics[scale=1.2]{imgs/vga.eps}
+\caption{Video Graphic Array Architecture.}
+\label{fig:lcd_vs_crt}
+\end{figure}
+
 
  {\underline{Note :}} The clean pipeline architecture in Figure \ref{fig:vga_arch} is an oversimplication. In reality each Controller interacted with the rest of the system. The Sequece Controller for example could not only interact with the RAM but also gdgdfgegdfg...
 
