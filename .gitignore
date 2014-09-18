@@ -2,7 +2,6 @@ output
 .texpadtmp
 .DS_Store
 *.pdf
-*.eps
 *.aux
 *.log
 *.lot
