@@ -2,6 +2,9 @@
 \begin{document}
 \section{Source Code}
 
+Includel list of all files.\\
+Include cloc stats.
+
  \begin{fancyquotes}
    We didn't have spell checkers in our editors back then, and I always had poor spelling.  The word “collumn” appears in the source code dozens of times.  After I released the source code, one of the emails that stands out in memory read:
  \bigskip \\
@@ -26,9 +29,68 @@ It's "COLUMN", you dumb @\#\$\% !\\
 
 \section{3D Renderer}
 \section{Fixed Point}
-If integers were not accurate enough and floating points were too slow, how could trigonometry be done on those machines? The solution was to re-purpose the hardware via Fixed Points!
+If integers were not accurate enough and floating points were too slow, how could trigonometry be done on those machines? The solution was to re-purpose the hardware via Fixed Points!\\
+\begin{figure}[H]
+\centering
+ \includegraphics[scale=0.8]{imgs/wolfd_0.eps}
+ \caption{Finalez frame} \label{fig:mips}
+ \end{figure}
 
+
+\begin{figure}[H]
+\centering
+ \includegraphics[scale=1.1]{imgs/wolfd_1.eps}
+ \caption{Finalez frame} \label{fig:mips}
+ \end{figure}
+
+ 
+     \begin{figure}[H]
+\centering
+ \includegraphics{imgs/wolfd_2_1.eps}
+ \caption{Finalez frame} \label{fig:mips}
+ \end{figure}
+ 
+ \begin{figure}[H]
+\centering
+ \includegraphics{imgs/wolfd_2_2.eps}
+ \caption{Finalez frame} \label{fig:mips}
+ \end{figure}
+ 
+ \begin{figure}[H]
+\centering
+ \includegraphics{imgs/wolfd_2_3.eps}
+ \caption{Finalez frame} \label{fig:mips}
+ \end{figure}
+
+ \begin{figure}[H]
+\centering
+ \includegraphics{imgs/wolfd_2_5.eps}
+ \caption{Finalez frame} \label{fig:mips}
+ \end{figure}
+ 
+  \begin{figure}[H]
+\centering
+ \includegraphics[scale=1]{imgs/wolfd_3.eps}
+ \caption{Finalez frame} \label{fig:mips}
+ \end{figure}
+ 
+   \begin{figure}[H]
+\centering
+ \includegraphics[scale=0.8]{imgs/wolf3d_4.eps}
+ \caption{Finalez frame} \label{fig:mips}
+ \end{figure}
+ 
+   \begin{figure}[H]
+\centering
+ \includegraphics[scale=1]{imgs/wolfd_4-2.eps}
+ \caption{Finalez frame} \label{fig:mips}
+ \end{figure}
    \bigskip
+   
+   
+   
+
+ 
 
 Fixed Point is a method that allows to keep track of fractions while still using the integer operations of the CPU. The machine manipulates what are supposed to be integer numbers but the programmers sees them as a real numbers. As usual it is easier to describe with a drawing. Integer are encoded following figure \ref{fig:int_layout}:
 \begin{figure}[H]
