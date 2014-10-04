@@ -15,8 +15,8 @@ char map[64][64];
 
 
 typedef struct{
-    int x;
-    int y;
+    float x;
+    float y;
     int angle;
     float fov;
 } player_t;
@@ -35,7 +35,7 @@ typedef struct{
     
 } ray_t;
 
-static const int numRays = 320;
+static const int numRays = 40;
 ray_t rays[numRays];
 
 
@@ -56,12 +56,13 @@ bool ReadMap(const char* filename){
     
     FILE* mapFile = fopen(filename, "r");
     if (!mapFile){
-        printf("Unable to open map file '%s\n",filename);
+        printf("Unable to open map file '%s'\n",filename);
         return false;
     }
     
-    int posX,posY,type;
-    while (fscanf(mapFile,"%d %d %d",&posX,&posY,&type)) {
+    int posX,posY;
+    char type;
+    while (fscanf(mapFile,"%d %d %c",&posX,&posY,&type) != EOF) {
         map[posX][posY] = type;
     }
     
@@ -136,13 +137,17 @@ void traceRay(ray_t* ray){
         if (map[mapX][mapY] > 0) hit = 1;
     }
     
+    float a = (ray->dirY-ray->origY)/(ray->dirX-ray->origX);
+    float b = 0;
+    
     if (side == 0){
-        ray->endX = 0;
-        ray->endY = 0;
+        ray->endX = mapX;
+        ray->endY = a*mapX + b;
     }
     else{
-        ray->endX = 0;
-        ray->endY = 0;
+        if (a==0) a =1 ;
+        ray->endX = (mapY-b)/a;
+        ray->endY = mapY;
     }
     
     
@@ -168,30 +173,30 @@ void RayCastAll(){
     }
 }
 
-void GenerateTIKZCommands(){
+void GenerateTIKZCommands(const char* filename){
     FILE* outputFile = NULL ;
     
-    outputFile = fopen("output.tex","w");
+    outputFile = fopen(filename,"w");
     
     //Write prolog
-    fprintf(outputFile,"");
+    fprintf(outputFile,"\\documentclass{standalone}\n\\usepackage{tikz}\n\\begin{document}\n\\begin{tikzpicture}[y=-1cm]");
     
     //Generate map
     for (int x = 0 ; x < 64 ; x++)
         for (int y = 0 ; y < 64 ; y++){
             if (map[x][y]){
-                fprintf(outputFile,"");
+                fprintf(outputFile,"\\draw (%d,%d) rectangle (%d,%d) node[pos=.5] {%c};\n",x,y,x+1,y+1,map[x][y]);
             }
         }
     
     //Generate rays
     ray_t* ray = rays;
     for (int i=0 ; i < numRays; i++,ray++) {
-        ;
+        fprintf(outputFile,"\\draw[thin,black] (%f,%f) -- (%f,%f);\n",ray->origX,ray->origY,ray->endX,ray->endY);
     }
     
     //Write epilog
-    fprintf(outputFile,"");
+    fprintf(outputFile,"\\end{tikzpicture}\n\\end{document}");
     
     fclose(outputFile);
 }
@@ -202,7 +207,7 @@ const char* GenerateTIKZFilename(const char* mapFilename){
     char* cursor = name;
     
     while (*mapFilename && *mapFilename != '.') {
-        *cursor++ = *mapFilename;
+        *cursor++ = *mapFilename++;
     }
     
     *cursor++ = '.';
@@ -218,8 +223,8 @@ const char* mapFilename = NULL;
 
 void ReadParameters(int argc, const char* argv[]){
     mapFilename = argv[1] ;
-    int playerPositionX = atoi(argv[2]);
-    int playerPositionY = atoi(argv[3]);
+    float playerPositionX = atof(argv[2]);
+    float playerPositionY = atof(argv[3]);
     int playerAngle = atoi(argv[4]);
     
     mapLoaded = ReadMap(mapFilename);
@@ -229,11 +234,20 @@ void ReadParameters(int argc, const char* argv[]){
 
 }
 
+int myargc = 5 ;
+const char* myargv[] ={
+     "raycaster_explayner",
+     "beginning.map",
+     "29.5",
+     "57.5",
+     "0"
+};
+
 int main(int argc, const char * argv[]) {
     
     Init();
     
-    ReadParameters(argc,argv);
+    ReadParameters(myargc,myargv);
     
     if (!mapLoaded)
         return EXIT_FAILURE;
@@ -242,7 +256,7 @@ int main(int argc, const char * argv[]) {
     
     const char* outputName = GenerateTIKZFilename(mapFilename);
     
-    GenerateTIKZCommands();
+    GenerateTIKZCommands(outputName);
     
     return EXIT_SUCCESS;
     

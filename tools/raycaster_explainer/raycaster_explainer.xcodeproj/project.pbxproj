@@ -7,19 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D2F049519E0B9F200A48B6D /* beginning.map in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2DA1CD9B19E077D400EA2B83 /* beginning.map */; };
 		2DA1CD9519DE500700EA2B83 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DA1CD9419DE500700EA2B83 /* main.cpp */; };
-		2DA1CD9D19E077D400EA2B83 /* beginning.map in Sources */ = {isa = PBXBuildFile; fileRef = 2DA1CD9B19E077D400EA2B83 /* beginning.map */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		2DA1CD8F19DE500700EA2B83 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
+			buildActionMask = 12;
+			dstPath = /Users/fabiensanglard/Desktop/gebbwolf3/tools/raycaster_explainer/DerivedData/Build/Products/Debug/.;
 			dstSubfolderSpec = 0;
 			files = (
+				2D2F049519E0B9F200A48B6D /* beginning.map in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -123,7 +124,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DA1CD9D19E077D400EA2B83 /* beginning.map in Sources */,
 				2DA1CD9519DE500700EA2B83 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
