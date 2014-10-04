@@ -296,29 +296,27 @@ As a result, out of the original 1024KB, only 640KB (called Conventional Memory)
 \textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why even though they had many MB installed on their machine, some game would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (Appendice "\nameref{chap:barrier640}") along with the game to make it clear that it was not their fault.
 
 \subsection{The infamous Real Mode: 16 bits Segmented addressing}
-Real Mode could not use 32 bits registers for addressing. Everything had to be done by combining two 16 bits registers. This led to many issues:\\
-\bigskip
-Since the C language was invented on 32 bits machine, the language had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence: \codeword{far} was used to represent a memory pointer featuring both segment and offset while \codeword{near} was used for a pointer with just an offset (and therefore in the same segment).\\
-\\
+Real Mode could not use 32 bits registers for addressing. Everything had to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There were two kinds of RAM pointers: near and far. In the case of a far pointer, a 16 bits segment register would be shifted left 4 bits and combined with an other 16 bits offset register\\
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.8]{imgs/register_combination_20_bits_address.eps}
 \caption{How registers were combined to address memory.}
 \label{fig:register_comb_to_20_bits}
 \end{figure}
-  
+A near pointer was just a 16 bits offset that would point in the same segment.\\  
 \bigskip
-  
-As a result, the 1MB of RAM is divided in 65536 paragraphs, addressed by the segments. Since a paragraph is 16 bytes but an offset can be up to 65536, you can easily figure out that....\\
-  
-Two pointers could point to the same RAM location but fail an equality test:\\
+That may not sound too bad but in practice this segmented addressing led to many issues:
 \bigskip
-With pointer A defined as:
+The least probemetatic was about the langauge: Since the C language was invented on 32 bits machine, the language had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro would be provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}.\\
+\\
+But the really big issue was how two pointers, refering to the same address could fail an equality test: In this model, the 1MB of RAM is divided in 65536 paragraphs by the segment pointer. So a paragraph is 16 bytes but an offset can be up to 65536 !!! See the following example:\\
+\bigskip
+\\Pointer A defined as:
 \begin{Verbatim}[fontsize=\relsize{-1}]
-    0110 1000 1000 0111 0000  Segment, 16 bits shifted 4 bits left  
-  +      0011 0100 1010 1001  Offet,   16 bits
+    0000 0000 0000 0000 0000  Segment, 16 bits shifted 4 bits left  
+  +      0000 0001 0010 0000  Offet,   16 bits
 ============================
-    0110 1011 1101 0001 1001  Address, 20 bits
+    0000 0000 0001 0010 0000  Address, 20 bits
 \end{Verbatim}
 
 \bigskip
@@ -341,7 +339,7 @@ Pointer C defined as:
     0000 0000 0001 0010 0000  Address, 20 bits
 \end{Verbatim}
 
-As defined A, B and C all points to the same memory location but however would fail a comparison test in the following code.\\
+As defined A, B and C all points to the same memory location however they would fail a comparison test in the following code.\\
 
 \lstinputlisting[language=C]{code/pointer_madness.c}
 
