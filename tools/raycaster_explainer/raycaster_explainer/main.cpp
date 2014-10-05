@@ -11,6 +11,15 @@
 #include <stdlib.h>
 #include <math.h>
 
+
+float myround(float f)
+{
+    if (f >= 0x1.0p23) return f;
+    if (f <= 0.5) return 0;
+    return (float) (unsigned int) (f + 0.5f);
+}
+
+
 char map[64][64];
 
 
@@ -35,7 +44,7 @@ typedef struct{
     
 } ray_t;
 
-static const int numRays = 40;
+static const int numRays = 1000;
 ray_t rays[numRays];
 
 
@@ -137,15 +146,27 @@ void traceRay(ray_t* ray){
         if (map[mapX][mapY] > 0) hit = 1;
     }
     
-    float a = (ray->dirY-ray->origY)/(ray->dirX-ray->origX);
-    float b = 0;
+    if (!hit){
+        ray->endX = ray->origX;
+        ray->endY = ray->origY;
+        return;
+    }
+    
+    float a = ray->dirY/ray->dirX;
+    float b = ray->origY - (a * ray->origX);
     
     if (side == 0){
+        if (stepX == -1)
+            mapX += 1;
         ray->endX = mapX;
         ray->endY = a*mapX + b;
     }
     else{
         if (a==0) a =1 ;
+        
+        if (stepY== -1)
+            mapY += 1;
+        
         ray->endX = (mapY-b)/a;
         ray->endY = mapY;
     }
@@ -170,6 +191,8 @@ void RayCastAll(){
         ray->dirY = sinf(angle*2*3.1415/360.0f);
         
         traceRay(ray);
+        
+        
     }
 }
 
@@ -225,7 +248,7 @@ void ReadParameters(int argc, const char* argv[]){
     mapFilename = argv[1] ;
     float playerPositionX = atof(argv[2]);
     float playerPositionY = atof(argv[3]);
-    int playerAngle = atoi(argv[4]);
+    int playerAngle = 360 - atoi(argv[4]);
     
     mapLoaded = ReadMap(mapFilename);
     player.x = playerPositionX;
@@ -234,6 +257,7 @@ void ReadParameters(int argc, const char* argv[]){
 
 }
 
+/*
 int myargc = 5 ;
 const char* myargv[] ={
      "raycaster_explayner",
@@ -242,6 +266,19 @@ const char* myargv[] ={
      "57.5",
      "0"
 };
+*/
+
+
+int myargc = 5 ;
+const char* myargv[] ={
+    "raycaster_explayner",
+    "out_room.map",
+    "32.76",
+    "57.34",
+    "331"
+};
+
+
 
 int main(int argc, const char * argv[]) {
     
