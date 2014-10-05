@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2D2F049519E0B9F200A48B6D /* beginning.map in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2DA1CD9B19E077D400EA2B83 /* beginning.map */; };
+		2D2F049719E0E15F00A48B6D /* out_room.map in Sources */ = {isa = PBXBuildFile; fileRef = 2D2F049619E0E15F00A48B6D /* out_room.map */; };
+		2D2F049819E0E16500A48B6D /* out_room.map in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2D2F049619E0E15F00A48B6D /* out_room.map */; };
 		2DA1CD9519DE500700EA2B83 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DA1CD9419DE500700EA2B83 /* main.cpp */; };
-		2DA1CD9F19E0D61000EA2B83 /* beginning in Sources */ = {isa = PBXBuildFile; fileRef = 2DA1CD9E19E0D61000EA2B83 /* beginning */; };
-		2DA1CDA019E0D6E100EA2B83 /* beginning in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2DA1CD9E19E0D61000EA2B83 /* beginning */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -20,7 +20,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				2DA1CDA019E0D6E100EA2B83 /* beginning in CopyFiles */,
+				2D2F049819E0E16500A48B6D /* out_room.map in CopyFiles */,
 				2D2F049519E0B9F200A48B6D /* beginning.map in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -28,11 +28,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D2F049619E0E15F00A48B6D /* out_room.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = out_room.map; sourceTree = "<group>"; };
 		2DA1CD9119DE500700EA2B83 /* raycaster_explainer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = raycaster_explainer; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DA1CD9419DE500700EA2B83 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		2DA1CD9B19E077D400EA2B83 /* beginning.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = beginning.map; sourceTree = "<group>"; };
 		2DA1CD9C19E077D400EA2B83 /* TemplateIcon2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TemplateIcon2x.png; sourceTree = "<group>"; };
-		2DA1CD9E19E0D61000EA2B83 /* beginning */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = beginning; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,10 +65,10 @@
 		2DA1CD9319DE500700EA2B83 /* raycaster_explainer */ = {
 			isa = PBXGroup;
 			children = (
+				2D2F049619E0E15F00A48B6D /* out_room.map */,
 				2DA1CD9419DE500700EA2B83 /* main.cpp */,
 				2DA1CD9B19E077D400EA2B83 /* beginning.map */,
 				2DA1CD9C19E077D400EA2B83 /* TemplateIcon2x.png */,
-				2DA1CD9E19E0D61000EA2B83 /* beginning */,
 			);
 			path = raycaster_explainer;
 			sourceTree = "<group>";
@@ -129,7 +129,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DA1CD9F19E0D61000EA2B83 /* beginning in Sources */,
+				2D2F049719E0E15F00A48B6D /* out_room.map in Sources */,
 				2DA1CD9519DE500700EA2B83 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

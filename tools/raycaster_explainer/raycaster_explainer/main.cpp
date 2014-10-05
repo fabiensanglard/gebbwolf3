@@ -44,7 +44,7 @@ typedef struct{
     
 } ray_t;
 
-static const int numRays = 1000;
+static const int numRays = 180;
 ray_t rays[numRays];
 
 
