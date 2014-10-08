@@ -395,18 +395,11 @@ PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curv
 
 {\underline{Trivia :}} How big and heavy could a CRT be ? The InterView 28hd96 by Integraph weighted 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).
 \bigskip
-The VGA (Video Graphic Array) was the chipset in charge of interfacing the CPU and the CRT:
-\bigskip
-DRAWING
-\bigskip
-That chip was a blessing and a curse: It was universally deployed on every single IBM PC on the market but it was also poorly documented and complicated to program with more than 300 internal registers.
-
-
+Since the monitor were analogic and the PC were digital, there had to be an interface between the two. They were called Adapters.
 
   \subsection{History}
 
-The VGA\footnote{Video Graphic Adapter} was the chip interfacing between the PC RAM and the CRT\footnote{Cathode Ray Tube} screen. Released in 1987, it was installed on every single machine on the market. 
-
+From 1981onward, many systems were released:
 \bigskip
   
  \begin{figure}[H]
@@ -436,20 +429,21 @@ The VGA\footnote{Video Graphic Adapter} was the chip interfacing between the PC 
 \caption{Video interface history.}\label{fig:vga_history}
 \end{figure}
 
-The universality of VGA was a two edged sword. One one side, developers did not have to deal with hereogeneity. One the other side, the shortcoming of the Adapater were the same for everybody.
+Each added new feature to the previous iteration. In 1993 the ubiquitous graphic system was the VGA\footnote{Video Graphic Adapter}. The universality of that system was a two edged sword: One one side developers did not have to deal with hereogeneity. But on the other side, the shortcoming of the Adapater were the same for everybody.\\
 
-
+In 1993, the VGA (Video Graphic Array) was the chipset in charge of interfacing the CPU and the CRT.
 
 
 \subsection{VGA Architecture}
 
-  Four parts were interacting around 256Kb of RAM:
+That chip was a blessing and a curse: It was universally deployed on every single IBM PC on the market but it was also poorly documented and complicated to program with more than 300 internal registers.\\
+\bigskip
+  Three parts were interacting around 256Kb of RAM:
 
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlled how the RAM was populated.
-\item The Sequence Controller
-\item The CRTC Controller and the DAC (Digital To Analog Converter) took care of sending the content of the RAM to the monitor.
-\item The DAC
+\item The RAM stored the framebuffer.
+\item The CRTC Controller and the DAC (Digital To Analog Converter) took care of converting the framebuffer to analogic signal.
 \end{itemize}
 
 
@@ -463,18 +457,30 @@ The universality of VGA was a two edged sword. One one side, developers did not 
 
 
 
-The most surprising part of the architecture is the frame buffer (the RAM that contain the image before it is sent to the screen) which is not one big linear array but four parallel memory banks (called planes). The design raison d'etre is twofold :
+The most surprising part of the architecture is the framebuffer (the RAM that contain the image before it is sent to the screen) which is not one big linear array but four parallel memory banks (called planes). The design raison d'etre was twofold :
 
 \begin{itemize}
 
 
 
-\item Backward compatibility: EGA (the precursor of VGA) had only 64kB of RAM.
+\item Backward compatibility: EGA (the precursor of VGA) had only 64kB of RAM. It was easy to emulate EGA by using only one bank.
 \item Hardware limitations: A CRT running at 60Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of second . That mean one pixel each 54ns. The problem was the RAM access time was 200ns so that was not possible. But if latency could not be reduced, the throughput could be improved by fetching 1 pixel + 3 others in advance. Therefore the memory banks were read in parallel: 4 bytes at a time and the CRTC had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
 \end{itemize}
 
+ {\underline{Note :}} The clean pipeline architecture in Figure \ref{fig:vga_arch} is an oversimplication. In reality each Controller interacted with the rest of the system. The actual drawing, staight from IBM VGA Reference looks like this:\\
+ 
+ 
+ \begin{figure}[H]
+\centering
+\includegraphics[scale=0.38]{imgs/ibm_vga.eps}
+%\def\svgscale{1.5}
+%\input{imgs/fun_pipeline.pdf_tex}
+\caption{IBM's VGA Documentation}
+\label{fig:ibm_vga}
+\end{figure}
+
 \bigskip
-To help configure automatically the 300 registers of the VGA, the IBM BIOS had a preset number of mode with an associated resolution and color space :
+To configure this mess, meant configuring 300 registers to interact together. Needless to say few programmers got to dive in the internal of this thing. Luckily IBM BIOS had a few preset configutation (called "mode") with an associated resolution and color numbers :
 
 \begin{figure}[H]
 \centering
@@ -502,32 +508,126 @@ To help configure automatically the 300 registers of the VGA, the IBM BIOS had a
 \caption{VGA Modes available from BIOS.}\label{fig:vga_modes}
  \end{figure}
  
- {\underline{Note :}} The clean pipeline architecture in Figure \ref{fig:vga_arch} is an oversimplication. In reality each Controller interacted with the rest of the system. The Sequece Controller for example could not only interact with the RAM but also gdgdfgegdfg...
 
-\begin{figure}[H]
+ \begin{fancyquotes}
+   Right off the bat, I'd like to make one thing perfectly clear: The VGA is hard-sometimes very hard-to program for good performance.
+ \bigskip \\
+\textbf{Michael Abrash - Zen VGA guru}
+ \end{fancyquotes}
+ 
+ 
+
+
+
+ 
+ 
+  \subsection{VGA Programming}
+  Using the VGA as per the manual is easy. A few instructions are enough to call the BIOS and setup the environment. The most appealing mode for game is of course 320x200 256 palettes based color: Mode 13h.\\
+  \lstinputlisting[ language={[x86masm]Assembler}]{code/vga_mode13.asm}
+  The \codeword{int 10} instruction is an interrupt calling BIOS routine. It looks up the \codeword{ax} register to load the requested mode.\\
+  
+  After setting up the VGA, the programmer has access to a linear framebuffer of 64KB mapped at \codeword{A0000h}.\\
+  
+  DRAWING
+  
+  To clear the screen to black for example, the following code was enough:\\
+  
+  \lstinputlisting[language=C]{code/clear_vga.c}
+  
+  
+  The mode 13h may look good but it is in fact terrible for game and animation. The intend was clearly to display static images:
+  \begin{itemize}
+\item All the RAM is used and there is no way to have a double buffer.
+\item Since the resolution is 320x200, the aspect ration does not feet the monitor. As a result the image is streched when transfered from the 
+framebuffer to the CRT.
+
+ \begin{figure}[H]
 \centering
-\includegraphics[scale=0.38]{imgs/ibm_vga.eps}
+\includegraphics[scale=1.0]{imgs/circleframebuffer.eps}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
-\caption{IBM's VGA Documentation}
-\label{fig:ibm_vga}
+\caption{Parallele Port}
+\label{fig:parallelPort}
 \end{figure}
 
-The VGA was actually a mess. Inside the chip every components were connected to each other and configured via more than 300 registers.\\
-\\
-Abrash citation about difficulty.
- 
- 
-  \subsection{VGA setup}
+ \begin{figure}[H]
+\centering
+\includegraphics[scale=1.0]{imgs/circlescreen.eps}
+%\def\svgscale{1.5}
+%\input{imgs/fun_pipeline.pdf_tex}
+\caption{Parallele Port}
+\label{fig:parallelPort}
+\end{figure}
 
-  \subsection{VGA Programming}
-  \subsection{VGA Mode Y}
+\item VGA MAPPING I/O WASTED SPACE.
+
+\end{itemize}
+
+
+
+
+
+  
+
 \section{Audio}
+Off all the parts in a PC, the audio system was the best. The card manufacturer had started to see a market and player actually had the opportunity to buy decent stuff.
   \subsection{Speaker}
+  PC came out of the box with a binary beeper. I was able to produce two frequency.
   \subsection{Ad Lib}
+  Canadian manufacturer of sound cards
+  Music (midi)
+  Not about canada: adlib, watcom and matrox millenium
   \subsection{Sound Blaster}
-
+  The Sound Blaster 1.0 (code named "Killer Kard"),[1] CT1320A, was released in 1989
+  Music (midi+digitized sound)]  But it also added two key features absent from the Adlib: a PCM audio channel, and a game port.
+  \subsection{Sound Blaster Pro}
+  Model CT1330, announced in May 1991, was the first significant redesign of the card's core features, and complied with the Microsoft MPC standard.[6]. The Sound Blaster Pro supported faster digital sampling rates (up to 22.05 kHz stereo or 44.1 kHz mono), added a "mixer" to provide a crude master volume control (independent of the volume of sound sources feeding the mixer), and a crude high pass or low pass filter. The Sound Blaster Pro used a pair of YM3812 chips to provide stereo music-synthesis (one for each channel).
 \section{Inputs}
+Inputs were a mess. This was time before USB. Each peripheric was using a differnt port.
+
+The parallel port was usually used for printers.
+ \begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{imgs/ports/DB-25_parallel_port.eps}
+%\def\svgscale{1.5}
+%\input{imgs/fun_pipeline.pdf_tex}
+\caption{Parallele Port}
+\label{fig:parallelPort}
+\end{figure}
+
+
+The serial port was used to connect the mouse.
+ \begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{imgs/ports/DE9_serial_port.eps}
+%\def\svgscale{1.5}
+%\input{imgs/fun_pipeline.pdf_tex}
+\caption{Serial Port}
+\label{fig:serialPort}
+\end{figure}
+
+The keyboard was using something different: a PS/2 port.
+ \begin{figure}[H]
+\centering
+\includegraphics[scale=0.2]{imgs/ports/MiniDIN-6_PS2.eps}
+%\def\svgscale{1.5}
+%\input{imgs/fun_pipeline.pdf_tex}
+\caption{PS/2 Port}
+\label{fig:ps2Port}
+\end{figure}
+
+
+Finally, sound card connected via the ISA bus provided a Game Port allowing to connect a joystick.
+ \begin{figure}[H]
+\centering
+\includegraphics[scale=0.9]{imgs/ports/DA-15_GamePort.eps}
+%\def\svgscale{1.5}
+%\input{imgs/fun_pipeline.pdf_tex}
+\caption{Game Port}
+\label{fig:gamePort}
+\end{figure}
+
+Note that without a sound card you were unable to connect a joystick !
 
 \end{document}
 
