@@ -1,3 +1,5 @@
+xcshareddata
+DerivedData
 xcuserdata
 output
 .texpadtmp
@@ -8,3 +10,4 @@ output
 *.lot
 *.out
 *.toc
+*.svg

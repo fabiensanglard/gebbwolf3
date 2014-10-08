@@ -459,6 +459,8 @@ That chip was a blessing and a curse: It was universally deployed on every singl
 
 The most surprising part of the architecture is the framebuffer (the RAM that contain the image before it is sent to the screen) which is not one big linear array but four parallel memory banks (called planes). The design raison d'etre was twofold :
 
+
+
 \begin{itemize}
 
 
@@ -466,6 +468,18 @@ The most surprising part of the architecture is the framebuffer (the RAM that co
 \item Backward compatibility: EGA (the precursor of VGA) had only 64kB of RAM. It was easy to emulate EGA by using only one bank.
 \item Hardware limitations: A CRT running at 60Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of second . That mean one pixel each 54ns. The problem was the RAM access time was 200ns so that was not possible. But if latency could not be reduced, the throughput could be improved by fetching 1 pixel + 3 others in advance. Therefore the memory banks were read in parallel: 4 bytes at a time and the CRTC had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
 \end{itemize}
+
+
+\subsection{VGA Planar madness}
+
+This bandwidth limitation led to bizarre things. The main one is that data could not be stored linearly and sent to the screen. Because memory was read 4 bytes at a time but from four planes, the layout looked like this:\\
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{imgs/vga_ram_screen_layout.eps}
+\caption{Video Graphic Array Architecture.}
+\label{fig:vga_arch}
+\end{figure}
 
  {\underline{Note :}} The clean pipeline architecture in Figure \ref{fig:vga_arch} is an oversimplication. In reality each Controller interacted with the rest of the system. The actual drawing, staight from IBM VGA Reference looks like this:\\
  
@@ -480,7 +494,11 @@ The most surprising part of the architecture is the framebuffer (the RAM that co
 \end{figure}
 
 \bigskip
-To configure this mess, meant configuring 300 registers to interact together. Needless to say few programmers got to dive in the internal of this thing. Luckily IBM BIOS had a few preset configutation (called "mode") with an associated resolution and color numbers :
+To configure this mess of planes, registers and controllers meant setting up more than 300 registers to interact together. Needless to say few programmers got to dive in the internal of this thing. Luckily IBM BIOS had a few preset configutation (called "mode") with an associated resolution and color numbers.
+
+\subsection{VGA Modes}
+
+The BIOS could be called to have the VGA configured with preset registers.
 
 \begin{figure}[H]
 \centering
@@ -508,6 +526,7 @@ To configure this mess, meant configuring 300 registers to interact together. Ne
 \caption{VGA Modes available from BIOS.}\label{fig:vga_modes}
  \end{figure}
  
+The best was of course....13h and 12h
 
  \begin{fancyquotes}
    Right off the bat, I'd like to make one thing perfectly clear: The VGA is hard-sometimes very hard-to program for good performance.
@@ -628,6 +647,11 @@ Finally, sound card connected via the ISA bus provided a Game Port allowing to c
 \end{figure}
 
 Note that without a sound card you were unable to connect a joystick !
+
+
+
+\section{Summary}
+I hope this summarize well that the hardware sucked for what id Software intended to do. 
 
 \end{document}
 
