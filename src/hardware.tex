@@ -293,7 +293,6 @@ As a result, out of the original 1024KB, only 640KB (called Conventional Memory)
 
 \textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys woud be properly mapped. The driver consumed a whopping 5KB of Conventional Memory.\\
 \\
-\textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why even though they had many MB installed on their machine, some game would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (Appendice "\nameref{chap:barrier640}") along with the game to make it clear that it was not their fault.
 
 \subsection{The infamous Real Mode: 16 bits Segmented addressing}
 Real Mode could not use 32 bits registers for addressing. Everything had to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There were two kinds of RAM pointers: near and far. In the case of a far pointer, a 16 bits segment register would be shifted left 4 bits and combined with an other 16 bits offset register\\
@@ -356,14 +355,23 @@ Woud ouput:
 
   \subsection{Extended Memory}
 
-In Real-Mode the processor could access 1MB no matter what. But machines of 1992 came equipped with more. From 2MB to 4MB was very common. 
+The 20 bits address but of Real Mode limited the addressable RAM to 1MB. But machines of 1992 came equipped with more, typically 2MB and even sometimes 4MB. The workaround at the time was to install special drivers that would open a window beyond the addressable RAM as shown in Figure \ref{fig:ems_xms_layout}.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=1]{imgs/expanded_ram.eps}
 \caption{Expanded memory layout}
-\label{fig:em_layout}
+\label{fig:ems_xms_layout}
 \end{figure}
+
+Unfortunately once again, nothing was standardized. Users could load different drivers:
+\begin{itemize}
+\item Expanded Memory Specification (EMS) drivers: EMM368.SYS.
+\item eXtended Memory Specification (XMS) drivers: HIMEM.SYS .
+\end{itemize}
+
+Or they could decide to load no drivers at all at startup and not use any of the RAM beyond 1MB.\\
+\textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why even though they had many MB installed on their machine, some game would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (Appendice "\nameref{chap:barrier640}") along with the game to make it clear that it was not their fault.
 
 {\underline{Trivia :}}  As of 2014, thirty five years after the introduction of the 8086, most PC in the world start in  real mode. Then a bootloader switch them to protected mode, load the kernel and then real startup can begin. Mac computers don't have this problem.
 
@@ -376,8 +384,7 @@ Include reference to XMS and EMS programming reference. \footnote{eXtended Memor
 
 \section{Video}
 
-PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curved surface, deep and incredibly heavy devices. Most had a tiny 13" diagonal and all had a 4:3 ratio. Figure \ref{fig:int_layout} shows a comparison with a 28" LCD display from 2014.
-
+PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curved surface, deep and incredibly heavy devices. Most monitor had a tiny 13" diagonal with a 4:3 aspect ratio. Figure \ref{fig:int_layout} shows a comparison between a monitor of 1992 and a 28" LCD display from 2014.\\
 
 \begin{figure}[H]
 \centering
@@ -386,7 +393,7 @@ PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curv
 \label{fig:lcd_vs_crt}
 \end{figure}
 
-{\underline{Trivia :}} How big and heavy could a CRT be ? Integraph InterView 28hd96 weighted 45kg (99.5lb). Compared to 7.8kg (17lb). Used for Doom 3 ?! Details about pictures.
+{\underline{Trivia :}} How big and heavy could a CRT be ? The InterView 28hd96 by Integraph weighted 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).
 \bigskip
 The VGA (Video Graphic Array) was the chipset in charge of interfacing the CPU and the CRT:
 \bigskip
