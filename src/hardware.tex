@@ -384,22 +384,23 @@ Include reference to XMS and EMS programming reference. \footnote{eXtended Memor
 
 \section{Video}
 
-PC were connected to a CRT monitor: Huge, cathodic ray based, small screen, curved surface, deep and incredibly heavy devices. Most monitor had a tiny 13" diagonal with a 4:3 aspect ratio. Figure \ref{fig:int_layout} shows a comparison between a monitor of 1992 and a 28" LCD display from 2014.\\
+PC were connected to CRT monitors: Big, heavy, small diagonal, cathodic ray based with curved surface screens. Most monitors had a 13" diagonal with a 4:3 aspect ratio. Figure \ref{fig:int_layout} shows a comparison between a 13" CRT from 1992 and a 28" LCD display from 2014.\\
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=1.2]{imgs/crt_lcd.eps}
-\caption{CRT vs LCD screen surfaces.}
+\caption{CRT (left) vs LCD (right)}
 \label{fig:lcd_vs_crt}
 \end{figure}
 
-{\underline{Trivia :}} How big and heavy could a CRT be ? The InterView 28hd96 by Integraph weighted 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).
-\bigskip
-Since the monitor were analogic and the PC were digital, there had to be an interface between the two. They were called Adapters.
+{\underline{Trivia :}} How big and heavy could a CRT be ? The InterView 28hd96 by Integraph weighted 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).\\
+\\
+The main issue in this system is that CRT are analogic system while computers are digital. An interface system is needed between the two and it cames as the form of a serie of chipses called Adapters.
 
   \subsection{History}
 
-From 1981onward, many systems were released:
+The first adapter of the family was released in 1981. The Monochrome Display
+   Adapater (\codeword{MDA}) was monochrome with low resolutions but it had the merit to be on every PC sold. Many other systems followed over the years, always preserving backward compatibility like it was the tradition at the time:
 \bigskip
   
  \begin{figure}[H]
@@ -429,23 +430,23 @@ From 1981onward, many systems were released:
 \caption{Video interface history.}\label{fig:vga_history}
 \end{figure}
 
-Each added new feature to the previous iteration. In 1993 the ubiquitous graphic system was the VGA\footnote{Video Graphic Adapter}. The universality of that system was a two edged sword: One one side developers did not have to deal with hereogeneity. But on the other side, the shortcoming of the Adapater were the same for everybody.\\
-
-In 1993, the VGA (Video Graphic Array) was the chipset in charge of interfacing the CPU and the CRT.
-
+Each iteration added new features and in 1993 the ubiquitous graphic system was the VGA\footnote{Video Graphic Adapter}. The universality of that system was a two edged sword: One one side developers had to program for one graphic system only. But on the other side, there was no escape to the shortcoming of the Adapater and people did not purchase separate GPU back then.\\
 
 \subsection{VGA Architecture}
 
-That chip was a blessing and a curse: It was universally deployed on every single IBM PC on the market but it was also poorly documented and complicated to program with more than 300 internal registers.\\
-\bigskip
-  Three parts were interacting around 256Kb of RAM:
+The VGA can be summarized as two major systems :
 
 \begin{itemize}
-\item The Graphic Controller and Sequence Controller controlled how the RAM was populated.
-\item The RAM stored the framebuffer.
-\item The CRTC Controller and the DAC (Digital To Analog Converter) took care of converting the framebuffer to analogic signal.
+\item The Graphic Controller and Sequence Controller controlled how the VGA RAM was accessed (interface CPU-VRAM).
+\item The framebuffer (VGA RAM) made not of one memory bank of 256KB but four memory banks of 64KB.
+\item The CRTC Controller and the DAC (Digital To Analog Converter) took care of converting the framebuffer to analogic signal (interface VRAM-CRT).
 \end{itemize}
 
+The most surprising part of the architecture is obviously the framebuffer. The first reaction of any engineer would be to ask themselve: Why four banks instead of one clean big one ?\\
+\\
+The first part of the explanation comes from backward compatibility: The version before VGA, the EGA had only 64KB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
+\\
+But the real reasion was hardware limitations: A CRT running at 60Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of second . That mean one pixel each 54ns. The problem was the RAM spped access time of 200ns: Not nearly fast enough\footnote{REFERENCE TO GC BIBLE}. If latency could not be reduced, the throughput could still be improved by accessing four banks at the time. The memory banks read in parallel had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
 
 
 \begin{figure}[H]
@@ -457,33 +458,18 @@ That chip was a blessing and a curse: It was universally deployed on every singl
 
 
 
-The most surprising part of the architecture is the framebuffer (the RAM that contain the image before it is sent to the screen) which is not one big linear array but four parallel memory banks (called planes). The design raison d'etre was twofold :
-
-
-
-\begin{itemize}
-
-
-
-\item Backward compatibility: EGA (the precursor of VGA) had only 64kB of RAM. It was easy to emulate EGA by using only one bank.
-\item Hardware limitations: A CRT running at 60Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of second . That mean one pixel each 54ns. The problem was the RAM access time was 200ns so that was not possible. But if latency could not be reduced, the throughput could be improved by fetching 1 pixel + 3 others in advance. Therefore the memory banks were read in parallel: 4 bytes at a time and the CRTC had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
-\end{itemize}
-
 
 \subsection{VGA Planar madness}
 
-This bandwidth limitation led to bizarre things. The main one is that data could not be stored linearly and sent to the screen. Because memory was read 4 bytes at a time but from four planes, the layout looked like this:\\
+Four memory banks granted enough throughput to reach high resolutions. The price was complexity of programming aknowledged by even the best programmers of the time:\\
 
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.5]{imgs/vga_ram_screen_layout.eps}
-\caption{Video Graphic Array Architecture.}
-\label{fig:vga_arch}
-\end{figure}
-
- {\underline{Note :}} The clean pipeline architecture in Figure \ref{fig:vga_arch} is an oversimplication. In reality each Controller interacted with the rest of the system. The actual drawing, staight from IBM VGA Reference looks like this:\\
- 
- 
+ \begin{fancyquotes}
+   Right off the bat, I'd like to make one thing perfectly clear: The VGA is hard-sometimes very hard-to program for good performance.
+ \bigskip \\
+\textbf{Michael Abrash - Graphic Programming Black Book}
+ \end{fancyquotes}
+ \\
+Because the VGA was not as clean as the first drawing showed. The diagram from IBM VGA Reference looks like this:\\
  \begin{figure}[H]
 \centering
 \includegraphics[scale=0.38]{imgs/ibm_vga.eps}
@@ -492,6 +478,18 @@ This bandwidth limitation led to bizarre things. The main one is that data could
 \caption{IBM's VGA Documentation}
 \label{fig:ibm_vga}
 \end{figure}
+
+The chipset was in fact a mess of components all interacting together, configured via more than 300 internal registers. Oh and that was very poorly documented.\\
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{imgs/vga_ram_screen_layout.eps}
+\caption{Video Graphic Array Architecture.}
+\label{fig:vga_arch}
+\end{figure}
+
+BIOS to the rescue: HEEEEERE 
+ 
+
 
 \bigskip
 To configure this mess of planes, registers and controllers meant setting up more than 300 registers to interact together. Needless to say few programmers got to dive in the internal of this thing. Luckily IBM BIOS had a few preset configutation (called "mode") with an associated resolution and color numbers.
@@ -526,13 +524,9 @@ The BIOS could be called to have the VGA configured with preset registers.
 \caption{VGA Modes available from BIOS.}\label{fig:vga_modes}
  \end{figure}
  
-The best was of course....13h and 12h
+ Programmers started to reference VGA modes. It was a common thing to see tutorial about Mode 12h or Mode 13 which were the two most appealing mode for game programming.
 
- \begin{fancyquotes}
-   Right off the bat, I'd like to make one thing perfectly clear: The VGA is hard-sometimes very hard-to program for good performance.
- \bigskip \\
-\textbf{Michael Abrash - Zen VGA guru}
- \end{fancyquotes}
+
  
  
 
@@ -540,12 +534,17 @@ The best was of course....13h and 12h
 
  
  
-  \subsection{VGA Programming}
-  Using the VGA as per the manual is easy. A few instructions are enough to call the BIOS and setup the environment. The most appealing mode for game is of course 320x200 256 palettes based color: Mode 13h.\\
+  \subsection{VGA Programming: Mode 13h}
+  Using the VGA as per the manual is easy since two instructions are enough to ask the BIOS to setup the environment with a mode. Here is an example that setup the a VGA to operate at 320x200 with 256 indexed colors: Mode 13h.\\
   \lstinputlisting[ language={[x86masm]Assembler}]{code/vga_mode13.asm}
-  The \codeword{int 10} instruction is an interrupt calling BIOS routine. It looks up the \codeword{ax} register to load the requested mode.\\
   
-  After setting up the VGA, the programmer has access to a linear framebuffer of 64KB mapped at \codeword{A0000h}.\\
+  \\
+  Two instructions and that is it. The \codeword{int 10} is a software interrupt call to the BIOS routine in charge of Graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA register with the corresponding mode.\\
+  
+  \\ A convenient thing with those was how the four memory banks were hidden to the programmer. By using 2 bits from the RAM, the VGA automatically determined in which bank to store a value. The side effect was to waste 75\% of the RAM. Memory Mapped area:\\
+  DRAWING
+  
+  \\ The programmer has access to a linear framebuffer of 64KB mapped at \codeword{A0000h}.\\
   
   DRAWING
   
