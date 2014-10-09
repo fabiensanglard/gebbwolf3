@@ -538,13 +538,13 @@ The BIOS could be called to have the VGA configured with preset registers.
   Using the VGA as per the manual is easy since two instructions are enough to ask the BIOS to setup the environment with a mode. Here is an example that setup the a VGA to operate at 320x200 with 256 indexed colors: Mode 13h.\\
   \lstinputlisting[ language={[x86masm]Assembler}]{code/vga_mode13.asm}
   
-  \\
+  
   Two instructions and that is it. The \codeword{int 10} is a software interrupt call to the BIOS routine in charge of Graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA register with the corresponding mode.\\
   
-  \\ A convenient thing with those was how the four memory banks were hidden to the programmer. By using 2 bits from the RAM, the VGA automatically determined in which bank to store a value. The side effect was to waste 75\% of the RAM. Memory Mapped area:\\
+  A convenient thing with those was how the four memory banks were hidden to the programmer. By using 2 bits from the RAM, the VGA automatically determined in which bank to store a value. The side effect was to waste 75\% of the RAM. Memory Mapped area:\\
   DRAWING
   
-  \\ The programmer has access to a linear framebuffer of 64KB mapped at \codeword{A0000h}.\\
+  The programmer has access to a linear framebuffer of 64KB mapped at \codeword{A0000h}.\\
   
   DRAWING
   
@@ -596,7 +596,7 @@ Off all the parts in a PC, the audio system was the best. The card manufacturer 
   
   Note: Canadian company and especially from Quebec were very innovative in the early 90s. Ad Lib manufactured Sound Card, Matrox made a killing with Millenium Graphic Card, Watcom compiler, ATI.\\
   
-  \\ Music (midi)
+  Music (midi)
   Not about canada: adlib, watcom and matrox millenium
   \subsection{Sound Blaster}
   The Sound Blaster 1.0 (code named "Killer Kard"),[1] CT1320A, was released in 1989
@@ -604,9 +604,9 @@ Off all the parts in a PC, the audio system was the best. The card manufacturer 
   \subsection{Sound Blaster Pro}
   Model CT1330, announced in May 1991, was the first significant redesign of the card's core features, and complied with the Microsoft MPC standard.[6]. The Sound Blaster Pro supported faster digital sampling rates (up to 22.05 kHz stereo or 44.1 kHz mono), added a "mixer" to provide a crude master volume control (independent of the volume of sound sources feeding the mixer), and a crude high pass or low pass filter. The Sound Blaster Pro used a pair of YM3812 chips to provide stereo music-synthesis (one for each channel).
 \section{Inputs}
-Inputs were a mess. This was time before USB. Each peripheric was using a differnt port.
+Even though it is anecdotic I still wanted to write a part about the connectors found on a PC at the time. A time before the ubiquitous USB. In short, inputs were a mess.\\
 
-The parallel port was usually used for printers.
+The parallel port (DB-25) was on every computer and usually used to connect matrix printers (loud thing that printed with aiguilles).
  \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{imgs/ports/DB-25_parallel_port.eps}
@@ -617,7 +617,7 @@ The parallel port was usually used for printers.
 \end{figure}
 
 
-The serial port was used to connect the mouse.
+The serial port (DE9) was used to connect the mouse.
  \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{imgs/ports/DE9_serial_port.eps}
@@ -627,7 +627,7 @@ The serial port was used to connect the mouse.
 \label{fig:serialPort}
 \end{figure}
 
-The keyboard was using something different: a PS/2 port.
+The PS/2 port was used to connect a keyboard.
  \begin{figure}[H]
 \centering
 \includegraphics[scale=0.2]{imgs/ports/MiniDIN-6_PS2.eps}
@@ -638,7 +638,7 @@ The keyboard was using something different: a PS/2 port.
 \end{figure}
 
 
-Finally, sound card connected via the ISA bus provided a Game Port allowing to connect a joystick.
+Finally, sound card connected via the ISA bus provided a new port: A Game Port (DA-15) allowing to connect a joystick.
  \begin{figure}[H]
 \centering
 \includegraphics[scale=0.9]{imgs/ports/DA-15_GamePort.eps}
