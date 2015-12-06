@@ -18,7 +18,7 @@ id Software was funded during February 1991 by four people:
 \caption{id Software founding members.}\label{fig:Id Software team}
 \end{figure}
 
-Wolfenstein 3D would be the first title for id but the team had already shipped no less than 13 games will working for their previous employer SoftDisk:\\
+Wolfenstein 3D would be id first title but the team had already shipped no less than 13 games will working for their previous employer SoftDisk:\\
 \begin{itemize}
   \item Dangerous Dave (1988)\footnote{Dangerous Dave is a solo project of John Romero predating Id's formation, but Id Software produced its first sequel and it is sometimes regarded as an early Id Software title. Later Dangerous Dave sequels were not made by Id, nor were later Catacomb titles.}
   \item Commander Keen
@@ -77,7 +77,7 @@ We started with floppy data transfer, but we had a Novell network on coax Ethern
 \end{fancyquotes}
 \section{Programming}
 
-John Carmack took care of most of the runtime code. John Romero programmed many of the tools (editor, packers, …). Jason Blochowiak was contracted to write important subsystems of the game (Input manager, Page Manager, Sound Manager, User Manager).\\
+John Carmack took care of the runtime code. John Romero programmed many of the tools (editor, packers, ...). Jason Blochowiak was contracted to write important subsystems of the game (Input manager, Page Manager, Sound Manager, User Manager).\\
 \\
 The compiler was Borland C++ 3.1. To compensate for the tiny CRT, some of the developers used two screens (a very unusual thing at the time).\\
 \begin{fancyquotes}
@@ -86,7 +86,7 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-Picture of dual head. Monochrome second screen.
+TODO: Picture of dual head. Monochrome second screen.
 
 Amazingly possible to recreate with DosBox
 
@@ -104,30 +104,37 @@ Jason was part of Id at the start, but we parted ways during Wolf development.
 
 
 \section{Graphics assets}
-The graphic assets comprise many aspects of the game:
+The graphic assets are divided as follow:
 \begin{itemize}
 \item 2D Menus items.
 \item 2D Action phase items.
 \item Wall textures.
-\item entities animations.
+\item Entities animations.
 \end{itemize}
 Those were the work of Adrian Carmack and Kevin Cloud. All of the work was done with Deluxe Paint on highend 386 DX computers. The greatest task was not to draw everything but to make the key decision of what colors would go in the palette.\\
 \\
-Palette IMAGE\\
+Since VGA was not a RGB system but an indexed system, an entry in the palette was a precious commodity:
+TODO:Palette IMAGE\\
 \\
+All assets were hand drawn:
 \begin{fancyquotes}
 We didn't have any scanning tools at the time.\\
 \\
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
-Did they at least had a stylus or something like that ?	\\
+Question to ASK: Did they at least had a stylus or something like that ?	 Or did they use a mouse ?\\
+
+\section{Asset workflow}
+All asset were given a name (e.g: ). A tool IGRAB-ED tool care of packing all assets in a file and generated a C header file:\\
+TODO: entry example.
+ The program could reference an asset direcly by using its macro.\\
 \begin{figure}[H]
 \centering
  \includegraphics[scale=0.4]{imgs/drawing_plain.eps}
  \caption{Assets creation} \label{fig:mips}
  \end{figure}
 
-
+\textbf{\underline{Trivia :}} This system let to issues when the source code was released: The header provided did not match the asset file from the shareware or early version of Wolfenstein 3D: The header released were from Spears of Destiny. You can see the kind of graphic mess this let to in the appendix "Let's compile like it is 1994".\\
 
 
 \section{Maps}
@@ -162,16 +169,10 @@ anywhere.\\
 
 
 \section{Business}
-Jay Wilbur
+Jay Wilbur: I was unable to get in touch with Jay. Little is known...for now :) !\\
 \section{Sounds}
-Robert Prince
-\section{Distribution}
-Finally after having descrived all the assets created by the team I wanted to discuss a little bit about the distribution model and its intrinsics. Since id Software wanted to distribute the game as a shareware, it was paramount to make the game very easy to copy and exchange among people. So the decision was made to make the game fit on one single disk. This had several consequences:
-- Few files
-- Compression
-- Archives
-	\subsection{Compression}
-	\subsection{Shareware model}
+Robert Prince: I was unable to get in touch with Robert. Little is known...for now :) !\\
+
 \end{document}
 
 
