@@ -1,14 +1,50 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
 \section{Source Code}
-The game engine was uploaded on the later legendary ftp.idsoftware.com.\\
-\textbf{\underline{Trivia :}} Even after all these years ftp.idsoftware.com is still up and running. Try it, open your command-line: ftp ftp.idsoftware.com and find all the source code released over the year by id Software in the folder idstuff.\\
+The game engine was released on July 21, 1995. It is still there:\\ 
+\\\codeword{ftp://ftp.idsoftware.com/idstuff/source/wolfsrc.zip}.\\
+\\
+\textbf{\underline{Trivia :}} Before the times of nmap and WireShark, ftp was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
 
-Estimated completion time ?  
+\section{First Contact}
+The file \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical nowadays. You can deflate it with:\\
+\\\codeword{unzip WOLFSRC.1}.\\
+\\The source code actually contains more than just \codeword{.H} (headers) and \codeword{.C} (code) files. Also present are:
+\begin{itemize}
+\item \codeword{.EQU}
+\item \codeword{\_WL1.H}
+\item \codeword{\_WL6.H}
+\item \codeword{\_SOD.H}
+\item \codeword{\_SDM.H}
+\item \codeword{GOODSTUF.TXT} A letter from a POW playing Wolfenstein 3D.
+\item \codeword{.ASM} Assembly optimized routines. Also contains  routines to access VGA and refresh screen.
+\item \codeword{.OBJ/} Precompiled stuff. ID did not have the right for it ?!
+\item \codeword{README/} How to build. You can find a complete tutorial in the Annexe of this book.
+\item \codeword{RULES.ASI} ???
+\item \codeword{SV.EXE} ???
+\item Many files resulting in a previous compilation attempt.
+\end{itemize}
+A quick stats:\\
+\begin{verbatim}
+wolfsrc$ cloc-1.64.pl .
 
+      96 text files.
+      94 unique files.                              
+      27 files ignored.
 
-Includel list of all files.\\
-Include cloc stats.
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C++                             26           5750           6201          21169
+C/C++ Header                    42            802            660           3900
+Assembly                        10            669            732           2150
+DOS Batch                        1              1              0              4
+-------------------------------------------------------------------------------
+SUM:                            79           7222           7593          27223
+-------------------------------------------------------------------------------
+\end{verbatim}
+The game engine is mostly C with a few ASM routines for optimized stuff and I/O.
+
 
  \begin{fancyquotes}
    We didn't have spell checkers in our editors back then, and I always had poor spelling.  The word "collumn" appears in the source code dozens of times.  After I released the source code, one of the emails that stands out in memory read:
@@ -18,9 +54,26 @@ It's "COLUMN", you dumb @\#\$\% !\\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
 
-
-
+\begin{fancyquotes}
+Estimated completion time ?  
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
+ 
 \section{Architecture}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=1.3]{imgs/palette.png}
+ \caption{The 3D sequence palette.} \label{fig:palette}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=1.3]{imgs/palette_damage.png}
+ \caption{The palette RGB colors altered when taking damage.} \label{fig:palette_damage}
+\end{figure}
+
 
 
 \begin{figure}[H]
@@ -82,23 +135,27 @@ Upon finishing parameter selection, the engine would switch from Menu phase to A
    \item Draw scaled (entities such as enemies and items)
    \item Draw current weapon
 \end{itemize}
+
+
 \begin{figure}[H]
 \centering
  \includegraphics[scale=1.3]{screenshots/wolf3d_1_background.png}
  \caption{3D Rendere Phase 1: Background} \label{fig:mips}
  \end{figure}
-
-     \begin{figure}[H]
-\centering
- \includegraphics[scale=1.3]{screenshots/wolf3d_4_partial_wall_32rays.png}
- \caption{3D Rendere Phase 2: Walls (160 rays)} \label{fig:mips}
- \end{figure}
+The floor was always the same color. The ceiling however changed see \codeword{WL\_DRAW.C} for a hard-coded index. TODO: Include a clear screen from a later level.\\
+\begin{figure}[H]
+ \centering
+  \includegraphics[scale=1.3]{screenshots/wolf3d_4_partial_wall_32rays.png}
+  \caption{3D Rendere Phase 2: Walls (160 rays)}
+  \label{fig:mips}
+\end{figure}
  
- \begin{figure}[H]
-\centering
- \includegraphics[scale=1.3]{screenshots/wolf3d_5_partialwalls_160rays.png}
- \caption{Finalez frame} \label{fig:mips}
- \end{figure}
+\begin{figure}[H]
+ \centering
+  \includegraphics[scale=1.3]{screenshots/wolf3d_5_partialwalls_160rays.png}
+ \caption{Finalez frame} 
+ \label{fig:mips}
+\end{figure}
  
  
  \begin{figure}[H]

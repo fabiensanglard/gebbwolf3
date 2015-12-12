@@ -302,7 +302,7 @@ Real Mode could not use 32 bits registers for addressing. Everything had to be d
 A near pointer was just a 16 bits offset that would point in the same segment. 
 \bigskip
 That may not sound too bad but in practice this segmented addressing led to many issues.
-The least problematic was about the language: Since the C language was invented on 32 bits machine, the language had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro would be provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. That was an ugly wart on the beautiful C but that was managable.\\
+The least problematic was about the language: Since the C language was invented on 32 bits machine, the language had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro would be provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. That was an ugly wart on the beautiful C but that was manageable.\\
 \\
 The really big issue however was how two pointers, referring to the same address could fail an equality test: In this model, the 1MB of RAM is divided in 65536 paragraphs by the segment pointer. So a paragraph is 16 bytes but an offset can be up to 65536 !!! See the following example:\\
 \bigskip
@@ -441,7 +441,7 @@ The most surprising part of the architecture is obviously the framebuffer. The f
 \\
 The first part of the explanation comes from backward compatibility: The version before VGA, the EGA had only 64KB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
 \\
-But the real reason was physical limitations: A CRT running at 60Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of a second . That means one pixel each 54ns. The problem was that RAM access time was 200ns: Not nearly fast enough\footnote{TODO: REFERENCE TO GC BIBLE} to refresh the screen at 60hz. If latency could not be reduced, the throughput could still be improved by accessing four banks at the time. The memory banks read in parallel had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
+But the real reason was physical limitations: A CRT running at 60Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of a second . That means one pixel each 54ns. The problem was that RAM access time was 200ns: Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 60hz. If latency could not be reduced, the throughput could still be improved by accessing four banks at the time. The memory banks read in parallel had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
 
 
 \begin{figure}[H]
