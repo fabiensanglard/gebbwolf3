@@ -27,13 +27,13 @@ The jaguar port was the only one able to reach 60 frames per seconds. The consol
 \begin{fancyquotes}
 The memory, bus, blitter and video processor were 64 bits wide, but the processors (68k and two custom risc processors) were 32 bit.\\
 \\
-The blitter could do basic texture mapping of horizontal and vertical spans, but because there wasn't any caching involved, every pixel caused two ram page misses and only used 1/4 of the 64 bit bus. Two 64 bit buffers would have easily trippled texture mapping performance. Unfortunate.\\
+The bliter could do basic texture mapping of horizontal and vertical spans, but because there wasn't any caching involved, every pixel caused two ram page misses and only used 1/4 of the 64 bit bus. Two 64 bit buffers would have easily tripled texture mapping performance. Unfortunate.\\
 \\
 It could make better use of the 64 bit bus with Z buffered, shaded triangles, but that didn't make for compelling games.\\
 \\
-It offered a usefull color space option that allowed you to do lighting effects based on a single channel, isntead of RGB.\\
+It offered a usefull color space option that allowed you to do lighting effects based on a single channel, instead of RGB.\\
 \\
-The video compositing engine was the most innovative part of the console. All of the characters in Wolf3D were done with just the back end scalar instead of blitting. Still, the experience with the limitations and hard failure cases of that gave me good amunition to rail against microsoft's (thankfully aborted) talisman project.\\
+The video compositing engine was the most innovative part of the console. All of the characters in Wolf3D were done with just the back end scalar instead of bliting. Still, the experience with the limitations and hard failure cases of that gave me good ammunition to rail against microsoft's (thankfully aborted) talisman project.\\
 \\
 The little risc engined were decent processors. I was surprised that they didn't use off the shelf designs, but they basically worked ok. They had some design hazards (write after write) that didn't get fixed, but the only thing truly wrong with them was that they had scratchpad memory instead of caches, and couldn't execute code from main memory. I had to chunk the DOOM renderer into nine sequentially loaded overlays to get it working (with hindsight, I would have done it differently in about three...).\\
 \\
@@ -70,7 +70,7 @@ The enemies in the PC version also offer an extra level of realism by being able
 
 \subsection{Weapons, Items, and Enemies}
 
-Several other difference worth noting include the addition of 2 extra weapons in the Macintosh version: the flamethrower and the rocket launcher. Those two weapons and some other items (bullet crates, flamet thrower and rocket ammo, backpacks) are not found in the PC version.
+Several other difference worth noting include the addition of 2 extra weapons in the Macintosh version: the flamethrower and the rocket launcher. Those two weapons and some other items (bullet crates, flame thrower and rocket ammo, backpacks) are not found in the PC version.
 Also, some other pick-ups and dropped items are different. For example, in the PC version, dropped clips give 4 ammo and other clips give 8 ammo; in the Macintosh version, all clips give 5 ammo. Also, picking up treasure in the PC version adds to your score (40000 points gets you an extra life); in the Macintosh version, picking up treasure increases your item count by one until you get an extra life at 50 items.
 
 Other differences include an additional enemy, the Flying Hitler, in the PC version and different bosses in the 2 versions (see the enemies and bosses pages); the Mac version actually uses some bosses from Wolfenstein 3D and some bosses from Spear of Destiny.
