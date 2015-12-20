@@ -1,0 +1,48 @@
+%\documentclass[tikz,border=2pt,png]{standalone}
+%\usepackage{tkz-euclide}
+%\usetkzobj{all}
+%\begin{document}
+\begin{tikzpicture}[scale=2.0]
+
+\coordinate(origin) at (0,0)[label=below:view] {};
+\coordinate(yaxis) at (0,6.5){};
+\coordinate(xaxis) at (6,0) {};
+\coordinate(angle) at (30:3);
+\coordinate(intercept) at (3,5) {};
+
+\node[below left] (orign) {viewpoint};
+\node[below right] (_XX) at (intercept) {intercept};
+
+% AXIS
+%\draw[->,draw=black,>=stealth] (origin)  -- (xaxis) ;
+%\draw[->,draw=black,>=stealth] (origin)  -- (yaxis) ;
+%\draw[draw=black] (origin)  -- (0,-0.5) ;
+%\draw[draw=black] (origin)  -- (-0.5,0) ;
+
+% WALL
+\fill[black!20!white, draw=black] (2,5) rectangle (4,7);
+%\fill[black!20!white, draw=black] (4,5) rectangle (6,7);
+%\fill[black!20!white, draw=black] (4,3) rectangle (6,5);
+
+
+\fill (intercept) circle (2pt);
+
+
+\draw[->,draw=gray,>=stealth] (origin)  -- (angle) ;
+
+\coordinate (dx) at ($(origin)!(intercept)!(xaxis)$);
+\draw[draw=gray,>=stealth,dashed] (origin) -- node[below] {dx} (dx);
+\draw[draw=gray,>=stealth,dashed] (intercept) -- node[right] {dy}(dx);
+
+\tkzMarkAngle[fill= gray,size=0.8cm,opacity=.2](xaxis,origin,angle)
+\tkzLabelAngle[pos = 0.6](xaxis,origin,angle){$\alpha$}
+
+\fill[fill=black] (origin) circle (2pt);
+
+\draw[] (origin) -- node[below] {d} ++(intercept) ;
+
+%\draw[] 
+
+
+\end{tikzpicture}
+%\end{document}
