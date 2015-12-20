@@ -18,7 +18,8 @@ The file \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive.
 \item \codeword{\_SDM.H}
 \item \codeword{GOODSTUF.TXT} A letter from a POW playing Wolfenstein 3D.
 \item \codeword{.ASM} Assembly optimized routines. Also contains  routines to access VGA and refresh screen.
-\item \codeword{.OBJ/} Precompiled stuff. ID did not have the right for it ?!
+\item \codeword{SIGNON.OBJ/}: The startup screen showing the system characteristic (RAM, EMS, XMS, Joystick, SoundCards) was linked in the binary. Because that screen was showed before any sub-system was started. TODO: This should be a trivia.
+\item \codeword{GAMEPAL.OBJ/} Game palette. Hardcoded and linked in the executable for the same reason described previously.
 \item \codeword{README/} How to build. You can find a complete tutorial in the Annexe of this book.
 \item \codeword{RULES.ASI} ???
 \item \codeword{SV.EXE} ???
@@ -32,16 +33,16 @@ wolfsrc\$ cloc-1.64.pl .
       94 unique files.                              
       27 files ignored.
 
--------------------------------------------------------------------------------
-Language                     files          blank        comment           code
--------------------------------------------------------------------------------
-C++                             26           5750           6201          21169
-C/C++ Header                    42            802            660           3900
-Assembly                        10            669            732           2150
-DOS Batch                        1              1              0              4
--------------------------------------------------------------------------------
-SUM:                            79           7222           7593          27223
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Language                files          blank        comment           code
+--------------------------------------------------------------------------
+C++                        26           5750           6201          21169
+C/C++ Header               42            802            660           3900
+Assembly                   10            669            732           2150
+DOS Batch                   1              1              0              4
+--------------------------------------------------------------------------
+SUM:                       79           7222           7593          27223
+--------------------------------------------------------------------------
 \end{verbatim}
 The game engine is mostly C with a few ASM routines for optimized stuff and I/O.\\
 
@@ -60,6 +61,23 @@ Estimated completion time ?
  \end{fancyquotes}
  
 \section{Architecture}
+
+The engine is made of sub-systems called Managers:
+\begin{itemize}
+	\item Memory
+	\item Page
+	\item Video
+	\item Cache
+	\item Sound
+	\item User
+	\item Input
+\end{itemize}
+Together they harness the machine to play sound, music and display the two phases of the game:
+\begin{itemize}
+	\item 2D Menus
+	\item 3D Action
+\end{itemize}
+
 
 \begin{figure}[H]
   \centering
@@ -107,7 +125,12 @@ Estimated completion time ?
 
 \section{Unrolled Loop}
 \subsection{Memory Manager (MM)}
+
 \subsection{Page Manager (PM)}
+The Page Manager harness the three types of RAM available: Conventional, XMS and XML. It abstract this complexity behind a Paging system.\\
+Is it where the loading screen shows a progress bar ?
+"Get Psyched !!!": Fill up the cache ?
+Trivia: The progress bar was called a "thermometer".
 \subsection{Video Manager (VW)}
 \subsection{Cache Manager (CA)}
 \subsection{Sound Manager (SD)}
@@ -119,7 +142,28 @@ The game starts with the legendary "resource summary" which display the availabl
 
 \section{Renderer: Mode X and Mode Y}
 As seen in the Hardware chapter, none of the VGA modes offered could do what a game needed. But game developers found
-a way: Mode X \footnote{X-Mode Frequently Asked Questions - By Zoombapup (Phil)  2-Oct-94}. Nobody knows who discovered mode-X but the person who popularized it is Michael Abrash \footnote{Michael Abrash's Graphic Programming Black Book: Chapter 47, page 877.}.
+a way: Mode X \footnote{X-Mode Frequently Asked Questions - By Zoombapup (Phil)  2-Oct-94}. Nobody knows who discovered mode-X but the person who popularized it is Michael Abrash \footnote{Michael Abrash's Graphic Programming Black Book: Chapter 47, page 877.}. The idea is to disable the "convenience" mechanism making the 4 banks appear as one. It is called putting the VGA in unchained mode where each bank of memory (called "plane") is written to individually.\\
+With this technique the 64KB of mapped RAM can access the full 256KB of the VGA. This enables a mode offering:
+\begin{itemize}
+	\item Resolution of 320x200
+	\item Double buffering
+	\item Storage of sprites in VRAM.
+\end{itemize}
+
+Compared to figure 
+TODO: New Drawing of VGA RAM.\\
+But there is still a problem: Switching the target RAM was very slow. So a routine drawing an horizontal line on the screen:
+
+\begin{verbatim}
+void DrawLine(y, color) {
+  for(int x=0; x < 320 ; x++) {
+    SelectBrank(x % 4);
+    WritePixel(x, y, color);   
+  }
+}
+\end{verbatim}\\
+Would have been unpractical. But something else can be done if you notice that 320 is a multiple of 4 (320/4=80): If you draw only columns you don't have to change the target plan often.\\
+TOOD: Drawing of how column line up in VGA RAM.\\
 
 \section{Menu Phase: 2D Renderer}
 The menu phase is renderer by the 2D renderer which is tile based. The screen is divided into tiles as follow:\\
@@ -127,7 +171,70 @@ DRAWING\\
 Bla bla bla\\
 
 \section{Action Phase: 3D Renderer}
+\subsection{Fixed point}
+\subsection{Raytracing: DDA Algorithm}
+Digital Differential Analysis\\
+\subsection{FishEye}
 
+\begin{figure}[H]
+\centering
+ \input{imgs/fish_eye/state.tex}
+ \caption{blabla.} \label{fig:Raycasting2}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+ \input{imgs/fish_eye/d_vs_z.tex}
+ \caption{blabla.} \label{fig:Raycasting2}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+ \input{imgs/fish_eye/correct_way.tex}
+ \caption{blabla.} \label{fig:Raycasting2}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/fish_eye/bad_mild.png}
+ \caption{3D Rendere Phase 1: Background} \label{fig:mips}
+ \end{figure}
+ 
+\begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/fish_eye/bad_ok.png}
+ \caption{3D Rendere Phase 1: Background} \label{fig:mips}
+ \end{figure}
+ 
+ \begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/fish_eye/bad_bad.png}
+ \caption{3D Rendere Phase 1: Background} \label{fig:mips}
+ \end{figure}
+
+ \begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/fish_eye/fish_eye.png}
+ \caption{3D Rendere Phase 1: Background} \label{fig:mips}
+ \end{figure}
+ 
+  \begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/fish_eye/fish_eye_corrected.png}
+ \caption{3D Rendere Phase 1: Background} \label{fig:mips}
+ \end{figure}
+ 
+  \begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/fish_eye/fish_eyed_start_screen2.png}
+ \caption{3D Rendere Phase 1: Background} \label{fig:mips}
+ \end{figure}
+ 
+\subsection{Texturing}
+Light texture.\\
+Scaler (precompiled).\\
+
+\subsection{Rendering phases}
 Upon finishing parameter selection, the engine would switch from Menu phase to Action Phase which was mostly about rendering the 3D environment. The renderer operated in four phases:
 \begin{itemize}
    \item Draw Background
@@ -135,6 +242,15 @@ Upon finishing parameter selection, the engine would switch from Menu phase to A
    \item Draw scaled (entities such as enemies and items)
    \item Draw current weapon
 \end{itemize}
+
+\subsection{Square World and RayCasting}
+TODO: Wolfenstein 3D referencial (64 grid, with origin and rotation
+\subsection{Compiled Scalars}
+Builds a compiled scaler object that will scale a 64 tall object to the given height (centered vertically on the screen).
+\codeword{SetupScaling}\\
+\codeword{BuildCompScale}
+\lstinputlisting[language=C]{code/compscale.c}
+
 
 
 \begin{figure}[H]
