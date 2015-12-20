@@ -113,28 +113,42 @@ Estimated completion time ?
  
 
 \section{Unrolled Loop}
+
 \subsection{Memory Manager (MM)}
+
 \subsection{Page Manager (PM)}
+The Page Manager provides all asset during 3D rendition. 
+It loads as many "Pages" as possible in Main, XMS and EMS memory during the get Psyched screen.
+TODO: Add a screenshot.
+It uses a Least Frequency Used eviction policy if not all asset fit in RAM. VSWAP.WL6 is 1.6MB -> Recommended configuration 2MB RAM..but the game would run with just 640KB.\\
+
 \subsection{Video Manager (VW)}
+
+
 \subsection{Cache Manager (CA)}
+The Cache Manager takes care of all the assets during Menu Phases: Sprites, Music, Sounds.
 \subsection{Sound Manager (SD)}
+The Sound Manager abstract interaction with all four sound systems supported: PC Speaker, ADLib (Music only), Sound Blaster (Mono), Sound Blaster Pro (Stereo).
 \subsection{User Manager (US)}
+
+
 \subsection{Input Manager (IN)}
+Abstract interaction with keyboard and mouse.
 
 \section{Introduction Phase}
-The game starts with the legendary "resource summary" which display the available RAM, Inputs and Audio systems. Then it is followed by the title screen and the the disclaimer screen. Subversive spirit.
+The game starts with the "resource summary" which display the available RAM, Inputs and Audio systems. Then it is followed by the title screen and the the disclaimer screen. Subversive spirit.
 
 \section{Renderer: Mode X and Mode Y}
 As seen in the Hardware chapter, none of the VGA modes offered could do what a game needed. But game developers found
 a way: Mode X \footnote{X-Mode Frequently Asked Questions - By Zoombapup (Phil)  2-Oct-94}. Nobody knows who discovered mode-X but the person who popularized it is Michael Abrash \footnote{Michael Abrash's Graphic Programming Black Book: Chapter 47, page 877.}.
-
+TODO: How VRAM is organized: Page one, Page two and assets for fast copy VRAM to VRAM.
 \section{Menu Phase: 2D Renderer}
 The menu phase is renderer by the 2D renderer which is tile based. The screen is divided into tiles as follow:\\
 DRAWING\\
 Bla bla bla\\
 
 \section{Action Phase: 3D Renderer}
-
+Raycasting DDA: "http://lodev.org/cgtutor/raycasting.html"
 Upon finishing parameter selection, the engine would switch from Menu phase to Action Phase which was mostly about rendering the 3D environment. The renderer operated in four phases:
 \begin{itemize}
    \item Draw Background
@@ -143,7 +157,7 @@ Upon finishing parameter selection, the engine would switch from Menu phase to A
    \item Draw current weapon
 \end{itemize}
 
-
+Trivia: Hard-coded cos and sin lookup table. Budget ? 
 \begin{figure}[H]
 \centering
  \includegraphics[scale=1.3]{screenshots/wolf3d_1_background.png}
@@ -188,7 +202,7 @@ The floor was always the same color. The ceiling however changed see \codeword{W
    Synergy: VGA column drawing, raycasting, occlusion array
    
 \section{Fixed Point}
-
+\section{I.A: Stage Machines}
  
 If integers were not accurate enough and floating points were too slow, how could trigonometry be done on those machines? The solution was to re-purpose the hardware via Fixed Points!\\
 Fixed Point is a method that allows to keep track of fractions while still using the integer operations of the CPU. The machine manipulates what are supposed to be integer numbers but the programmers sees them as a real numbers. As usual it is easier to describe with a drawing. Integer are encoded following figure \ref{fig:int_layout}:

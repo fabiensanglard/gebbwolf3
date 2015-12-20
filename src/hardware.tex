@@ -434,7 +434,7 @@ The VGA can be summarized as two major systems :
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlled how the VGA RAM was accessed (interface CPU-VRAM).
 \item The framebuffer (VGA RAM) made not of one memory bank of 256KB but four memory banks of 64KB.
-\item The CRTC Controller and the DAC (Digital To Analog Converter) took care of converting the framebuffer to analogic signal (interface VRAM-CRT).
+\item The CRTC Controller and the DAC (Digital To Analog Converter) took care of converting the Palette indexed framebuffer to RGB and then to analogic signal (interface VRAM-CRT).
 \end{itemize}
 
 The most surprising part of the architecture is obviously the framebuffer. The first reaction of any engineer would be to ask themselves: Why four banks instead of one clean big one ?\\
