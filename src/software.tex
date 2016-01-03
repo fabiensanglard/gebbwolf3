@@ -128,6 +128,7 @@ Together they harness the machine to play sound, music and display the two phase
  \caption{The 320 rays cast to render the walls in the previous scene.} \label{fig:Raycasting2}
 \end{figure}
  
+Trivia: Actually the engine casted less than 320 rays: Trick used.
  
 
 \section{Unrolled Loop}
@@ -199,13 +200,55 @@ Raycasting DDA: "http://lodev.org/cgtutor/raycasting.html"
 Show map.\\
 Show 64x64.\\
 Show angle orientation.\\
+
+Call apogee:\\
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=1.3]{imgs/call_apogee_texture.png}
+ \caption{Raycasting 2: Call apogee texture} \label{fig:callapogeesprite}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=0.6]{imgs/call_apogee.png}
+ \caption{Raycasting 2: Call Apogee as seen in  Episode 2, Floor 8} \label{fig:callapogeeingame}
+\end{figure}
+
+\begin{fancyquotes}
+"Call Apogee and say Aardwolf."  It's a sign that to this day is something
+that I get asked about a lot.  This is a sign that appears on a wall in a
+particularly nasty maze in Episode 2 Level 8 of Wolfenstein 3D.  The sign
+was to be the goal in a contest Apogee was going to have, but almost
+immediately after the game's release, a large amount of cheat and mapping
+programs were released.  With these programs running around, we felt that
+it would have been unfair to have the contest and award a prize.  The sign
+was still left in the game, but in hindsight, probably should have been
+taken out.  To this day, Apogee gets letters and phone calls and asking
+what Aardwolf is, frequently with the question, "Has anyone seen this yet?"\\
+\\
+Also, in a somewhat related issue, letters were shown after the highest score
+in the score table in some revisions of the game.  These letters were to be
+part of another contest that got scrapped before it got started, where we were
+going to have people call in with their scores and tell us the code; we'd then
+be able to verify their score.  However, with the cheat programs out there,
+this got scrapped too.\\
+\\
+Basically, "Aardwolf" and the letters mean nothing now.  Also note that if
+you found the Aardwolf sign in the game (without cheating), there's a VERY
+strong chance that you're stuck in there.  The only way out may be to restart,
+or load a saved game from before you went into that maze.\\
+\\
+\textbf{Joe Siegler - Past Pioneers of the Shareware Revolution}
+\end{fancyquotes}
+
 \subsection{Fixed point}
 \subsection{Raytracing: DDA Algorithm}
 Digital Differential Analysis\\
 Some ray are not traced ? How does that work ?\\
 Precalculated sin-cos.\\
 \subsection{FishEye}
-
+\lstinputlisting[language=C]{code/CalcHeight.c}
+trivia: global variables, years later JC pure functions.
 \begin{figure}[H]
 \centering
  \input{imgs/fish_eye/state.tex}
@@ -262,7 +305,11 @@ Precalculated sin-cos.\\
 \subsection{Door}
 \subsection{Texturing}
 Pre-Lighted texture.\\
-Scaler (precompiled).\\
+Scaler (precompiled).\\  \begin{figure}[H]
+\centering
+ \includegraphics[scale=3.3]{imgs/baked_lights.png}
+ \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
+ \end{figure}
 
 \subsection{Rendering phases}
 
@@ -285,7 +332,23 @@ Builds a compiled scaler object that will scale a 64 tall object to the given he
 \codeword{BuildCompScale}
 \lstinputlisting[language=C]{code/compscale.c}
 
+  \begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/wall_texturw.png}
+ \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
+ \end{figure}
 
+  \begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/light_sprite.png}
+ \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
+ \end{figure}
+
+  \begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/guard_sprite.png}
+ \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
+ \end{figure}
 
 
 \begin{figure}[H]
