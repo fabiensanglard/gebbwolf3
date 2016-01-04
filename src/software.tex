@@ -255,11 +255,25 @@ trivia: global variables, years later JC pure functions.
  \caption{blabla.} \label{fig:Raycasting2}
 \end{figure}
 
+\begin{math}
+	d = \sqrt{dx^2 + dy^2}
+\end{math}
+
+Angle 
+\begin{math}\alpha\end{math}
+
+\begin{math}
+	z = dx * \cos(\alpha) - dy * \sin(\alpha)
+\end{math}
+
 \begin{figure}[H]
 \centering
  \input{imgs/fish_eye/d_vs_z.tex}
  \caption{blabla.} \label{fig:Raycasting2}
 \end{figure}
+
+Mnemonic: SOH-CAH-TOA\\
+
 
 \begin{figure}[H]
 \centering
@@ -285,11 +299,17 @@ trivia: global variables, years later JC pure functions.
  \caption{3D Rendere Phase 1: Background} \label{fig:mips}
  \end{figure}
 
+
+
+
+
+
  \begin{figure}[H]
 \centering
  \includegraphics[scale=1.3]{imgs/fish_eye/fish_eye.png}
  \caption{3D Rendere Phase 1: Background} \label{fig:mips}
  \end{figure}
+ 
  
   \begin{figure}[H]
 \centering
@@ -457,11 +477,11 @@ The beauty of this method is that addition and subtraction work exactly like int
  
  
 \begin{fancyquotes}
-Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacombs 3D.  C3D (and Hovertank before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn’t really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel “rock solid”.
+Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacombs 3D.  C3D (and Hovertank before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn't really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel "rock solid".
  \bigskip \\
-There was a clear performance cost to it – doing 320 traces through a tile map and treating each column independently is much slower than looping through a few long wall segments.  However, the resulting code was small and very regular compared to the hairball of my wall span renderers, and it did deliver the rock-solid feel I wanted.
+There was a clear performance cost to it - doing 320 traces through a tile map and treating each column independently is much slower than looping through a few long wall segments.  However, the resulting code was small and very regular compared to the hairball of my wall span renderers, and it did deliver the rock-solid feel I wanted.
  \bigskip \\
-If you made extremely jagged block maps that would turn into many dozen independent wall segments, the ray casting could start to look like a good performance choice, but few scenes were even close to that.  This is exactly the same ray tracing versus rasterization performance tradeoff that is still being made today, but now it is “how many tens of millions of triangles per frame to ray tracing break-even” instead of “how many dozen wall segments”.
+If you made extremely jagged block maps that would turn into many dozen independent wall segments, the ray casting could start to look like a good performance choice, but few scenes were even close to that.  This is exactly the same ray tracing versus rasterization performance tradeoff that is still being made today, but now it is "how many tens of millions of triangles per frame to ray tracing break-even" instead of "how many dozen wall segments".
  \bigskip \\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
