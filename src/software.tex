@@ -241,30 +241,67 @@ or load a saved game from before you went into that maze.\\
 \textbf{Joe Siegler - Past Pioneers of the Shareware Revolution}
 \end{fancyquotes}
 
+
+
+
+
+
+
+
+
+
+
+
+
 \subsection{Fixed point}
 \subsection{Raytracing: DDA Algorithm}
 Digital Differential Analysis\\
 Some ray are not traced ? How does that work ?\\
 Precalculated sin-cos.\\
 \subsection{FishEye}
-\lstinputlisting[language=C]{code/CalcHeight.c}
-trivia: global variables, years later JC pure functions.
-\begin{figure}[H]
-\centering
- \input{imgs/fish_eye/state.tex}
- \caption{blabla.} \label{fig:Raycasting2}
-\end{figure}
+The function in charge of calculating the heigh of a wall is CalcHeight:\\
 
+\lstinputlisting[language=C]{code/CalcHeight.c}
+
+The code is not what one would expect: The raytracing algorithm is supposed to cast a ray for each pixel column and use the distance D to infer an other value. So I would have expected to see something like:
 \begin{math}
 	d = \sqrt{dx^2 + dy^2}
 \end{math}
 
-Angle 
-\begin{math}\alpha\end{math}
-
+but instead it looks like:
 \begin{math}
-	z = dx * \cos(\alpha) - dy * \sin(\alpha)
-\end{math}
+	d = dx * \cos(\alpha) - dy * \sin(\alpha)
+\end{math}.
+Something is not right. Or misunderstood here.
+\begin{figure}[H]
+\centering
+ \input{imgs/fish_eye/state.tex}
+ \caption{Raycasting using distance d} \label{fig:Raycasting2}
+\end{figure}
+
+In this drawing the player is located at viewpoint with a view angle \begin{math}\alpha\end{math}. The distance d is a straight line between the player point of view and the location where the ray hit the line. Such an algorithm would result in a "fisheye effect". It is not very noticeable when a wall is far:
+
+\begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/fish_eye/bad_mild.png}
+ \caption{Fish eye effect: Mild}. \label{fig:mips}
+ \end{figure}
+
+But it gets worse when you get closer:
+\begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/fish_eye/bad_ok.png}
+ \caption{Fish eye effect: Bad} \label{fig:mips}
+ \end{figure}
+
+And become unbearable when close:
+ \begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{imgs/fish_eye/bad_bad.png}
+ \caption{Fish eye effect: AAAAARG} \label{fig:mips}
+ \end{figure}
+ 
+To avoid this visual annoyance, what must be used is not the direct distance d but d projected on the perpendicular of the view direction:
 
 \begin{figure}[H]
 \centering
@@ -272,8 +309,7 @@ Angle
  \caption{blabla.} \label{fig:Raycasting2}
 \end{figure}
 
-Mnemonic: SOH-CAH-TOA\\
-
+This projection is mathematically hard to calculate in one go (especially with fixed point). The trick is to break it down in two components and use highschool mnemonic: SOH-CAH-TOA\\
 
 \begin{figure}[H]
 \centering
@@ -281,23 +317,11 @@ Mnemonic: SOH-CAH-TOA\\
  \caption{blabla.} \label{fig:Raycasting2}
 \end{figure}
 
-\begin{figure}[H]
-\centering
- \includegraphics[scale=1.3]{imgs/fish_eye/bad_mild.png}
- \caption{3D Rendere Phase 1: Background} \label{fig:mips}
- \end{figure}
+
  
-\begin{figure}[H]
-\centering
- \includegraphics[scale=1.3]{imgs/fish_eye/bad_ok.png}
- \caption{3D Rendere Phase 1: Background} \label{fig:mips}
- \end{figure}
+
  
- \begin{figure}[H]
-\centering
- \includegraphics[scale=1.3]{imgs/fish_eye/bad_bad.png}
- \caption{3D Rendere Phase 1: Background} \label{fig:mips}
- \end{figure}
+
 
 
 
@@ -314,16 +338,20 @@ Mnemonic: SOH-CAH-TOA\\
   \begin{figure}[H]
 \centering
  \includegraphics[scale=1.3]{imgs/fish_eye/fish_eye_corrected.png}
- \caption{3D Rendere Phase 1: Background} \label{fig:mips}
+ \caption{Fish eye: Uncorrected} \label{fig:mips}
  \end{figure}
  
   \begin{figure}[H]
 \centering
  \includegraphics[scale=1.3]{imgs/fish_eye/fish_eyed_start_screen2.png}
- \caption{3D Rendere Phase 1: Background} \label{fig:mips}
+ \caption{Fish eye: Corrected} \label{fig:mips}
  \end{figure}
+ Note: Why substract values insted of adding them ? The Wolf3D coordinate system has its origin at the upper left. This inverse the sin value. To compensate for it, the correction math uses substraction instead of addition.
+ 
 \subsection{Door}
 \subsection{Texturing}
+
+
 Pre-Lighted texture.\\
 Scaler (precompiled).\\  \begin{figure}[H]
 \centering
