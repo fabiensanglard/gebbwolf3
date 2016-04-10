@@ -5,7 +5,7 @@ In order to understand the machine I broke it down in five components part of a 
  \bigskip
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1.2]{imgs/fun_pipeline.eps}
+\includegraphics[scale=1.2]{imgs/fun_pipeline.pdf}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
 \caption{Hardware pipeline.}
@@ -106,7 +106,7 @@ It is important to understand what floating point is and how it works to fully g
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.4]{imgs/floating_point_layout.eps}
+\includegraphics[scale=0.4]{imgs/floating_point_layout.pdf}
 \caption{Floating Point internals}
 \label{fig:fp_internals}
 \end{figure}
@@ -116,7 +116,7 @@ It is important to understand what floating point is and how it works to fully g
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.4]{imgs/floating_point_math.eps}
+\includegraphics[scale=0.4]{imgs/floating_point_math.pdf}
 \caption{Floating Point three sections}
 \label{fig:fp_regions}
 \end{figure}
@@ -136,7 +136,7 @@ Although correct, this way to explain floating point usually leaves programmers 
   
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.4]{imgs/floating_point_intuitive.eps}
+\includegraphics[scale=0.4]{imgs/floating_point_intuitive.pdf}
 \caption{Alternative Floating Point internals}
 \label{fig:fp_internals}
 \end{figure}
@@ -146,7 +146,7 @@ Figure \ref{fig:fp_internals_window} illustrate how the number 6.1 would be enco
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{imgs/floating_point_window.eps}
+\includegraphics[scale=0.7]{imgs/floating_point_window.pdf}
 
 \caption{Value 6.1 approximated with floating point}
 \label{fig:fp_internals_window}
@@ -170,7 +170,7 @@ Which in binary translate to:
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.4]{imgs/floating_point_layout_pi.eps}
+\includegraphics[scale=0.4]{imgs/floating_point_layout_pi.pdf}
 \caption{Floating Point internals}
 \label{fig:fp_internals}
 \end{figure}
@@ -190,7 +190,7 @@ And finally the graphic representation:\\
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{imgs/floating_point_window_pi.eps}
+\includegraphics[scale=0.7]{imgs/floating_point_window_pi.pdf}
 
 \caption{3.14 window and offset.}
 \label{fig:fp_internals}
@@ -277,7 +277,7 @@ Here is a brief description of the memory layout: \\
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1]{imgs/real_mode}
+\includegraphics[scale=1]{imgs/real_mode.pdf}
 
 \caption{3.14 window and offset.}
 \label{fig:fp_internals}
@@ -295,7 +295,7 @@ As a result, out of the original 1024KB, only 640KB (called Conventional Memory)
 Real Mode could not use 32 bits registers for addressing. Everything had to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There were two kinds of RAM pointers: near and far. In the case of a far pointer, a 16 bits segment register would be shifted left 4 bits and combined with an other 16 bits offset register\\
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{imgs/register_combination_20_bits_address.eps}
+\includegraphics[scale=0.8]{imgs/register_combination_20_bits_address.pdf}
 \caption{How registers were combined to address memory.}
 \label{fig:register_comb_to_20_bits}
 \end{figure}
@@ -355,7 +355,7 @@ The 20 bits address bus of Real Mode limited the addressable RAM to 1MB. But mac
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1]{imgs/expanded_ram.eps}
+\includegraphics[scale=1]{imgs/expanded_ram}
 \caption{Expanded memory layout}
 \label{fig:ems_xms_layout}
 \end{figure}
