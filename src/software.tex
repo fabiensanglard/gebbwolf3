@@ -263,7 +263,7 @@ The function in charge of calculating the heigh of a wall is CalcHeight:\\
 
 \lstinputlisting[language=C]{code/CalcHeight.c}
 
-The code is not what one would expect: The raytracing algorithm is supposed to cast a ray for each pixel column and use the distance D to infer an other value. So I would have expected to see something like:
+The code is not what one would expect: The raytracing algorithm is supposed to cast a ray for each pixel column and use the distance \codeword{d} to infer an other value. So I would have expected to see something like:
 \begin{math}
 	d = \sqrt{dx^2 + dy^2}
 \end{math}
@@ -279,7 +279,7 @@ Something is not right. Or misunderstood here.
  \caption{Raycasting using distance d} \label{fig:Raycasting2}
 \end{figure}
 
-In this drawing the player is located at viewpoint with a view angle \begin{math}\alpha\end{math}. The distance d is a straight line between the player point of view and the location where the ray hit the line. Such an algorithm would result in a "fisheye effect". It is not very noticeable when a wall is far:
+In this drawing the player is located at viewpoint with a view angle \begin{math}\alpha\end{math}. The distance \codeword{d} is a straight line between the player point of view and the location where the ray hit the line. Such an algorithm would result in a "fisheye effect". It is not very noticeable when a wall is far:
 
 \begin{figure}[H]
 \centering
