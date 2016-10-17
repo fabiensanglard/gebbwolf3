@@ -347,13 +347,49 @@ This projection is mathematically hard to calculate in one go (especially with f
  \caption{Fish eye: Corrected} \label{fig:mips}
  \end{figure}
  Note: Why substract values insted of adding them ? The Wolf3D coordinate system has its origin at the upper left. This inverse the sin value. To compensate for it, the correction math uses substraction instead of addition.
+
+\subsection{Ray skipping trick} 
+For a screen 320 pixels wide, a naive algorithm would cast 320 rays. But the engine has a trick to reduce the amount of work. It is based on XXX.\\
+The following code is doing it\\
+The idea is to\\
+This trick alone saves X\% rays per frames. On the demo, XX frames are draw, XX rays should have been cast but only XX did.\\
+Precalculated angle per pixel width (pixelangle). Precalculated sin and cos table () same thing for tangent: sintable, costable, finetangent. Granularity is one degree \#define ANGLES 360\\
+tilehit encodes not only the coordinate of the hit but also the type of tile (8::8)\\
+All object 64x64 are scaled and centered vertically on the screen.
+
+TODO: Were images stored rotated 90degres to increase cache hit ? No way, this was aimed at 386. BUT that would make the drawing easier !!
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=1.3]{imgs/post_optimization_1_show.png}
+\end{figure}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=1.3]{imgs/post_optimization_1_pink_show.png}
+\end{figure}
+
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=1.3]{imgs/post_optimization_2_show.png}
+\end{figure}
+
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=1.3]{imgs/post_optimization_2_pink_show.png}
+\end{figure}
+ 
+ 
  
 \subsection{Door}
 \subsection{Texturing}
 
 
 Pre-Lighted texture.\\
-Scaler (precompiled).\\  \begin{figure}[H]
+Scaler (precompiled).\\
+  \begin{figure}[H]
 \centering
  \includegraphics[scale=3.3]{imgs/baked_lights.png}
  \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
