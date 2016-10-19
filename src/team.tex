@@ -1,6 +1,5 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-
 id Software was funded during February 1991 by four people: 
 
  \begin{figure}[H]
@@ -9,16 +8,16 @@ id Software was funded during February 1991 by four people:
   \toprule
   \textbf{Name} &  \textbf{Age} & \textbf{Occupation} \\
   \toprule 
-   John Carmack & 22 &  Technical Director\\
-   John Romero & 25 &  Level Artist\\
+   John Carmack & 22 &  Programming\\
+   John Romero & 25 &  Programming\\
    Adrian Carmack & 22 &  Artist\\
-   Tom Hall & 28 &  Game Designer\\
+   Tom Hall & 28 &  Creative Director\\
      \toprule
 \end{tabularx}
 \caption{id Software founding members.}\label{fig:Id Software team}
 \end{figure}
 
-Wolfenstein 3D would be id first title but the team had already shipped no less than 13 games will working for their previous employer SoftDisk:\\
+Wolfenstein 3D was id first title but the team had already shipped no less than 13 games will working for their previous employer SoftDisk:\\
 \begin{itemize}
   \item Dangerous Dave (1988)\footnote{Dangerous Dave is a solo project of John Romero predating Id's formation, but Id Software produced its first sequel and it is sometimes regarded as an early Id Software title. Later Dangerous Dave sequels were not made by Id, nor were later Catacomb titles.}
   \item Commander Keen
@@ -41,7 +40,7 @@ Wolfenstein 3D would be id first title but the team had already shipped no less 
 \end{itemize}
 
 
-Considering the magnitude and ambitions of the title, four more people were added to the team for a total of eight people.\\
+Considering the magnitude and ambitions of the title, four more people were added to the team for a total of eight.\\
 
  \begin{figure}[H]
 \centering  
@@ -52,7 +51,7 @@ Considering the magnitude and ambitions of the title, four more people were adde
    Jay Wilbur & ?? &  Business\\
    Kevin Cloud & 27 &  Computer Artist\\
    Robert Prince & ?? &  Composer\\
-   Jason Blochowiak & ?? &  Additional Programming\\
+   Jason Blochowiak & ?? &   Programming\\
      \toprule
 \end{tabularx}
 \caption{id Software new hires.}\label{fig:Id Software hires}
@@ -106,6 +105,7 @@ The editor used VGA mode 3: 80 characters wide and 25 characters tall.
 John Carmack took care of the runtime code. John Romero programmed many of the tools (editor, packers, ...). Jason Blochowiak was contracted to write important subsystems of the game (Input manager, Page Manager, Sound Manager, User Manager).\\
 \\
 The compiler was Borland C++ 3.1. To compensate for the tiny CRT, some of the developers used two screens (a very unusual thing at the time).\\
+
 \begin{fancyquotes}
 At that point, we wanted 21" monitors, but couldn't justify them.  I used a second mono monitor to allow Turbo Debugger 386 to keep the main screen in graphics mode while I stepped through the code.\\
  \\
@@ -148,23 +148,27 @@ The graphic assets are divided as follow:
 \item Wall textures.
 \item Entities animations.
 \end{itemize}
-Those were the work of Adrian Carmack and Kevin Cloud. All of the work was done with Deluxe Paint on high-end 386 DX computers. The greatest task was not to draw everything but to make the key decision of what colors would go in the palette.\\
-\\
-Since VGA was not a RGB system but an indexed system, an entry in the palette was a precious commodity:
-TODO:Palette IMAGE\\
-\\
+Those were the work of Adrian Carmack and Kevin Cloud. All of the work was done with Deluxe Paint on high-end 386 DX computers. The most difficult task was not to draw everything but to make the key decision of what colors would go in the palette.\\
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=1.3]{imgs/palette.png}
+ \caption{The 3D sequence palette.} \label{fig:palette}
+\end{figure}
+
+Since all textures for the wall and sprites would have to use it.\\
 All assets were hand drawn:\\
 \begin{fancyquotes}
 We didn't have any scanning tools at the time.\\
 \\
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
-Question to ASK: Did they at least had a stylus or something like that ?	 Or did they use a mouse ?\\
+\\
+I was unable to get in touch with Adrian Carmack or Kevin Cloud but I would have loved to know if they have some sort of stylus or if he was just very good with a mouse.\\
 
 \section{Asset workflow}
-All asset were given a name (e.g: ). A tool IGRAB-ED tool care of packing all assets in a file and generated a C header file:\\
-TODO: entry example.
- The program could reference an asset direcly by using its macro.\\
+Once all the Deluxe Paint images were ready, a tool, IGRAB-ED, packed all the ILBMs files and generated a C header file:\\
+TODO: entry example. All asset were given a name (e.g: ). 
+ The program could reference an asset directly by using its macro.\\
 \begin{figure}[H]
 \centering
  \includegraphics[scale=0.4]{imgs/drawing_plain.eps}
@@ -252,9 +256,9 @@ anywhere.\\
 
 
 \section{Business}
-Jay Wilbur: I was unable to get in touch with Jay. Little is known...for now :) !\\
+I was unable to get in touch with Jay Wilbur. Little is known...for now :) !\\
 \section{Sounds}
-Robert Prince: I was unable to get in touch with Robert. Little is known...for now :) !\\
+Despite multiple emails, I was unable to get in touch with Robert Prince. Little is known...for now :) !\\
 
 \end{document}
 

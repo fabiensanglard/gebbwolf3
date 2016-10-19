@@ -1,7 +1,7 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
 \section{Source Code}
-The game engine was released on July 21, 1995. It is still there:\\ 
+The game engine was released on July 21, 1995. 20 years later it is still there on the company ftp\footnote{Transfer File Protocol (along with Finger where J.C.Carmack used to blog) was commonly used in the 90s in the blessed time where you did not have to encrypt everything on the wire.}:\\ 
 \\\codeword{ftp://ftp.idsoftware.com/idstuff/source/wolfsrc.zip}.\\
 \\
 \textbf{\underline{Trivia :}} Before the times of nmap and WireShark, ftp was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
@@ -86,13 +86,9 @@ Together they harness the machine to play sound, music and display the two phase
 \label{fig:architecture}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
- \includegraphics[scale=1.3]{imgs/palette.png}
- \caption{The 3D sequence palette.} \label{fig:palette}
-\end{figure}
 
 
+\section{Palette tricks}
 \begin{figure}[H]
   \centering
  \includegraphics[scale=1.3]{imgs/palette_damage.png}
@@ -132,7 +128,7 @@ Trivia: Actually the engine casted less than 320 rays: Trick used.
  
 
 \section{Unrolled Loop}
-
+Game runs at 70Hz (twice as doom which ran at 35Hz). Framerate comes from the refresh rate of VGA at 320x240. At 640*480, rate it 60hz.
 \subsection{Memory Manager (MM)}
 
 \subsection{Page Manager (PM)}
@@ -160,6 +156,7 @@ Abstract interaction with keyboard and mouse.
 
 \section{Introduction Phase}
 The game starts with the "resource summary" which display the available RAM, Inputs and Audio systems. Then it is followed by the title screen and the the disclaimer screen. Subversive spirit.
+TODO: Show screenshot.
 
 \section{Renderer: Mode X and Mode Y}
 As seen in the Hardware chapter, none of the VGA modes offered could do what a game needed. But game developers found
@@ -197,7 +194,11 @@ Bla bla bla\\
 Raycasting DDA: "http://lodev.org/cgtutor/raycasting.html"
 
 \subsection{Map}
-Show map.\\
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=1.3]{imgs/e1m1.png}
+\end{figure}
+
 Show 64x64.\\
 Show angle orientation.\\
 
@@ -348,28 +349,48 @@ This projection is mathematically hard to calculate in one go (especially with f
  \end{figure}
  Note: Why substract values insted of adding them ? The Wolf3D coordinate system has its origin at the upper left. This inverse the sin value. To compensate for it, the correction math uses substraction instead of addition.
 
-\subsection{Ray skipping trick} 
-For a screen 320 pixels wide, a naive algorithm would cast 320 rays. But the engine has a trick to reduce the amount of work. It is based on XXX.\\
-The following code is doing it\\
-The idea is to\\
-This trick alone saves X\% rays per frames. On the demo, XX frames are draw, XX rays should have been cast but only XX did.\\
-Precalculated angle per pixel width (pixelangle). Precalculated sin and cos table () same thing for tangent: sintable, costable, finetangent. Granularity is one degree \#define ANGLES 360\\
-tilehit encodes not only the coordinate of the hit but also the type of tile (8::8)\\
-All object 64x64 are scaled and centered vertically on the screen.
+\subsection{Ray skipping trick}
+A naive implementation of the raycaster would be:\\
+\lstinputlisting[language=C]{code/naive_raycaster_pseudocode.c}
+But Wolf3D is different: It buffers what to draw:
+\lstinputlisting[language=C]{code/wolf3d_raycaster_pseudocode.c}
 
+Rendition is deferred because the engine allows itself to cheat a little: If a ray is cast and hits the same block and in the same
+texture column, the two rays are considered similar. If two rays are similar they are drawn at the same height. The visual result is 
+barely noticable. But this cheat allows to draw up to eight column of pixel in three write operations (in practice it is more like two columns
+with one write operation). The details of this are in the method \codeword{ScalePost} in \codeword{WL\_DRAW.C}.\\
+
+Note: A \quotes{post} is a column of pixel belonging to a wall.\\
+ScalePost is written in assembly and performs a maximum of three pass to draw a maximum of eight columns of pixels.
+\lstinputlisting[language=C]{code/ScalePost.c}
+Because there can be many combinations of VGA bank alignment and number of pixels to draw:
+
+\begin{figure}[H]
+\centering
+ \includegraphics[scale=0.3]{imgs/scalePost_explanation1.png}
+ \end{figure}
+ 
+ \begin{figure}[H]
+ \centering
+ \includegraphics[scale=0.3]{imgs/scalePost_explanation2.png}
+ \end{figure}
+The instruction \codeword{or al , al} can be surprising. It means test if al is equal to zero and set the flag. Back in the day it was more populate than \codeword{test al, al}
+ the VGA bank masks are harcoded in an array: One for each pass:\\
+\lstinputlisting[language=C]{code/hardcoded_masks.c}
 TODO: Were images stored rotated 90degres to increase cache hit ? No way, this was aimed at 386. BUT that would make the drawing easier !!
 
+In the following example, the left wall is magnified. several rays hit the wall at the same texture location.
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=1.3]{imgs/post_optimization_1_pink_show.png}
+\end{figure}
+The engine takes advantage of it and draw several columns (posts) efficiently with the VGA. The engine was altered to show the optimized posts in pink.
 \begin{figure}[H]
  \centering
  \includegraphics[scale=1.3]{imgs/post_optimization_1_show.png}
 \end{figure}
 
-\begin{figure}[H]
- \centering
- \includegraphics[scale=1.3]{imgs/post_optimization_1_pink_show.png}
-\end{figure}
-
-
+In the previous scene, 20\% of the wall was optimized away. In the next two screenshot, the same process, this time with the `eagle' texture:
 \begin{figure}[H]
  \centering
  \includegraphics[scale=1.3]{imgs/post_optimization_2_show.png}
@@ -381,7 +402,10 @@ TODO: Were images stored rotated 90degres to increase cache hit ? No way, this w
  \includegraphics[scale=1.3]{imgs/post_optimization_2_pink_show.png}
 \end{figure}
  
- 
+To draw several column of pixels at the same time, the engine exploit the VGA banks and the masking mechanism seen in the Hardware section.
+Since up to eight column can be similar, there are many case of figure depending on the aligment with the VGA banks and how many pixels to draw:
+
+Example
  
 \subsection{Door}
 \subsection{Texturing}
@@ -427,6 +451,13 @@ Builds a compiled scaler object that will scale a 64 tall object to the given he
  \includegraphics[scale=1.3]{imgs/light_sprite.png}
  \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
  \end{figure}
+Trivia: This type of sprite would later turn out a major issue with hardware accelerated renderer for the iOS port:
+
+\begin{fancyquotes}
+Wolfenstein (and Doom) originally drew the characters as sparse stretched columns of solid pixels (vertical instead of horizontal for efficiency in interleaved planar mode-X VGA), but OpenGL versions need to generate a square texture with transparent pixels.  Typically this is then drawn by either alpha blending or alpha testing a big quad that is mostly empty space.  You could play through several early levels of Wolf without this being a problem, but in later levels there are often large fields of dozens of items that stack up to enough overdraw to max out the GPU and drop the framerate to 20 fps.  The solution is to bound the solid pixels in the texture and only draw that restricted area, which solves the problem with most items, but Wolf has a few different heavily used ceiling lamp textures that have a small lamp at the top and a thin but full width shadow at the bottom.  A single bounds doesn't exclude many texels, so I wound up including two bounds, which made them render many times faster. 
+\bigskip \\
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
 
   \begin{figure}[H]
 \centering
@@ -478,7 +509,11 @@ The floor was always the same color. The ceiling however changed see \codeword{W
 
    Synergy: VGA column drawing, raycasting, occlusion array
 
-\section{I.A: Stage Machines}
+\subsection{Rendering things}
+\subsection{Loading screen}
+One interesting aspect: Wall sprites were stored uncompressed but things are compressed in memory and decompressed while drawing occurs via bytecode.
+
+\section{I.A: State Machines}
  
 If integers were not accurate enough and floating points were too slow, how could trigonometry be done on those machines? The solution was to re-purpose the hardware via Fixed Points!\\
 Fixed Point is a method that allows to keep track of fractions while still using the integer operations of the CPU. The machine manipulates what are supposed to be integer numbers but the programmers sees them as a real numbers. As usual it is easier to describe with a drawing. Integer are encoded following figure \ref{fig:int_layout}:
