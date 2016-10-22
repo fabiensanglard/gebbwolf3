@@ -87,6 +87,35 @@ Together they harness the machine to play sound, music and display the two phase
 \end{figure}
 
 
+\subsection{Memory Manager (MM)}
+
+\subsection{Page Manager (PM)}
+
+The Page Manager harness the three types of RAM available: Conventional, XMS and XML. It abstract this complexity behind a Paging system.\\
+Is it where the loading screen shows a progress bar ?
+"Get Psyched !!!": Fill up the cache ?
+Trivia: The progress bar was called a "thermometer".
+The Page Manager provides all asset during 3D rendition. 
+It loads as many "Pages" as possible in Main, XMS and EMS memory during the get Psyched screen.
+TODO: Add a screenshot.
+It uses a Least Frequency Used eviction policy if not all asset fit in RAM. VSWAP.WL6 is 1.6MB -> Recommended configuration 2MB RAM..but the game would run with just 640KB.
+\subsection{Video Manager (VW)}
+
+
+\subsection{Cache Manager (CA)}
+The Cache Manager takes care of all the assets during Menu Phases: Sprites, Music, Sounds.
+\subsection{Sound Manager (SD)}
+The Sound Manager abstract interaction with all four sound systems supported: PC Speaker, ADLib (Music only), Sound Blaster (Mono), Sound Blaster Pro (Stereo).
+\subsection{User Manager (US)}
+
+
+\subsection{Input Manager (IN)}
+Abstract interaction with keyboard and mouse.
+
+
+
+
+
 
 \section{Palette tricks}
 \begin{figure}[H]
@@ -129,30 +158,10 @@ Trivia: Actually the engine casted less than 320 rays: Trick used.
 
 \section{Unrolled Loop}
 Game runs at 70Hz (twice as doom which ran at 35Hz). Framerate comes from the refresh rate of VGA at 320x240. At 640*480, rate it 60hz.
-\subsection{Memory Manager (MM)}
-
-\subsection{Page Manager (PM)}
-
-The Page Manager harness the three types of RAM available: Conventional, XMS and XML. It abstract this complexity behind a Paging system.\\
-Is it where the loading screen shows a progress bar ?
-"Get Psyched !!!": Fill up the cache ?
-Trivia: The progress bar was called a "thermometer".
-The Page Manager provides all asset during 3D rendition. 
-It loads as many "Pages" as possible in Main, XMS and EMS memory during the get Psyched screen.
-TODO: Add a screenshot.
-It uses a Least Frequency Used eviction policy if not all asset fit in RAM. VSWAP.WL6 is 1.6MB -> Recommended configuration 2MB RAM..but the game would run with just 640KB.
-\subsection{Video Manager (VW)}
+\lstinputlisting[language=C]{code/unrolled_loop.c}
+\lstinputlisting[language=C]{code/soundsystem_interrupt.c}
 
 
-\subsection{Cache Manager (CA)}
-The Cache Manager takes care of all the assets during Menu Phases: Sprites, Music, Sounds.
-\subsection{Sound Manager (SD)}
-The Sound Manager abstract interaction with all four sound systems supported: PC Speaker, ADLib (Music only), Sound Blaster (Mono), Sound Blaster Pro (Stereo).
-\subsection{User Manager (US)}
-
-
-\subsection{Input Manager (IN)}
-Abstract interaction with keyboard and mouse.
 
 \section{Introduction Phase}
 The game starts with the "resource summary" which display the available RAM, Inputs and Audio systems. Then it is followed by the title screen and the the disclaimer screen. Subversive spirit.
@@ -184,12 +193,162 @@ void DrawLine(y, color) {
 Would have been unpractical. But something else can be done if you notice that 320 is a multiple of 4 (320/4=80): If you draw only columns you don't have to change the target plan often.\\
 TOOD: Drawing of how column line up in VGA RAM.\\
 
+
+
+
+
+\subsection{Writing multiple pixels}
+In the Hardware chapter we introduced the VGA bank system:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{imgs/vga_ram_screen_layout.eps}
+\end{figure}
+
+Even though it was convoluted it allows clever tricks. Let's take the example of clearing the screen to black. A naive approach would be to write every pixels left to write and top to bottom:
+
+\lstinputlisting[language=C]{code/vga_clear/naive.c}
+
+
+The cost of this operation is 320x200= 64000 writes and 64000 out operation (to select the mask).
+But the overhead of selecting the bank (a.k.a plan) would make the task impossibly slow. A better approach would be to do bottom up and left to right as follow:
+
+\lstinputlisting[language=C]{code/vga_clear/optimized.c}
+
+The code is slightly more complicated but this way we only switch bank XXX times and write 320x200=64000 writes and  320 out out operation. But there is a way to do even better: 
+
+\lstinputlisting[language=C]{code/vga_clear/optimal.c}
+
+Which results in 320*80=25600 and 1 out operation !\\
+
+This is not always that easy: You can write up to four pixels in one write as long as they are properly aligned. See the example following:
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=0.4]{imgs//vga_multiple_pixel_write.png}
+\end{figure}
+
+
+
+
+
+
+
+
 \section{Menu Phase: 2D Renderer}
 The menu phase is renderer by the 2D renderer which is tile based. The screen is divided into tiles as follow:\\
 DRAWING\\
 Bla bla bla\\
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Action Phase: 3D Renderer}
+
+\subsection{Big Picture}
+
+During action sequences, the 3D scene is rendered in four passes:
+\begin{enumerate}
+ \item Clear the screen by drawing the floor and the ceiling (both solid color).
+ \item Cast up to 320 rays and draw then according to the distance from the player.
+ \item Draw the things (enemies, lamps, barrels).
+ \item Draw the weapon.	
+\end{enumerate}
+
+Following, screenshots of a slowdown version of the engine, showing each four step of rendition:
+\begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{screenshots/wolf3d_1_background.png}
+ \caption{3D Rendere Phase 1: Background} \label{fig:mips}
+ \end{figure}
+The floor was always the same color. The ceiling however changed see \codeword{WL\_DRAW.C} for a hard-coded index. TODO: Include a clear screen from a later level.\\
+\begin{figure}[H]
+ \centering
+  \includegraphics[scale=1.3]{screenshots/wolf3d_4_partial_wall_32rays.png}
+  \caption{3D Rendere Phase 2: Walls (160 rays)}
+  \label{fig:mips}
+\end{figure}
+ 
+\begin{figure}[H]
+ \centering
+  \includegraphics[scale=1.3]{screenshots/wolf3d_5_partialwalls_160rays.png}
+ \caption{Finalez frame} 
+ \label{fig:mips}
+\end{figure}
+ 
+ 
+ \begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{screenshots/wolf4d_2_walls.png}
+ \caption{3D Rendere Phase 2: Walls completed} \label{fig:mips}
+ \end{figure}
+ 
+ 
+ \begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{screenshots/wolf3d_6_scaled}
+ \caption{3D Rendere Phase 3: Scaled} \label{fig:mips}
+ \end{figure}
+
+ \begin{figure}[H]
+\centering
+ \includegraphics[scale=1.3]{screenshots/wolf3d_7_fullframe.png}
+ \caption{3D Rendere Phase 2: Weapon} \label{fig:mips}
+ \end{figure}
+ 
+
+   Synergy: VGA column drawing, raycasting, occlusion array
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Casting a Ray}
+To explain how a ray is traced up to its interception point (a wall), let's take the example of a player looking at 15 degres. Three tiles will be seen, in the engine, up to 320 ray have to be cast to find out how far the post are and how tall they should be drawn.
+\begin{figure}[H]
+\centering
+ \input{imgs/casting_a_ray/situation.tex}
+\end{figure}
+
+
+With a naive approach one could check for intersection at a regular interval. As the two rays draws below, it would works for some rays and fail for most of them.
+\begin{figure}[H]
+\centering
+ \input{imgs/casting_a_ray/unaligned.tex}
+ \caption{blabla.}
+\end{figure}
+
+The solution for 100\% accuracy is to check for 'hit` when the ray cross the grid. This is why Wolfenstein 3D could only draw walls on a perpendicular grid.
+\begin{figure}[H]
+\centering
+ \input{imgs/casting_a_ray/fixed.tex}
+ \caption{blabla.}
+\end{figure}
+
+
+
+
+
+
+
 
 
 \subsection{Loading Screen}
@@ -545,48 +704,6 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
  \end{figure}
 
 
-\begin{figure}[H]
-\centering
- \includegraphics[scale=1.3]{screenshots/wolf3d_1_background.png}
- \caption{3D Rendere Phase 1: Background} \label{fig:mips}
- \end{figure}
-The floor was always the same color. The ceiling however changed see \codeword{WL\_DRAW.C} for a hard-coded index. TODO: Include a clear screen from a later level.\\
-\begin{figure}[H]
- \centering
-  \includegraphics[scale=1.3]{screenshots/wolf3d_4_partial_wall_32rays.png}
-  \caption{3D Rendere Phase 2: Walls (160 rays)}
-  \label{fig:mips}
-\end{figure}
- 
-\begin{figure}[H]
- \centering
-  \includegraphics[scale=1.3]{screenshots/wolf3d_5_partialwalls_160rays.png}
- \caption{Finalez frame} 
- \label{fig:mips}
-\end{figure}
- 
- 
- \begin{figure}[H]
-\centering
- \includegraphics[scale=1.3]{screenshots/wolf4d_2_walls.png}
- \caption{3D Rendere Phase 2: Walls completed} \label{fig:mips}
- \end{figure}
- 
- 
- \begin{figure}[H]
-\centering
- \includegraphics[scale=1.3]{screenshots/wolf3d_6_scaled}
- \caption{3D Rendere Phase 3: Scaled} \label{fig:mips}
- \end{figure}
-
- \begin{figure}[H]
-\centering
- \includegraphics[scale=1.3]{screenshots/wolf3d_7_fullframe.png}
- \caption{3D Rendere Phase 2: Weapon} \label{fig:mips}
- \end{figure}
- 
-
-   Synergy: VGA column drawing, raycasting, occlusion array
 
 \subsection{Rendering things}
 \subsection{Loading screen}
@@ -616,6 +733,12 @@ If you made extremely jagged block maps that would turn into many dozen independ
  
  
 \section{I.A: State Machines} 
+
+\section{Heathbeats}
+VGA: 70Hz
+audio: Depends on quality, three levels of fidelity.
+
+\section{Music and Sound effects} 
 
 \end{document}
 
