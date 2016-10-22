@@ -118,6 +118,9 @@ Abstract interaction with keyboard and mouse.
 
 
 \section{Palette tricks}
+Because VGA is palette indexed instead of RGB, it allows visual effect such as fading (to black for intermission or red when the player is taking damage). The cost is relatively low:\\
+CODE\\
+256*3= 768 + setup out operations.
 \begin{figure}[H]
   \centering
  \includegraphics[scale=1.3]{imgs/palette_damage.png}
@@ -223,7 +226,7 @@ Which results in 320*80=25600 and 1 out operation !\\
 This is not always that easy: You can write up to four pixels in one write as long as they are properly aligned. See the example following:
 \begin{figure}[H]
   \centering
- \includegraphics[scale=0.4]{imgs//vga_multiple_pixel_write.png}
+ \includegraphics[scale=0.3]{imgs//vga_multiple_pixel_write.png}
 \end{figure}
 
 
