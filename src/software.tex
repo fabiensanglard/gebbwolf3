@@ -7,6 +7,7 @@ The game engine was released on July 21, 1995. 20 years later it is still there 
 \textbf{\underline{Trivia :}} Before the times of nmap and WireShark, ftp was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
 
 \section{First Contact}
+\section{PG13}
 The file \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical nowadays. You can deflate it with:\\
 \\\codeword{unzip WOLFSRC.1}.\\
 \\The source code actually contains more than just \codeword{.H} (headers) and \codeword{.C} (code) files. Also present are:
@@ -118,6 +119,8 @@ Abstract interaction with keyboard and mouse.
 
 
 \section{Palette tricks}
+The "h" in Mode 13h stands for "hexadecimal"; it is actually VGA mode 19 in decimal.
+Palette is stored in the DAC registers.
 Because VGA is palette indexed instead of RGB, it allows visual effect such as fading (to black for intermission or red when the player is taking damage). The cost is relatively low:\\
 CODE\\
 256*3= 768 + setup out operations.
@@ -165,8 +168,22 @@ Game runs at 70Hz (twice as doom which ran at 35Hz). Framerate comes from the re
 \lstinputlisting[language=C]{code/soundsystem_interrupt.c}
 
 
+\section{Unchaining the VGA}
+\subsection{Mode-X}
+Mode 13: This is achieved using the VGA 'Chain 4' setting in which the lowest two bits of the 16 bit aperture address are used to select the plane to write to/read from. \footnote{https://en.wikipedia.org/wiki/Mode\_13h}
+\subsection{Latch}
+LatchDrawPic
+Chapter 48 from michael abrash book
+atches were not intended for use in 256-color mode; that was something I figured out as a hack and wrote about. The latches were used so that in 16-color mode any or all of the four planes could be written to at once.
+
+
+
+
+
 
 \section{Introduction Phase}
+
+
 The game starts with the "resource summary" which display the available RAM, Inputs and Audio systems. Then it is followed by the title screen and the the disclaimer screen. Subversive spirit.
 TODO: Show screenshot.
 
@@ -240,13 +257,8 @@ This is not always that easy: You can write up to four pixels in one write as lo
 The menu phase is renderer by the 2D renderer which is tile based. The screen is divided into tiles as follow:\\
 DRAWING\\
 Bla bla bla\\
-
-
-
-
-
-
-
+Assets are called "pic" as opposed to sprites in 3D phases. Pics  are all Huffman-compressed (VGADICT, VGAHEAD, 
+VGAGRAPH).
 
 
 
@@ -267,6 +279,11 @@ During action sequences, the 3D scene is rendered in four passes:
  \item Draw the weapon.	
 \end{enumerate}
 
+Assets come from file VMSWAP:
+\begin{enumerate}
+	\item Textures for the wall are stored uncompressed.
+	\item Sprites are ...They are not compressed per say but because they contain a lot of optimization: Own many columns to skip on the left. How wide they are. Since scprite are drawn as column....chunk offsets ahd chunk length. Sprites are drawn bottom up
+\end{enumerate}
 Following, screenshots of a slowdown version of the engine, showing each four step of rendition:
 \begin{figure}[H]
 \centering
@@ -649,6 +666,11 @@ Since up to eight column can be similar, there are many case of figure depending
 Example
  
 \subsection{Door}
+Doors have no tickness.\\
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=1.3]{imgs/door_flat.png}
+\end{figure}
 \subsection{Texturing}
 
 
@@ -719,10 +741,44 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 One interesting aspect: Wall sprites were stored uncompressed but things are compressed in memory and decompressed while drawing occurs via bytecode.
 
 
- 
+\subsection{VSD: Visible Surface Determination}
+To determine what is visible and draw things properly is hard. Michael Abrash summarized the domain of the problem well:\\
 
+\begin{fancyquotes}
+I want to talk about what is, in my book, the toughest 3-D problem of all, visible surface determination (drawing the proper surface at each pixel), and its close relative, culling (discarding non-visible polygons as quickly as possible, a way of accelerating visible surface determination). In the interests of brevity, I’ll use the abbreviation VSD to mean both visible surface determination and culling from now on.
+ \bigskip \\
+Why do I think VSD is the toughest 3-D challenge? Although rasterization issues such as texture mapping are fascinating and important, they are tasks of relatively finite scope, and are being moved into hardware as 3-D accelerators appear; also, they only scale with increases in screen resolution, which are relatively modest.
+ \bigskip \\
+In contrast, VSD is an open-ended problem, and there are dozens of approaches currently in use. Even more significantly, the performance of VSD, done in an unsophisticated fashion, scales directly with scene complexity, which tends to increase as a square or cube function, so this very rapidly becomes the limiting factor in doing realistic worlds. I expect VSD increasingly to be the dominant issue in realtime PC 3-D over the next few years, as 3-D worlds become increasingly detailed.
+ \bigskip \\
+\bigskip \\
+\textbf{Michael Abrash - Programmer}
+ \end{fancyquotes}
  
+ Wolf3D uses two mechanism to make sure things are draw properly:
+ \begin{enumerate}
+ 	\item While casting each ray, memorize which cells were visited by the ray. This is used to know which "things" to draw.
+ 	\item Upon drawing a wall column, save the height of that wall. This is done to clip "things" to draw.
+ \end{enumerate}
  
+ \subsubsection{}
+ At the beginning of each 3D rendition, the engine clears the:
+ \lstinputlisting[language=C]{code/clear_vis_wold3d.c}
+ Note that because register are 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations. Nowadays it is more efficient to use the C library.
+ \lstinputlisting[language=C]{code/clear_vis_modern.c}
+ Later in the assembly hand crafted procedure \codeword{AsmRefresh} we can find where this array is populated:
+  \lstinputlisting[language={[x86masm]Assembler}]{code/mark_vis_wold3d.asm}
+  If we table the example of the starting screen, we can see which tile were marked at visible:
+  
+  
+\begin{figure}[H]
+  \centering
+  \input{imgs/ray_caster_explained/marked_out_room.tex}
+ \caption{Ray cast and visible spots.} 
+\end{figure}
+
+  
+  
 \subsection{Why a raytracer instead of a rasterizer?} 
 \begin{fancyquotes}
 Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacombs 3D.  C3D (and Hovertank before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn't really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel "rock solid".
@@ -733,8 +789,9 @@ If you made extremely jagged block maps that would turn into many dozen independ
  \bigskip \\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
- 
- 
+ \subsection{Page flipping trick}
+ Use an address that can be changed with only one byte ( e.g: a000 b0000 c000).
+ Or did he wait for the vsync?
 \section{I.A: State Machines} 
 
 \section{Heathbeats}
