@@ -789,6 +789,34 @@ If you made extremely jagged block maps that would turn into many dozen independ
  \bigskip \\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ \subsection{Things compression}
+ If wall texture were always fully opaque (64*64 sprites), things could be transparent. So they were good candidate to save space in RAM. They are stored compressed in RAM and decompressed on the fly when they have to be drawn. As a result they are stored as column of pixels (instead of the usual lines of pixels you can find in BMP or PNG formats).
+ 
+ \subsubsection{Example: Soldier} 
+ \subsubsection{Example: Lamp}  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  \subsection{Page flipping trick}
  Use an address that can be changed with only one byte ( e.g: a000 b0000 c000).
  Or did he wait for the vsync?
