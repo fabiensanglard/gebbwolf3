@@ -1,0 +1,35 @@
+\subsection{VSD: Visible Surface Determination}
+To determine what is visible and draw things properly is hard. Michael Abrash summarized the domain of the problem well:\\
+
+\begin{fancyquotes}
+I want to talk about what is, in my book, the toughest 3-D problem of all, visible surface determination (drawing the proper surface at each pixel), and its close relative, culling (discarding non-visible polygons as quickly as possible, a way of accelerating visible surface determination). In the interests of brevity, I’ll use the abbreviation VSD to mean both visible surface determination and culling from now on.
+ \bigskip \\
+Why do I think VSD is the toughest 3-D challenge? Although rasterization issues such as texture mapping are fascinating and important, they are tasks of relatively finite scope, and are being moved into hardware as 3-D accelerators appear; also, they only scale with increases in screen resolution, which are relatively modest.
+ \bigskip \\
+In contrast, VSD is an open-ended problem, and there are dozens of approaches currently in use. Even more significantly, the performance of VSD, done in an unsophisticated fashion, scales directly with scene complexity, which tends to increase as a square or cube function, so this very rapidly becomes the limiting factor in doing realistic worlds. I expect VSD increasingly to be the dominant issue in realtime PC 3-D over the next few years, as 3-D worlds become increasingly detailed.
+ \bigskip \\
+\bigskip \\
+\textbf{Michael Abrash - Programmer}
+ \end{fancyquotes}
+ 
+ Wolf3D uses two mechanism to make sure things are draw properly:
+ \begin{enumerate}
+ 	\item While casting each ray, memorize which cells were visited by the ray. This is used to know which "things" to draw.
+ 	\item Upon drawing a wall column, save the height of that wall. This is done to clip "things" to draw.
+ \end{enumerate}
+ 
+ \subsubsection{}
+ At the beginning of each 3D rendition, the engine clears the:
+ \lstinputlisting[language=C]{code/clear_vis_wold3d.c}
+ Note that because register are 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations. Nowadays it is more efficient to use the C library.
+ \lstinputlisting[language=C]{code/clear_vis_modern.c}
+ Later in the assembly hand crafted procedure \codeword{AsmRefresh} we can find where this array is populated:
+  \lstinputlisting[language={[x86masm]Assembler}]{code/mark_vis_wold3d.asm}
+  If we table the example of the starting screen, we can see which tile were marked at visible:
+  
+  
+\begin{figure}[H]
+  \centering
+  \input{imgs/ray_caster_explained/marked_out_room.tex}
+ \caption{Ray cast and visible spots.} 
+\end{figure}
