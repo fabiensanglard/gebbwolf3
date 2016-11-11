@@ -6,17 +6,23 @@
 
 
 \section{Palette tricks}
-The "h" in Mode 13h stands for "hexadecimal"; it is actually VGA mode 19 in decimal.
-Palette is stored in the DAC registers.
-Because VGA is palette indexed instead of RGB, it allows visual effect such as fading (to black for intermission or red when the player is taking damage). The cost is relatively low:\\
+
+Every 1/70th of a second, the VGA output the framebuffer to the screen. Since what is stored are palette index, a translation layer is done in the VGA's DAC. The DAC convert a one byte index to a 3 bytes RGB color. The palette is stored a one block: 256*3 = 768bytes. 
 CODE\\
-256*3= 768 + setup out operations.
+256*3= 768 + setup out operations.\\
+This palette allow for fast fading. For example when the played is taking damage, the screen briedly fades to red:
 \begin{figure}[H]
   \centering
- \includegraphics[scale=1.3]{imgs/palette_damage.png}
+ \includegraphics[width=\textwidth]{imgs/palette_damage.png}
  \caption{The palette RGB colors altered when taking damage.} \label{fig:palette_damage}
 \end{figure}
+There is a trick however: Only the 3D part should fade. UpdatePaletteShifts function.\\
+Palette are precomputed in 6 steps toward red or white.\\
+What is fast palette setting (via outsb instruction)?\\
 
+\begin{minipage}{\linewidth}
+\lstinputlisting[language=C,morekeywords={asm,byte,far}]{code/vl_setpalette.c}
+\end{minipage}
 
 
 \begin{figure}[H]
@@ -208,6 +214,10 @@ Planes:
 An ambush tile-affected enemy is not blind but attack playe but won't react to dead soldiers or dogs.\\
 
 
+\section{Pseudo random generator}
+US\_RndT\\
+rndtable\\
+During dying randon generation is done differently.
 
 \section{Heathbeats}
 VGA: 70Hz

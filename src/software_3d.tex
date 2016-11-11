@@ -57,15 +57,15 @@ The floor was always the same color. The ceiling however changed see \codeword{W
  \end{figure}
  
 
-   Synergy: VGA column drawing, raycasting, occlusion array
+   Synergy: VGA column drawing, raycasting, occlusion array\\
+
+
+The static part (ammo, face, etc) is not redrawn if not necessary. However cost is high since the new part of the screen has to be draw in three buffers (e\.g:StatusDrawPic) .
 
 
 
-
-
-
-
-
+\subsection{Clearing the screen}
+Screen is never actuall cleared like in modern engines. Instead a floor color and a ceiling color are drawn.
 
 
 
@@ -120,6 +120,12 @@ Raycasting DDA: "http://lodev.org/cgtutor/raycasting.html"
 
 Show 64x64.\\
 Show angle orientation.\\
+
+Map are plane based. Wolf3D have two planes. Plane \#0 stores walls, doors and ambush markers (ambush markers are explained in the I\.A section. Plane \#1 stores actors.\\
+
+Maps are stored compressed RLEWed and then Carmackized.\\
+To uncompress they have to be UnCarmackized and then unRLEWed.
+
 
 Call apogee:\\
 \begin{figure}[H]
