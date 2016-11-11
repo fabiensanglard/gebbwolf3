@@ -137,7 +137,7 @@ Although correct, this way to explain floating point usually leaves programmers 
   
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.4]{imgs/floating_point_intuitive.pdf}
+\includegraphics[width=\textwidth]{imgs/floating_point_intuitive.pdf}
 \caption{Alternative Floating Point internals}
 \label{fig:fp_internals}
 \end{figure}
@@ -278,7 +278,7 @@ Here is a brief description of the memory layout: \\
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1]{imgs/real_mode.pdf}
+\includegraphics[width=\textwidth]{imgs/real_mode.pdf}
 
 \caption{3.14 window and offset.}
 \label{fig:fp_internals}
@@ -296,7 +296,7 @@ As a result, out of the original 1024KB, only 640KB (called Conventional Memory)
 Real Mode could not use 32 bits registers for addressing. Everything had to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There were two kinds of RAM pointers: near and far. In the case of a far pointer, a 16 bits segment register would be shifted left 4 bits and combined with an other 16 bits offset register\\
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{imgs/register_combination_20_bits_address.pdf}
+\includegraphics[width=\textwidth]{imgs/register_combination_20_bits_address.pdf}
 \caption{How registers were combined to address memory.}
 \label{fig:register_comb_to_20_bits}
 \end{figure}
@@ -356,7 +356,7 @@ The 20 bits address bus of Real Mode limited the addressable RAM to 1MB. But mac
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1]{imgs/expanded_ram}
+\includegraphics[width=\textwidth]{imgs/expanded_ram}
 \caption{Expanded memory layout}
 \label{fig:ems_xms_layout}
 \end{figure}
@@ -384,7 +384,7 @@ PC were connected to CRT monitors: Big, heavy, small diagonal, cathodic ray base
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1.2]{imgs/crt_lcd.eps}
+\includegraphics[width=\textwidth]{imgs/crt_lcd.eps}
 \caption{CRT (left) vs LCD (right)}
 \label{fig:lcd_vs_crt}
 \end{figure}
@@ -401,7 +401,7 @@ The first adapter of the family was released in 1981. The Monochrome Display
   
  \begin{figure}[H]
 \centering  
-\begin{tabularx}{0.9\textwidth}{ X  Y }
+\begin{tabularx}{\textwidth}{ X  Y }
   \toprule
   \textbf{Name} &  \textbf{Year Released} \\
   \toprule \codeword{MDA}
@@ -447,7 +447,7 @@ But the real reason was physical limitations: A CRT running at 60Hz and displayi
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1.2]{imgs/vga.eps}
+\includegraphics[width=\textwidth]{imgs/vga.eps}
 \caption{Video Graphic Array Architecture.}
 \label{fig:vga_arch}
 \end{figure}
@@ -469,7 +469,7 @@ Four memory banks granted enough throughput to reach high resolutions. The price
 My first drawing of the VGA was actually deceiving. It was a hell of a system to work with. The diagram from IBM VGA Reference illustrate this pretty well:\\
  \begin{figure}[H]
 \centering
-\includegraphics[scale=0.38]{imgs/ibm_vga.eps}
+\includegraphics[width=\textwidth]{imgs/ibm_vga.eps}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
 \caption{IBM's VGA Documentation}
@@ -481,7 +481,7 @@ My first drawing of the VGA was actually deceiving. It was a hell of a system to
 How memory banks were populated vs how they were displayed:
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{imgs/vga_ram_screen_layout.eps}
+\includegraphics[width=\textwidth]{imgs/vga_ram_screen_layout.eps}
 \caption{Video Graphic Array Architecture.}
 \label{fig:vga_arch}
 \end{figure}
@@ -496,7 +496,7 @@ The BIOS could be called to have the VGA configured with preset registers.
 \begin{figure}[H]
 \centering
 \begin{table}[H]
-\begin{tabular}[c]{llllr}
+\begin{tabularx}{\textwidth}[c]{llllr}
 \hline
 \textbf{Mode} & \textbf{Type} & \textbf{Format} & \textbf{Colors}          & \multicolumn{1}{l}{\textbf{Segment}} \\ \hline
 0             & text          & 40x25           & 16 gradient (monochrome) & b800h                                \\ \hline
@@ -514,7 +514,7 @@ The BIOS could be called to have the VGA configured with preset registers.
 11h           & VGA graphic   & 640x480         & 2                        & A000h                                \\ \hline
 12h           & VGA graphic   & 640x480         & 16                       & A000h                                \\ \hline
 13h           & VGA graphic   & 320x200         & 256                      & A000h                                \\ \hline
-\end{tabular}
+\end{tabularx}
 \end{table}
 \caption{VGA Modes available from BIOS.}\label{fig:vga_modes}
  \end{figure}
@@ -556,7 +556,7 @@ framebuffer to the CRT.
 
  \begin{figure}[H]
 \centering
-\includegraphics[scale=1.0]{imgs/circleframebuffer.eps}
+\includegraphics[width=\textwidth]{imgs/circleframebuffer.eps}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
 \caption{Drawing a circle in the framebuffer}
@@ -564,7 +564,7 @@ framebuffer to the CRT.
 
  \begin{figure}[H]
 \centering
-\includegraphics[scale=1.0]{imgs/circlescreen.eps}
+\includegraphics[width=\textwidth]{imgs/circlescreen.eps}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
 \caption{How the framebuffer looked once streshed on the CRT monitor :( !}
@@ -605,7 +605,7 @@ Even though it is anecdotic I still wanted to write a part about the connectors 
 The parallel port (DB-25) was on every computer and usually used to connect matrix printers (loud thing that printed with aiguilles).
  \begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{imgs/ports/DB-25_parallel_port.eps}
+\includegraphics[width=\textwidth]{imgs/ports/DB-25_parallel_port.eps}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
 \caption{Parallele Port}
@@ -616,7 +616,7 @@ The parallel port (DB-25) was on every computer and usually used to connect matr
 The serial port (DE9) was used to connect the mouse.
  \begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{imgs/ports/DE9_serial_port.eps}
+\includegraphics[width=\textwidth]{imgs/ports/DE9_serial_port.eps}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
 \caption{Serial Port}
@@ -626,7 +626,7 @@ The serial port (DE9) was used to connect the mouse.
 The PS/2 port was used to connect a keyboard.
  \begin{figure}[H]
 \centering
-\includegraphics[scale=0.2]{imgs/ports/MiniDIN-6_PS2.eps}
+\includegraphics[width=\textwidth]{imgs/ports/MiniDIN-6_PS2.eps}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
 \caption{PS/2 Port}
@@ -637,7 +637,7 @@ The PS/2 port was used to connect a keyboard.
 Finally, the sound card connected via the ISA bus provided a new port: A Game Port (DA-15) allowing to connect a joystick.
  \begin{figure}[H]
 \centering
-\includegraphics[scale=0.9]{imgs/ports/DA-15_GamePort.eps}
+\includegraphics[width=\textwidth]{imgs/ports/DA-15_GamePort.eps}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
 \caption{Game Port}

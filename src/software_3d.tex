@@ -18,20 +18,20 @@ Assets come from file VMSWAP:
 Following, screenshots of a slowdown version of the engine, showing each four step of rendition:
 \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{screenshots/wolf3d_1_background.png}
+ \includegraphics[width=\textwidth]{screenshots/wolf3d_1_background.png}
  \caption{3D Rendere Phase 1: Background} \label{fig:mips}
  \end{figure}
 The floor was always the same color. The ceiling however changed see \codeword{WL\_DRAW.C} for a hard-coded index. TODO: Include a clear screen from a later level.\\
 \begin{figure}[H]
  \centering
-  \includegraphics[scale=1.3]{screenshots/wolf3d_4_partial_wall_32rays.png}
+  \includegraphics[width=\textwidth]{screenshots/wolf3d_4_partial_wall_32rays.png}
   \caption{3D Rendere Phase 2: Walls (160 rays)}
   \label{fig:mips}
 \end{figure}
  
 \begin{figure}[H]
  \centering
-  \includegraphics[scale=1.3]{screenshots/wolf3d_5_partialwalls_160rays.png}
+  \includegraphics[width=\textwidth]{screenshots/wolf3d_5_partialwalls_160rays.png}
  \caption{Finalez frame} 
  \label{fig:mips}
 \end{figure}
@@ -39,20 +39,20 @@ The floor was always the same color. The ceiling however changed see \codeword{W
  
  \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{screenshots/wolf4d_2_walls.png}
+ \includegraphics[width=\textwidth]{screenshots/wolf4d_2_walls.png}
  \caption{3D Rendere Phase 2: Walls completed} \label{fig:mips}
  \end{figure}
  
  
  \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{screenshots/wolf3d_6_scaled}
+ \includegraphics[width=\textwidth]{screenshots/wolf3d_6_scaled}
  \caption{3D Rendere Phase 3: Scaled} \label{fig:mips}
  \end{figure}
 
  \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{screenshots/wolf3d_7_fullframe.png}
+ \includegraphics[width=\textwidth]{screenshots/wolf3d_7_fullframe.png}
  \caption{3D Rendere Phase 2: Weapon} \label{fig:mips}
  \end{figure}
  
@@ -90,7 +90,7 @@ With a naive approach one could check for intersection at a regular interval. As
 The solution for 100\% accuracy is to check for 'hit` when the ray cross the grid. This is why Wolfenstein 3D could only draw walls on a perpendicular grid.
 \begin{figure}[H]
 \centering
- \input{imgs/casting_a_ray/fixed.tex}
+ \includegraphics[width=0.5\textwidth]{imgs/casting_a_ray/fixed}
  \caption{blabla.}
 \end{figure}
 
@@ -105,7 +105,7 @@ The solution for 100\% accuracy is to check for 'hit` when the ray cross the gri
 \subsection{Loading Screen}
 \begin{figure}[H]
   \centering
- \includegraphics[scale=1.3]{imgs/get_psyched.png}
+ \includegraphics[width=\textwidth]{imgs/get_psyched.png}
 \end{figure}
 PM\_Preload()
 
@@ -114,7 +114,7 @@ Raycasting DDA: "http://lodev.org/cgtutor/raycasting.html"
 \subsection{Map}
 \begin{figure}[H]
   \centering
- \includegraphics[scale=1.0]{imgs/e1m1.png}
+ \includegraphics[width=\textwidth]{imgs/e1m1.png}
  \caption{The legendary E1M1. Player is the green arrow at the bottom.}
 \end{figure}
 
@@ -130,13 +130,13 @@ To uncompress they have to be UnCarmackized and then unRLEWed.
 Call apogee:\\
 \begin{figure}[H]
   \centering
- \includegraphics[scale=1.3]{imgs/call_apogee_texture.png}
+ \includegraphics[width=\textwidth]{imgs/call_apogee_texture.png}
  \caption{Raycasting 2: Call apogee texture} \label{fig:callapogeesprite}
 \end{figure}
 
 \begin{figure}[H]
   \centering
- \includegraphics[scale=0.6]{imgs/call_apogee.png}
+ \includegraphics[width=\textwidth]{imgs/call_apogee.png}
  \caption{Raycasting 2: Call Apogee as seen in  Episode 2, Floor 8} \label{fig:callapogeeingame}
 \end{figure}
 
@@ -279,21 +279,21 @@ In this drawing the player is located at viewpoint with a view angle \begin{math
 
 \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{imgs/fish_eye/bad_mild.png}
+ \includegraphics[width=\textwidth]{imgs/fish_eye/bad_mild.png}
  \caption{Fish eye effect: Mild}. \label{fig:mips}
  \end{figure}
 
 But it gets worse when you get closer:
 \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{imgs/fish_eye/bad_ok.png}
+ \includegraphics[width=\textwidth]{imgs/fish_eye/bad_ok.png}
  \caption{Fish eye effect: Bad} \label{fig:mips}
  \end{figure}
 
 And become unbearable when close:
  \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{imgs/fish_eye/bad_bad.png}
+ \includegraphics[width=\textwidth]{imgs/fish_eye/bad_bad.png}
  \caption{Fish eye effect: AAAAARG} \label{fig:mips}
  \end{figure}
  
@@ -326,20 +326,20 @@ This projection is mathematically hard to calculate in one go (especially with f
 
  \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{imgs/fish_eye/fish_eye.png}
+ \includegraphics[width=\textwidth]{imgs/fish_eye/fish_eye.png}
  \caption{3D Rendere Phase 1: Background} \label{fig:mips}
  \end{figure}
  
  
   \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{imgs/fish_eye/fish_eye_corrected.png}
+ \includegraphics[width=\textwidth]{imgs/fish_eye/fish_eye_corrected.png}
  \caption{Fish eye: Uncorrected} \label{fig:mips}
  \end{figure}
  
   \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{imgs/fish_eye/fish_eyed_start_screen2.png}
+ \includegraphics[width=\textwidth]{imgs/fish_eye/fish_eyed_start_screen2.png}
  \caption{Fish eye: Corrected} \label{fig:mips}
  \end{figure}
  Note: Why substract values insted of adding them ? The Wolf3D coordinate system has its origin at the upper left. This inverse the sin value. To compensate for it, the correction math uses substraction instead of addition.
@@ -362,12 +362,12 @@ Because there can be many combinations of VGA bank alignment and number of pixel
 
 \begin{figure}[H]
 \centering
- \includegraphics[scale=0.3]{imgs/scalePost_explanation1.png}
+ \includegraphics[width=\textwidth]{imgs/scalePost_explanation1.png}
  \end{figure}
  
  \begin{figure}[H]
  \centering
- \includegraphics[scale=0.3]{imgs/scalePost_explanation2.png}
+ \includegraphics[width=\textwidth]{imgs/scalePost_explanation2.png}
  \end{figure}
 The instruction \codeword{or al , al} can be surprising. It means test if al is equal to zero and set the flag. Back in the day it was more populate than \codeword{test al, al}
  the VGA bank masks are harcoded in an array: One for each pass:\\
@@ -377,24 +377,24 @@ TODO: Were images stored rotated 90degres to increase cache hit ? No way, this w
 In the following example, the left wall is magnified. several rays hit the wall at the same texture location.
 \begin{figure}[H]
  \centering
- \includegraphics[scale=1.3]{imgs/post_optimization_1_pink_show.png}
+ \includegraphics[width=\textwidth]{imgs/post_optimization_1_pink_show.png}
 \end{figure}
 The engine takes advantage of it and draw several columns (posts) efficiently with the VGA. The engine was altered to show the optimized posts in pink.
 \begin{figure}[H]
  \centering
- \includegraphics[scale=1.3]{imgs/post_optimization_1_show.png}
+ \includegraphics[width=\textwidth]{imgs/post_optimization_1_show.png}
 \end{figure}
 
 In the previous scene, 20\% of the wall was optimized away. In the next two screenshot, the same process, this time with the `eagle' texture:
 \begin{figure}[H]
  \centering
- \includegraphics[scale=1.3]{imgs/post_optimization_2_show.png}
+ \includegraphics[width=\textwidth]{imgs/post_optimization_2_show.png}
 \end{figure}
 
 
 \begin{figure}[H]
  \centering
- \includegraphics[scale=1.3]{imgs/post_optimization_2_pink_show.png}
+ \includegraphics[width=\textwidth]{imgs/post_optimization_2_pink_show.png}
 \end{figure}
  
 To draw several column of pixels at the same time, the engine exploit the VGA banks and the masking mechanism seen in the Hardware section.
@@ -406,7 +406,7 @@ Example
 Doors have no tickness.\\
 \begin{figure}[H]
  \centering
- \includegraphics[scale=1.3]{imgs/door_flat.png}
+ \includegraphics[width=\textwidth]{imgs/door_flat.png}
 \end{figure}
 \subsection{Texturing}
 
@@ -415,7 +415,7 @@ Pre-Lighted texture.\\
 Scaler (precompiled).\\
   \begin{figure}[H]
 \centering
- \includegraphics[scale=3.3]{imgs/baked_lights.png}
+ \includegraphics[width=\textwidth]{imgs/baked_lights.png}
  \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
  \end{figure}
 
@@ -442,13 +442,13 @@ Builds a compiled scaler object that will scale a 64 tall object to the given he
 
   \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{imgs/wall_texturw.png}
+ \includegraphics[width=\textwidth]{imgs/wall_texturw.png}
  \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
  \end{figure}
 
   \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{imgs/light_sprite.png}
+ \includegraphics[width=\textwidth]{imgs/light_sprite.png}
  \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
  \end{figure}
 Trivia: This type of sprite would later turn out a major issue with hardware accelerated renderer for the iOS port:
@@ -461,7 +461,7 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 
   \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{imgs/guard_sprite.png}
+ \includegraphics[width=\textwidth]{imgs/guard_sprite.png}
  \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
  \end{figure}
 
@@ -471,7 +471,7 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 \subsection{Loading screen}
  \begin{figure}[H]
 \centering
- \includegraphics[scale=1.3]{imgs/get_psyched.png}
+ \includegraphics[width=\textwidth]{imgs/get_psyched.png}
 
  \end{figure}
  

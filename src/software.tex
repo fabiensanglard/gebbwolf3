@@ -27,7 +27,7 @@ What is fast palette setting (via outsb instruction)?\\
 
 \begin{figure}[H]
   \centering
- \includegraphics[scale=1.3]{imgs/ray_caster_explained/beginning.png}
+ \includegraphics[width=\textwidth]{imgs/ray_caster_explained/beginning.png}
  \caption{Raycasting 1: Screenshot} \label{fig:Raycasting2Drawing}
 \end{figure}
 
@@ -42,7 +42,7 @@ What is fast palette setting (via outsb instruction)?\\
 
 \begin{figure}[H]
   \centering
- \includegraphics[scale=1.3]{imgs/ray_caster_explained/out_door.png}
+ \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_door.png}
  \caption{Raycasting 2: Screenshot} \label{fig:Raycasting2Drawing}
 \end{figure}
 
@@ -114,7 +114,7 @@ TOOD: Drawing of how column line up in VGA RAM.\\
 In the Hardware chapter we introduced the VGA bank system:
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{imgs/vga_ram_screen_layout.eps}
+\includegraphics[width=\textwidth]{imgs/vga_ram_screen_layout.eps}
 \end{figure}
 
 Even though it was convoluted it allows clever tricks. Let's take the example of clearing the screen to black. A naive approach would be to write every pixels left to write and top to bottom:
@@ -136,7 +136,7 @@ Which results in 320*80=25600 and 1 out operation !\\
 This is not always that easy: You can write up to four pixels in one write as long as they are properly aligned. See the example following:
 \begin{figure}[H]
   \centering
- \includegraphics[scale=0.3]{imgs//vga_multiple_pixel_write.png}
+ \includegraphics[width=\textwidth]{imgs//vga_multiple_pixel_write.png}
 \end{figure}
 
 
