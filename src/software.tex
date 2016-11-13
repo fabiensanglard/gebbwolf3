@@ -28,13 +28,13 @@ What is fast palette setting (via outsb instruction)?\\
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/ray_caster_explained/beginning.png}
- \caption{Raycasting 1: Screenshot} \label{fig:Raycasting2Drawing}
+ \caption{Raycasting 1: Screenshot}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \input{imgs/ray_caster_explained/beginning.tex}
- \caption{Raycasting 1: Drawing} \label{fig:Raycasting1}
+ \caption{Raycasting 1: Drawing} 
 \end{figure}
 
 
@@ -43,7 +43,7 @@ What is fast palette setting (via outsb instruction)?\\
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_door.png}
- \caption{Raycasting 2: Screenshot} \label{fig:Raycasting2Drawing}
+ \caption{Raycasting 2: Screenshot} 
 \end{figure}
 
 \begin{figure}[H]
@@ -98,7 +98,7 @@ But there is still a problem: Switching the target RAM was very slow. So a routi
 \begin{verbatim}
 void DrawLine(y, color) {
   for(int x=0; x < 320 ; x++) {
-    SelectBrank(x % 4);
+    SelectBank(x % 4);
     WritePixel(x, y, color);   
   }
 }
