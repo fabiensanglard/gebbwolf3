@@ -110,9 +110,7 @@ Next to the hard drives (HDD) you can see the assets packed as described in the 
 
 
 \subsection{Memory Manager (MM)}
-
-
-
+Harness the "fast" conventionnal memory.
 
 \subsection{Page Manager (PM)}
 
@@ -124,6 +122,10 @@ The Page Manager provides all asset during 3D rendition.
 It loads as many "Pages" as possible in Main, XMS and EMS memory during the get Psyched screen.
 TODO: Add a screenshot.
 It uses a Least Frequency Used eviction policy if not all asset fit in RAM. VSWAP.WL6 is 1.6MB -> Recommended configuration 2MB RAM..but the game would run with just 640KB.
+
+
+PAGE is for SWAP ! (see PML\_OpenPageFile)\\
+According to the page header (Primary coder: Jason Blochowiak) Jason had experience with Unix programming and its design clearly is inspired of Unix SWAP file and paging system.
 \subsection{Video Manager (VW)}
 
 
