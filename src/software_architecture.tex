@@ -18,16 +18,16 @@ wolfsrc\$ cloc-1.64.pl .
       94 unique files.                              
       27 files ignored.
 
---------------------------------------------------------------------------
-Language                files          blank        comment           code
---------------------------------------------------------------------------
-C++                        26           5750           6201          21169
-C/C++ Header               42            802            660           3900
-Assembly                   10            669            732           2150
-DOS Batch                   1              1              0              4
---------------------------------------------------------------------------
-SUM:                       79           7222           7593          27223
---------------------------------------------------------------------------
+---------------------------------------------------------------------
+Language           files          blank        comment           code
+---------------------------------------------------------------------
+C++                   26           5750           6201          21169
+C/C++ Header          42            802            660           3900
+Assembly              10            669            732           2150
+DOS Batch              1              1              0              4
+---------------------------------------------------------------------
+SUM:                  79           7222           7593          27223
+---------------------------------------------------------------------
 \end{verbatim}
 The game engine is mostly C with a few ASM routines for optimized stuff and I/O.\\
 
@@ -37,11 +37,6 @@ The game engine is mostly C with a few ASM routines for optimized stuff and I/O.
  \bigskip \\
 It's "COLUMN", you dumb @\#\$\% !\\
  \bigskip \\
-\textbf{John Carmack - Programmer}
- \end{fancyquotes}
-
-\begin{fancyquotes}
-Estimated completion time ?  
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
  
@@ -56,6 +51,32 @@ The archive actually contains more than just \codeword{.H} (headers) and \codewo
 \item \codeword{SV.EXE} ???
 \item Many files resulting in a previous compilation attempt.
 \end{itemize}
+
+
+
+
+
+
+
+\section{The Big Picture}
+The main system of the engine is its 3D engine. Which is not really 3D: Maps are designed in 2D dimensions (lattitude and longitude) and a 3D dimensional view is generated at runtime. In that sense, it could be called a pseudo-3D engine. The game is broken down in flat levels which are divided into areas and rooms by a grid-based pattern of walls and doors. The first level E1M1:\par
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/e1m1.png}
+ \caption{The legendary E1M1 viwed from the top as in TED5 (Player is the green arrow at the bottom).}
+\end{figure}
+\par 
+
+
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{screenshots/wolf3d_7_fullframe.png}
+ \caption{As it is rendered at runtime in pseudo-3D from the player point of view.} 
+ \end{figure}
+
+
+
+
 
 
 
@@ -76,12 +97,22 @@ The engine is made of sub-systems called Managers:
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/architecture.pdf}
-\caption{Architecture and sub-systems.}
+\caption{Architecture and sub-systems (in white) connected to I/O (in gray).}
 \label{fig:architecture}
 \end{figure}
+Next to the hard drives (HDD) you can see the assets packed as described in the Team chapter.
+
+
+
+
+
+
 
 
 \subsection{Memory Manager (MM)}
+
+
+
 
 \subsection{Page Manager (PM)}
 

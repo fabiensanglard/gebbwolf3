@@ -2,7 +2,7 @@
 \begin{document}
 PC performances in the 90s were so overwhelmingly dominated by their CPU that they were simply referred to not by their brand or model but by their Intel chip. If your PC has an Intel 80386SX in it, it was a 386. If it had an Intel 80286, it was a 286. Wolfenstein was target at 386s with degraded performances (yet still playable) on 286s.\\
 \\
-In order to understand the machine I broke it down in five components part of a pipeline: Input, Cpu, Ram, Video and Audio.\\
+The machine can be broken down in five sub-systems part of one pipeline: Input, Cpu, Ram, Video and Audio.\\
  \bigskip
 \begin{figure}[H]
 \centering
@@ -13,7 +13,7 @@ In order to understand the machine I broke it down in five components part of a 
 \label{fig:digraph}
 \end{figure}
 
-None of theses part were good for game although some were worse than others:
+As I will describe, none of theses part were good for a 3D game engine although some were worse than others:
 
  \bigskip
 
@@ -25,19 +25,17 @@ None of theses part were good for game although some were worse than others:
   RAM & Very Poor \\ 
   Video & Very Poor \\ 
   Audio & Poor \\ 
-  Inputs & Good \\ 
+  Inputs & Ok \\ 
   CPU & Poor \\ \bottomrule
 \end{tabularx}
-\caption{Component quality for a game engine.}  \label{fig:Component quality for a game engine.}
+\caption{Component quality for a game engine.}
 \end{figure}
 
-\footnote{Even though the CPU was powerful it was very good only at something next to useless for a 3D engine: Integer arithmetic.}
+The pipeline offered a lot of resistance: hardware manufacturers had not embraced the game industry yet, PC Gaming was a niche market and it showed a lot. Ever since their inception in the 70s, IBM Personal Computers were designed to display static images and crunch integers. Real-time 3D, fractions and smooth seventy-frames-per-seconds animations were not part of the blueprints.
 
-Overall, the pipeline offered a lot of resistance: hardware manufacturers had not embraced the game industry yet and it showed a lot. Ever since their inception in the 70s, IBM Personal Computers were designed to display static images and crunch integers. Real-time 3D, fractions and smooth sixty-frames-per-seconds animations were part of the blueprints.
-
-\section{Central Processing Unit}
+\section{CPU: Central Processing Unit}
   \subsection{Overview}
-  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors.  The machines based on the 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor: The 80386. Moore's law was in full swing as can be seen on a mips\footnote{Million Instructions Per Second.} histogram:
+  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors.  The machines based on the 16bits 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor: The 80386. Moore's law was in full swing as seen on a MIPS\footnote{Million Instructions Per Second.} histogram:
 
 
 \definecolor{skyblue1}{rgb}{0.1,0.624,0.812}
@@ -72,7 +70,7 @@ Overall, the pipeline offered a lot of resistance: hardware manufacturers had no
    \end{tikzpicture}
    \caption{Processor speeds comparison.} \label{fig:mips}
  \end{figure}
-386 = Simpledesign with no pipeline and no cache and no overclocking.\\
+
  \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 Mips: Five orders of magnitude faster!
 
  \bigskip
@@ -81,7 +79,7 @@ Overall, the pipeline offered a lot of resistance: hardware manufacturers had no
 
  \bigskip
  
- \textbf{\underline{Trivia :}} The 386SX and 386DX were identical processor. Yet the DX is twice faster than the SX thanks to a data bus between the CPU and the RAM twice as wide (32 bits vs 16 bits) !
+ \textbf{\underline{Trivia :}} The 386SX and 386DX were identical processor. Yet the DX is twice faster than the SX thanks to a data bus between the CPU and the RAM twice as wide (32 bits vs 16 bits)!
 
 
 
@@ -96,7 +94,7 @@ Overall, the pipeline offered a lot of resistance: hardware manufacturers had no
 
   \subsection{Floating Point}
   
-   PC 286s and 386s were powerful machines far outperforming any game console on the market. But all that power was not necessarily useful. In order to perform all the trigonometry for a '3D' game, the machines had to keep track of the fractional part of each operations. This is not an issue since the C language offers the types \codeword{float} and \codeword{double} precisely for that.\\
+   PC 286s and 386s were powerful machines far outperforming any game console on the market. But all that power was not necessarily useful. In order to perform all the trigonometry for a '3D' game, the machines had to keep track of the fractional part of each operations. This is not an issue since the C language offers the types \codeword{float} and \codeword{double} precisely for that\footnote{This is how modern 3D engine do all their calculations via SIMDs and GPU shaders: Floating point}.\\
 \\
 It is important to understand what floating point is and how it works to fully grasp how useful it is when doing maths. \codeword{float} are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
@@ -108,8 +106,7 @@ It is important to understand what floating point is and how it works to fully g
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/floating_point_layout.pdf}
-\caption{Floating Point internals}
-\label{fig:fp_internals}
+\caption{Floating Point internals.}
 \end{figure}
   \bigskip
 
@@ -118,21 +115,22 @@ It is important to understand what floating point is and how it works to fully g
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/floating_point_math.pdf}
-\caption{Floating Point three sections}
-\label{fig:fp_regions}
+\caption{Floating Point three sections.}
 \end{figure}
   \bigskip  
 
 
-How numbers are stored and interpreted is usually explained with the formula \ref{eq:fp}).\
+How numbers are stored and interpreted is usually explained with the formula in Figure \ref{eq:fp}).\
 
-
+\begin{figure}[H]
 \begin{equation}\label{eq:fp}
 \large
 (-1)^S * 1.M * 2^{(E-127)}
 \end{equation}
- 
+ \caption{How everybody hates floating point to be explained to them.}
+\end{figure}
 \bigskip  
+
 Although correct, this way to explain floating point usually leaves programmers completely clueless. I blame this ignoble notation for discouraging generations of programmers, scaring them to the point they never looked back to understand how floating point actually works. Fortunately, there is a better way to explain it: Instead of Exponent, think of a floating window between two consecutive power of two integers. And instead of a Mantissa think of an Offset within that window as in Figure \ref{fig:fp_internals}:
   
 \begin{figure}[H]
@@ -143,7 +141,7 @@ Although correct, this way to explain floating point usually leaves programmers 
 \end{figure}
   \bigskip  
 
-Figure \ref{fig:fp_internals_window} illustrate how the number 6.1 would be encoded, with the window starting at 4 (and therefore spanning up to next power of two: 8). The offset about half way down the window.
+Figure \ref{fig:fp_internals_window} illustrates how the number 6.1 would be encoded, with the window starting at 4 (and therefore spanning up to next power of two: 8). The offset about half way down the window.
 
 \begin{figure}[H]
 \centering
@@ -187,7 +185,7 @@ The corresponding value with the ugly and useless formula:
 
 \bigskip
 
-And finally the graphic representation:\\
+And finally the graphic representation with window and offset:\\
 
 \begin{figure}[H]
 \centering
@@ -202,15 +200,15 @@ Floating Point are very handy: They can represent very small values and huge one
 \\
 They are neat but computational intensive: In order to add, subtract, multiply or divide two numbers, they have to be expressed with the same window. Which mean converting one number to the representation used by the other usually with higher precision than 32 bits (typically 80 bits on Intel FPUs).\\
 \\
-This is not a problem when everything is hardwired...but it was a big problem for the 286 and the 386: \emph{They did not have a hardware Floating Point Unit}. Those operations were emulated in software by the compiler and therefore terribly slow. So slow they were not usable for anything real-time. 
+This is not a problem when everything is hardwired...but it was a big problem for the 286 and the 386: \emph{They did not have a hardware Floating Point Unit}. If cound in the code, these operations were emulated in software by the compiler and therefore terribly slow. So slow they were not usable for anything real-time. 
 
   \bigskip
 
- \textbf{\underline{Trivia :}} Since floating point units where so slow, why did the C language end up with a \codeword{float} and \codeword{double} types ? The machine used to invent the language (PDP-11) did not have a floating point but the manufacturer (DEC) had promised Dennis Ritchie and Ken Thompson the next model would have one\footnote{The Development of the C Language by Dennis M. Ritchie}. Being astronomy enthusiasts they decided to add those two types to their language. Had they decided not to, C and C++ would have never enjoyed the same popularity!
+ \textbf{\underline{Trivia :}} Since floating point units where so slow, why did the C language end up with a \codeword{float} and \codeword{double} types ? The machine used to invent the language (PDP-11) did not have a floating point but the manufacturer (DEC) had promised to Dennis Ritchie and Ken Thompson the next model would have one\footnote{The Development of the C Language by Dennis M. Ritchie}. Being astronomy enthusiasts they decided to add those two types to their language. Had they decided not to, C and C++ would have never enjoyed the same popularity!
 
 \bigskip  
 \break
-\textbf{\underline{Trivia :}} Some PCs did have hardware FPU. Intel sold what was marked as "Math CoProcessor". Intented to scientists, performances were average, price outrageous and sales mediocre :\\
+\textbf{\underline{Trivia :}} Some PCs did have hardware FPU. Intel sold what was marked as "Math CoProcessor". Intented to scientists, performances were average, price outrageous\footnote{\$200 in 1993 equivalent to \$350 in 2016} and sales mediocre :\\
 \begin{figure}[H]
 \centering
   \shadowbox{
@@ -223,7 +221,7 @@ This is not a problem when everything is hardwired...but it was a big problem fo
 
 
 \bigskip
-Overall the CPU was not promising for a 3D game: 286 and 386 \emph{int} operations were fast but not accurate enough and \emph{float} operations were accurate but not fast enough.
+So a game developer was stuck with two half solution to his problem: \emph{int}(integer) operations were fast but not accurate enough and \emph{float} operations were accurate but not fast enough!
    
 
 
@@ -246,7 +244,7 @@ Intel CPUs could operate in two modes:
   \item The old backward compatible Real Mode. Available \emph{only} to allow old software to run. This memory model replicated how the Intel 8086 CPU from the 70s operated: 20 bits memory bus, 1MB addressable RAM with an awful segmented addressing system.
   \item The new Protected Mode with a 32 bits memory bus wide offering up to 4 GB of RAM protectable with a MMU\footnote{Memory management Unit}.
 \end{itemize}
-The machine started in Real Mode for compatibility reasons. You may assume that programers of the 90s switched the CPU in Protected Mode to unleash the full potential of the machines and ditch the 20 years old Real Mode. Unfortunately, there was a major obstacle between this nice feature and the programmer. The infamous operating system, MS-DOS 5.0 by Microsoft Corporation.
+The machine started in Real Mode for compatibility reasons. You may assume that programers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20 years old Real Mode. Unfortunately, there was a major obstacle between this nice feature and the programmer. The infamous operating system, MS-DOS 5.0 by Microsoft Corporation.
   
 
 
@@ -293,17 +291,14 @@ As a result, out of the original 1024KB, only 640KB (called Conventional Memory)
 \\
 
 \subsection{The infamous Real Mode: 16 bits Segmented addressing}
-Real Mode could not use 32 bits registers for addressing. Everything had to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There were two kinds of RAM pointers: near and far. In the case of a far pointer, a 16 bits segment register would be shifted left 4 bits and combined with an other 16 bits offset register\\
+Real Mode could not use 32 bits registers for addressing (or even operations as a matter of facts). Everything had to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There were two kinds of RAM pointers: near and far. In the case of a far pointer, a 16 bits segment register would be shifted left 4 bits and combined with an other 16 bits offset register to form a 20bits address:\\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/register_combination_20_bits_address.pdf}
 \caption{How registers were combined to address memory.}
 \label{fig:register_comb_to_20_bits}
 \end{figure}
-A near pointer was just a 16 bits offset that would point in the same segment. 
-\bigskip
-That may not sound too bad but in practice this segmented addressing led to many issues.
-The least problematic was about the language: Since the C language was invented on 32 bits machine, the language had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro would be provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. That was an ugly wart on the beautiful C but that was manageable.\\
+A near pointer was just a 16 bits offset that would point in the same segment. That may not sound too bad but in practice this segmented addressing led to many issues. The least problematic was about the language: Since the C language was invented on 32 bits machine, the language had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro would be provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. That was an ugly wart on the beautiful C but that was manageable.\\
 \\
 The really big issue however was how two pointers, referring to the same address could fail an equality test: In this model, the 1MB of RAM is divided in 65536 paragraphs by the segment pointer. So a paragraph is 16 bytes but an offset can be up to 65536 !!! See the following example:\\
 \bigskip
@@ -368,15 +363,39 @@ Unfortunately once again, nothing was standardized. Users could load different d
 \end{itemize}
 
 Or they could decide to load no drivers at all at startup and not use any of the RAM beyond 1MB.\\
-\textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why even though they had many MB installed on their machine, some game would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (Appendix "\nameref{chap:barrier640}") along with the game to make it clear that it was not their fault.\\
+\par
+\textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why, even though they had many (extremly expensive\footnote{In 1992, 4MB of RAM costed \$149 which ajusted to inflaction would be \$256 in 2016}) megabytes of RAM installed on their machine, some game would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (Appendix "\nameref{chap:barrier640}") along with the game to make it clear that it was not their fault.\\
 
 \textbf{\underline{Trivia :}}  As of 2014, thirty five years after the introduction of the 8086, most PC in the world still start in Real Mode. A bootloader switch them to protected mode, load the kernel and then real startup can begin. Mac computers don't have this problem.
 
 \bigskip
+To learn more about EMS be sure to read Edward Mendelson's excellent article: . "A Slot Full of RAM"\footnote{PC Mag, (1989-12-12)}. If you are really hardcore, you can also check out XMS programming reference:\footnote{eXtended Memory Specification (XMS) July 19, 1988.}\\
+\par
+These two sections conclude on Intel CPUs which 
+I think the best way to summarize the x86 CPU memory model is how XXX described it:\\
+\par
+ \begin{fancyquotes}
+   \[x86 is\]...difficult to explain and impossible to love.
+   \\
+\textbf{David A. Patterson \& John L. Hennessy - Computer Organization and Design.}
+ \end{fancyquotes}\\
 
-TODO: Include reference to XMS and EMS programming reference. \footnote{eXtended Memory Specification (XMS) July 19, 1988.}\\
 
-TODO: Include starting screen of Wolf3D showing available memory.\\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Video}
 
@@ -430,7 +449,7 @@ Each iteration added new features and in 1993 the ubiquitous graphic system was 
 
 \subsection{VGA Architecture}
 
-The VGA can be summarized as two major systems :
+The VGA can be summarized as three major systems :
 
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlled how the VGA RAM was accessed (interface CPU-VRAM).
@@ -442,7 +461,7 @@ The most surprising part of the architecture is obviously the framebuffer. The f
 \\
 The first part of the explanation comes from backward compatibility: The version before VGA, the EGA had only 64KB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
 \\
-But the real reason was physical limitations: A CRT running at 60Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of a second . That means one pixel each 54ns. The problem was that RAM access time was 200ns: Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 60hz. If latency could not be reduced, the throughput could still be improved by accessing four banks at the time. The memory banks read in parallel had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
+But the real reason was physical limitations: A CRT running at 70Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of a second . That means one pixel each 54ns. The problem was that RAM access time was 200ns: Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz. If latency could not be reduced, the throughput could still be improved by accessing four banks at the time. The memory banks read in parallel had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
 
 
 \begin{figure}[H]
@@ -465,8 +484,23 @@ Four memory banks granted enough throughput to reach high resolutions. The price
 \textbf{Michael Abrash - Graphic Programming Black Book}
  \end{fancyquotes}
  \\
+\par
+The problem with this design is that programmers did not have a linear framebuffer. In order to write four pixesl next to each others on a line, a developer has to write one pixel in each bank. Each of these banks were located at the same memory adress. It was a mess better illustrated with the following drawing:\\
+\par
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imgs/vga_ram_screen_layout.eps}
+\caption{Video Graphic Array Architecture.}
+\label{fig:vga_arch}
+\end{figure}
+
+TODO: Show drawing of memory mapping RAM -> VGA ?
+ 
+
+ 
+
 \bigskip
-My first drawing of the VGA was actually deceiving. It was a hell of a system to work with. The diagram from IBM VGA Reference illustrate this pretty well:\\
+To configure this mess of planes and circuitry, the four constollers had a set of 300 poorly documented registers to setup. Needless to say few programmers got to dive in the internal of this thing. My first drawing of the VGA was actually deceiving: The register system and architecture of the VGA was hell as confirm the diagram from IBM VGA Reference:\\
  \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/ibm_vga.eps}
@@ -478,16 +512,9 @@ My first drawing of the VGA was actually deceiving. It was a hell of a system to
 
 \bigskip
 
-How memory banks were populated vs how they were displayed:
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{imgs/vga_ram_screen_layout.eps}
-\caption{Video Graphic Array Architecture.}
-\label{fig:vga_arch}
-\end{figure}
- 
-\bigskip
-To configure this mess of planes, registers and controllers meant setting up more than 300 poorly documented registers to interact together. Needless to say few programmers got to dive in the internal of this thing. Luckily IBM BIOS had a few preset configuration (called "mode") with an associated resolution and color numbers.
+
+
+Luckily IBM provided routines to do all the controllers initialization via the BIOS: 15 preset configuration (called "mode") with an associated resolution, color numbers and memory layout.
 
 \subsection{VGA Modes}
 
@@ -506,7 +533,7 @@ The BIOS could be called to have the VGA configured with preset registers.
 4             & CGA Graphics  & 320x200         & 4                        & b800h                                \\ \hline
 5             & CGA Graphics  & 320x200         & 4 gradient (monochrome)  & b800h                                \\ \hline
 6             & CGA Graphics  & 640x200         & 2                        & b800h                                \\ \hline
-7             & MDA text      & 9x14            & 3 gradient (monochrome   & b000h                                \\ \hline
+7             & MDA text      & 9x14            & 3 gradient (monochrome)  & b000h                                \\ \hline
 0Dh           & EGA graphic   & 320x200         & 16                       & A000h                                \\ \hline
 0Eh           & EGA graphic   & 640x200         & 16                       & A000h                                \\ \hline
 0Fh           & EGA graphic   & 640x350         & 3                        & A000h                                \\ \hline
@@ -525,11 +552,24 @@ The BIOS could be called to have the VGA configured with preset registers.
  
  
 
-
-
+ \subsection{VGA Programming: Mode 12h}
+Mode 12h was planar which means there was no linear framebuffer to write to. Instead 8 pixels were packed in one byte. To write the color index of the first pixel, a developer had to write the first bit of the nibble in plane 0, the second in plane 1, the third in plane 2 and the fourth in plane 3. The CRT Controller would read 4 bytes at a time (which resulted in 16 pixels on screen).\\
+\par
+\begin{figure}[H]
+\centering
+  
+      \includegraphics[width=\textwidth]{imgs/mode_12h.png}
+    
+\caption{Banks layout in mode 12h.}
+\end{figure}
+\par
+Trivia: 12h had only one buffer. And 16 colors looked ugly.
  
  
   \subsection{VGA Programming: Mode 13h}
+  Mode 13h was more appealing: It offered 256 colors (but still only one buffer). It also had the avantage of faking linear buffer: A special chip called Chain-4 used the lower 4 bit of the RAM adress to match it in the VGA RAM:\\
+  TODO: Draw right shift and linear adresses\\
+  \par
   Using the VGA as per the manual is easy since two instructions are enough to ask the BIOS to setup the environment with a mode. Here is an example that setup the a VGA to operate at 320x200 with 256 indexed colors: Mode 13h.\\
   \lstinputlisting[ language={[x86masm]Assembler}]{code/vga_mode13.asm}
   
@@ -537,21 +577,25 @@ The BIOS could be called to have the VGA configured with preset registers.
   Two instructions and that is it. The \codeword{int 10} is a software interrupt call to the BIOS routine in charge of Graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA register with the corresponding mode.\\
   
   A convenient thing with those was how the four memory banks were hidden to the programmer. By using 2 bits from the RAM, the VGA automatically determined in which bank to store a value. The side effect was to waste 75\% of the RAM. Memory Mapped area:\\
-  DRAWING
+ \begin{figure}[H]
+\centering
+  
+      \includegraphics[width=\textwidth]{imgs/mode_13h.png}
+    
+\caption{Banks layout in mode 12h.}
+\end{figure}
   
   The programmer has access to a linear framebuffer of 64KB mapped at \codeword{A0000h}.\\
-  
-  DRAWING
   
   To clear the screen to black for example, the following code was enough:\\
   
   \lstinputlisting[language=C]{code/clear_vga.c}
   
   
-  The mode 13h may look good but it is in fact terrible for game and animation. The intend was clearly to display static images:
+  The mode 13h may look good but it is in fact terrible for game and animation. The intend was clearly to display photos and drawings:
   \begin{itemize}
-\item All the RAM is used and there is no way to have a double buffer.
-\item Since the resolution is 320x200, the aspect ration does not feet the monitor. As a result the image is streched when transfered from the 
+\item All the RAM adress space is used and there is no way to have a double buffer.
+\item Since the resolution is 320x200, the aspect ration does not fit the monitor. As a result the image is streched when transfered from the 
 framebuffer to the CRT.
 
  \begin{figure}[H]
@@ -570,42 +614,58 @@ framebuffer to the CRT.
 \caption{How the framebuffer looked once streshed on the CRT monitor :( !}
 \end{figure}
 
-\item VGA MAPPING I/O WASTED SPACE.
+ \begin{figure}[H]
+\centering
+  
+      \includegraphics[width=\textwidth]{imgs/ram_to_vga_maping.png}
+    
+\caption{Mapping PC RAM to VGA banks.}
+\end{figure}
 
 \end{itemize}
 
-\subsection{What VGA meant for games}
-Not sprite engine meant a full framebuffer was had to be populated for any type of animation.\\
-Off all parts of the system, the VGA was in appearance the weakest of them all. Single-handedly preventing any type of smooth, tearless animation.
-
-
-
-
-  
 
 \section{Audio}
-Off all the parts in a PC, the audio system was the best. The card manufacturer had started to see a market and player actually had the opportunity to buy decent extension "sound card" from Ad Lib or SoundBlaster.
+Off all the parts in a PC, the audio system was the best. The card manufacturer had started to see a market and player actually had the opportunity to buy decent extension "sound card" from manufacturers like Ad Lib or Creative. As a result, the market was heterogenous.
   \subsection{Speaker}
-  PC came out of the box with a binary beeper. It was capable to produce two frequencies with surprisingly good results such as in Monkey Island game.\footnote{https://www.youtube.com/watch?v=a324ykKV-7Y}
+  PCs came out of the box with a binary beeper. It was capable to produce two frequencies. Of course hackers found clever way to exploit it as it is explained from Wikipedia page:\\
+\par
+ \begin{fancyquotes}
+  The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc.), the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC,[5] thereby enabling approximate playback of PCM audio. This technique is called pulse-width modulation (PWM).
+ \end{fancyquotes}
+\par
+  It gave surprisingly good results such as in Monkey Island music.\footnote{https://www.youtube.com/watch?v=a324ykKV-7Y}
+  
+
+
+
   \subsection{Ad Lib}
-  Ad Lib was a Canadian manufacturer of sound cards. As early as XXXX they identified the limitations of the PC Speakers and started to manufactur a card to connect othe ISA bus. Allowd MIDI.
+  Ad Lib was a Canadian manufacturer of sound cards. As early as XXXX they identified the limitations of the PC Speakers and started to manufacture a card to connect to the ISA bus which Allowed MIDI playback.
   
   Note: Canadian company and especially from Quebec were very innovative in the early 90s. Ad Lib manufactured Sound Card, Matrox made a killing with Millenium Graphic Card, Watcom compiler, ATI.\\
   
   Music (midi)
-  Not about canada: adlib, watcom and matrox millenium
+  
   \subsection{Sound Blaster}
-  The Sound Blaster 1.0 (code named "Killer Kard"),[1] CT1320A, was released in 1989
-  Music (midi+digitized sound)]  But it also added two key features absent from the Adlib: a PCM audio channel, and a game port.
+  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative labs. It was the best a gamer could purchage since it gave access not only to midi(music) playback but also digitized sound (8bits, mono, 23Hz sampling). It also added a very good port: A DA-15 allowing connection of a joystick!. The quality of the card would lead the Sound Blaster to be a de-factor standard in the 90s\footnote{The standard was broken by Windows 95 which standardized the programming interface at application level (eliminating the importance of backward compatibility with Sound Blaster)}.
   
 
   \subsection{Disney Sound Source}
   Plugged into the printer port (parrallel port) of the PC. Covox-idea based DAC, marketed by Disney Software in early 1990s. It consisted of 2 parts: a DAC plugged into printer port and separate amplifier / speaker box.[5] Its price was set to only \$14 and it was supported by many games (see below). It used external power (9 volt battery) and could be turned on/off by software. Contrary to the Speech Thing the output rate is determined by the hardware (7 kHz) and the design features a 16 byte FIFO allowing for autodetection and flow control of the output. In 2015 the hardware was reverse engineered so compatible circuits can be built from easily available off the shelf components.
 
-  \subsection{Sound Blaster Pro}
-  Model CT1330, announced in May 1991, was the first significant redesign of the card's core features, and complied with the Microsoft MPC standard.[6]. The Sound Blaster Pro supported faster digital sampling rates (up to 22.05 kHz stereo or 44.1 kHz mono), added a "mixer" to provide a crude master volume control (independent of the volume of sound sources feeding the mixer), and a crude high pass or low pass filter. The Sound Blaster Pro used a pair of YM3812 chips to provide stereo music-synthesis (one for each channel).
+
+
+
+
+
+
+
+
+
+
+
 \section{Inputs}
-Even though it is anecdotic I still wanted to write a part about the connectors found on a PC at the time. A time before the ubiquitous USB. In short, inputs were a mess.\\
+A time before the ubiquitous USB inputs were a mess with no less than four ports, all programed with differents I/O adresses.\\
 
 The parallel port (DB-25) was on every computer and usually used to connect matrix printers (loud thing that printed with needles). The parallel port was multipurpose: The Disney Sound Source could be plugged into it and generate crude sounds. The slow bandwidth of the port (150 kbit/s) forbid anything melodious:
  \begin{figure}[H]
@@ -654,7 +714,7 @@ Note that without a sound card you were unable to connect a joystick !
 
 
 \section{Summary}
-In a nutshell, a PC was a nightmare for game developer. The CPU was good at doing the wrong thing, the graphic interface allowed neither enough colors nor double buffering (which would result in tearing), the memory model only allowed 1 standard MB...with address composed of two separate 16bits registers. Last but not least the sound eco-system made of 4 different configurations. Despite all these unfavorable circonstances teams of irreductible developers gathered to crack the beast and unleash its power to gamers.
+In a nutshell, a PC was a nightmare for game developer. The CPU was good at doing the wrong thing, the graphic interface allowed neither enough colors nor double buffering (which would result in tearing), the memory model only allowed 1 standard MB...with address composed of two separate 16bits registers. Last but not least the sound eco-system was made of four overlaping configurations. Despite all these unfavorable circonstances teams of irreductible developers gathered to crack the beast and unleash its power to gamers.
 \end{document}
 
 

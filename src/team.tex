@@ -58,7 +58,7 @@ Considering the magnitude and ambitions of the title, four more people were adde
 \end{figure}
 
 \begin{fancyquotes}
-Jason was part of Id at the start, but we parted ways during Wolf development.
+Jason was part of Id at the start, but we parted ways during Wolf development\footnote{Jason still wrote part of the memory manager and is credited for introducing John Carmack to Unix development which ultimately led to the purchase of a Next Color ColorStation}.
  \bigskip \\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
@@ -81,7 +81,7 @@ Jason was part of Id at the start, but we parted ways during Wolf development.
 \label{fig:id_team_1993}
 \end{figure}
 
-Every member was working with an high end 386-DX 33Mhz. As for combining game, tools and assets:\\
+Every member was working with an high end 386-DX 33Mhz. As for combining engine, tools and assets:\\
 
  \begin{fancyquotes}
 We started with floppy data transfer, but we had a Novell network on coax Ethernet by the end. We didn't have a version control system.  Surprisingly, we went all the way to Quake 3 without one, then we started using Visual Source Safe.\\
@@ -111,21 +111,22 @@ During Wold3D development (from November 1991 to May 1992: Roughly six months), 
 
 \section{Programming}
 
-Development was done with Borland C++ 3.1:\\
+
+
+Development was done with Borland C++ 3.1 (the language used however was C): The editor used VGA mode 3: 80 characters wide and 25 characters tall.
+
+John Carmack took care of the runtime code. John Romero programmed many of the tools (editor, packers, ...). Jason Blochowiak was contracted to write important subsystems of the game (Input manager, Page Manager, Sound Manager, User Manager).\\
+\\
 \begin{figure}[H]
 \centering
   \shadowbox{
       \includegraphics[width=\textwidth]{screenshots/development.png}
   }  
-\caption{Dual-monitor: Screen 2.}
-\label{fig:dm1}
+\caption{Bordland C++ 3.1 editor}
 \end{figure}
 
-The editor used VGA mode 3: 80 characters wide and 25 characters tall.
 
-John Carmack took care of the runtime code. John Romero programmed many of the tools (editor, packers, ...). Jason Blochowiak was contracted to write important subsystems of the game (Input manager, Page Manager, Sound Manager, User Manager).\\
-\\
-The compiler was Borland C++ 3.1. To compensate for the tiny CRT, some of the developers used two screens (a very unusual thing at the time).\\
+To compensate for the tiny CRT, some of the developers used two screens (an unusual thing at the time).\\
 
 \begin{fancyquotes}
 At that point, we wanted 21" monitors, but couldn't justify them.  I used a second mono monitor to allow Turbo Debugger 386 to keep the main screen in graphics mode while I stepped through the code.\\
@@ -133,7 +134,7 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA mode (See figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes}): they don't have the same starting segment. This allows to add a CGA video card to the PC to run in dual-monitor mode: One in monochrome text and the other one in regular VGA. This allows a developer to debug the game engine in real-time.\\
+You may have noticed in the listing of VGA mode 13h and 4h (See figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes}): they don't have the same starting segment. This allows to plug two graphi cards in the PC: One in monochrome text and the other one in regular VGA. This allows a developer to debug the game engine in real-time.\\
 \begin{figure}[H]
 \centering
   \shadowbox{
@@ -165,18 +166,27 @@ You may have noticed in the listing of VGA mode (See figure~\ref{fig:vga_modes} 
 The graphic assets are divided as follow:
 \begin{itemize}
 \item 2D Menus items.
-\item 2D Action phase items.
+\item 3D Action phase items.
 \item Wall textures.
 \item Entities animations.
 \end{itemize}
-Those were the work of Adrian Carmack and Kevin Cloud. All of the work was done with Deluxe Paint on high-end 386 DX computers. The most difficult task was not to draw everything but to make the key decision of what colors would go in the palette.\\
+Those were the work of Adrian Carmack and Kevin Cloud. All of the work was done with Deluxe Paint (from Electronic Arts) on high-end 386 DX computers. 
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/deluxe_paint.png}
+ \caption{Deluxe Paint tool, used to draw all assets in the game.}
+\end{figure}
+
+
+
+Since the VGA is palette based (colors a not specific via RBG but by indices pointing to a pallete), the most difficult task was not to draw everything but to make the key decision of what colors would go in the palette\footnote{Some games (such as Monkey island) used many palettes depending on the section of the game but id went for a simple solution: One palette for the whole game.}.\\
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/palette.png}
- \caption{The 3D sequence palette.} \label{fig:palette}
+ \caption{Deluxe Paint editor.}
 \end{figure}
 
-Since all textures for the wall and sprites would have to use it.\\
 All assets were hand drawn:\\
 \begin{fancyquotes}
 We didn't have any scanning tools at the time.\\
@@ -188,7 +198,6 @@ I was unable to get in touch with Adrian Carmack or Kevin Cloud but I would have
 
 \section{Asset workflow}
 Once all the Deluxe Paint images were ready, a tool, IGRAB-ED, packed all the ILBMs files and generated a C header file:\\
-TODO: entry example. All asset were given a name (e.g: ). 
  The program could reference an asset directly by using its macro.\\
 \begin{figure}[H]
 \centering
@@ -196,9 +205,13 @@ TODO: entry example. All asset were given a name (e.g: ).
  \caption{Assets creation} \label{fig:mips}
  \end{figure}
 
+ \lstinputlisting[language=C]{code/assets_header.c}\par
+ In the engine, assets usage were "hardcoded" via the enum. This way to work was efficient: Once the name was used in the engine, the assets would be changed and repackaged thanks to the enum indirection layer:
+ \lstinputlisting[language=C]{code/assets_usage.c}\par
+
 \textbf{\underline{Trivia :}} This system let to issues when the source code was released: The header provided did not match the asset file from the shareware or early version of Wolfenstein 3D: The header released were from Spears of Destiny. You can see the kind of graphic mess this let to in the appendix "Let's compile like it is 1994".\\
 
-Insight into asset production show Tom Hall sketches before they were created by Adrian Carmack.\\
+"The Official Hint Manual for Wolfesnteind 3D"\footnote{The manual was entirely designed on a Next ColorStation. this was the only usage of NeXT for wolfenstein 3D.} contains many drawing from Tom Hall. These sketches were given to Adrian Carmack who turned them into pixel art.\\
 
   \begin{figure}[H]
 \centering
@@ -219,12 +232,16 @@ Insight into asset production show Tom Hall sketches before they were created by
  \includegraphics[scale=5]{imgs/sprites/gretel_hanse.png}
  \end{figure}
  
+ \begin{fancyquotes}
+When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a sketches for Adrian Carmck. Below are some of Tom's early design for the title screen. The third sketch was chosen.\\
+\\
+\textbf{John Carmack - Programmer}
+\end{fancyquotes}
+
    \begin{figure}[H]
 \centering
  \includegraphics[scale=0.5]{imgs/tom_hall_sketch_intro_screen_genesis.png}
- \includegraphics[scale=3]{imgs/sprites/castle.png}
- \includegraphics[scale=5]{imgs/sprites/jim.png}
- \includegraphics[scale=3]{imgs/sprites/woldf3d.png}
+ \includegraphics[scale=2]{imgs/sprites/woldf3d.png}
  \end{figure}
  
    \begin{figure}[H]
@@ -240,25 +257,48 @@ Insight into asset production show Tom Hall sketches before they were created by
 
  \end{figure}
  
-%    \begin{figure}[H]
-%\centering
-% \includegraphics[scale=0.5]{imgs/adrian_carmack_paper_sketch.png}
-% \end{figure}
  
-\footnote{The official hint manual for Wolfenstein 3D}
+The hint book also contains several photos of the team back in the days. Go check it out!
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Maps}
-trivia: speed run.\\
-trivia: the ceiling color is not part of the asset. Instead it is hard-coded in the game engine. TODO: Paste code and file here.\\
-Maps were created using the in-house editor called TED which is short for Tile EDitor. That tool was used for other games, the 2D scroller Commander Keen serie was entirely designed using TED.\\
-TODO: Find quote about speed to make a level. After X learned they could make a level in XX times he suggested to ship 6 episodes instead of X.
+Maps were created using the in-house editor called TED5 which is short for Tile EDitor. TED was not create specialy for wolf: It was actually used for Commander Keen serie (yes: a platform scroller).\\
+
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/ted5_scrolling_map.png}
+ \caption{TED used for Commander Keen - side scroller} \label{fig:mips}
+ \end{figure}
+
+
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/TED.png}
- \caption{Tile EDitor screen} \label{fig:mips}
+ \caption{TED used for top view level design} \label{fig:mips}
  \end{figure}
- Trivia: The game could be launched from TED: WL\_MAIN.C NoWait parameter. The game could be played with no music.
-Everybody worked a little bit on the map but those were mostly the work of John Romero and Tom Hall. John Romero updated the editor TileEDitor (TED). Maps were plans based, 64x64.\\
 
+Since they had been using it for years, the entire team was proficient with TED. It allowed id to make many levels within a small amount of time:
+
+ \begin{fancyquotes}
+After talking with Romero and Tom, Scott learned that it was taking the group only about one day to make a level of the game. Ka-chung! Dollar signs! Instead of just three episodes, why not have six? Scott said, “If you can do thirty more levels, it would only take you fifteen days. And we could have it where people could buy the first trilogy for thirty-five dollars or get all six for fifty dollars, or if people buy the first episode and later want the second episodes it will be twenty dollars. So there’s a reason to get them all!” After some consideration, id agreed.
+ \textbf{- Masters of Doom}
+ \end{fancyquotes}\\
+
+When the engine was licensed to Apogee for Rise of The Triad, TED5 was also used. Tom Halls wrote about it and you can find his comment in the Appendix section.
+\par
+Everybody worked a little bit on the map but those were mostly the work of John Romero and Tom Hall. John Romero updated the editor TileEDitor (TED). Maps were plans based, 64x64.\\
+\par
  \textbf{\underline{Trivia :}} The source code of TED was released several years later. Inspecting the source was a mysterious \codeword{\_TOM.PIC}. Converted to PNG it looks as follow:\\
 \begin{figure}[H]
 \centering
@@ -278,19 +318,26 @@ anywhere.\\
 \textbf{John Romero - Programmer}
  \end{fancyquotes}\\
 
- \begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/ted5_scrolling_map.png}
- \caption{Tile EDitor screen} \label{fig:mips}
- \end{figure}
+
 
 
 
 \section{Business}
 I was unable to get in touch with Jay Wilbur. Little is known...for now :) !\\
+
+
+
+
 \section{Sounds}
 Despite multiple emails, I was unable to get in touch with Robert Prince. Little is known...for now :) !\\
-Mention all games made with TED: Tom Hall enumaretes them in ROTT in hell.
+
+
+
+
+\section{Office layout}
+The team was setup as follow\footnote{Since they played Dungeons \& Dragons a lot, the map is drawn D\&D style.}:
+\par
+TODO: Insert map of the office as soon as john romero sends it.
 
 
 \section{Results}
@@ -300,6 +347,8 @@ The engine took six weeks to program. TED5 was constantly updated for the six mo
  \includegraphics[width=\textwidth]{imgs/result.png}
  \caption{Tile EDitor screen} \label{fig:mips}
  \end{figure}
+ TODO: Describe all files and what they contain:\\
+
  The engine was very tiny and only used 94KB (of it was 64KB dedicated to the Signon screen and 768B for the palette) which means the engine was only 29KB of code.\\
  All assets combined compressed accounted for 1,207KB.\\
  Everything was compressed to 645KB to fit on a 3½-inch floppy (these could store 720KB). To make the game fit on one disk was very important given the distribution model

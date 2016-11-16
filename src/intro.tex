@@ -1,4 +1,4 @@
-Wolfenstein 3D was released on May, 5th 1992 and established the First Person Shooter genre. The beautiful graphics, high framerate, crisp sounds effect and engaging musics were universally acclaimed. Within a year more than 100,000 units had been sold over the mail (the game was distributed via shareware: You had to mail money to get the full version), bringing fame and a little bit of fortune to the team of people who built it: id Software.\\
+Wolfenstein 3D was released on May, 5th 1992 and established the First Person Shooter genre. The beautiful graphics, high framerate, crisp sounds effect and engaging musics were universally acclaimed. Within a year more than 100,000 units had been sold over the mail\footnote{The game was distributed via shareware: You had to mail money to get the full version}, bringing fame and a little bit of fortune to the team who built it: id Software.\\
 \\
 The many fans did not stop at beating the game. Because they wanted to modify it and make their own characters and maps, they started to explore and reverse engineer the engine. Within a few months the assets formats were well known and people released mods\footnote{MODified version.} with altered graphics, sounds effects, music and maps. The core of the game however, the 3D engine and the secrets of its speed remained mostly unknown.\\
 \\
@@ -16,12 +16,12 @@ Opening the code did not only allow MODding and educate programers: It had two u
 \\
 It allowed the software to live long after the target hardware and operating system died. With access to the source, programmers were able to maintain and port the engine to new hardware and operating systems: Twenty years after the release of Wolfenstein 3D you can still play the game on anything with a CPU, some RAM and a framebuffer. \\
 \\
-A second unexpected side effect was the creation of a window back in time looking right into 1992. As a technical writer on \emph{fabiensanglard.net} I thought i would never take a look at these old thing. But when out of curiosity I took a peek, I could not stop reading: I was mesmerized. The more I read, the more I came to realize one very important thing: The IBM PC was designed for office work, not gaming. It was meant to crunch integers, word processing, spreadsheet and static screens. What id Software did in 1993 was not just program a machine: They repurposed something built to do office work and turned it into the best gaming platform in the world\footnote{A few other companies, such as Origins and LucasArts where also doing amazing things: I focus on Id because we have the source code!}.\\
+A second unexpected side effect was the creation of a window back in time looking right into 1992. As a technical writer on \emph{fabiensanglard.net} I thought i would never take a look at these old thing. But when out of curiosity I took a peek, I could not stop reading: I was mesmerized. The more I read, the more I came to realize one very important thing: The IBM PC was designed for office work, not gaming. It was meant to crunch integers for static screens such as word processors and spreadsheets. What id Software did in 1991 was not just program a machine: They repurposed something built to do office work and turned it into the best gaming platform in the world\footnote{A few other companies, such as Origins and LucasArts where also doing amazing things: I focus on Id because we have the source code!}.\\
 \\
-But why go through so much trouble? After all if you were a game company and you wanted to make video games, you had hardware dedicated to this very specific thing: video game console! The Megadrive, the NES and the Neo-Geo had sprite engine which albeit small limitation such as size and number allowed to move something on the screen by simply updating  its $(x,y)$ coordinates. Heck if really you wanted to use a personal computer for gaming why not use an Amiga which was packed with coprocessors dedicated to make smooth animation?\\
+But why go through so much trouble? After all if you were a game company and you wanted to make video games, you had hardware dedicated to this very specific thing: video game console! The Megadrive, the NES and the Neo-Geo had sprite engine which albeit small limitations such as size and number allowed to move something on the screen by simply updating its $(x,y)$ coordinates. Heck if really you wanted to use a personal computer for gaming why not use an Amiga which was packed with coprocessors dedicated to smooth animation?\\
 \\
-The reason is: framebuffer. The kind of game they wanted to do could not be done with a sprite engine. Every frames, 70 times per seconds, it has to draw a full screen pixel per pixel in the framebuffer and send it to the screen. That task required a particularly powerful CPU. No console or Amiga could do the job as the mips\footnote{Million Instructions Per Second.} graph shows.
-\\
+The reason is: framebuffer. The kind of game they wanted to do could not be done with a sprite engine or tricks from a Copper\footnote{Nickname of a powerful Amiga co-processor allowing operations at hsync level}. Every frames, 70 times per seconds, it has to draw a full screen, pixel per pixel in the framebuffer and ship it to the screen. That task required a particularly powerful CPU. No console or Amiga\footnote{Jimmy Maher advances an interesting theory in his book "The Future was here: The Commodore Amiga": People wanted to play First Person Shooter, which the Amiga architecture did not allow: This inability ultimately provoked the downfall of Commodore's best seller.} could do the job as the mips\footnote{Million Instructions Per Second.} graph shows.
+\par
 \begin{figure}[H]
 \centering
   \begin{tikzpicture}[font=\small]
@@ -55,23 +55,17 @@ The reason is: framebuffer. The kind of game they wanted to do could not be done
  
 PC had a fast CPU and a framebuffer but everything else was a nightmare:
 \begin{itemize}
-\item Smooth animation was next to impossible.
-\item CPU could only do integer operations, 3D requires fractions.
-\item RAM was segmented resulting in complex and error prone model.
+\item No double buffer making smooth animation next to impossible.
+\item CPU could only do integer operations, 3D engines requires fractions.
+\item RAM adressing was not flat but segmented resulting in complex and error prone pointer mathematics.
 \item The pixel of the VGA were not square: the framebuffer was distorted on screen.
-\item Various sound systems had various capabilities and expectations.
+\item The sound ecosystem was fragmented: Various sound systems had different capabilities and expectations.
 \item Various RAM drivers exposed the RAM and made it available differently.
 \end{itemize}
 
-At first sight it did not look like much could be done to make a 3D game come true. Yet id made it happen thanks to creativity and hard work.
-
-The book emphasis on the contrast between what the machine were theoritically capable of, the people who worked on it and the software they produced to innovate and reach new grounds:
+At first sight it did not look like much could be done to make a 3D game possible. Yet programmers of this era made it happen thanks to their ingeniosity and hard work. To help readers to understand the extend of the task, the book emphasis first on the hardware limitations then goes on to describe how the software circumvented and sometimes exploited these limitations:
 \begin{itemize}
 \item Chapter I: Hardware: The limits.
-\item Chapter II: People: The team pushing the edges.
-\item Chapter III: The result: Wolfenstein 3D engine.
+\item Chapter II: People: The team\footnote{The description is logistic. For the human aspect, read David Kushner's chef d'oeuvre: "Masters of Doom''} pushing the edges.
+\item Chapter III: Software: Wolfenstein game engine.
 \end{itemize}
-Credited as the demise of all other types of computer such as the Amiga (reference HERE as footnote).\\
-Ultimately all consoles abandonned the sprite engine and onboarded big fast cpus.\\
-Racing the beam.\\
- \textbf{\underline{Disclaimer :}} The description that follows is technical and will most likely appeal to programmers. If you are more into the human aspect of game programming I would recommend instead to read David Kushner's chef d'oeuvre: "Masters of Doom".
