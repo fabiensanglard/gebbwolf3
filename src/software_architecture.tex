@@ -80,9 +80,20 @@ The main system of the engine is its 3D engine. Which is not really 3D: Maps are
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 \section{Architecture}
 
-The engine is made of sub-systems called Managers:
+The engine is made of WL\_* files which relies on ID\_* sub-systems called Managers:
 \begin{itemize}
 	\item Memory
 	\item Page
@@ -97,7 +108,7 @@ The engine is made of sub-systems called Managers:
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/architecture.pdf}
-\caption{Architecture and sub-systems (in white) connected to I/O (in gray).}
+\caption{Architecture with engine and sub-systems (in white) connected to I/O (in gray).}
 \label{fig:architecture}
 \end{figure}
 Next to the hard drives (HDD) you can see the assets packed as described in the Team chapter.
@@ -109,11 +120,15 @@ Next to the hard drives (HDD) you can see the assets packed as described in the 
 
 
 
+
+
 \subsection{Memory Manager (MM)}
 Harness the "fast" conventionnal memory.
 
-\subsection{Page Manager (PM)}
 
+
+
+\subsection{Page Manager (PM)}
 The Page Manager harness the three types of RAM available: Conventional, XMS and XML. It abstract this complexity behind a Paging system.\\
 Is it where the loading screen shows a progress bar ?
 "Get Psyched !!!": Fill up the cache ?
@@ -134,14 +149,34 @@ The Cache Manager takes care of all the assets during Menu Phases: Sprites, Musi
 \subsection{Sound Manager (SD)}
 The Sound Manager abstract interaction with all four sound systems supported: PC Speaker, ADLib (Music only), Sound Blaster (Mono), Sound Blaster Pro (Stereo).
 \subsection{User Manager (US)}
-
+Largely based on Catacom 3D code by Jason Blochowiak. Handles user. The copy/past is very visible since 90\% of the functions declared in the header (ID\_US.H) are not actually implemented in ID\_US.C. 
 
 \subsection{Input Manager (IN)}
 Abstract interaction with keyboard and mouse.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Engine startup}
-
-
 \subsection{MM (Memory Manager)}
 Bla
 

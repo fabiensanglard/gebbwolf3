@@ -23,7 +23,7 @@ Following, screenshots of a slowdown version of the engine, showing each four st
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{screenshots/wolf3d_1_background.png}
- \caption{3D Rendere Phase 1: Background} \label{fig:mips}
+ \caption{3D Rendere Phase 1: Background}
  \end{figure}
 The floor was always the same color. The ceiling however changed see \codeword{WL\_DRAW.C} for a hard-coded index. TODO: Include a clear screen from a later level.\\
 \begin{figure}[H]
@@ -44,20 +44,20 @@ The floor was always the same color. The ceiling however changed see \codeword{W
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{screenshots/wolf4d_2_walls.png}
- \caption{3D Rendere Phase 2: Walls completed} \label{fig:mips}
+ \caption{3D Rendere Phase 2: Walls completed} 
  \end{figure}
  
  
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{screenshots/wolf3d_6_scaled}
- \caption{3D Rendere Phase 3: Scaled} \label{fig:mips}
+ \caption{3D Rendere Phase 3: Scaled (a.k.a: Sprites)} 
  \end{figure}
 
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{screenshots/wolf3d_7_fullframe.png}
- \caption{3D Rendere Phase 2: Weapon} \label{fig:mips}
+ \caption{3D Rendere Phase 2: Weapon} 
  \end{figure}
  
 
@@ -420,12 +420,34 @@ Doors have no tickness.\\
 
 
 Pre-Lighted texture.\\
-Scaler (precompiled).\\
+
   \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/baked_lights.png}
  \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
  \end{figure}
+
+\subsection{Precompiled scalers}
+One of the secret of the the speed of the engine was its pre-compiler scalers. These scalers are used to draw all walls and sprites. As see in the following screenshots:
+\par
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/scaling_walls.png}
+ \end{figure}
+\par
+Everything not between the pink lines (64 pixels tall) is either minified or magnified. It is a significant task to perform at runtime, involving fraction (of course done via fixed point arithmetics). To speed up this phase, the engine generate executable x86 code when the screen size is set (at startup or upon user choices).
+TODO: Show a lower resolution photo.
+
+Every column of pixels are centered vertically.
+\par
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/scaler_valign.png}
+ \end{figure}
+\par
+
+
+TODO: Pseudo-code here
 
 \subsection{Rendering phases}
 

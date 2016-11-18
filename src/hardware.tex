@@ -364,22 +364,23 @@ Unfortunately once again, nothing was standardized. Users could load different d
 
 Or they could decide to load no drivers at all at startup and not use any of the RAM beyond 1MB.\\
 \par
-\textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why, even though they had many (extremly expensive\footnote{In 1992, 4MB of RAM costed \$149 which ajusted to inflaction would be \$256 in 2016}) megabytes of RAM installed on their machine, some game would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (Appendix "\nameref{chap:barrier640}") along with the game to make it clear that it was not their fault.\\
+\textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why, even though they had many (extremly expensive\footnote{In 1992, 4MB of RAM costed \$149 which ajusted to inflation would be \$256 in 2016.}) megabytes of RAM installed on their machine, some game would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (Appendix "\nameref{chap:barrier640}") along with the game to make it clear that it was not their fault.\\
 
 \textbf{\underline{Trivia :}}  As of 2014, thirty five years after the introduction of the 8086, most PC in the world still start in Real Mode. A bootloader switch them to protected mode, load the kernel and then real startup can begin. Mac computers don't have this problem.
 
 \bigskip
-To learn more about EMS be sure to read Edward Mendelson's excellent article: . "A Slot Full of RAM"\footnote{PC Mag, (1989-12-12)}. If you are really hardcore, you can also check out XMS programming reference:\footnote{eXtended Memory Specification (XMS) July 19, 1988.}\\
+To learn more about EMS be sure to read Edward Mendelson's excellent article: . "A Slot Full of RAM"\footnote{PC Mag, (1989-12-12).}. If you are really hardcore, you can also check out XMS programming reference:\footnote{eXtended Memory Specification (XMS) July 19, 1988.}\\
 \par
 These two sections conclude on Intel CPUs which 
 I think the best way to summarize the x86 CPU memory model is how XXX described it:\\
 \par
  \begin{fancyquotes}
-   \[x86 is\]...difficult to explain and impossible to love.
-   \\
-\textbf{David A. Patterson \& John L. Hennessy - Computer Organization and Design.}
+   \lbrack x86 is \rbrack...difficult to explain and impossible to love.\\
+   \par
+\textbf{David Patterson \& John Hennessy - Computer Organization and Design.}
  \end{fancyquotes}\\
-
+\par
+Trivia: 640KB was all a game could have. But people got clever. Strike Commander (a very famous flight arcade game released in 1993) executable is 745KB. The trick is to load only a few segments of the executable and use a technique of "overlays": At runtime, sections of the code remove themselves from the Conventional Memory and load new ones from the hard drive.
 
 
 
@@ -623,6 +624,19 @@ framebuffer to the CRT.
 \end{figure}
 
 \end{itemize}
+
+
+\subsection{The importance of doublebuffer}
+Is it a big deal to have only one buffer in all the VGA modes described? Yes and very much so. With only one buffer the software as to work exactly at the frequency of the CRT (70Hz). Otherwise a phenomenom known as "tearing" appears. Let's take the example of a software rendering a circle moving from the left to the right:
+\par
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/double_buffer_explained.png}
+ \end{figure}
+\par
+If the engine updates the framebuffer while the CRT is drawing it (a.k.a: While the circle is moving), the result will be made of two frames. Hence the "cutting" visual artifact.
+
+
 
 
 \section{Audio}
