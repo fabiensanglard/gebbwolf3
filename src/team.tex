@@ -205,9 +205,15 @@ Once all the Deluxe Paint images were ready, a tool, IGRAB-ED, packed all the IL
  \caption{Assets creation} \label{fig:mips}
  \end{figure}
 
+\begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/assets_header.c}\par
+ \end{minipage}
+ 
  In the engine, assets usage were "hardcoded" via the enum. This way to work was efficient: Once the name was used in the engine, the assets would be changed and repackaged thanks to the enum indirection layer:
+ 
+ \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/assets_usage.c}\par
+ \end{minipage}
 
 \textbf{\underline{Trivia :}} This system let to issues when the source code was released: The header provided did not match the asset file from the shareware or early version of Wolfenstein 3D: The header released were from Spears of Destiny. You can see the kind of graphic mess this let to in the appendix "Let's compile like it is 1994".\\
 
@@ -241,6 +247,7 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
    \begin{figure}[H]
 \centering
  \includegraphics[scale=0.5]{imgs/tom_hall_sketch_intro_screen_genesis.png}
+ \par
  \includegraphics[scale=2]{imgs/sprites/woldf3d.png}
  \end{figure}
  

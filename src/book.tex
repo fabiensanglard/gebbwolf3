@@ -20,13 +20,17 @@
 \def\Version{0.1}
 
     %Cover page
+
     \subfile{cover}
     
+
     \renewcommand{\rmdefault}{cmss} 
     \renewcommand{\familydefault}{\sfdefault}
     
     % Table of content
-    \addtolength{\cftsecnumwidth}{10pt}
+    \addtolength{\cftsecnumwidth}{12pt}
+    
+    \cleardoublepage % Make toc appear on right side.
     \tableofcontents
     
     \pagebreak
@@ -43,11 +47,10 @@
       
     \chapter{Software}
        \subfile{software_architecture}
-       \subfile{software}
        \subfile{software_2d}
        \subfile{software_3d}
-       \subfile{software_vsd}
-       \subfile{dying}
+       \subfile{software}
+       \subfile{tricks}
        \subfile{performances}
     \chapter{After Woftenstein 3D}
         \subfile{fallout}

@@ -67,13 +67,52 @@ The main system of the engine is its 3D engine. Which is not really 3D: Maps are
 \end{figure}
 \par 
 
-
- \begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{screenshots/wolf3d_7_fullframe.png}
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/ray_caster_explained/beginning.png}
  \caption{As it is rendered at runtime in pseudo-3D from the player point of view.} 
- \end{figure}
+\end{figure}
 
+\begin{figure}[H]
+  \centering
+  \input{imgs/ray_caster_explained/beginning.tex}
+ \caption{Raycasting 1: Drawing} 
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+ \input{imgs/ray_caster_explained/out_room.tex}
+ \caption{The 320 rays cast to render the walls in the previous scene.} \label{fig:Raycasting2}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_door.png}
+ \caption{Raycasting 2: Screenshot} 
+\end{figure}
+
+
+Game runs at 70Hz (twice as doom which ran at 35Hz). Framerate comes from the refresh rate of VGA at 320x240. At 640*480, rate it 60hz.\\
+TODO: Describe word, long, double word etc...
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/unrolled_loop_main.c}
+\end{minipage}\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/unrolled_loop_init.c}
+\end{minipage}\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/unrolled_loop_demoloop.c}
+\end{minipage}\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/unrolled_loop_playloop.c}
+\end{minipage}\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/soundsystem_interrupt.c}
+\end{minipage}
+\par
 
 
 
@@ -123,10 +162,54 @@ Next to the hard drives (HDD) you can see the assets packed as described in the 
 
 
 \subsection{Memory Manager (MM)}
-Harness the "fast" conventionnal memory.
+The engine does not rely on \cw{malloc} to manage memory because it can lead to fragmented memory and no way to compact free space. A linked list keep track of the RAM, dividing it in blocks. A block
+point to a starting point in RAM and has a size:\\
+ \par
+\lstinputlisting[language=C]{code/mm_block.c}
+ \par
+A block can be marked with attributes:
+\begin{itemize}
+\item \cw{LOCKBIT} : This block of RAM cannot be moved during garbage collection.
+\item \cw{PURGEBITS} : 0-3 level, 0= unpurgable, 3= purge first.
+\end{itemize}
 
+The memory manager starts by allocating all available RAM via \cw{malloc} and creates a \cw{LOCKED} block of size 1KB at the end. The linked list uses two pointers: \cw{HEAD} and \cw{ROVER} (for the tail).
+ \par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/mm_start.png}
+ \end{figure}
+ \par
+ The engine interacts with the Memory Manager by requesting RAM (\cw{MM\_GetPtr}) and freeing RAM (\cw{MM\_FreePtr}). To allocate ram , the manager searches for "holes" in the layout. It take up to three passes of increasing complexity. The easier case is when there is enough space after the rover. A new node is added to the linked list and rover moves forward:\\
+  \par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/mm_after_rover.png}
+ \end{figure}
+ \par
+ If the first pass fails, the second pass looks for a "hole" between the head and the rover:\\
+  \par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/mm_before_rover.png}
+ \end{figure}
+ \par
+ In the third pass, it looks like there is nowhere a continuous block of memory big enough to satisfy the request. The manager is going to iterate through the entire linked list and do two things: Delete blocks marked as purgeable and compact the RAM.
+  \par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/mm_compact.png}
+ \end{figure}
+ \par
+But if memory is moved around, how do previous allocation still point to what they had before the garbage collection phase? Notice that a \cw{mmblockstruct} has a \cw{useptr} poitner which point to the owner of a block: If it moves memory, it also updates the ower of the block.
 
-
+   \par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/mm_compact_bad_case.png}
+ \end{figure}
+ \par
+ Note that since some block can be marked as \cw{LOCKED}, the compacting will be disturbed: Upon encountering a locked lock, compacting start after it, even is there was space available between the last block and the locked block.
 
 \subsection{Page Manager (PM)}
 The Page Manager harness the three types of RAM available: Conventional, XMS and XML. It abstract this complexity behind a Paging system.\\
@@ -149,7 +232,22 @@ The Cache Manager takes care of all the assets during Menu Phases: Sprites, Musi
 \subsection{Sound Manager (SD)}
 The Sound Manager abstract interaction with all four sound systems supported: PC Speaker, ADLib (Music only), Sound Blaster (Mono), Sound Blaster Pro (Stereo).
 \subsection{User Manager (US)}
-Largely based on Catacom 3D code by Jason Blochowiak. Handles user. The copy/past is very visible since 90\% of the functions declared in the header (ID\_US.H) are not actually implemented in ID\_US.C. 
+
+  
+
+\begin{minipage}{0.7\textwidth}
+Largely based on Catacom 3D code and written by Jason Blochowiak. The copy/past is very visible since 90\% of the functions declared in the header (ID\_US.H) are not actually implemented in \cw{ID\_US.C}. 
+It is a poorly named manager since it takes care mostly of graphic layout. When a \cw{WL\_*} high level routines needs to draw a string, it is passed to \cw{US\_Print} which does all measurement (e.g: Draw string centered)
+and then passes these information to the Video Manager (\cw{VW\_DrawPropString}) which takes care of rendition.
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\begin{flushright}
+\includegraphics[width=0.8\textwidth]{imgs/US_explained.png}
+\end{flushright}
+\end{minipage}
+\noindent
+\\
+
 
 \subsection{Input Manager (IN)}
 Abstract interaction with keyboard and mouse.
@@ -178,7 +276,7 @@ Abstract interaction with keyboard and mouse.
 
 \section{Engine startup}
 \subsection{MM (Memory Manager)}
-Bla
+
 
 \subsection{Video setup}
 An important problem left open in the Hardware chapter, is the video card: None of the VGA modes available in the user manual are suited for a game engine. The most interesting one (13h) offers a single framebuffer of 256 indexed colors at a resolution of 320x200 with no square pixels (the 320x200 framebuffer was stretched to 320x240 on the screen). Nothing can be done about the non square pixels but there is something that can be done about the absence of double buffering.\\
@@ -186,7 +284,9 @@ An important problem left open in the Hardware chapter, is the video card: None 
  In mode 13h, the VGA circuitry automatically maps the 16K adress space to the four VGA banks. It is called "chaining" and even though it wastes 75\% of the RAM it offers a linear framebuffer to the developer.\\
  \par
  Mode 13h is how the engine initialize the graphic pipeline:\\
+ \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/init_vga.c}
+\end{minipage}
  \par
 \begin{figure}[H]
 \centering
@@ -194,12 +294,17 @@ An important problem left open in the Hardware chapter, is the video card: None 
  \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
  \par
- Even though it is undocumented in Mode 13h there is a way to disable chaining. Nobody can remember who invented unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. By tweaking the VGA Sequence controller the chaining can be disabled. The developer now has to manually drive the VGA mask to plot pixel but the full 256k of ram is available. This VGA mode is commonly called "Mode X". Note: In the engine, unchaining is called "deplane" in VL\_DePlaneVGA.
+ Even though it is undocumented in Mode 13h there is a way to disable chaining. Nobody can remember who invented unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. By tweaking the VGA Sequence controller the chaining can be disabled. The developer now has to manually drive the VGA mask to plot pixel but the full 256k of ram is available. This VGA mode is commonly called "Mode X". Note: In the engine, unchaining is called "deplane" in VL\_DePlaneVGA.\\
  \par
-\lstinputlisting[language=C]{code//unchaining.c}
+ \begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/unchaining.c}
+\end{minipage}
  \par
- To manually set the mask and select the bank were a value will be written can be done as follow
-\lstinputlisting[language=C]{code//select_plan.c}
+ To manually set the mask and select the bank were a value will be written can be done as follow:\\
+ \par
+ \begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/select_plan.c}
+\end{minipage}
  \par
  With that much RAM available, wolf3d divides the VRAM in four parts:
  \begin{itemize}
@@ -266,7 +371,68 @@ void CleanScreen(y, color) {
 \end{verbatim}\\
 The previous code runs without issues at 70frames per second: Only 200 slow out instruction are used.\\
 \par
-This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algotithms picked during 2D and 3D all the way up to the assets compression techniques.
+This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algotithms picked during 2D and 3D all the way up to the assets compression techniques.\\
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imgs/vga_ram_screen_layout.eps}
+\end{figure}
+
+Even though it was convoluted it allows clever tricks. Let's take the example of clearing the screen to black. A naive approach would be to write every pixels left to write and top to bottom:
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/vga_clear/naive.c}
+\end{minipage}
+
+The cost of this operation is 320x200= 64000 writes and 64000 out operation (to select the mask).
+But the overhead of selecting the bank (a.k.a plan) would make the task impossibly slow. A better approach would be to do bottom up and left to right as follow:
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/vga_clear/optimized.c}
+\end{minipage}
+
+The code is slightly more complicated but this way we only switch bank XXX times and write 320x200=64000 writes and  320 out out operation. But there is a way to do even better: 
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/vga_clear/optimal.c}
+\end{minipage}
+
+Which results in 320*80=25600 and 1 out operation !\\
+
+This is not always that easy: You can write up to four pixels in one write as long as they are properly aligned. See the example following:
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs//vga_multiple_pixel_write.png}
+\end{figure}
+
+\note{Ask John Carmack why they went for Mode-Y instead of Mode-X which offered square pixels.}
+
+\par
+With this technique the 64KB of mapped RAM can access the full 256KB of the VGA. This enables a mode offering:
+\begin{itemize}
+  \item Resolution of 320x200
+  \item Double buffering
+  \item Storage of sprites in VRAM.
+\end{itemize}
+
+Compared to figure 
+TODO: New Drawing of VGA RAM.\\
+But there is still a problem: Switching the target RAM was very slow. So a routine drawing an horizontal line on the screen:
+
+\begin{verbatim}
+void DrawLine(y, color) {
+  for(int x=0; x < 320 ; x++) {
+    SelectBank(x % 4);
+    WritePixel(x, y, color);   
+  }
+}
+\end{verbatim}\\
+Would have been unpractical. But something else can be done if you notice that 320 is a multiple of 4 (320/4=80): If you draw only columns you don't have to change the target plan often.\\
+TOOD: Drawing of how column line up in VGA RAM.\\
+
+ \par
+ Use an address that can be changed with only one byte ( e.g: a000 b0000 c000).\\
+ Or did he wait for the vsync?\\
 
 
 
@@ -277,8 +443,11 @@ At this point, the memory manager and the vga are initialized but nothing else. 
 \includegraphics[width=\textwidth]{imgs/signon.png}
 \caption{Architecture and sub-systems.}
 \end{figure}
-Since the graphic pipeline is not initialized at this point, the full 64K pg13 screen ships compiled in the executable. The engine only copies from RAM to the VGA banks. 
+Since the graphic pipeline is not initialized at this point, the full 64K pg13 screen ships compiled in the executable. The engine only copies from RAM to the VGA banks.\\
+\par 
+\begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/signonscreen.c}
+\end{minipage}
 Note: In an effot to get more RAM available, these 64K are unlinked for RAM.\\
 Note: The palette (3*256=768B) is also compiled in the executable. It is simply copied from RAM to VGA's DAC.
 Note the main (conventional memory) which goes only up to 320K: Between the exectuable and other residence routines it is all what was remaining of the original 640K. The game is able to run on 320KB but you needs to swap with the HD at runtime to load textures and sprites.
@@ -314,12 +483,5 @@ The legendary "Profound Carnage-13" self-proclaimed rating, spoofing the movie i
 \caption{Architecture and sub-systems.}
 \end{figure}
 
-
-\subsection{Menu phase}
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{imgs/first_menu.png}
-\caption{Architecture and sub-systems.}
-\end{figure}
 
 \end{document}

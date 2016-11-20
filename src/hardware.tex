@@ -205,9 +205,7 @@ This is not a problem when everything is hardwired...but it was a big problem fo
   \bigskip
 
  \textbf{\underline{Trivia :}} Since floating point units where so slow, why did the C language end up with a \codeword{float} and \codeword{double} types ? The machine used to invent the language (PDP-11) did not have a floating point but the manufacturer (DEC) had promised to Dennis Ritchie and Ken Thompson the next model would have one\footnote{The Development of the C Language by Dennis M. Ritchie}. Being astronomy enthusiasts they decided to add those two types to their language. Had they decided not to, C and C++ would have never enjoyed the same popularity!
-
-\bigskip  
-\break
+\par
 \textbf{\underline{Trivia :}} Some PCs did have hardware FPU. Intel sold what was marked as "Math CoProcessor". Intented to scientists, performances were average, price outrageous\footnote{\$200 in 1993 equivalent to \$350 in 2016} and sales mediocre :\\
 \begin{figure}[H]
 \centering
@@ -332,14 +330,15 @@ Pointer C defined as:
 
 As defined A, B and C all points to the same memory location however they would fail a comparison test in the following code.\\
 
+\begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pointer_madness.c}
-
+\end{minipage}
 Would output:
 
-
+\begin{minipage}{\textwidth}
 \lstinputlisting{code/pointer_madness_output.txt}
-
-\bigskip
+\end{minipage}
+\par
 
 
 
@@ -590,8 +589,9 @@ Trivia: 12h had only one buffer. And 16 colors looked ugly.
   
   To clear the screen to black for example, the following code was enough:\\
   
+  \begin{minipage}{\textwidth}
   \lstinputlisting[language=C]{code/clear_vga.c}
-  
+  \end{minipage}
   
   The mode 13h may look good but it is in fact terrible for game and animation. The intend was clearly to display photos and drawings:
   \begin{itemize}

@@ -30,14 +30,14 @@ The floor was always the same color. The ceiling however changed see \codeword{W
  \centering
   \includegraphics[width=\textwidth]{screenshots/wolf3d_4_partial_wall_32rays.png}
   \caption{3D Rendere Phase 2: Walls (160 rays)}
-  \label{fig:mips}
+ 
 \end{figure}
  
 \begin{figure}[H]
  \centering
   \includegraphics[width=\textwidth]{screenshots/wolf3d_5_partialwalls_160rays.png}
  \caption{Finalez frame} 
- \label{fig:mips}
+ 
 \end{figure}
  
  
@@ -77,6 +77,20 @@ Screen is never actuall cleared like in modern engines. Instead a floor color an
 
 
 \subsection{Casting a Ray}
+
+\begin{fancyquotes}
+Why a raytracer instead of a rasterizer?\\
+\par
+Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacombs 3D.  C3D (and Hovertank before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn't really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel "rock solid".
+ \bigskip \\
+There was a clear performance cost to it - doing 320 traces through a tile map and treating each column independently is much slower than looping through a few long wall segments.  However, the resulting code was small and very regular compared to the hairball of my wall span renderers, and it did deliver the rock-solid feel I wanted.
+ \bigskip \\
+If you made extremely jagged block maps that would turn into many dozen independent wall segments, the ray casting could start to look like a good performance choice, but few scenes were even close to that.  This is exactly the same ray tracing versus rasterization performance tradeoff that is still being made today, but now it is "how many tens of millions of triangles per frame to ray tracing break-even" instead of "how many dozen wall segments".
+ \bigskip \\
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
+
+
 To explain how a ray is traced up to its interception point (a wall), let's take the example of a player looking at 15 degres. Three tiles will be seen, in the engine, up to 320 ray have to be cast to find out how far the post are and how tall they should be drawn.
 \begin{figure}[H]
 \centering
@@ -259,13 +273,21 @@ The beauty of this method is that addition and subtraction work exactly like int
  
  
 \subsection{Raytracing: DDA Algorithm}
-Digital Differential Analysis\\
+DDA stands for Digital Differential Analysis. It is an algorythm widely used in computer graphic to draw a line.\\
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/flipflop.c}
+\end{minipage}
+
+
 Some ray are not traced ? How does that work ?\\
 Precalculated sin-cos.\\
 \subsection{FishEye}
 The function in charge of calculating the heigh of a wall is CalcHeight:\\
 
+\begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/CalcHeight.c}
+\end{minipage}
 
 The code is not what one would expect: The raytracing algorithm is supposed to cast a ray for each pixel column and use the distance \codeword{d} to infer an other value. So I would have expected to see something like:
 \begin{math}
@@ -354,9 +376,16 @@ This projection is mathematically hard to calculate in one go (especially with f
 
 \subsection{Ray skipping trick}
 A naive implementation of the raycaster would be:\\
+
+\begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/naive_raycaster_pseudocode.c}
+\end{minipage}
+
 But Wolf3D is different: It buffers what to draw:
+
+\begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wolf3d_raycaster_pseudocode.c}
+\end{minipage}
 
 Rendition is deferred because the engine allows itself to cheat a little: If a ray is cast and hits the same block and in the same
 texture column, the two rays are considered similar. If two rays are similar they are drawn at the same height. The visual result is 
@@ -364,8 +393,11 @@ barely noticable. But this cheat allows to draw up to eight column of pixel in t
 with one write operation). The details of this are in the method \codeword{ScalePost} in \codeword{WL\_DRAW.C}.\\
 
 Note: A \quotes{post} is a column of pixel belonging to a wall.\\
-ScalePost is written in assembly and performs a maximum of three pass to draw a maximum of eight columns of pixels.
+ScalePost is written in assembly and performs a maximum of three pass to draw a maximum of eight columns of pixels.\\
+\par 
+\begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/ScalePost.c}
+\end{minipage}
 Because there can be many combinations of VGA bank alignment and number of pixels to draw:
 
 \begin{figure}[H]
@@ -379,7 +411,10 @@ Because there can be many combinations of VGA bank alignment and number of pixel
  \end{figure}
 The instruction \codeword{or al , al} can be surprising. It means test if al is equal to zero and set the flag. Back in the day it was more populate than \codeword{test al, al}
  the VGA bank masks are harcoded in an array: One for each pass:\\
+ \par
+ \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/hardcoded_masks.c}
+\end{minipage}
 TODO: Were images stored rotated 90degres to increase cache hit ? No way, this was aimed at 386. BUT that would make the drawing easier !!
 
 In the following example, the left wall is magnified. several rays hit the wall at the same texture location.
@@ -409,9 +444,13 @@ To draw several column of pixels at the same time, the engine exploit the VGA ba
 Since up to eight column can be similar, there are many case of figure depending on the aligment with the VGA banks and how many pixels to draw:
 
 Example
- 
+
+\subsection{Push walls} 
 \subsection{Door}
 Doors have no tickness.\\
+doorposition[] holds the amount the door is open, ranging from 0 to 0xffff
+  this is directly accessed by AsmRefresh during rendering\\
+  // don't close on anything solid\\
 \begin{figure}[H]
  \centering
  \includegraphics[width=\textwidth]{imgs/door_flat.png}
@@ -436,8 +475,8 @@ One of the secret of the the speed of the engine was its pre-compiler scalers. T
  \end{figure}
 \par
 Everything not between the pink lines (64 pixels tall) is either minified or magnified. It is a significant task to perform at runtime, involving fraction (of course done via fixed point arithmetics). To speed up this phase, the engine generate executable x86 code when the screen size is set (at startup or upon user choices).
-TODO: Show a lower resolution photo.
-
+TODO: Show a lower resolution photo.\\
+TODO: Show precompiled scaler ram consumption.\\
 Every column of pixels are centered vertically.
 \par
  \begin{figure}[H]
@@ -468,7 +507,10 @@ TODO: Wolfenstein 3D referencial (64 grid, with origin and rotation
 Builds a compiled scaler object that will scale a 64 tall object to the given height (centered vertically on the screen).
 \codeword{SetupScaling}\\
 \codeword{BuildCompScale}
+
+\begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/compscale.c}
+\end{minipage}
 
   \begin{figure}[H]
 \centering
@@ -506,3 +548,59 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
  \end{figure}
  
 One interesting aspect: Wall sprites were stored uncompressed but things are compressed in memory and decompressed while drawing occurs via bytecode.
+
+
+
+
+\subsection{VSD: Visible Surface Determination}
+To determine what is visible and draw things properly is hard. Michael Abrash summarized the domain of the problem well:\\
+
+\begin{fancyquotes}
+I want to talk about what is, in my book, the toughest 3-D problem of all, visible surface determination (drawing the proper surface at each pixel), and its close relative, culling (discarding non-visible polygons as quickly as possible, a way of accelerating visible surface determination). In the interests of brevity, I’ll use the abbreviation VSD to mean both visible surface determination and culling from now on.
+ \bigskip \\
+Why do I think VSD is the toughest 3-D challenge? Although rasterization issues such as texture mapping are fascinating and important, they are tasks of relatively finite scope, and are being moved into hardware as 3-D accelerators appear; also, they only scale with increases in screen resolution, which are relatively modest.
+ \bigskip \\
+In contrast, VSD is an open-ended problem, and there are dozens of approaches currently in use. Even more significantly, the performance of VSD, done in an unsophisticated fashion, scales directly with scene complexity, which tends to increase as a square or cube function, so this very rapidly becomes the limiting factor in doing realistic worlds. I expect VSD increasingly to be the dominant issue in realtime PC 3-D over the next few years, as 3-D worlds become increasingly detailed.
+ \bigskip \\
+\bigskip \\
+\textbf{Michael Abrash - Programmer}
+ \end{fancyquotes}
+ 
+ Wolf3D uses two mechanism to make sure things are draw properly:
+ \begin{enumerate}
+  \item While casting each ray, memorize which cells were visited by the ray. This is used to know which "things" to draw.
+  \item Upon drawing a wall column, save the height of that wall. This is done to clip "things" to draw.
+ \end{enumerate}
+ 
+ \subsubsection{}
+ At the beginning of each 3D rendition, the engine clears the:
+ \lstinputlisting[language=C]{code/clear_vis_wold3d.c}
+ Note that because register are 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations. Nowadays it is more efficient to use the C library.
+ \lstinputlisting[language=C]{code/clear_vis_modern.c}
+ Later in the assembly hand crafted procedure \codeword{AsmRefresh} we can find where this array is populated:
+  \lstinputlisting[language={[x86masm]Assembler}]{code/mark_vis_wold3d.asm}
+  If we take the example of the starting screen, we can see which tile were marked at visible:
+  
+  
+\begin{figure}[H]
+  \centering
+  \input{imgs/ray_caster_explained/marked_out_room.tex}
+ \caption{Ray cast and visible spots.} 
+\end{figure}
+
+
+
+
+\subsection{I.A: State Machines} 
+
+Defined in WL\_ACT2.c\\
+Normal, standing guard\\
+Walking guard\\
+Deaf guard\\
+
+Planes:
+=Ambush tile: enemy placed ohere are deaf to all attacks (normal enemy responds immediately to sound).\\
+An ambush tile-affected enemy is not blind but attack playe but won't react to dead soldiers or dogs.\\
+\par
+How does sound travel between areas ? If a door is open, and a fire is shot, enemies in other room will come.\\
+areabyplayer connect players\\

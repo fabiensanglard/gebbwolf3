@@ -7,7 +7,7 @@
   \usepackage[margin=1in]{geometry}
   %\usepackage{calc}
   \setlength\paperwidth{7.5in}
-  \setlength\paperheight{9.252in}
+  \setlength\paperheight{9.25in}
  \setlength\textwidth{5.2in}
  \setlength\textheight{7.2in}
   %\setlength\oddsidemargin{(\paperwidth-\textwidth)/2 - 2in}
@@ -35,8 +35,9 @@
 \setlength\parindent{0pt}
 
 \newcommand{\codeword}[1]{\texttt{#1}}
+\newcommand{\cw}[1]{\texttt{#1}}
 \newcommand{\quotes}[1]{``#1''}
-
+\newcommand{\note}[1]{\color{red}\#\#\#\#\##1\color{black}\par}
 % Allow to include urls in pdf
 \usepackage[pdftex]{hyperref}
 
@@ -205,4 +206,8 @@ middleextra={\draw[dashed,line width=1pt,xshift=1pt] (O) -- (P|-O);\draw[dashed,
 %make footnote stick to the bottom of the page
 \usepackage[bottom]{footmisc}
 
+% To make floating images
+\usepackage{wrapfig}
 
+% adjustbox package which allows you to add alignment keys to \includegraphics
+% \usepackage{adjustbox}
