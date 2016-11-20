@@ -385,14 +385,14 @@ Even though it was convoluted it allows clever tricks. Let's take the example of
 \end{minipage}
 
 The cost of this operation is 320x200= 64000 writes and 64000 out operation (to select the mask).
-But the overhead of selecting the bank (a.k.a plan) would make the task impossibly slow. A better approach would be to do bottom up and left to right as follow:
-
+But the overhead of selecting the bank (a.k.a plan) would make the task impossibly slow. A better approach would be to do bottom up and left to right as follow:\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/vga_clear/optimized.c}
 \end{minipage}
 
-The code is slightly more complicated but this way we only switch bank XXX times and write 320x200=64000 writes and  320 out out operation. But there is a way to do even better: 
-
+The code is slightly more complicated but this way we only switch bank XXX times and write 320x200=64000 writes and  320 out out operation. But there is a way to do even better:\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/vga_clear/optimal.c}
 \end{minipage}
