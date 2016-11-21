@@ -4,7 +4,7 @@
 The game engine was released on July 21, 1995. 20 years later it is still there on the company ftp\footnote{Transfer File Protocol (along with Finger where J.C.Carmack used to blog) was commonly used in the 90s in the blessed time where you did not have to encrypt everything on the wire.}:\\ 
 \\\codeword{ftp://ftp.idsoftware.com/idstuff/source/wolfsrc.zip}.\\
 \\
-\textbf{\underline{Trivia :}} Before the times of nmap, WireShark and various eavesdropping techniques, FTP\footnote{File Transfer Protocol} was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
+\bu{Trivia :} Before the times of nmap, WireShark and various eavesdropping techniques, FTP\footnote{File Transfer Protocol} was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
 
 \section{First Contact}
 The file \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical nowadays. You can deflate it with:\\
@@ -211,30 +211,86 @@ But if memory is moved around, how do previous allocation still point to what th
  \par
  Note that since some block can be marked as \cw{LOCKED}, the compacting will be disturbed: Upon encountering a locked lock, compacting start after it, even is there was space available between the last block and the locked block.
 
+
+
+
+
+
+
+
+
+
+
+
 \subsection{Page Manager (PM)}
-The Page Manager harness the three types of RAM available: Conventional, XMS and XML. It abstract this complexity behind a Paging system.\\
-Is it where the loading screen shows a progress bar ?
-"Get Psyched !!!": Fill up the cache ?
-Trivia: The progress bar was called a "thermometer".
-The Page Manager provides all asset during 3D rendition. 
-It loads as many "Pages" as possible in Main, XMS and EMS memory during the get Psyched screen.
-TODO: Add a screenshot.
-It uses a Least Frequency Used eviction policy if not all asset fit in RAM. VSWAP.WL6 is 1.6MB -> Recommended configuration 2MB RAM..but the game would run with just 640KB.
+The Page Manager is dedicated to the 3D engine. Its task is to make sure assets such a wall texture, sprites and sound effect at available in RAM. Jason Blochowiak seems to be the main author and his previous experience with Unix system clearly influenced the design of this component. It is built around the idea of asset container called "Page". When the engine needs a resource, its requests a page with the resource Id to the Page Manager. To fulfill the request as fast as possible, it taps in all types of RAM: Conventional, EMS and XMS. If a page is located in conventional memory or EMS, the request is considered a cache "hit" and page is returned to caller. Otherwise the request is a cache "miss". The PM looks for the page in XMS RAM and ultimately if all failed in \cw{VSWAP.WL1} file on the HDD which contains all 3D assets.\\
+ \par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/page_manager_architecture.png}
+ \end{figure}
+ \par
+In order to minimize the cost of page miss, the engine preload the page cache before a level start. This is known at the "Get Psyched" screen:
+ \par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/get_psyched.png}
+ \end{figure}
+ \par
+The precaching mechanis is not particularly clever: It loads as many page from the swap file as possible. It doesn't try to look at what is actually used in the level. But the eviction policy (LRU) ultimately stabilize the cache and even a machine with only 1MB of RAM is able to play a level with no HDD access after a few minutes. This design had a small annoying flow: On a low memory machine a cache miss would occur at the worse possible moment: When the player opens the last door and is about to find himself confronted to the heavy powered final boss, the cache manager would not have the sprites available. This would incur a HDD access, a lag and an unfair death.\\
+\par
+The size of the swap file varies depending on the version of the game you play: \cw{VSWAP.WL1} (shareware) is 742KB while \cw{VSWAP.WL6} (full version) is 1,500KB. In both case a machine with 2MB of RAM on top of the factory issued 1MB is enough to have all assets loaded during pre-caching.\\
+\par
+\bu{Trivia:} In the code, the progress bar was called a "thermometer".\\
+\par
+\bu{Trashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, it is trashing. The HDD is put to heavy contribution and the framerate drops. Trashing can happen if two many different resources are visible on the screen. In order to help designers balance their creativity with the needs for a decent framerate, the engine detects trashing and flashes the screen border red when it occurs.\\
+\par
+\bu{Sounds are special:} Because the sound cards are fed via a system of interrupt, the sound manager cannot recover from a page miss. Therefore all sound resources are loaded first (they are located at the start of \cw{SWAP.WL1}) and they are also only loaded in Conventional memory.
 
 
-PAGE is for SWAP ! (see PML\_OpenPageFile)\\
-According to the page header (Primary coder: Jason Blochowiak) Jason had experience with Unix programming and its design clearly is inspired of Unix SWAP file and paging system.
-\subsection{Video Manager (VW)}
+
+
+
+
+
+
+
+
+
+\subsection{Video Manager (VL \& VH)}
+The video manager features two parts:
+\begin{itemize}
+\item A part dedicated to VGA register manipulation.
+\item A part dedicated to 2D menu drawings.
+\end{itemize}
+\par
+This part features what I think is one of the most beautiful trick in the game: FizzleFade which is explained later.
+
+
+
+
 
 
 \subsection{Cache Manager (CA)}
-The Cache Manager takes care of all the assets during Menu Phases: Sprites, Music, Sounds.
-\subsection{Sound Manager (SD)}
-The Sound Manager abstract interaction with all four sound systems supported: PC Speaker, ADLib (Music only), Sound Blaster (Mono), Sound Blaster Pro (Stereo).
+A small manager performing a lot: Interface with map, graphic and music. Assets are stored in two files: One header file performing the translation between resource ID and offset in the DATA file and an other file containing he actually payload.\\
+ \par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/cache_manager_architecture.png}
+ \end{figure}
+ \par
+\note{Note:} All resources are compressed. The CM handle decompression transparently.
+
+
+
+
+
+
+
+
+
+
 \subsection{User Manager (US)}
-
-  
-
 \begin{minipage}{0.7\textwidth}
 Largely based on Catacom 3D code and written by Jason Blochowiak. The copy/past is very visible since 90\% of the functions declared in the header (ID\_US.H) are not actually implemented in \cw{ID\_US.C}. 
 It is a poorly named manager since it takes care mostly of graphic layout. When a \cw{WL\_*} high level routines needs to draw a string, it is passed to \cw{US\_Print} which does all measurement (e.g: Draw string centered)
@@ -249,8 +305,44 @@ and then passes these information to the Video Manager (\cw{VW\_DrawPropString})
 \\
 
 
+
+
+
+
+
+
+
+
+
+
+\subsection{Sound Manager (SD)}
+The Sound Manager abstracts interaction with all four sound systems supported: PC Speaker, ADLib (Music only), Sound Blaster and SoundSource. It is a beast of his own since it doesn't run inside the engine. Instead it called via IRQ at a much higher frequency than that engine (the engine runs at 70Hz, the sound manager ranges from 150Hz to 7000Hz). For efficiency it is written in assembly and is privileged when it comes to memory allocation: All its allocation are in Conventional Memory and its assets can never miss the cache in the Page Manager.\\
+ \par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/sound_manager_architecture.png}
+ \end{figure}
+ \par
+The source manager is described extensively in the "Sound and Music" section.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \subsection{Input Manager (IN)}
-Abstract interaction with keyboard and mouse.
+Abstract interaction with joystick keyboard and mouse. Features a lot of boring boilerplate code to deal with PS/2, Serial and DA-15 ports.
 
 
 
@@ -281,7 +373,7 @@ Abstract interaction with keyboard and mouse.
 \subsection{Video setup}
 An important problem left open in the Hardware chapter, is the video card: None of the VGA modes available in the user manual are suited for a game engine. The most interesting one (13h) offers a single framebuffer of 256 indexed colors at a resolution of 320x200 with no square pixels (the 320x200 framebuffer was stretched to 320x240 on the screen). Nothing can be done about the non square pixels but there is something that can be done about the absence of double buffering.\\
 \par
- In mode 13h, the VGA circuitry automatically maps the 16K adress space to the four VGA banks. It is called "chaining" and even though it wastes 75\% of the RAM it offers a linear framebuffer to the developer.\\
+ In mode 13h, the VGA circuitry automatically maps the 16K address space to the four VGA banks. It is called "chaining" and even though it wastes 75\% of the RAM it offers a linear framebuffer to the developer.\\
  \par
  Mode 13h is how the engine initialize the graphic pipeline:\\
  \begin{minipage}{\textwidth}
@@ -357,7 +449,7 @@ void CleanScreen(y, color) {
   }
 }
 \end{verbatim}\\
-The culpit being the 320*200=64000 slow instruction to set the mask. But if we look carefully at the screenshot in Figure \ref{fig:vga_layout_for_intro} and Figure \ref{fig:vga_layout_in_3D} on page \pageref{fig:vga_layout_in_3D} there is an interesting propertly: Vertically the screen is still linear and not broken down in banks. This unlock different algorithm where things are drawn vertically:\\
+The culprit being the 320*200=64000 slow instruction to set the mask. But if we look carefully at the screenshot in Figure \ref{fig:vga_layout_for_intro} and Figure \ref{fig:vga_layout_in_3D} on page \pageref{fig:vga_layout_in_3D} there is an interesting property: Vertically the screen is still linear and not broken down in banks. This unlock different algorithm where things are drawn vertically:\\
 
 \begin{verbatim}
 void CleanScreen(y, color) {
@@ -371,7 +463,7 @@ void CleanScreen(y, color) {
 \end{verbatim}\\
 The previous code runs without issues at 70frames per second: Only 200 slow out instruction are used.\\
 \par
-This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algotithms picked during 2D and 3D all the way up to the assets compression techniques.\\
+This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algorithms picked during 2D and 3D all the way up to the assets compression techniques.\\
 
 \begin{figure}[H]
 \centering
@@ -450,7 +542,7 @@ Since the graphic pipeline is not initialized at this point, the full 64K pg13 s
 \end{minipage}
 Note: In an effot to get more RAM available, these 64K are unlinked for RAM.\\
 Note: The palette (3*256=768B) is also compiled in the executable. It is simply copied from RAM to VGA's DAC.
-Note the main (conventional memory) which goes only up to 320K: Between the exectuable and other residence routines it is all what was remaining of the original 640K. The game is able to run on 320KB but you needs to swap with the HD at runtime to load textures and sprites.
+Note the main (conventional memory) which goes only up to 320K: Between the executable and other residence routines it is all what was remaining of the original 640K. The game is able to run on 320KB but you needs to swap with the HD at runtime to load textures and sprites.
 
 
 
