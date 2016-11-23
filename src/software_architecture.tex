@@ -1,7 +1,7 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
 \section{Source Code}
-The game engine was released on July 21, 1995. 20 years later it is still there on the company ftp\footnote{Transfer File Protocol (along with Finger where J.C.Carmack used to blog) was commonly used in the 90s in the blessed time where you did not have to encrypt everything on the wire.}:\\ 
+The game engine source code was released on July 21st, 1995. Twenty years later it is still there on id software's ftp\footnote{Transfer File Protocol (along with Finger where J.C.Carmack used to blog) was commonly used in the 90s in the blessed time where you did not have to encrypt everything on the wire.}:\\ 
 \\\codeword{ftp://ftp.idsoftware.com/idstuff/source/wolfsrc.zip}.\\
 \\
 \bu{Trivia :} Before the times of nmap, WireShark and various eavesdropping techniques, FTP\footnote{File Transfer Protocol} was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
@@ -11,6 +11,7 @@ The file \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive.
 \\\codeword{unzip WOLFSRC.1}.\\
 \par
 A few quick stats:\\
+
 \begin{verbatim}
 wolfsrc\$ cloc-1.64.pl .
 
@@ -29,7 +30,8 @@ DOS Batch              1              1              0              4
 SUM:                  79           7222           7593          27223
 ---------------------------------------------------------------------
 \end{verbatim}
-The game engine is mostly C with a few ASM routines for optimized stuff and I/O.\\
+
+Twenty seven thousands lines of code. By 2016 standard it is very little. The game is written 90\% in C.\\
 
 
  \begin{fancyquotes}
@@ -42,14 +44,12 @@ It's "COLUMN", you dumb @\#\$\% !\\
  
 The archive actually contains more than just \codeword{.H} (headers) and \codeword{.C} (code) files. Also present are:
 \begin{itemize}
-\item \codeword{GOODSTUF.TXT} Two emails from fans demonstrating the success of the game: An ex-POW and a Microsoft employee.
-\item \codeword{.ASM} Assembly optimized routines. Also contains  routines to access VGA and refresh screen.
-\item \codeword{SIGNON.OBJ}: The startup screen showing the system characteristic (RAM, EMS, XMS, Joystick, SoundCards) was linked in the binary. Because that screen was showed before any sub-system was started. TODO: This should be a trivia.
-\item \codeword{GAMEPAL.OBJ} Game palette. Hardcoded and linked in the executable for the same reason described previously.
-\item \codeword{README} How to build. You can find a complete tutorial in the Annexe of this book.
-\item \codeword{RULES.ASI} ???
-\item \codeword{SV.EXE} ???
-\item Many files resulting in a previous compilation attempt.
+\item \codeword{GOODSTUF.TXT:} Two emails from fans demonstrating the success of the game: An ex-POW and a Microsoft employee.
+\item \codeword{.ASM:} Assembly routines to optimize 3D renderer. Also contains low level routines for I/O.
+\item \codeword{SIGNON.OBJ:} The startup screen showing the system characteristic (RAM, EMS, XMS, Joystick, SoundCards) was linked in the binary. The reason why is given later.
+\item \codeword{GAMEPAL.OBJ:} Game palette. Hardcoded and linked in the executable for the same reason described previously.
+\item \codeword{README:} How to build. You can also find a complete tutorial in the Annexe of this book.
+\item Many files resulting from a previous compilation attempt.
 \end{itemize}
 
 
@@ -59,13 +59,29 @@ The archive actually contains more than just \codeword{.H} (headers) and \codewo
 
 
 \section{The Big Picture}
-The main system of the engine is its 3D engine. Which is not really 3D: Maps are designed in 2D dimensions (lattitude and longitude) and a 3D dimensional view is generated at runtime. In that sense, it could be called a pseudo-3D engine. The game is broken down in flat levels which are divided into areas and rooms by a grid-based pattern of walls and doors. The first level E1M1:\par
+The engine can be divided in three blocks:
+\begin{itemize}
+\item The 2D renderer let the user set the game.
+\item The 3D renderer where most of the time is spent in the game.
+\item The sound system which always run concurrently with either 2D or 3D renderer. 
+\end{itemize}
+
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/three_systems.png}
+ \end{figure}
+ \par
+
+ 
+These three systems are emply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are actually two dimensional designed with square blocks.: e.g, the first level E1M1:\par
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/e1m1.png}
  \caption{The legendary E1M1 viwed from the top as in TED5 (Player is the green arrow at the bottom).}
 \end{figure}
 \par 
+A 3D dimensional view is faked at runtime:
 
 \begin{figure}[H]
   \centering
@@ -73,13 +89,15 @@ The main system of the engine is its 3D engine. Which is not really 3D: Maps are
  \caption{As it is rendered at runtime in pseudo-3D from the player point of view.} 
 \end{figure}
 
+ The pseudo 3D is generated via a system of raycasting\footnote{Not to be confused with raytracing.}. The previous screenshot being 320 wide by 200 tall, it requested to cast 320 rays (one for each column of wall):
+
 \begin{figure}[H]
   \centering
   \input{imgs/ray_caster_explained/beginning.tex}
- \caption{Raycasting 1: Drawing} 
+ \caption{Complex scene: 320 ray cast.} 
 \end{figure}
 
-
+Raycasting is a powerful even with (for 1991) complex scene.
 \begin{figure}[H]
 \centering
  \input{imgs/ray_caster_explained/out_room.tex}
@@ -90,25 +108,48 @@ The main system of the engine is its 3D engine. Which is not really 3D: Maps are
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_door.png}
- \caption{Raycasting 2: Screenshot} 
+ \caption{Complex scene: rendition.} 
 \end{figure}
 
+The 3D renderer attemps to run as fast as possible but is capped by the VGA graphic card: 70Hz.
 
-Game runs at 70Hz (twice as doom which ran at 35Hz). Framerate comes from the refresh rate of VGA at 320x240. At 640*480, rate it 60hz.\\
-TODO: Describe word, long, double word etc...
+
+\subsection{Unrolled loop}
+A quick overview of the engine code lets us see the two renderers (the sound system is interrupt driven and therefore is out of the looP).\\
+\par
+The main function is very simple:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_main.c}
-\end{minipage}\par
+\end{minipage}
+\par
+
+\cw{Trivia:} Because the game is using Real Mode, C types don't mean what people would expect from a 32 bits system: 
+\begin{itemize}
+\item \cw{int} and \cw{word} are 16 bits.
+\item \cw{long} and \cw{dword} are 32 bits.
+\end{itemize}
+\par
+The engine starts up (all managers are described next):\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_init.c}
-\end{minipage}\par
+\end{minipage}
+\par
+The core loop where 2D renderer and 3D renderer are called for ever:\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_demoloop.c}
-\end{minipage}\par
+\end{minipage}
+\par
+The play loop which is the 3D renderer. Pretty standard so far:\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_playloop.c}
-\end{minipage}\par
+\end{minipage}
+\par
+The sound system which is not in a loop. Instead it is associated with Interrupt XX and called at a regular time interval:\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/soundsystem_interrupt.c}
 \end{minipage}
@@ -142,7 +183,7 @@ The engine is made of WL\_* files which relies on ID\_* sub-systems called Manag
 	\item User
 	\item Input
 \end{itemize}
-
+The WL stuff was written specifically for Wolf3D while the ID\_ managers were taken from previous game (Catacomb 3D) and improved for the needs of the new engine.
 
 \begin{figure}[H]
 \centering
@@ -366,27 +407,31 @@ Abstract interaction with joystick keyboard and mouse. Features a lot of boring 
 
 
 
-\section{Engine startup}
-\subsection{MM (Memory Manager)}
+\section{Solving the VGA}
+An important problem left open in the Hardware chapter, is the video output: None of the VGA modes described in the user manual are suited for a game engine. The more important thing is to have a double buffer to avoid tearing.\\
 
-
-\subsection{Video setup}
-An important problem left open in the Hardware chapter, is the video card: None of the VGA modes available in the user manual are suited for a game engine. The most interesting one (13h) offers a single framebuffer of 256 indexed colors at a resolution of 320x200 with no square pixels (the 320x200 framebuffer was stretched to 320x240 on the screen). Nothing can be done about the non square pixels but there is something that can be done about the absence of double buffering.\\
+ The most appealing one (13h) offers a single framebuffer at a resolution of 320x200 with 256 indexed colors...which is not even square pixels (the 320x200 framebuffer is stretched to 320x240 on the CRT screen). Nothing can be done about the non square pixels but luckily something that can be done about the absence of double buffering:\\
 \par
  In mode 13h, the VGA circuitry automatically maps the 16K address space to the four VGA banks. It is called "chaining" and even though it wastes 75\% of the RAM it offers a linear framebuffer to the developer.\\
  \par
  Mode 13h is how the engine initialize the graphic pipeline:\\
+\par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/init_vga.c}
 \end{minipage}
+ \par
+
+The resulting system can be seen as follow:\\
+
  \par
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/vga_layout/wasted_vga_ram.png}
  \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
+
  \par
- Even though it is undocumented in Mode 13h there is a way to disable chaining. Nobody can remember who invented unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. By tweaking the VGA Sequence controller the chaining can be disabled. The developer now has to manually drive the VGA mask to plot pixel but the full 256k of ram is available. This VGA mode is commonly called "Mode X". Note: In the engine, unchaining is called "deplane" in VL\_DePlaneVGA.\\
+ So the problem really is the Chain-4 chip. Even though it is undocumented there is a way to disable it. Nobody can remember who invented unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. By tweaking the VGA Sequence controller the chaining can be disabled. The developer now has to manually drive the VGA mask to plot pixel but the full 256k of ram is available. This VGA mode is commonly called "Mode X". Note: In the engine, unchaining is called "deplane" in VL\_DePlaneVGA.\\
  \par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unchaining.c}
@@ -438,32 +483,32 @@ An other example during a 3D sequence
  \end{figure}
 
 \par
-But this solution only leads to an other problem. The automatic cicuitry of the VGA in Mode 13h is fast. Piloting manually the SC\_MASK is very slow. Therefore a naive algorithm drawing left to right and top to bottom as follow could not go beyond 4-5 frames per seconds:\\
+But this solution only leads to an other problem. The Chain-4 chip hardwired and therefore it is fast while piloting the SC\_MASK manually via in/out BIOS operations is very VERY slow. A naive algorithm drawing left to right and top to bottom as follow could not go beyond 4-5 frames per seconds:\\
 \begin{verbatim}
 void CleanScreen(y, color) {
   for(int y=0 ; y < 200 ; y++) {
     for(int x=0; x < 320 ; x++) {
-      SelectBank(x % 4);
-      WritePixel(x, y, color);   
+      selectPlan(x % 4);
+      writePixel(x, y, color);   
     }
   }
 }
 \end{verbatim}\\
-The culprit being the 320*200=64000 slow instruction to set the mask. But if we look carefully at the screenshot in Figure \ref{fig:vga_layout_for_intro} and Figure \ref{fig:vga_layout_in_3D} on page \pageref{fig:vga_layout_in_3D} there is an interesting property: Vertically the screen is still linear and not broken down in banks. This unlock different algorithm where things are drawn vertically:\\
+The culprit being the 320*200=64000 slow instruction to set the mask. But if we look carefully at the screenshot in Figure \ref{fig:vga_layout_for_intro} and Figure \ref{fig:vga_layout_in_3D} on page \pageref{fig:vga_layout_in_3D} there is an interesting property: If horizontal lines of pixels are broken into four areas (and it looks like mashed potatoes), vertically the column of pixesls are still linear and not broken down in banks. Indeed 320 is evenly divisible by 4 so vertically pixels are aligned and grouped in column of 80 pixels. This observation unlock a different algorithm where things are drawn vertically:\\
 
 \begin{verbatim}
 void CleanScreen(y, color) {
   for(int x=0; x < 320 ; x++) {
-    SelectBank(x % 4);
+    selectPlan(x % 4);
     for(int y=0 ; y < 200 ; y++) {
-      WritePixel(x, y, color);   
+      writePixel(x, y, color);   
     }
   }
 }
 \end{verbatim}\\
-The previous code runs without issues at 70frames per second: Only 200 slow out instruction are used.\\
+This code can run without issues at 70frames per second: Only 200 slow out instruction are used.\\
 \par
-This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algorithms picked during 2D and 3D all the way up to the assets compression techniques.\\
+This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algorithms picked during 2D and 3D all the way up to the assets compression techniques. In wolf3d: Everything is vertical!\\
 
 \begin{figure}[H]
 \centering
@@ -483,7 +528,7 @@ But the overhead of selecting the bank (a.k.a plan) would make the task impossib
 \lstinputlisting[language=C]{code/vga_clear/optimized.c}
 \end{minipage}
 
-The code is slightly more complicated but this way we only switch bank XXX times and write 320x200=64000 writes and  320 out out operation. But there is a way to do even better:\\
+The code is slightly more complicated but this way we only switch bank XXX times and write 320x200=64000 writes and 320 out out operation. But there is a way to do even better:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/vga_clear/optimal.c}

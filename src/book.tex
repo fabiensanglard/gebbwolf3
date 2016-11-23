@@ -28,9 +28,16 @@
     \renewcommand{\familydefault}{\sfdefault}
     
     % Table of content
-    \addtolength{\cftsecnumwidth}{12pt}
+    \addtolength{\cftsecnumwidth}{10pt}
     
     \cleardoublepage % Make toc appear on right side.
+    \setcounter{secnumdepth}{3} % toc is 2 level deep.
+    % \chapter is level 0
+    % \section is level 1
+    % \subsection is level 2
+    % \subsubsection is level 3
+    % \paragraph is level 4
+    % \subparagraph is level 5
     \tableofcontents
     
     \pagebreak

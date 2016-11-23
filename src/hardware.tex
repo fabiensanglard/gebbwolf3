@@ -626,8 +626,8 @@ framebuffer to the CRT.
 \end{itemize}
 
 
-\subsection{The importance of doublebuffer}
-Is it a big deal to have only one buffer in all the VGA modes described? Yes and very much so. With only one buffer the software as to work exactly at the frequency of the CRT (70Hz). Otherwise a phenomenom known as "tearing" appears. Let's take the example of a software rendering a circle moving from the left to the right:
+\subsection{The importance of doublebuffer: Avoid tearing}
+Is it a big deal to have only one buffer in all the VGA modes described? Yes and very much so! With only one buffer the software has to work exactly at the frequency of the CRT (70Hz). Otherwise a phenomenom known as "tearing" appears. Let's take the example of a software rendering a circle moving from the left to the right:
 \par
  \begin{figure}[H]
 \centering
