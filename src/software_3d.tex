@@ -161,9 +161,17 @@ The beauty of fixed point is that addition and subtraction work exactly like int
 Notice that you have to be careful: In the previous example some precision was lost ($ 2^{-8}$) bit disappeared during the $\gg 4$ operation) and an overflow could have occured (multiplying by 3 would have gone past the precision of 8:8). But with this system, fractions are possible and fast enough!\\
 \par
 
+ \lstinputlisting[language=C]{code/fixed_mul.c}
+\par
  \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game console manufactured in the 90s and later had no hardware floating point unit: Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples among many with a design choice that not only reduced the production cost but also maximized the CPU pipeline throughput.
  
+ Even right shit and left shift trick work:\\
  
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/fixed_point_shifts.png}
+\end{figure}
+\par
  
  
  
@@ -201,6 +209,14 @@ The solution for 100\% accuracy is to check for 'hit` when the ray cross the gri
  \input{imgs/casting_a_ray/fixed.tex}
  \caption{blabla.}
 \end{figure}
+\par
+DDA Algorythm:
+ \par
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/dda_explainer.png}
+\end{figure}
+\par
 
 This way is fast. For the ray above, only four intersections checks had to done. For the one below only 3.\\
 \par
@@ -600,7 +616,13 @@ doorposition[] holds the amount the door is open, ranging from 0 to 0xffff
 \par
 TODO: Explaih half step added.\\
 \par 
-TODO: Add drawing showing pass and hit.
+ \par
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/test_door.png}
+\end{figure}
+\par
+
 
 
 
@@ -672,9 +694,12 @@ In contrast, VSD is an open-ended problem, and there are dozens of approaches cu
 
 
 
-
+Note that the engine does not place things vertically. They are always centered vertically. The artists cleverly drew the sprites not centered vertically but at the bottom of each images. This allows for a non-expensive perspective effect even though all sprites are vertically aligned.
 \par
-THINGS ARE VERTICALLY ALIGNED TOO. show a screenshot showing it.
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/drawing_things.png}
+\end{figure}
 \par
 
 
