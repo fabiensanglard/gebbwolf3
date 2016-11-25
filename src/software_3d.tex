@@ -744,6 +744,24 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 TODO: Elaborate on drawing routines which uncompresse sprites on the fly.
 
 
+\subsubsection{Clipping}
+Drawing things far to near is good for transparency but does not guaranty correctness. When a sprite is partially behind a wall or a door, it has to be clipped. This is done thanks to an occlusion array: While drawing the walls and door, the engine also maintains an array in which it records the height of the column:\\
+\par
+\begin{verbatim}
+
+\\Write in HitVertWall, HitHorizWall, HitVertDoor, HitHorizDoor, HitHorizPWall, HitVertPWall
+wallheight[pixx] = CalcHeight();
+
+\\Read
+\#define MAXVIEWWIDTH    320
+unsigned  wallheight[MAXVIEWWIDTH];
+
+        if (wallheight[slinex] >= height)
+          continue;   // obscured by closer wall
+\end{verbatim}
+\par
+Since all sprite and walls are in the same coordinate system, clipping is as easy as a heigh comparaision:\\
+
 
 
 
@@ -775,7 +793,10 @@ Drawing the weapon at the bottom is very straight forward. It just uses the prec
 
 
 \subsection{I.A: State Machines}
-The 3D engine not only draw things, it also allows all objects to "think". 
+The 3D engine not only draw things, it also allows all objects to "think". All I.A is hardcoded in \cw{WL\_STATE.C}.\\ Enemies react to noise, sight or proximity.
+\par
+TODO: Draw a state machine of a guard, starting at \cw{T\_Stand} and moving to \cw{SightPlayer}, \cw{T\_Attack}.
+\par
 Closely tied to sound system: Enemy responding to audio clue are deemed smarter!!\\
 Defined in WL\_ACT2.c\\
 Normal, standing guard\\
@@ -794,5 +815,12 @@ I/A also faked with map waypoint for patrolling.\\
 
 
 \section{Heathbeats}
+Because the engine uses triple buffering, it is completely decoupled from the VGA refresg rate (70Hz). Yet it needs something not only to pace itself (not render too fast) and to keep track of wall time (so the player is presented with a linear game time progression). This is where the sound system performs two tasks. Not only the XXX chips triggers at a regular interval, it also updates a global variable (\cw{TimeCount}) at 70Hz. This variable is used in the renderer to make sure at least 1/70th of a second has passed before rendering something again but also to pace actor thinking (so player movement is proportionnal to frame rate and actor also think proportionnaly).\\
+\cw{CalcTics} maintains \cw{ticks} variable: The amount of walltime since last frame. An action takes a certain number of ticks.\\
+\par
+It works but there is a major flaw with this technique: The engine is non-deterministic. Recording and replaying a demo, even on the same machine cannot work.\\\par
+\note{Trivia :} When playing a recording, the engine bypasses the timer and hardcoded tics: (tics = DEMOTICS;). The demo was likely recorded at 15fps which is consistent with what a 386DX33 would have produced
+
+haha: // if the game was paused a LONG time
 VGA: 70Hz
 audio: Depends on quality, three levels of fidelity.

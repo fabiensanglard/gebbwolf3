@@ -726,6 +726,13 @@ Finally, the sound card connected via the ISA bus provided a new port: A Game Po
 Note that without a sound card you were unable to connect a joystick !
 
 
+\section{ISA BUS}
+
+ISA 8-Bit/4.77 MHz  19.1 Mbit/s
+ISA 16-Bit/8.33 MHz
+
+TODO: Draw architecture. Show that ISA bus must feed both the VGA, (with reads) and the sound card. 66.7 Mbit/s = 66,700,000 bits per seconds. Which is 117,857 bytes per frame. If you take of 65000 for the VGA, that leaves 52 KB of data for controls and sounds!!\\
+19100000/8/70 = 34107 not even enough to reach 70Hz for the VGA.
 
 \section{Summary}
 In a nutshell, a PC was a nightmare for game developer. The CPU was good at doing the wrong thing, the graphic interface allowed neither enough colors nor double buffering (which would result in tearing), the memory model only allowed 1 standard MB...with address composed of two separate 16bits registers. Last but not least the sound eco-system was made of four overlaping configurations. Despite all these unfavorable circonstances teams of irreductible developers gathered to crack the beast and unleash its power to gamers.

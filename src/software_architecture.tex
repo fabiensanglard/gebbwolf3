@@ -591,23 +591,6 @@ Note the main (conventional memory) which goes only up to 320K: Between the exec
 
 
 
-\subsection{Music and Heatbeats}
-After showing something on screen, the audio and heatbeat system are started. This is done by reprogramming 8254-PIT and 8259-PIC timers to install an ISR\footnote{DOS Interrupt Service Routine}:\\
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/heatbeats.png}
- \caption{3D View as is appears on screen} 
- \end{figure}
-
-Different things could happen depending on the hardware available:
-\begin{itemize}
-\item With the default PC speaker or with , the isr is set on slow: 140Hz
-\item With an adlib or Disney Sound source, the isr is set on fast: 700Hz
-\item With Sound Blaster, the isr is set on extreme: 7000Hz
-\end{itemize}
-Every time the ISR triggers, it takes care of feeding music and audio to the sound chip and also updates TimeCount variable, the heat of the whole system, at 70Hz (like VGA refresh rate).
-
-
 
 
 
