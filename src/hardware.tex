@@ -728,9 +728,9 @@ Note that without a sound card you were unable to connect a joystick !
 
 \section{ISA BUS}
 
-ISA 8-Bit/4.77 MHz  19.1 Mbit/s
-ISA 16-Bit/8.33 MHz
-
+ISA 8-Bit/4.77 MHz  19.1 Mbit/s\footnote{https://en.wikipedia.org/wiki/List_of_device_bit_rates}\\
+ISA 16-Bit/8.33 MHz 66.7 Mbit/s\\
+\par
 TODO: Draw architecture. Show that ISA bus must feed both the VGA, (with reads) and the sound card. 66.7 Mbit/s = 66,700,000 bits per seconds. Which is 117,857 bytes per frame. If you take of 65000 for the VGA, that leaves 52 KB of data for controls and sounds!!\\
 19100000/8/70 = 34107 not even enough to reach 70Hz for the VGA.
 
