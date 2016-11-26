@@ -553,7 +553,7 @@ The BIOS could be called to have the VGA configured with preset registers.
  
 
  \subsection{VGA Programming: Mode 12h}
-Mode 12h was planar which means there was no linear framebuffer to write to. Instead 8 pixels were packed in one byte. To write the color index of the first pixel, a developer had to write the first bit of the nibble in plane 0, the second in plane 1, the third in plane 2 and the fourth in plane 3. The CRT Controller would read 4 bytes at a time (which resulted in 16 pixels on screen).\\
+Mode 12h was planar which means there was no linear framebuffer to write to. Instead 8 pixels were packed in one byte. To write the color index of the first pixel, a developer had to write the first bit of the nibble in plane 0, the second in plane 1, the third in plane 2 and the fourth in plane 3. The CRT Controller would read 4 bytes at a time (which resulted in 8 pixels on screen).\\
 \par
 \begin{figure}[H]
 \centering
@@ -736,7 +736,7 @@ Altought developers had no control over it, it is still worth mentioning how the
 \par
 The Northbridge connects the CPU to the RAM is 16 bits wide on 286 and 386SX but 32 bits wide on 386DX machines. It runs at the same speed as the CPU.\\
 \par
-The Southbridge run on ISA\footnote{Industry Standard Architecture}. Invented in 1981, it offers a 16 bits data bus at 8.33MHz for a 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates} bandwidth . Quick math: 66.7 Mbit/s = 66,700,000 bits per seconds which is 117,857 bytes per frame. If you take of 65,000 for the VGA, that leaves 52 KB of data for controls and sounds (at 23kHz sampling a digitized sound effect consums 23,000/70 = 328 bytes per frame). Not a limiting factor but not exactly exempt from generating bottleneck if you factor in delays due to interrupts and that the CPU is not always transmitting (halving bandwidth).\\
+The Southbridge run on ISA\footnote{Industry Standard Architecture}. Invented in 1981, it offers a 16 bits data bus at 8.33MHz for a 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates} bandwidth. In practice, due to packet overhead and interrupts, the effective bandwidth of the bus is rather 33.4 Mbit/s. Quick math: 33.4 Mbit/s = 33,400,000 bits per seconds which is 59,553 bytes per frame. Which is not even enough for the 65,000 bytes required for a full screen refresh. If you factor in other things which had to transit on the bus such as palette, keyboard interrupt, mouse inputs and music/sounds (at 23kHz sampling a digitized sound effect consums 23,000/70 = 328 bytes per frame) you understand well why no PC of the era could reach 70 frame per seconds. The top was usually considered 35 frames per seconds.
 
 
 \section{Summary}
