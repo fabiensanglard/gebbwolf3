@@ -1,0 +1,7 @@
+#define SCREENBWIDE     80
+...
+#define SCREENSIZE      (SCREENBWIDE*208)
+#define PAGE1START      0
+#define PAGE2START      (SCREENSIZE)
+#define PAGE3START      (SCREENSIZE*2u)
+#define FREESTART       (SCREENSIZE*3u)

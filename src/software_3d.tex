@@ -73,21 +73,191 @@ The static part (ammo, face, etc) is not redrawn if not necessary. However cost 
 
 
 \subsection{HUD}
+At the beginning of the 3D sequence, the engine generates the HUD\footnote{Head-up display} in all three buffers:\\
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{imgs/sprites.png}
+ \includegraphics[width=\textwidth]{imgs/hud_empty.png}
 \end{figure}
+It also uploads all assets neeeded to update the HUD (weapon, font, keys, status face, paused).
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/hud.png}
+\end{figure}
+Sprites 91 to 134 are latched in VRAM.\\
+
+\begin{minipage}{.23\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/91.png}
+  \end{minipage}
+\begin{minipage}{.23\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/92.png}
+  \end{minipage}
+\begin{minipage}{.23\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/93.png}
+  \end{minipage}
+\begin{minipage}{.23\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/94.png}
+  \end{minipage}
+\par
+
+
+\begin{minipage}{.095\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/99.png}
+  \end{minipage}
+\begin{minipage}{.095\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/100.png}
+  \end{minipage}
+\begin{minipage}{.095\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/101.png}
+  \end{minipage}
+\begin{minipage}{.095\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/102.png}
+  \end{minipage}
+\begin{minipage}{.095\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/103.png}
+  \end{minipage}
+\begin{minipage}{.095\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/104.png}
+  \end{minipage}
+\begin{minipage}{.095\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/105.png}
+  \end{minipage}
+\begin{minipage}{.095\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/106.png}
+  \end{minipage}
+\begin{minipage}{.095\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/107.png}
+  \end{minipage}
+\begin{minipage}{.095\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/108.png}
+  \end{minipage}
+\par
+
+
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/109.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/110.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/111.png}
+  \end{minipage}
+\par
+
+
+
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/112.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/113.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/114.png}
+  \end{minipage}
+\par
+
+
+
+  \begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/115.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/116.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/117.png}
+  \end{minipage}
+\par
 
 
 
 
 
+  \begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/118.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/119.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/120.png}
+  \end{minipage}
+\par
 
 
+
+  \begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/121.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/122.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/123.png}
+  \end{minipage}
+\par
+
+    \begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/124.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/125.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/126.png}
+  \end{minipage}
+\par
+
+    \begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/127.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/128.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/129.png}
+  \end{minipage}
+\par
+
+    \begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/130.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/131.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/132.png}
+  \end{minipage}
+\par
+
+
+\begin{minipage}{.1\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/95.png}
+  \end{minipage}
+\begin{minipage}{.1\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/96.png}
+  \end{minipage}
+\begin{minipage}{.1\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/97.png}
+  \end{minipage}
+\begin{minipage}{.1\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/98.png}
+  \end{minipage}
+  \begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/133.png}
+  \end{minipage}
+\begin{minipage}{.3\textwidth}
+     \includegraphics[width=\textwidth]{imgs/latched/134.png}
+  \end{minipage}\
+
+
+All these assets account for $48*24*4+14*8*16+23*24*32+224*48=34,816$ bytes. There is therefore $2^18-320*208*3 - 34,816=27,648$ bytes unused VRAM in the VGA.
+All these assets are used with the VGA in order to copy 4 pixels at a time.
 
 
 \subsection{Clearing the screen}
-
+At the beginning of very frame, the engine switch to an unused buffer (TODO: show triple buffering in action) and clear it. To this effect, it uses the latch seen in the 2D renderer: 
 
 
 
@@ -477,7 +647,15 @@ Trivia: What as the memory budget of the scaller? JC had to cut corners. What wa
 \lstinputlisting[language=C]{code/compscale.c}
 \end{minipage}
 
-
+\par
+Is the tradeof speed/memory worse it for compiled scalers ? How much RAM does it use? According to the code sample, it takes 7 instructions of one byte each to write a pixel. So if all size were generated from 2,4,6...152, we could use Gauss method to calculate the size:\\
+\par
+$154*38*7=40,964$ bytes\\
+\par
+That cost was deamed too high, so past size 76 only every other size are generated (2,4,6,,..,72,74,76) and (78,82,86,...,144,148,152):\\
+\par
+$78*19*7+9*230*7=26,474$ bytes\\
+\par
 
 
 
@@ -785,8 +963,19 @@ Drawing the weapon at the bottom is very straight forward. It just uses the prec
 
 
 
-
-
+\subsection{Flipping buffer} \label{Flippingbuffer}
+Once a frame is completed, the engine instructs the CRT controller to scan the page just completed next time it has to refresh the screen. It doesn't have to wait for the end of a vsync, the CRTC will automatically pick up the new adress next time it has to refresh. But you still have to be VERY careful since updating the CRT scan starting adress is a 16 bits value....but you can only write 8 bits at a time. If you are unlucky, you could update the 8 bits high value, the CRT could read the adress and start refreshing the screen...then your routine could set the low value. That would result in an ugly mess on the screen...which at 70 updates a second could happen fairly often.\\
+\par
+The trick is to use page adress which need only one byte update. Which explains why the engine "wastes" 8*80 bytes per page in section \ref{SetupPages}:\\
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/triple_pages_trick.png}
+\end{figure}
+\par
+Using pages of 80*200 result in page 0 at 0x0000, page 1 at 0x3E80 and page 2 at 0x7000. Moving from page 0 to 1 would require updating the high 0x00 to 0x3E and the low 0x00 to 0x80. If you are unlucky the CRT could start scanning after the high byte has bee updated but before the low byte has. This would present user with an ugly mess.\\
+\par
+Using pages of 80*208 result in page 0 at 0x0000, page 1 at 0x4100 and page 2 at 0x8200. Moving from any page to an other only requires updating the high 8 bits. Flipping buffer is now an atomic operation !!\\
 
 
 
@@ -819,6 +1008,7 @@ Because the engine uses triple buffering, it is completely decoupled from the VG
 \cw{CalcTics} maintains \cw{ticks} variable: The amount of walltime since last frame. An action takes a certain number of ticks.\\
 \par
 It works but there is a major flaw with this technique: The engine is non-deterministic. Recording and replaying a demo, even on the same machine cannot work.\\\par
+haha joke about LONG time.\\
 \note{Trivia :} When playing a recording, the engine bypasses the timer and hardcoded tics: (tics = DEMOTICS;). The demo was likely recorded at 15fps which is consistent with what a 386DX33 would have produced
 
 haha: // if the game was paused a LONG time

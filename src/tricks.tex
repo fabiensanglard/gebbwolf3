@@ -26,12 +26,15 @@ Boss:\\
 \begin{figure}[H] \centering \includegraphics[scale=1.0]{imgs/fizzlefade/boss/screenshot_102.png} \end{figure}        
 \begin{figure}[H] \centering \includegraphics[scale=1.0]{imgs/fizzlefade/boss/screenshot_130.png} \end{figure}        
 
-The code responsible for this effect can be found in id\_vh.cpp, function FizzleFade. At first it is not obvious to understand how it works. I consider it to be one of the most beautiful trick of the engine:
-\newpage
+The code responsible for this effect can be found in id\_vh.cpp, function FizzleFade. At first it is not obvious to understand how it works. I consider it to be one of the most beautiful trick of the engine:\\
+\par
+\begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/fizzlefade.c}
-
-        \begin{figure}[H] \centering \includegraphics[scale=0.3]{imgs/fizzlefade/fibonnaci.png} \end{figure}
-    \begin{figure}[H] \centering \includegraphics[scale=0.3]{imgs/fizzlefade/galois.png} \end{figure}
+\end{minipage}
+\par
+        
+\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/fizzlefade/fibonnaci.png} \end{figure}
+\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/fizzlefade/galois.png} \end{figure}
       
 Note: Because the effect works by plotting pixels individually, this effect was very hard to replicate when developers tried to port the game to hardware accelerated GPU. As far as I know none of the port managed to replicate the fizzlefade.
 

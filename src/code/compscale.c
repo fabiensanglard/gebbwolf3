@@ -13,6 +13,7 @@ unsigned BuildCompScale (int height, byte far *code)
     *code++ = 0x26;
     *code++ = 0x88;
     *code++ = 0x85;
+    *((unsigned far *)code)++ = startpix*SCREENBWIDE;
   }
   // retf
   *code++ = 0xcb;

@@ -726,16 +726,21 @@ Finally, the sound card connected via the ISA bus provided a new port: A Game Po
 Note that without a sound card you were unable to connect a joystick !
 
 
-\section{ISA BUS}
-
-ISA 8-Bit/4.77 MHz  19.1 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates}\\
-ISA 16-Bit/8.33 MHz 66.7 Mbit/s\\
+\section{Bus}
+Altought developers had no control over it, it is still worth mentioning how these component are connected together via the Northbridge and Southbridge chipsets:\\ 
 \par
-TODO: Draw architecture. Show that ISA bus must feed both the VGA, (with reads) and the sound card. 66.7 Mbit/s = 66,700,000 bits per seconds. Which is 117,857 bytes per frame. If you take of 65000 for the VGA, that leaves 52 KB of data for controls and sounds!!\\
-19100000/8/70 = 34107 not even enough to reach 70Hz for the VGA.
+\begin{figure}[H]
+\centering
+      \includegraphics[width=\textwidth]{imgs/bus.png}
+\end{figure}
+\par
+The Northbridge connects the CPU to the RAM is 16 bits wide on 286 and 386SX but 32 bits wide on 386DX machines. It runs at the same speed as the CPU.\\
+\par
+The Southbridge run on ISA\footnote{Industry Standard Architecture}. Invented in 1981, it offers a 16 bits data bus at 8.33MHz for a 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates} bandwidth . Quick math: 66.7 Mbit/s = 66,700,000 bits per seconds which is 117,857 bytes per frame. If you take of 65,000 for the VGA, that leaves 52 KB of data for controls and sounds (at 23kHz sampling a digitized sound effect consums 23,000/70 = 328 bytes per frame). Not a limiting factor but not exactly exempt from generating bottleneck if you factor in delays due to interrupts and that the CPU is not always transmitting (halving bandwidth).\\
+
 
 \section{Summary}
-In a nutshell, a PC was a nightmare for game developer. The CPU was good at doing the wrong thing, the graphic interface allowed neither enough colors nor double buffering (which would result in tearing), the memory model only allowed 1 standard MB...with address composed of two separate 16bits registers. Last but not least the sound eco-system was made of four overlaping configurations. Despite all these unfavorable circonstances teams of irreductible developers gathered to crack the beast and unleash its power to gamers.
+In a nutshell, a PC was difficult to program for game developer. The CPU was good at doing the wrong thing, the graphic interface allowed neither enough colors nor double buffering (which would result in tearing), the memory model only allowed 1 standard MB...with address composed of two separate 16 bits registers. Last but not least the sound eco-system was made of four overlaping configurations. Yet, despite all these unfavorable conditions, teams of irreductible developers gathered to tame the beast and unleash its power to gamers.
 \end{document}
 
 

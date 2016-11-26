@@ -74,7 +74,7 @@ The engine can be divided in three blocks:
  \par
 
  
-These three systems are emply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are actually two dimensional designed with square blocks.: e.g, the first level E1M1:\par
+These three systems are amply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are actually two dimensional designed with square blocks.: e.g, the first level E1M1:\par
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/e1m1.png}
@@ -111,7 +111,7 @@ Raycasting is a powerful even with (for 1991) complex scene.
  \caption{Complex scene: rendition.} 
 \end{figure}
 
-The 3D renderer attemps to run as fast as possible but is capped by the VGA graphic card: 70Hz.
+The 3D renderer attempts to run as fast as possible but is capped by the VGA graphic card: 70Hz.
 
 
 \subsection{Unrolled loop}
@@ -407,7 +407,7 @@ Abstract interaction with joystick keyboard and mouse. Features a lot of boring 
 
 
 
-\section{Solving the VGA}
+\section{Solving the VGA}\label{SetupPages}
 An important problem left open in the Hardware chapter, is the video output: None of the VGA modes described in the user manual are suited for a game engine. The more important thing is to have a double buffer to avoid tearing.\\
 
  The most appealing one (13h) offers a single framebuffer at a resolution of 320x200 with 256 indexed colors...which is not even square pixels (the 320x200 framebuffer is stretched to 320x240 on the CRT screen). Nothing can be done about the non square pixels but luckily something that can be done about the absence of double buffering:\\
@@ -456,6 +456,18 @@ The resulting system can be seen as follow:\\
  \includegraphics[width=\textwidth]{imgs/vga_layout/vga_ram_architecture.png}
  \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
+\par
+In the code it is done like this:\\
+\par
+ \begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/vga_setup_pages.c}
+\end{minipage}
+\par
+
+Note: Why use 208 height if the framebuffer is 200 pixels tall? That doesn't make sense at first sight. I thought it was a typo (after all 0 and 8 are visually close). Think about it and find out why in section \ref{Flippingbuffer}!\\
+\par
+
+
 As a result from unchaining a complete framebuffer is divided into four banks. Horizontally it looks a little bit like mashed potatoes:
  \begin{figure}[H]
 \centering
@@ -506,7 +518,7 @@ void CleanScreen(y, color) {
   }
 }
 \end{verbatim}\\
-This code can run without issues at 70frames per second: Only 200 slow out instruction are used.\\
+This code can run without issues at 70 frames per second: Only 200 slow out instruction are used.\\
 \par
 This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algorithms picked during 2D and 3D all the way up to the assets compression techniques. In wolf3d: Everything is vertical!\\
 
@@ -568,8 +580,6 @@ Would have been unpractical. But something else can be done if you notice that 3
 TOOD: Drawing of how column line up in VGA RAM.\\
 
  \par
- Use an address that can be changed with only one byte ( e.g: a000 b0000 c000).\\
- Or did he wait for the vsync?\\
 
 
 

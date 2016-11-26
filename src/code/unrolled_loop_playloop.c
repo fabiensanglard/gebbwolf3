@@ -14,6 +14,7 @@ PlayLoop () {
     WallRefresh ();         // Draw walls
     DrawScaleds();          // draw scaled stuff
     DrawPlayerWeapon ();    // draw weapon
+    // Flip framebuffer via CRT Controller
   }
   UpdateSoundLoc ();
 }
