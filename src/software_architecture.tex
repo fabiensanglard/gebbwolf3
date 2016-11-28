@@ -78,7 +78,7 @@ These three systems are amply described in the next sections. The most interesti
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/e1m1.png}
- \caption{The legendary E1M1 viwed from the top as in TED5 (Player is the green arrow at the bottom).}
+ \caption{The legendary E1M1 viewed from the top as in TED5 (Player is the green arrow at the bottom).}
 \end{figure}
 \par 
 A 3D dimensional view is faked at runtime:
@@ -99,23 +99,20 @@ A 3D dimensional view is faked at runtime:
 
 Raycasting is a powerful even with (for 1991) complex scene.
 \begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_door.png}
+ \caption{Complex scene: rendition.} 
+\end{figure}
+\par
+\begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_room.pdf}
  \caption{The 320 rays cast to render the walls in the previous scene.} \label{fig:Raycasting2}
 \end{figure}
 
 
-\begin{figure}[H]
-  \centering
- \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_door.png}
- \caption{Complex scene: rendition.} 
-\end{figure}
-
-The 3D renderer attempts to run as fast as possible but is capped by the VGA graphic card: 70Hz.
-
-
 \subsection{Unrolled loop}
-A quick overview of the engine code lets us see the two renderers (the sound system is interrupt driven and therefore is out of the looP).\\
+A quick overview of the engine code lets us see the two renderers (the sound system is interrupt driven and therefore is out of the loop).\\
 \par
 The main function is very simple:\\
 \par
@@ -130,7 +127,7 @@ The main function is very simple:\\
 \item \cw{long} and \cw{dword} are 32 bits.
 \end{itemize}
 \par
-The engine starts up (all managers are described next):\\
+The engine starts up (all managers are described later):\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_init.c}
@@ -242,7 +239,7 @@ The memory manager starts by allocating all available RAM via \cw{malloc} and cr
  \includegraphics[width=\textwidth]{imgs/mm_compact.png}
  \end{figure}
  \par
-But if memory is moved around, how do previous allocation still point to what they had before the garbage collection phase? Notice that a \cw{mmblockstruct} has a \cw{useptr} poitner which point to the owner of a block: If it moves memory, it also updates the ower of the block.
+But if memory is moved around, how do previous allocation still point to what they had before the garbage collection phase? Notice that a \cw{mmblockstruct} has a \cw{useptr} pointer which point to the owner of a block: If it moves memory, it also updates the ower of the block.
 
    \par
 \begin{figure}[H]
@@ -278,7 +275,7 @@ In order to minimize the cost of page miss, the engine preload the page cache be
  \includegraphics[width=\textwidth]{imgs/get_psyched.png}
  \end{figure}
  \par
-The precaching mechanis is not particularly clever: It loads as many page from the swap file as possible. It doesn't try to look at what is actually used in the level. But the eviction policy (LRU) ultimately stabilize the cache and even a machine with only 1MB of RAM is able to play a level with no HDD access after a few minutes. This design had a small annoying flow: On a low memory machine a cache miss would occur at the worse possible moment: When the player opens the last door and is about to find himself confronted to the heavy powered final boss, the cache manager would not have the sprites available. This would incur a HDD access, a lag and an unfair death.\\
+The precaching mechanism is not particularly clever: It loads as many page from the swap file as possible. It doesn't try to look at what is actually used in the level. But the eviction policy (LRU) ultimately stabilize the cache and even a machine with only 1MB of RAM is able to play a level with no HDD access after a few minutes. This design had a small annoying flow: On a low memory machine a cache miss would occur at the worse possible moment: When the player opens the last door and is about to find himself confronted to the heavy powered final boss, the cache manager would not have the sprites available. This would incur a HDD access, a lag and an unfair death.\\
 \par
 The size of the swap file varies depending on the version of the game you play: \cw{VSWAP.WL1} (shareware) is 742KB while \cw{VSWAP.WL6} (full version) is 1,500KB. In both case a machine with 2MB of RAM on top of the factory issued 1MB is enough to have all assets loaded during pre-caching.\\
 \par
@@ -320,7 +317,7 @@ A small manager performing a lot: Interface with map, graphic and music. Assets 
  \includegraphics[width=\textwidth]{imgs/cache_manager_architecture.png}
  \end{figure}
  \par
-\note{Note:} All resources are compressed. The CM handle decompression transparently.
+\bu{Note:} All resources are compressed. The CM handle decompression transparently.
 
 
 
@@ -527,26 +524,26 @@ This VGA bank layout has a fundamental impact on the engine: To draw anything fa
 \includegraphics[width=\textwidth]{imgs/vga_ram_screen_layout.eps}
 \end{figure}
 
-Even though it was convoluted it allows clever tricks. Let's take the example of clearing the screen to black. A naive approach would be to write every pixels left to write and top to bottom:
-
+Even though it was convoluted it allows clever tricks. Let's take the example of clearing the screen to black. A naive approach would be to write every pixels left to write and top to bottom:\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/vga_clear/naive.c}
 \end{minipage}
 
-The cost of this operation is 320x200= 64000 writes and 64000 out operation (to select the mask).
+The cost of this operation is $320*200=64000$ writes and 64000 out operation (to select the mask).
 But the overhead of selecting the bank (a.k.a plan) would make the task impossibly slow. A better approach would be to do bottom up and left to right as follow:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/vga_clear/optimized.c}
 \end{minipage}
 
-The code is slightly more complicated but this way we only switch bank XXX times and write 320x200=64000 writes and 320 out out operation. But there is a way to do even better:\\
+The code is slightly more complicated but this way we only switch bank XXX times and write $320*200=64000$ writes and 320 out out operation. But there is a way to do even better:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/vga_clear/optimal.c}
 \end{minipage}
 
-Which results in 320*80=25600 and 1 out operation !\\
+Which results in $320*80=25600$ and 1 out operation !\\
 
 This is not always that easy: You can write up to four pixels in one write as long as they are properly aligned. See the example following:
 \begin{figure}[H]
@@ -595,8 +592,8 @@ Since the graphic pipeline is not initialized at this point, the full 64K pg13 s
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/signonscreen.c}
 \end{minipage}
-Note: In an effot to get more RAM available, these 64K are unlinked for RAM.\\
-Note: The palette (3*256=768B) is also compiled in the executable. It is simply copied from RAM to VGA's DAC.
+Note: In an effort to get more RAM available, these 64K are unlinked for RAM.\\
+Note: The palette ($3*256=768$bytes) is also compiled in the executable. It is simply copied from RAM to VGA's DAC.
 Note the main (conventional memory) which goes only up to 320K: Between the executable and other residence routines it is all what was remaining of the original 640K. The game is able to run on 320KB but you needs to swap with the HD at runtime to load textures and sprites.
 
 

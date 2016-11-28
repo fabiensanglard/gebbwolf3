@@ -1,20 +1,20 @@
 InitGame () {
-    MM_Startup ();
+    MM_Startup ();       // Memory manager
 
-    SignonScreen ();
+    SignonScreen ();     // Show system configuration
 
-    VW_Startup ();
+    VW_Startup ();       // 
     IN_Startup ();
-    PM_Startup ();
-    PM_UnlockMainMem ();
-    SD_Startup ();
-    CA_Startup ();
-    US_Startup ();
+    PM_Startup ();       // Page Manager
+    PM_UnlockMainMem (); 
+    SD_Startup ();       // Sound manager
+    CA_Startup ();       // Cache manager
+    US_Startup ();       
     InitDigiMap ();
     ReadConfig ();
-    CA_CacheGrChunk(STARTFONT);
+    CA_CacheGrChunk(STARTFONT); // Load font
     MM_SetLock (&grsegs[STARTFONT],true);
-    LoadLatchMem ();
+    LoadLatchMem ();         // Load video asset to VRAM
     BuildTables ();          // trig tables
-    SetupWalls ();
+    SetupWalls ();           // ?
 }

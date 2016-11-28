@@ -1,6 +1,6 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-PC performances in the 90s were so overwhelmingly dominated by their CPU that they were simply referred to not by their brand or model but by their Intel chip. If your PC has an Intel 80386SX in it, it was a 386. If it had an Intel 80286, it was a 286. Wolfenstein was target at 386s with degraded performances (yet still playable) on 286s.\\
+PC performances in the 90s were so overwhelmingly dominated by their CPU that they were simply referred to not by their brand or GPU\footnote{There were no GPU yet.} but by their Intel chip. If your PC had an Intel 80386SX in it, it was a 386. If it had an Intel 80286, it was a 286. Wolfenstein was target at 386s with degraded performances (yet still playable) on 286s.\\
 \\
 The machine can be broken down in five sub-systems part of one pipeline: Input, Cpu, Ram, Video and Audio.\\
  \bigskip
@@ -35,7 +35,7 @@ The pipeline offered a lot of resistance: hardware manufacturers had not embrace
 
 \section{CPU: Central Processing Unit}
   \subsection{Overview}
-  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors.  The machines based on the 16bits 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor: The 80386. Moore's law was in full swing as seen on a MIPS\footnote{Million Instructions Per Second.} histogram:
+  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors.  The machines based on the 16 bits 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor: The 80386. Moore's law was in full swing as seen on a MIPS\footnote{Million Instructions Per Second.} histogram:
 
 
 \definecolor{skyblue1}{rgb}{0.1,0.624,0.812}
@@ -94,9 +94,9 @@ The pipeline offered a lot of resistance: hardware manufacturers had not embrace
 
   \subsection{Floating Point}
   
-   PC 286s and 386s were powerful machines far outperforming any game console on the market. But all that power was not necessarily useful. In order to perform all the trigonometry for a '3D' game, the machines had to keep track of the fractional part of each operations. This is not an issue since the C language offers the types \codeword{float} and \codeword{double} precisely for that\footnote{This is how modern 3D engine do all their calculations via SIMDs and GPU shaders: Floating point}.\\
+   PC 286s and 386s were powerful machines far outperforming any game console CPU on the market. But all that power was not necessarily useful. In order to perform all the trigonometry for a 3D game, the machines had to keep track of the fractional part of each operations. This is not an issue since the C language offers the types \codeword{float} and \codeword{double} precisely for that\footnote{This is how modern 3D engine do all their calculations via SIMDs and GPU shaders: Floating point}.\\
 \\
-It is important to understand what floating point is and how it works to fully grasp how useful it is when doing maths. \codeword{float} are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
+It is important to understand what floating point is and how it works to fully grasp how useful it is when doing maths. In the C language, \codeword{float} are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
   \item One bit S for the sign.
   \item Seven bits E for the exponent.
@@ -131,7 +131,8 @@ How numbers are stored and interpreted is usually explained with the formula in 
 \end{figure}
 \bigskip  
 
-Although correct, this way to explain floating point usually leaves programmers completely clueless. I blame this ignoble notation for discouraging generations of programmers, scaring them to the point they never looked back to understand how floating point actually works. Fortunately, there is a better way to explain it: Instead of Exponent, think of a floating window between two consecutive power of two integers. And instead of a Mantissa think of an Offset within that window as in Figure \ref{fig:fp_internals}:
+Although correct, this way to explain floating point usually leaves programmers completely clueless. I blame this ignoble notation for discouraging generations of programmers, scaring them to the point they never looked back to understand how floating point actually works. Fortunately, there is a better way to explain it: Instead of Exponent, think of a floating window between two consecutive power of two integers. And instead of a Mantissa think of an Offset within that window.\\ 
+\par
   
 \begin{figure}[H]
 \centering
@@ -140,8 +141,11 @@ Although correct, this way to explain floating point usually leaves programmers 
 \label{fig:fp_internals}
 \end{figure}
   \bigskip  
+The window tells within which two consecutive power of two the number will be: [0,1], [1,2], [2,4], [4,8] and so on (up to [$2^{127}$,$2^{128}$]. The offset divides the window in 8388608 offets. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing: Once you have reached the maximun in a window (e.g: [2,4]), you can slide it right and represent the number within the next window (e.g [4,8]). It only cost a little bit of lost precision.\\
+\par \bu{Trivia :} How much precision is lost ? Let's take an example with window [0,1] where 8388608 offsets give precision of $(1-0)/8388608=0.00000011920929$. In the window [2048,4096] the precision is $ (4096-2048)/8388608=0.0002$.\\
+\par
 
-Figure \ref{fig:fp_internals_window} illustrates how the number 6.1 would be encoded, with the window starting at 4 (and therefore spanning up to next power of two: 8). The offset about half way down the window.
+Figure \ref{fig:fp_internals_window} illustrates how the number 6.1 would be encoded with the window starting at 4 (and therefore spanning up to next power of two: 8). The offset about half way down the window.
 
 \begin{figure}[H]
 \centering
@@ -196,17 +200,18 @@ And finally the graphic representation with window and offset:\\
 \end{figure}
   \bigskip
 
-Floating Point are very handy: They can represent very small values and huge ones while keeping track of fractional part of a number and also protecting from overflow by floating the window when necessary.\\
+For a 3D engine, Floating Points are very handy: They can represent very small values and huge ones while keeping track of fractional part of a number and also protecting from overflow by floating the window when necessary.\\
 \\
 They are neat but computational intensive: In order to add, subtract, multiply or divide two numbers, they have to be expressed with the same window. Which mean converting one number to the representation used by the other usually with higher precision than 32 bits (typically 80 bits on Intel FPUs).\\
 \\
-This is not a problem when everything is hardwired...but it was a big problem for the 286 and the 386: \emph{They did not have a hardware Floating Point Unit}. If cound in the code, these operations were emulated in software by the compiler and therefore terribly slow. So slow they were not usable for anything real-time. 
-
-  \bigskip
-
- \textbf{\underline{Trivia :}} Since floating point units where so slow, why did the C language end up with a \codeword{float} and \codeword{double} types ? The machine used to invent the language (PDP-11) did not have a floating point but the manufacturer (DEC) had promised to Dennis Ritchie and Ken Thompson the next model would have one\footnote{The Development of the C Language by Dennis M. Ritchie}. Being astronomy enthusiasts they decided to add those two types to their language. Had they decided not to, C and C++ would have never enjoyed the same popularity!
+This is not a problem when everything is hardwired...but it is a big problem for the 286 and the 386: \emph{They do NOT not have a hardware Floating Point Unit}. If found in the code, these operations are emulated in software by the compiler, resulting in terribly slow processing. So slow they are not usable for anything real-time. All 286 and 386 are really good at is crunching \cw{int}s which is not what a 3D game needs.\\ 
 \par
-\textbf{\underline{Trivia :}} Some PCs did have hardware FPU. Intel sold what was marked as "Math CoProcessor". Intented to scientists, performances were average, price outrageous\footnote{\$200 in 1993 equivalent to \$350 in 2016} and sales mediocre :\\
+
+
+ \textbf{\underline{Trivia :}} Since floating point units where so slow, why did the C language end up with a \cw{float} and \cw{double} types ? The machine used to invent the language (PDP-11) did not have a floating point unit but the manufacturer (DEC) had promised to Dennis Ritchie and Ken Thompson the next model would have one\footnote{The Development of the C Language by Dennis M. Ritchie}. Being astronomy enthusiasts they decided to add those two types to their language. Had they decided not to, C and C++ would have never enjoyed the same popularity!\\
+\par
+
+\textbf{\underline{Trivia :}} Some PCs did have hardware FPU. Intel sold what was marked as "Math CoProcessor". Intended to scientists, performances were average, price outrageous\footnote{\$200 in 1993 equivalent to \$350 in 2016} and sales mediocre :\\
 \begin{figure}[H]
 \centering
   \shadowbox{
@@ -218,9 +223,9 @@ This is not a problem when everything is hardwired...but it was a big problem fo
 
 
 
-\bigskip
-So a game developer was stuck with two half solution to his problem: \emph{int}(integer) operations were fast but not accurate enough and \emph{float} operations were accurate but not fast enough!
-   
+\par
+As a result, a game developer was stuck with two half solution to his problem: \cw{int}(integer) operations were fast but not accurate enough and \cw{float} operations were accurate but not fast enough!
+  
 
 
 
@@ -237,12 +242,13 @@ So a game developer was stuck with two half solution to his problem: \emph{int}(
 
 
 \section{RAM}
-Intel CPUs could operate in two modes:
+The Intel 286 and 386 CPUs can operate in two modes:\\
+\par
 \begin{itemize}
-  \item The old backward compatible Real Mode. Available \emph{only} to allow old software to run. This memory model replicated how the Intel 8086 CPU from the 70s operated: 20 bits memory bus, 1MB addressable RAM with an awful segmented addressing system.
-  \item The new Protected Mode with a 32 bits memory bus wide offering up to 4 GB of RAM protectable with a MMU\footnote{Memory management Unit}.
+  \item The new Protected Mode with  32 bits registers and 24 bits address bus wide offering up to 16 MB of flat RAM protectable with a MMU\footnote{Memory management Unit}.
+  \item The backward compatible Real Mode. Available \emph{only} to allow old software to run. This memory model replicated how the Intel 8086 CPU from the 70s operated: 16 bits registers, 20 bits address bus giving 1MB addressable RAM with an awful segmented addressing system. 
 \end{itemize}
-The machine started in Real Mode for compatibility reasons. You may assume that programers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20 years old Real Mode. Unfortunately, there was a major obstacle between this nice feature and the programmer. The infamous operating system, MS-DOS 5.0 by Microsoft Corporation.
+For compatibility reasons all PCs starts in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20 years old Real Mode. Unfortunately, there was a major obstacle between this nice feature and the programmer. The infamous operating system, MS-DOS 5.0 by Microsoft Corporation.
   
 
 
@@ -251,11 +257,11 @@ The machine started in Real Mode for compatibility reasons. You may assume that 
 
 
   \subsection{DOS limitations}
-  Microsoft Corporation highly valued the applications running on their operating systems. They were adamant to never ever break anything with a new system.  Since many applications were written during the 80s on machine having only Real-Mode, DOS 5.0 kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the \emph{de-facto} operating system that came with every machine sold prevented programmers from using Protected Mode. They were forced to ignore all the neat features of their 1992 PC and use the machine like it was a very fast Intel 8086 CPU from 1976.
+  Microsoft Corporation highly valued the applications running on their operating systems. A clever priority, they were adamant to never ever break anything with a new system.  Since many applications were written during the 80s on machine having only Real-Mode, DOS 5.0 kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the \emph{de-facto} operating system delivered with every machine sold prevented programmers from using Protected Mode. They were forced to ignore all the neat features of their 1992 PC and use the machine like it was a very fast Intel 8086 CPU from 1976.
 
 \bigskip
 
- \textbf{\underline{Trivia :}} One year earlier, in 1991, a student from the University of Helsinki started working on a "hobby" of his: An operating system able to use the CPU in Protected Mode taking advantage of the MMU and the 32 bits registers. It would become Microsoft worse nightmare. Linus Torvalds had just started what would become Linux.
+ \textbf{\underline{Trivia :}} One year earlier, in 1991, a student from the University of Helsinki started working on a hobby, "nothing big", of his : An operating system able to use the CPU in Protected Mode taking advantage of the MMU and the 32 bits registers. It would become Microsoft worse nightmare. Linus Torvalds had just started what would become Linux.
 
 
 
@@ -289,7 +295,7 @@ As a result, out of the original 1024KB, only 640KB (called Conventional Memory)
 \\
 
 \subsection{The infamous Real Mode: 16 bits Segmented addressing}
-Real Mode could not use 32 bits registers for addressing (or even operations as a matter of facts). Everything had to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There were two kinds of RAM pointers: near and far. In the case of a far pointer, a 16 bits segment register would be shifted left 4 bits and combined with an other 16 bits offset register to form a 20bits address:\\
+Real Mode could not use 32 bits registers for addressing (or even operations as a matter of facts). Everything had to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There were two kinds of RAM pointers: \cw{near} and \cw{far}. In the case of a far pointer, a 16 bits segment register would be shifted left 4 bits and combined with an other 16 bits offset register to form a 20bits address:\\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/register_combination_20_bits_address.pdf}
@@ -302,7 +308,7 @@ The really big issue however was how two pointers, referring to the same address
 \bigskip
 \\Pointer A defined as:
 \begin{Verbatim}[fontsize=\relsize{-1}]
-    0000 0000 0000 0000 0000  Segment, 16 bits shifted 4 bits left  
+    0000 0000 0000 0000       Segment, 16 bits shifted 4 bits left  
   +      0000 0001 0010 0000  Offet,   16 bits
 ============================
     0000 0000 0001 0010 0000  Address, 20 bits
@@ -312,7 +318,7 @@ The really big issue however was how two pointers, referring to the same address
 
 Pointer B defined as:
 \begin{Verbatim}[fontsize=\relsize{-1}]
-    0000 0000 0001 0000 0000  Segment, 16 bits shifted 4 bits left  
+    0000 0000 0001 0000       Segment, 16 bits shifted 4 bits left  
   +      0000 0000 0010 0000  Offet,   16 bits
 ============================
     0000 0000 0001 0010 0000  Address, 20 bits
@@ -322,7 +328,7 @@ Pointer B defined as:
 
 Pointer C defined as:
 \begin{Verbatim}[fontsize=\relsize{-1}]
-    0000 0000 0001 0010 0000  Segment, 16 bits shifted 4 bits left  
+    0000 0000 0001 0010       Segment, 16 bits shifted 4 bits left  
   +      0000 0000 0000 0000  Offet,   16 bits
 ============================
     0000 0000 0001 0010 0000  Address, 20 bits
@@ -333,13 +339,14 @@ As defined A, B and C all points to the same memory location however they would 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pointer_madness.c}
 \end{minipage}
-Would output:
+Would output:\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting{code/pointer_madness_output.txt}
 \end{minipage}
 \par
 
+\bu{Trivia :} You also have to be careful about pointer arithmetic e.g: A \cw{far} pointer increment only increment the offset, not the segment. If you iterate on an array more than 64KB you can end up wrapping around! You could use \cw{huge} pointer to make pointer arithmetic work but...nobody wants to go there.
 
 
 
@@ -363,7 +370,7 @@ Unfortunately once again, nothing was standardized. Users could load different d
 
 Or they could decide to load no drivers at all at startup and not use any of the RAM beyond 1MB.\\
 \par
-\textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why, even though they had many (extremly expensive\footnote{In 1992, 4MB of RAM costed \$149 which ajusted to inflation would be \$256 in 2016.}) megabytes of RAM installed on their machine, some game would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (Appendix "\nameref{chap:barrier640}") along with the game to make it clear that it was not their fault.\\
+\textbf{\underline{Trivia :}}  This 640KB barrier was a big issue. Many customer could not understand why, even though they had many (extremely expensive\footnote{In 1992, 4MB of RAM cost \$149 which ajusted to inflation would be \$256 in 2016.}) megabytes of RAM installed on their machine, some game would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (Appendix "\nameref{chap:barrier640}") along with the game to make it clear that it was not their fault.\\
 
 \textbf{\underline{Trivia :}}  As of 2014, thirty five years after the introduction of the 8086, most PC in the world still start in Real Mode. A bootloader switch them to protected mode, load the kernel and then real startup can begin. Mac computers don't have this problem.
 
@@ -379,7 +386,7 @@ I think the best way to summarize the x86 CPU memory model is how XXX described 
 \textbf{David Patterson \& John Hennessy - Computer Organization and Design.}
  \end{fancyquotes}\\
 \par
-Trivia: 640KB was all a game could have. But people got clever. Strike Commander (a very famous flight arcade game released in 1993) executable is 745KB. The trick is to load only a few segments of the executable and use a technique of "overlays": At runtime, sections of the code remove themselves from the Conventional Memory and load new ones from the hard drive.
+\bu{Trivia :} 640KB was all a game could have. But people writing compilers got clever. Strike Commander (a very famous flight arcade game released in 1993) executable is 745KB. The trick is to load only a few segments of the executable and use a technique of "overlays": At runtime, sections of the code remove themselves from the Conventional Memory and load new ones from the hard drive.
 
 
 
@@ -399,7 +406,7 @@ Trivia: 640KB was all a game could have. But people got clever. Strike Commander
 
 \section{Video}
 
-PC were connected to CRT monitors: Big, heavy, small diagonal, cathodic ray based with curved surface screens. Most monitors had a 13" diagonal with a 4:3 aspect ratio. Figure \ref{fig:int_layout} shows a comparison between a 13" CRT from 1992 and a 28" LCD display from 2014.\\
+PCs were connected to CRT monitors: Big, heavy, small diagonal, cathodic ray based with curved surface screens. Most monitors had a 13" diagonal with a 4:3 aspect ratio. Figure \ref{fig:int_layout} shows a comparison between a 13" CRT from 1992 and a 28" LCD display from 2014.\\
 
 \begin{figure}[H]
 \centering
@@ -445,7 +452,7 @@ The first adapter of the family was released in 1981. The Monochrome Display
 \caption{Video interface history.}\label{fig:vga_history}
 \end{figure}
 
-Each iteration added new features and in 1993 the ubiquitous graphic system was the VGA\footnote{Video Graphic Adapter}. The universality of that system was a two edged sword: One one side developers had to program for one graphic system only. But on the other side, there was no escape to the shortcoming of the Adapter (and people did not purchase separate GPU back then).\\
+Each iteration added new features and in 1993 the ubiquitous graphic system was the VGA\footnote{Video Graphic Adapter}. The universality of that system was a two edged sword: On one side developers had to program for one graphic system only. But on the other side, there was no escape to the shortcoming of the Adapter (and people did not purchase separate GPU back then).\\
 
 \subsection{VGA Architecture}
 
@@ -457,7 +464,7 @@ The VGA can be summarized as three major systems :
 \item The CRTC Controller and the DAC (Digital To Analog Converter) took care of converting the Palette indexed framebuffer to RGB and then to analogic signal (interface VRAM-CRT).
 \end{itemize}
 
-The most surprising part of the architecture is obviously the framebuffer. The first reaction of any engineer would be to ask themselves: Why four banks instead of one clean big one ?\\
+The most surprising part of the architecture is obviously the framebuffer. The first reaction of any engineer would be to ask themselves: Why four banks instead of a big and linear one ?\\
 \\
 The first part of the explanation comes from backward compatibility: The version before VGA, the EGA had only 64KB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
 \\
@@ -494,12 +501,12 @@ The problem with this design is that programmers did not have a linear framebuff
 \label{fig:vga_arch}
 \end{figure}
 
-TODO: Show drawing of memory mapping RAM -> VGA ?
- 
 
  
 
-\bigskip
+ 
+
+\par
 To configure this mess of planes and circuitry, the four constollers had a set of 300 poorly documented registers to setup. Needless to say few programmers got to dive in the internal of this thing. My first drawing of the VGA was actually deceiving: The register system and architecture of the VGA was hell as confirm the diagram from IBM VGA Reference:\\
  \begin{figure}[H]
 \centering
