@@ -54,14 +54,15 @@ Considering the magnitude and ambitions of the title, four more people were adde
    Jason Blochowiak & ?? &   Programming\\
      \toprule
 \end{tabularx}
-\caption{id Software new hires.}\label{fig:Id Software hires}
+\caption{id Software hires.}\label{fig:Id Software hires}
 \end{figure}
 
 \begin{fancyquotes}
-Jason was part of Id at the start, but we parted ways during Wolf development\footnote{Jason still wrote part of the memory manager and is credited for introducing John Carmack to Unix development which ultimately led to the purchase of a Next Color ColorStation}.
+Jason was part of Id at the start, but we parted ways during Wolf development.
  \bigskip \\
 \textbf{John Carmack - Programmer}
- \end{fancyquotes}
+ \end{fancyquotes}\footnotetext{Jason still wrote part of the page manager and is credited for introducing John Carmack to Unix development
+which ultimately led to the purchase of a Next Color ColorStation.}
  
 \begin{figure}[H]
 \centering
@@ -134,7 +135,7 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA mode 13h and 4h (See figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes}): they don't have the same starting segment. This allows to plug two graphi cards in the PC: One in monochrome text and the other one in regular VGA. This allows a developer to debug the game engine in real-time.\\
+You may have noticed in the listing of VGA mode 13h and 4h (See figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting segment. This allows to plug two graphic cards in the PC: One in monochrome text and the other one in regular VGA. This allows a developer to debug the game engine in real-time.\\
 \begin{figure}[H]
 \centering
   \shadowbox{
@@ -165,10 +166,8 @@ You may have noticed in the listing of VGA mode 13h and 4h (See figure~\ref{fig:
 \section{Graphics assets}
 The graphic assets are divided as follow:
 \begin{itemize}
-\item 2D Menus items.
-\item 3D Action phase items.
-\item Wall textures.
-\item Entities animations.
+\item 2D Menus items (pictures).
+\item 3D Action phase items (walls and sprites).
 \end{itemize}
 Those were the work of Adrian Carmack and Kevin Cloud. All of the work was done with Deluxe Paint (from Electronic Arts) on high-end 386 DX computers. 
 
@@ -184,25 +183,24 @@ Since the VGA is palette based (colors a not specific via RBG but by indices poi
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/palette.png}
- \caption{The Game palette: Horizontal from 0x00 to 0x0F, verticall from 0x00 to 0xF0. The blue gradiant starts at 0xF00 and ends at 0xFE. 0xFF (represented in pink) is transparent color and always skipped during rendition.}
+ \caption{The Game palette: Horizontal from 0x00 to 0x0F, vertical from 0x00 to 0xF0. The blue gradiant starts at 0xF00 and ends at 0xFE. 0xFF (represented in pink) is transparent color and always skipped during rendition.}
 \end{figure}
 
-All assets were hand drawn:\\
+All assets were hand drawn and artist had to factor in how the framebuffer would be streched onto the screen due to non-square pixels.:\\
 \begin{fancyquotes}
 We didn't have any scanning tools at the time.\\
 \\
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-I was unable to get in touch with Adrian Carmack or Kevin Cloud but I would have loved to know if they have some sort of stylus or if he was just very good with a mouse.\\
+I was unable to get in touch with Adrian Carmack or Kevin Cloud but I would have loved to know if they have some sort of stylus or if they were just very good with a mouse.\\
 
 \section{Asset workflow}
-Once all the Deluxe Paint images were ready, a tool, IGRAB-ED, packed all the ILBMs files and generated a C header file:\\
- The program could reference an asset directly by using its macro.\\
+Once all the Deluxe Paint images were ready, a tool, IGRAB-ED, packed all the ILBMs files and generated a C header file:. The program could reference an asset directly by using its macro.\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawing_plain.eps}
- \caption{Assets creation} \label{fig:mips}
+ \caption{Assets creation} 
  \end{figure}
 
 \begin{minipage}{\textwidth}
@@ -220,59 +218,75 @@ Once all the Deluxe Paint images were ready, a tool, IGRAB-ED, packed all the IL
 
 
 
-\begin{figure}[H]
-\centering
-      \includegraphics[width=0.3\textwidth]{imgs/hint_manual_cover.png}    
-\end{figure}
-"The Official Hint Manual for Wolfesnteind 3D"\footnote{The manual was entirely designed on a Next ColorStation. It was the only usage of NeXT for wolfenstein 3D (they purchased it in december 1991).} contains many drawing from Tom Hall. These sketches were given to Adrian Carmack who turned them into pixel art.\\
+\begin{minipage}{0.7\textwidth}
+"The Official Hint Manual for Wolfesnteind 3D" published in 1992 contains many drawing from Tom Hall and shows many behind the scene sketches made by Tom Halls and pixel arted by the graphic team.\\
+\par
+ \begin{fancyquotes}
+When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a sketches for Adrian Carmck. Below are some of Tom's early design for the title screen. The third sketch was chosen.\\
 
-  \begin{figure}[H]
-\centering
- \includegraphics[scale=0.5]{imgs/tom_hall_sketch_adolf.png}
-  \includegraphics[scale=5]{imgs/sprites/adolf.png}
- \end{figure}
- 
+\end{fancyquotes}
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\begin{flushright}
+\includegraphics[width=0.8\textwidth]{imgs/hint_manual_cover.png}
+\end{flushright}
+\end{minipage}
+\noindent
    \begin{figure}[H]
 \centering
- \includegraphics[scale=1]{imgs/tom_hall_sketch_dr_schabbs.png}
-   \includegraphics[scale=10]{imgs/sprites/schabbs.png}
+ \includegraphics[width=\textwidth]{imgs/tom_hall_sketch_intro_screen_genesis.png}
+ \par
+ \par
+ \includegraphics[scale=2]{imgs/sprites/woldf3d.png}
  \end{figure}
+
+\footnotetext{The manual was entirely designed on a Next ColorStation. It was the only usage of NeXT for wolfenstein 3D (they purchased it in december 1991).}
+
+    \begin{minipage}{.48\textwidth}
+     \includegraphics[width=\textwidth]{imgs/tom_hall_sketch_adolf.png}
+  \end{minipage}
+      \begin{minipage}{.48\textwidth}
+     \includegraphics[width=\textwidth]{imgs/sprites/adolf.png}
+  \end{minipage}
+
+     \begin{minipage}{.48\textwidth}
+     \includegraphics[width=\textwidth]{imgs/tom_hall_sketch_dr_schabbs.png}
+  \end{minipage}
+      \begin{minipage}{.48\textwidth}
+     \includegraphics[width=\textwidth]{imgs/sprites/schabbs.png}
+  \end{minipage}
+
+
+
  
    \begin{figure}[H]
 \centering
  \includegraphics[scale=0.8]{imgs/tom_hall_sketch_gretel.png}\\
- \includegraphics[scale=2.5]{imgs/sprites/hans_grosse.png}
- \includegraphics[scale=5]{imgs/sprites/gretel_hanse.png}
- \end{figure}
- 
- \begin{fancyquotes}
-When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a sketches for Adrian Carmck. Below are some of Tom's early design for the title screen. The third sketch was chosen.\\
-\\
-\textbf{John Carmack - Programmer}
-\end{fancyquotes}
+\end{figure}
+      \begin{minipage}{.48\textwidth}
+     \includegraphics[width=\textwidth]{imgs/sprites/hans_grosse.png}
+  \end{minipage}
+      \begin{minipage}{.48\textwidth}
+     \includegraphics[width=\textwidth]{imgs/sprites/gretel_hanse.png}
+  \end{minipage}
 
-   \begin{figure}[H]
-\centering
- \includegraphics[scale=0.5]{imgs/tom_hall_sketch_intro_screen_genesis.png}
- \par
- \includegraphics[scale=2]{imgs/sprites/woldf3d.png}
- \end{figure}
- 
-   \begin{figure}[H]
-\centering
- \includegraphics[scale=1]{imgs/tom_hall_sketch_officer.png}
-\includegraphics[scale=9]{imgs/sprites/fettgesic.png}
- \end{figure}
- 
-   \begin{figure}[H]
-\centering
- \includegraphics[scale=0.5]{imgs/tom_hall_sketch_officer2.png}
- \includegraphics[scale=8]{imgs/sprites/giftmacher.png}
 
- \end{figure}
- 
- 
-The hint book also contains several photos of the team back in the days. Go check it out!
+      \begin{minipage}{.48\textwidth}
+     \includegraphics[width=\textwidth]{imgs/tom_hall_sketch_officer.png}
+  \end{minipage}
+      \begin{minipage}{.48\textwidth}
+     \includegraphics[width=\textwidth]{imgs/sprites/fettgesic.png}
+  \end{minipage}
+
+       \begin{minipage}{.48\textwidth}
+     \includegraphics[width=\textwidth]{imgs/tom_hall_sketch_officer2.png}
+  \end{minipage}
+      \begin{minipage}{.48\textwidth}
+     \includegraphics[width=\textwidth]{imgs/sprites/giftmacher.png}
+  \end{minipage}
+
+\par 
+The hint manual also contains several photos of the team back in the days. Go check it out!
 
 
 
@@ -292,32 +306,34 @@ Maps were created using the in-house editor called TED5 which is short for Tile 
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/ted5_scrolling_map.png}
- \caption{TED used for Commander Keen - side scroller} \label{fig:mips}
+ \caption{TED used for Commander Keen - side scroller} 
  \end{figure}
 
 
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/TED.png}
- \caption{TED used for top view level design} \label{fig:mips}
+ \caption{TED used for top view level design} 
  \end{figure}
 
-Since they had been using it for years, the entire team was proficient with TED. It allowed id to make many levels within a small amount of time:
+Since they had been using it for years, the entire team was proficient with TED. It allowed id to make many levels within a small amount of time:\\
+\par
 
  \begin{fancyquotes}
-After talking with Romero and Tom, Scott learned that it was taking the group only about one day to make a level of the game. Ka-chung! Dollar signs! Instead of just three episodes, why not have six? Scott said, “If you can do thirty more levels, it would only take you fifteen days. And we could have it where people could buy the first trilogy for thirty-five dollars or get all six for fifty dollars, or if people buy the first episode and later want the second episodes it will be twenty dollars. So there’s a reason to get them all!” After some consideration, id agreed.
+After talking with Romero and Tom, Scott learned that it was taking the group only about one day to make a level of the game. Ka-chung! Dollar signs! Instead of just three episodes, why not have six? Scott said, "If you can do thirty more levels, it would only take you fifteen days. And we could have it where people could buy the first trilogy for thirty-five dollars or get all six for fifty dollars, or if people buy the first episode and later want the second episodes it will be twenty dollars. So there’s a reason to get them all!" After some consideration, id agreed.\\
+\\
  \textbf{- Masters of Doom}
  \end{fancyquotes}\\
 
 When the engine was licensed to Apogee for Rise of The Triad, TED5 was also used. Tom Halls wrote about it and you can find his comment in the Appendix section.
 \par
-Everybody worked a little bit on the map but those were mostly the work of John Romero and Tom Hall. John Romero updated the editor TileEDitor (TED). Maps were plans based, 64x64.\\
+Everybody worked a little bit on the map but those were mostly the work of John Romero and Tom Hall.\\
 \par
- \textbf{\underline{Trivia :}} The source code of TED was released several years later. Inspecting the source was a mysterious \codeword{\_TOM.PIC}. Converted to PNG it looks as follow:\\
+ \textbf{\underline{Trivia :}} The source code of TED5 was released several years later. Inspecting the source was a mysterious \codeword{\_TOM.PIC}. Converted to PNG it looks as follow:\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/_tom.eps}
- \caption{Not so politically correct caricature.} \label{fig:mips}
+ \caption{Not so politically correct caricature.} 
  \end{figure}
 The explanation was provided later by John Romero:\\
  \begin{fancyquotes}
@@ -365,34 +381,34 @@ The engine took six weeks to program. TED5 was constantly updated for the six mo
  The files shipped can be divided in five parts:
  \begin{itemize}
  \item WOLF3D.EXE: The Game engine.
- \item VSWAP.WL1: Contains all the assets needed during 3D action phases. The design is clearly inspired by Jason Blochowiak's expereince with Unix systems.
+ \item VSWAP.WL1: Contains all the assets needed during 3D action phases.
  \item Music files:
      \begin{itemize}
-     \item AUDIOHED.WL1 : Offsets to the the individual chunks as signed 32-bit integers.
-     \item AUDIOT.WL1: Uncompressed audio chunks. 
+     \item AUDIOHED.WL1 : Index to payload in \cw{AUDIOT} file.
+     \item AUDIOT.WL1: Uncompressed audio data. 
      \end{itemize}
 \item Maps:
      \begin{itemize}
-      \item GAMEMAPS.WL1 
-      \item MAPHEAD.WL1: 
+     \item MAPHEAD.WL1 : Index into \cw{GAMEMAPS} file.
+      \item GAMEMAPS.WL1 : Map payloads.
       \end{itemize}
-\item Pictures:
+\item Pictures for 2D menus:
     \begin{itemize} 
-     \item VGADICT.WL1 : Huffman-tree for decopressing the pics.
-     \item VGAGRAPH.WL1 : Headers describing where to find the pics.
-     \item VGAHEAD.WL1 : Compressed pics lumped together.
+    \item VGAHEAD.WL1 : Index into \cw{VGAGRAPH} file.
+    \item VGADICT.WL1 : Huffman-tree to decompress each the picture.
+    \item VGAGRAPH.WL1 : Compressed pics lumped together.
      \end{itemize}
 \end{itemize}
  \par
 
-\textbf{\underline{Trivia :}} The file extension did have a meeting: 
+\textbf{\underline{Trivia :}} The file extension did have a meaning: 
 \begin{itemize}
-\item WL1: Shareware
-\item WL3: Early three-episode full version
-\item WL6: Six-episode full version
-\item WJ1: Japanese shareware
-\item WJ6: Japanese full version
-\item SOD: Spear of Destiny
+\item WL1: Shareware.
+\item WL3: Early three-episode full version (never released).
+\item WL6: Six-episode full version.
+\item WJ1: Japanese shareware.
+\item WJ6: Japanese full version.
+\item SOD: Spear of Destiny.
 \end{itemize}
  
 \par
@@ -403,6 +419,11 @@ The engine took six weeks to program. TED5 was constantly updated for the six mo
  Everything was compressed to 645KB to fit on a 3\nicefrac{1}{2}-inch floppy (these could store 720KB). To make the game fit on one disk was very important given the distribution model
  of the game (shareware) which encouraged people to copy the game and give it to as many people as possible (the game shipped with only one episode, to get the five others
  one had to mail money. The full six episodes fit on two disks. Spears of Destiny would fit on three disks).
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/shareware.png}
+ \caption{User exits the game and return to DOS. A message explains how to get the full version: Mail money.}
+ \end{figure}
 
 \end{document}
 

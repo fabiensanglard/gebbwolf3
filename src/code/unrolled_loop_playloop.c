@@ -1,4 +1,4 @@
-PlayLoop () {
+void PlayLoop () {
   PollControls ();
   MoveDoors ();
   MovePWalls ();

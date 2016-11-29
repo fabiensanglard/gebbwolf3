@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <dos.h>
+
 int main(int argc, char** argv){
 
   far void* a = FP_SEG(0x0000) + FP_OFF(0x0120);

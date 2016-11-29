@@ -1,4 +1,4 @@
-DemoLoop() {
+void DemoLoop() {
     StartCPMusic(INTROSONG);
     PG13 ();
     while (1) {

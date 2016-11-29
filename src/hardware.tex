@@ -1,8 +1,8 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-PC performances in the 90s were so overwhelmingly dominated by their CPU that they were simply referred to not by their brand or GPU\footnote{There were no GPU yet.} but by their Intel chip. If your PC had an Intel 80386SX in it, it was a 386. If it had an Intel 80286, it was a 286. Wolfenstein was target at 386s with degraded performances (yet still playable) on 286s.\\
+PC performances in the 90s were so overwhelmingly dominated by their CPU that they were simply referred to not by their brand or GPU\footnote{There were no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by their Intel chip. If your PC had a 80386 or equivalent in it, it was a 386. If it had an Intel 80286, it was a 286. Wolfenstein was target at what was majoritarily found on people's desk: The 386s with degraded performances (yet still playable) on 286s.\\
 \\
-The machine can be broken down in five sub-systems part of one pipeline: Input, Cpu, Ram, Video and Audio.\\
+The machine can be broken down in five sub-systems parts together forming one pipeline: Input, Cpu, Ram, Video and Audio.\\
  \bigskip
 \begin{figure}[H]
 \centering
@@ -31,7 +31,7 @@ As I will describe, none of theses part were good for a 3D game engine although 
 \caption{Component quality for a game engine.}
 \end{figure}
 
-The pipeline offered a lot of resistance: hardware manufacturers had not embraced the game industry yet, PC Gaming was a niche market and it showed a lot. Ever since their inception in the 70s, IBM Personal Computers were designed to display static images and crunch integers. Real-time 3D, fractions and smooth seventy-frames-per-seconds animations were not part of the blueprints.
+The pipeline offered a lot of resistance: hardware manufacturers had not embraced the game industry yet, PC Gaming was a niche market and it showed a lot.\\
 
 \section{CPU: Central Processing Unit}
   \subsection{Overview}
@@ -200,11 +200,11 @@ And finally the graphic representation with window and offset:\\
 \end{figure}
   \bigskip
 
-For a 3D engine, Floating Points are very handy: They can represent very small values and huge ones while keeping track of fractional part of a number and also protecting from overflow by floating the window when necessary.\\
+For a 3D engine floating points are very handy: They can represent very small values and huge ones while keeping track of fractional part of a number and also protecting from overflow by floating the window when necessary.\\
 \\
 They are neat but computational intensive: In order to add, subtract, multiply or divide two numbers, they have to be expressed with the same window. Which mean converting one number to the representation used by the other usually with higher precision than 32 bits (typically 80 bits on Intel FPUs).\\
 \\
-This is not a problem when everything is hardwired...but it is a big problem for the 286 and the 386: \emph{They do NOT not have a hardware Floating Point Unit}. If found in the code, these operations are emulated in software by the compiler, resulting in terribly slow processing. So slow they are not usable for anything real-time. All 286 and 386 are really good at is crunching \cw{int}s which is not what a 3D game needs.\\ 
+This is not a problem when everything is hardwired...but it is a big problem for the 286 and the 386: \emph{They do NOT not have a hardware Floating Point Unit}. If found in the code, these operations are emulated in software by the compiler, resulting in terribly slow processing. So slow they are not usable for anything real-time.\\ 
 \par
 
 
@@ -245,10 +245,10 @@ As a result, a game developer was stuck with two half solution to his problem: \
 The Intel 286 and 386 CPUs can operate in two modes:\\
 \par
 \begin{itemize}
-  \item The new Protected Mode with  32 bits registers and 24 bits address bus wide offering up to 16 MB of flat RAM protectable with a MMU\footnote{Memory management Unit}.
-  \item The backward compatible Real Mode. Available \emph{only} to allow old software to run. This memory model replicated how the Intel 8086 CPU from the 70s operated: 16 bits registers, 20 bits address bus giving 1MB addressable RAM with an awful segmented addressing system. 
+  \item The new\footnote{Well, in 1991 it was new!} Protected Mode with  32 bits registers and 24 bits address bus wide offering up to 16 MB of flat RAM protectable with a MMU\footnote{Memory management Unit}.
+  \item The backward compatible Real Mode. Available only to allow old software to run. This memory model replicated how the Intel 8086 CPU from the 1976 operated: 16 bits registers, 20 bits address bus giving 1MB addressable RAM with an awful segmented addressing system. 
 \end{itemize}
-For compatibility reasons all PCs starts in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20 years old Real Mode. Unfortunately, there was a major obstacle between this nice feature and the programmer. The infamous operating system, MS-DOS 5.0 by Microsoft Corporation.
+For compatibility reasons all PCs starts in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20 years old Real Mode. Unfortunately, there was a major obstacle between this nice feature and the programmer. The infamous operating system: MS-DOS 5.0 by Microsoft Corporation.
   
 
 
@@ -257,11 +257,11 @@ For compatibility reasons all PCs starts in Real Mode. You may assume that progr
 
 
   \subsection{DOS limitations}
-  Microsoft Corporation highly valued the applications running on their operating systems. A clever priority, they were adamant to never ever break anything with a new system.  Since many applications were written during the 80s on machine having only Real-Mode, DOS 5.0 kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the \emph{de-facto} operating system delivered with every machine sold prevented programmers from using Protected Mode. They were forced to ignore all the neat features of their 1992 PC and use the machine like it was a very fast Intel 8086 CPU from 1976.
+  Microsoft Corporation highly valued the applications running on their operating systems. As an excellent business priority, they were adamant to never ever break anything with a new system.  Since many applications were written during the 80s on machine having only Real-Mode, DOS 5.0 kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the \emph{de-facto} operating system delivered with every machine sold prevented programmers from using Protected Mode. Developers were forced to ignore all the neat features of their 1992 PC and use the machine like it was a very fast Intel 8086 CPU from 1976.
 
 \bigskip
 
- \textbf{\underline{Trivia :}} One year earlier, in 1991, a student from the University of Helsinki started working on a hobby, "nothing big", of his : An operating system able to use the CPU in Protected Mode taking advantage of the MMU and the 32 bits registers. It would become Microsoft worse nightmare. Linus Torvalds had just started what would become Linux.
+ \textbf{\underline{Trivia :}} One year earlier, in 1991, a student from the University of Helsinki started working on a hobby, "nothing big", of his : An operating system able to use the CPU in Protected Mode taking advantage of the MMU and the 32 bits registers. It would become Microsoft worse nightmare: Linus Torvalds had just started what would become Linux.
 
 
 
@@ -269,12 +269,12 @@ For compatibility reasons all PCs starts in Real Mode. You may assume that progr
   Protected mode was unavailable. What had the Real-Mode to offer ? Essentially a trip back in time to 1976: A 20 bits wide address bus offering only 1MB of addressable RAM. No matter how much memory was installed on the machine in 1992, only 1MB could be addressed. And to top it all, addressing had to be done not with the 32 bits registers available but by combining two 16 bits register together: One was the segment, the other an offset within that segment. Hence the name: '16 bits programming'.
 
   \bigskip
-Here is a brief description of the memory layout: \\
+Here is how the memory was layout: \\
 \begin{itemize}
 \item From 00000h to 003FFh : the Interrupt Vector Table.
 \item From 00400h to 004FFh : BIOS data.
 \item From 00500h to 005FFh : command.com+io.sys.
-\item From 00600h to 9FFFFh : Usable by a program (around 620KB). 
+\item From 00600h to 9FFFFh : Usable by a program (about 620KB in the best case). 
 \item From A0000h to FFFFFh : UMA (Upper Memory Area): Reserved to bios ROM, video card and sound card mapped I/O.
 \end{itemize}
 
@@ -291,11 +291,11 @@ As a result, out of the original 1024KB, only 640KB (called Conventional Memory)
 
 \bigskip
 
-\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KB of Conventional Memory.\\
+\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KB of Conventional Memory. Needless to say French people had a strong incentive to learn that god mode was iddAd\footnote{Invincibility mode in Doom is iddQd on a querty keyboard but iddAd on an azery keyboard without the French driver loaded.}.\\
 \\
 
 \subsection{The infamous Real Mode: 16 bits Segmented addressing}
-Real Mode could not use 32 bits registers for addressing (or even operations as a matter of facts). Everything had to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There were two kinds of RAM pointers: \cw{near} and \cw{far}. In the case of a far pointer, a 16 bits segment register would be shifted left 4 bits and combined with an other 16 bits offset register to form a 20bits address:\\
+Real Mode could not use 32 bits registers for addressing (or even operations as a matter of facts). Everything had to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There were two kinds of RAM pointers: \cw{near} and \cw{far}. In the case of a far pointer, a 16 bits segment register would be shifted left 4 bits and combined with an other 16 bits offset register to form a 20 bits address:\\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/register_combination_20_bits_address.pdf}
@@ -304,7 +304,7 @@ Real Mode could not use 32 bits registers for addressing (or even operations as 
 \end{figure}
 A near pointer was just a 16 bits offset that would point in the same segment. That may not sound too bad but in practice this segmented addressing led to many issues. The least problematic was about the language: Since the C language was invented on 32 bits machine, the language had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro would be provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. That was an ugly wart on the beautiful C but that was manageable.\\
 \\
-The really big issue however was how two pointers, referring to the same address could fail an equality test: In this model, the 1MB of RAM is divided in 65536 paragraphs by the segment pointer. So a paragraph is 16 bytes but an offset can be up to 65536 !!! See the following example:\\
+The really big issue however was how two pointers, referring to the same address could fail an equality test: In this model, the 1MB of RAM is divided in 65536 paragraphs by the segment pointer. So a paragraph is 16 bytes but an offset can be up to 65536 which result in a maze of overlaps! See the following example:\\
 \bigskip
 \\Pointer A defined as:
 \begin{Verbatim}[fontsize=\relsize{-1}]
@@ -346,7 +346,7 @@ Would output:\\
 \end{minipage}
 \par
 
-\bu{Trivia :} You also have to be careful about pointer arithmetic e.g: A \cw{far} pointer increment only increment the offset, not the segment. If you iterate on an array more than 64KB you can end up wrapping around! You could use \cw{huge} pointer to make pointer arithmetic work but...nobody wants to go there.
+\bu{Trivia :} You also have to be careful about pointer arithmetic e.g: A \cw{far} pointer increment only increment the offset, not the segment. If you iterate on an array more than 64KB you can end up wrapping around! You could use \cw{int huge*} pointer to make pointer arithmetic work but...nobody wants to go there.
 
 
 
@@ -377,14 +377,26 @@ Or they could decide to load no drivers at all at startup and not use any of the
 \bigskip
 To learn more about EMS be sure to read Edward Mendelson's excellent article: . "A Slot Full of RAM"\footnote{PC Mag, (1989-12-12).}. If you are really hardcore, you can also check out XMS programming reference:\footnote{eXtended Memory Specification (XMS) July 19, 1988.}\\
 \par
-These two sections conclude on Intel CPUs which 
-I think the best way to summarize the x86 CPU memory model is how XXX described it:\\
+
+\subsubsection{Impossible to love}
+These two sections conclude on Intel CPUs. If you are puzzled you are not alone. Over the years, I came around many ways to describe this madness but these two are my favorite:\\
 \par
  \begin{fancyquotes}
-   \lbrack x86 is \rbrack...difficult to explain and impossible to love.\\
+   \lbrack...\rbrack an architecture that is difficult to explain and impossible to love.\\
    \par
 \textbf{David Patterson \& John Hennessy - Computer Organization and Design.}
  \end{fancyquotes}\\
+\par
+And:
+\par
+ \begin{fancyquotes}
+    That sounds odd, but Intel built it, Microsoft wrote it, and DOS grew up around it.\\
+   \par
+\textbf{Eccles-Jordan Trigger - Codeproject.com.}
+ \end{fancyquotes}\\
+
+
+
 \par
 \bu{Trivia :} 640KB was all a game could have. But people writing compilers got clever. Strike Commander (a very famous flight arcade game released in 1993) executable is 745KB. The trick is to load only a few segments of the executable and use a technique of "overlays": At runtime, sections of the code remove themselves from the Conventional Memory and load new ones from the hard drive.
 
@@ -406,7 +418,7 @@ I think the best way to summarize the x86 CPU memory model is how XXX described 
 
 \section{Video}
 
-PCs were connected to CRT monitors: Big, heavy, small diagonal, cathodic ray based with curved surface screens. Most monitors had a 13" diagonal with a 4:3 aspect ratio. Figure \ref{fig:int_layout} shows a comparison between a 13" CRT from 1992 and a 28" LCD display from 2014.\\
+PCs were connected to CRT monitors: Big, heavy, small diagonal, cathodic ray based with curved surface screens. Most monitors had a 13" diagonal with a 4:3 aspect ratio. Figure \ref{fig:int_layout} shows a comparison between a 13" CRT from 1992 and a 23" LCD display from 2014.\\
 
 \begin{figure}[H]
 \centering
@@ -452,7 +464,7 @@ The first adapter of the family was released in 1981. The Monochrome Display
 \caption{Video interface history.}\label{fig:vga_history}
 \end{figure}
 
-Each iteration added new features and in 1993 the ubiquitous graphic system was the VGA\footnote{Video Graphic Adapter}. The universality of that system was a two edged sword: On one side developers had to program for one graphic system only. But on the other side, there was no escape to the shortcoming of the Adapter (and people did not purchase separate GPU back then).\\
+Each iteration added new features and in 1991 the ubiquitous graphic system was the VGA\footnote{Video Graphic Adapter}. The universality of that system was a two edged sword: On one side developers had to program for one graphic system only. But on the other side, there was no escape to the shortcoming of the Adapter (and people did not purchase separate GPU back then).\\
 
 \subsection{VGA Architecture}
 
@@ -468,7 +480,7 @@ The most surprising part of the architecture is obviously the framebuffer. The f
 \\
 The first part of the explanation comes from backward compatibility: The version before VGA, the EGA had only 64KB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
 \\
-But the real reason was physical limitations: A CRT running at 70Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of a second . That means one pixel each 54ns. The problem was that RAM access time was 200ns: Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz. If latency could not be reduced, the throughput could still be improved by accessing four banks at the time. The memory banks read in parallel had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
+But the real reason was physical limitations and the need for a minimum bandwidth: A CRT running at 70Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of a second . Since the VGA is palette based, one pixel is one byte [0-255] translated to a 888 RGB color. So that divides bandwidth by three. But you still need one byte each 54ns...and unfortunately RAM access time was 200ns: Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz. If latency could not be reduced, the throughput could still be improved by accessing four banks at the time. The memory banks read in parallel had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
 
 
 \begin{figure}[H]
@@ -521,7 +533,7 @@ To configure this mess of planes and circuitry, the four constollers had a set o
 
 
 
-Luckily IBM provided routines to do all the controllers initialization via the BIOS: 15 preset configuration (called "mode") with an associated resolution, color numbers and memory layout.
+Luckily IBM provided routines to initialize all the registers via one simple BIOS call: 15 preset configurations (called "mode") with an associated resolution, color numbers and memory layout.
 
 \subsection{VGA Modes}
 
@@ -564,35 +576,41 @@ Mode 12h was planar which means there was no linear framebuffer to write to. Ins
 \par
 \begin{figure}[H]
 \centering
-  
-      \includegraphics[width=\textwidth]{imgs/mode_12h.png}
-    
+ \includegraphics[width=\textwidth]{imgs/mode_12h.png}
 \caption{Banks layout in mode 12h.}
 \end{figure}
 \par
-Trivia: 12h had only one buffer. And 16 colors looked ugly.
- 
+\bu{Trivia}: The high resolution of Mode 12h was actually a drawback for 3D engine: More pixesl meant more calculations. Also 16 colors looked really ugly.
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/wolf3d_ega.png}
+\caption{Wolfenstein3D in 16 colors.}
+\end{figure}
+
+
+
+
+
+
+
+
  
   \subsection{VGA Programming: Mode 13h}
-  Mode 13h was more appealing: It offered 256 colors (but still only one buffer). It also had the avantage of faking linear buffer: A special chip called Chain-4 used the lower 4 bit of the RAM adress to match it in the VGA RAM:\\
-  TODO: Draw right shift and linear adresses\\
+  Mode 13h was far more appealing since it offered a lower resolution with appealing 256 colors (but still only one buffer). It also had the advantage of faking linear buffer: A special chip called Chain-4 used the lower 2 bit of the RAM address to match it in the VGA RAM:\\
   \par
-  Using the VGA as per the manual is easy since two instructions are enough to ask the BIOS to setup the environment with a mode. Here is an example that setup the a VGA to operate at 320x200 with 256 indexed colors: Mode 13h.\\
+ \begin{figure}[H]
+\centering
+      \includegraphics[width=\textwidth]{imgs/mode_13h.png}
+\end{figure}
+\par
+The side effect was to waste 75\% of the RAM (since only 14 bits were usable for offset).\\
+
+  \par
+  To setup the VGA using the BIOS is incredibly easy. e.g: For mode 13h (320x200 with 256 indexed colors) is setup in two instructions.\\
   \lstinputlisting[ language={[x86masm]Assembler}]{code/vga_mode13.asm}
   
   
-  Two instructions and that is it. The \codeword{int 10} is a software interrupt call to the BIOS routine in charge of Graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA register with the corresponding mode.\\
-  
-  A convenient thing with those was how the four memory banks were hidden to the programmer. By using 2 bits from the RAM, the VGA automatically determined in which bank to store a value. The side effect was to waste 75\% of the RAM. Memory Mapped area:\\
- \begin{figure}[H]
-\centering
-  
-      \includegraphics[width=\textwidth]{imgs/mode_13h.png}
-    
-\caption{Banks layout in mode 12h.}
-\end{figure}
-  
-  The programmer has access to a linear framebuffer of 64KB mapped at \codeword{A0000h}.\\
+  The \codeword{int 10} is a software interrupt call to the BIOS routine in charge of Graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA register with the corresponding mode. The programmer has access to a linear framebuffer of 64KB memory mapped at \codeword{A000000h}.\\
   
   To clear the screen to black for example, the following code was enough:\\
   
@@ -600,10 +618,10 @@ Trivia: 12h had only one buffer. And 16 colors looked ugly.
   \lstinputlisting[language=C]{code/clear_vga.c}
   \end{minipage}
   
-  The mode 13h may look good but it is in fact terrible for game and animation. The intend was clearly to display photos and drawings:
+  The mode 13h may look good but it is in fact terrible for game and animation or even photos:\\
   \begin{itemize}
-\item All the RAM adress space is used and there is no way to have a double buffer.
-\item Since the resolution is 320x200, the aspect ration does not fit the monitor. As a result the image is streched when transfered from the 
+\item All the RAM address space is used and there is no way to have a double buffer.
+\item Since the resolution is 320x200, the aspect ration (1.6) does not fit the monitor (which is 1.5). As a result the image is stretched when transfered from the 
 framebuffer to the CRT.
 
  \begin{figure}[H]
@@ -619,9 +637,12 @@ framebuffer to the CRT.
 \includegraphics[width=\textwidth]{imgs/circlescreen.eps}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
-\caption{How the framebuffer looked once streshed on the CRT monitor :( !}
+\caption{How the framebuffer looked once stretched on the CRT monitor :( !}
 \end{figure}
-
+\par
+If they picked this mode, pixels artists had to factor-in that deformation.\\
+\par
+\note{Not sure about this drawing. Probably should remove it. People will get it with the code sample.}
  \begin{figure}[H]
 \centering
   
@@ -634,14 +655,14 @@ framebuffer to the CRT.
 
 
 \subsection{The importance of doublebuffer: Avoid tearing}
-Is it a big deal to have only one buffer in all the VGA modes described? Yes and very much so! With only one buffer the software has to work exactly at the frequency of the CRT (70Hz). Otherwise a phenomenom known as "tearing" appears. Let's take the example of a software rendering a circle moving from the left to the right:
+Is it a big deal to have only one buffer in all the VGA modes described? Yes and very much so! With only one buffer the software has to work exactly at the frequency of the CRT (70Hz). Otherwise a phenomenon known as "tearing" appears. Let's take the example of a software rendering a circle moving from the left to the right:
 \par
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/double_buffer_explained.png}
  \end{figure}
 \par
-If the engine updates the framebuffer while the CRT is drawing it (a.k.a: While the circle is moving), the result will be made of two frames. Hence the "cutting" visual artifact.
+If the engine updates the framebuffer while the CRT is drawing it (a.k.a: While the circle is moving), the visual result will be a composite of two frames. Hence the "cutting" visual artifact.
 
 
 
@@ -747,6 +768,7 @@ The Southbridge run on ISA\footnote{Industry Standard Architecture}. Invented in
 
 
 \section{Summary}
+\note{This summary feels repetitive. I could probably just delete it.}
 In a nutshell, a PC was difficult to program for game developer. The CPU was good at doing the wrong thing, the graphic interface allowed neither enough colors nor double buffering (which would result in tearing), the memory model only allowed 1 standard MB...with address composed of two separate 16 bits registers. Last but not least the sound eco-system was made of four overlaping configurations. Yet, despite all these unfavorable conditions, teams of irreductible developers gathered to tame the beast and unleash its power to gamers.
 \end{document}
 

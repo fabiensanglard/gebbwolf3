@@ -1,4 +1,4 @@
-InitGame () {
+void InitGame () {
     MM_Startup ();       // Memory manager
 
     SignonScreen ();     // Show system configuration

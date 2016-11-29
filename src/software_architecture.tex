@@ -78,7 +78,7 @@ These three systems are amply described in the next sections. The most interesti
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/e1m1.png}
- \caption{The legendary E1M1 viewed from the top as in TED5 (Player is the green arrow at the bottom).}
+ \caption{The legendary E1M1 viewed from the top as in TED5 (The main character has just neutralized his guard and is in his cell: He is represented here as the green arrow at the bottom of the picture).}
 \end{figure}
 \par 
 A 3D dimensional view is faked at runtime:
@@ -97,7 +97,7 @@ A 3D dimensional view is faked at runtime:
  \caption{Complex scene: 320 ray cast.} 
 \end{figure}
 
-Raycasting is a powerful even with (for 1991) complex scene.
+Raycasting is simple yet powerful. Even for a complex scene involving multiple door and rooms, it delivers fast intersection. Based on the distance a ray his a wall, a height for a wall is generated, giving an illusion of perspective.
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_door.png}
@@ -170,7 +170,7 @@ The sound system which is not in a loop. Instead it is associated with Interrupt
 
 \section{Architecture}
 
-The engine is made of WL\_* files which relies on ID\_* sub-systems called Managers:
+The engine is made of WL\_* files which rely on ID\_* sub-systems called Managers:
 \begin{itemize}
 	\item Memory
 	\item Page
@@ -318,7 +318,9 @@ A small manager performing a lot: Interface with map, graphic and music. Assets 
  \end{figure}
  \par
 \bu{Note:} All resources are compressed. The CM handle decompression transparently.
-
+\begin{verbatim}
+http://www.shikadi.net/moddingwiki/GameMaps_Format
+\end{verbatim}
 
 
 
@@ -405,7 +407,7 @@ Abstract interaction with joystick keyboard and mouse. Features a lot of boring 
 
 
 \section{Solving the VGA}\label{SetupPages}
-An important problem left open in the Hardware chapter, is the video output: None of the VGA modes described in the user manual are suited for a game engine. The more important thing is to have a double buffer to avoid tearing.\\
+An important problem left open in the Hardware chapter, is the video output: None of the VGA modes described in the user manual are suited for a game engine. The more important being double buffer to avoid tearing.\\
 
  The most appealing one (13h) offers a single framebuffer at a resolution of 320x200 with 256 indexed colors...which is not even square pixels (the 320x200 framebuffer is stretched to 320x240 on the CRT screen). Nothing can be done about the non square pixels but luckily something that can be done about the absence of double buffering:\\
 \par
@@ -428,7 +430,7 @@ The resulting system can be seen as follow:\\
  \end{figure}
 
  \par
- So the problem really is the Chain-4 chip. Even though it is undocumented there is a way to disable it. Nobody can remember who invented unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. By tweaking the VGA Sequence controller the chaining can be disabled. The developer now has to manually drive the VGA mask to plot pixel but the full 256k of ram is available. This VGA mode is commonly called "Mode X". Note: In the engine, unchaining is called "deplane" in VL\_DePlaneVGA.\\
+ So the problem really is the Chain-4 chip. Even though it is undocumented there is a way to disable it. Nobody can remember who invented unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. By tweaking the VGA Sequence controller the chaining can be disabled. The developer now has to manually drive the VGA mask to plot pixel but the full 256k of ram is available. This VGA mode is commonly known as "Mode Y". Note: In the engine, unchaining is called "deplane" in VL\_DePlaneVGA.\\
  \par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unchaining.c}
@@ -503,7 +505,7 @@ void CleanScreen(y, color) {
   }
 }
 \end{verbatim}\\
-The culprit being the 320*200=64000 slow instruction to set the mask. But if we look carefully at the screenshot in Figure \ref{fig:vga_layout_for_intro} and Figure \ref{fig:vga_layout_in_3D} on page \pageref{fig:vga_layout_in_3D} there is an interesting property: If horizontal lines of pixels are broken into four areas (and it looks like mashed potatoes), vertically the column of pixesls are still linear and not broken down in banks. Indeed 320 is evenly divisible by 4 so vertically pixels are aligned and grouped in column of 80 pixels. This observation unlock a different algorithm where things are drawn vertically:\\
+The culprit being the 320*200=64000 slow instruction to set the mask. But if we look carefully at the screenshot in Figure \ref{fig:vga_layout_for_intro} and Figure \ref{fig:vga_layout_in_3D} on page \pageref{fig:vga_layout_in_3D} there is an interesting property: If horizontal lines of pixels are broken into four areas (and it looks like mashed potatoes), vertically the column of pixels are still linear and not broken down in banks. Indeed 320 is evenly divisible by 4 so vertically pixels are aligned and grouped in column of 80 pixels. This observation unlock a different algorithm where things are drawn vertically:\\
 
 \begin{verbatim}
 void CleanScreen(y, color) {
