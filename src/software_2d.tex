@@ -10,25 +10,14 @@ VGAGRAPH).
  \includegraphics[width=\textwidth]{imgs/latches_drawing.png}
  \end{figure}
 
-Not at fast as it seems since things have to be drawn in all three buffers during action 3D phase:
-\begin{verbatim}
-void StatusDrawPic (unsigned x, unsigned y, unsigned picnum)
-{
-	unsigned	temp;
+Not at fast as it seems since things have to be drawn in all three buffers during action 3D phase:\\
+\par
 
-	temp = bufferofs;
-	bufferofs = 0;
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/StatusDrawPic.c}
+\end{minipage}
 
-	bufferofs = PAGE1START+(200-STATUSLINES)*SCREENWIDTH;
-	LatchDrawPic (x,y,picnum);
-	bufferofs = PAGE2START+(200-STATUSLINES)*SCREENWIDTH;
-	LatchDrawPic (x,y,picnum);
-	bufferofs = PAGE3START+(200-STATUSLINES)*SCREENWIDTH;
-	LatchDrawPic (x,y,picnum);
 
-	bufferofs = temp;
-}
-\end{verbatim}
 LatchDrawPic
 Chapter 48 from michael abrash book
 atches were not intended for use in 256-color mode; that was something I figured out as a hack and wrote about. The latches were used so that in 16-color mode any or all of the four planes could be written to at once.

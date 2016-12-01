@@ -12,6 +12,7 @@ The file \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive.
 \par
 A few quick stats:\\
 
+\begin{minipage}{\textwidth}
 \begin{verbatim}
 wolfsrc\$ cloc-1.64.pl .
 
@@ -30,7 +31,7 @@ DOS Batch              1              1              0              4
 SUM:                  79           7222           7593          27223
 ---------------------------------------------------------------------
 \end{verbatim}
-
+\end{minipage}
 Twenty seven thousands lines of code. By 2016 standard it is very little. The game is written 90\% in C.\\
 
 
@@ -495,28 +496,19 @@ An other example during a 3D sequence
 
 \par
 But this solution only leads to an other problem. The Chain-4 chip hardwired and therefore it is fast while piloting the SC\_MASK manually via in/out BIOS operations is very VERY slow. A naive algorithm drawing left to right and top to bottom as follow could not go beyond 4-5 frames per seconds:\\
-\begin{verbatim}
-void CleanScreen(y, color) {
-  for(int y=0 ; y < 200 ; y++) {
-    for(int x=0; x < 320 ; x++) {
-      selectPlan(x % 4);
-      writePixel(x, y, color);   
-    }
-  }
-}
-\end{verbatim}\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/cleanScreenNaive.c}
+\end{minipage}
+\par
 The culprit being the 320*200=64000 slow instruction to set the mask. But if we look carefully at the screenshot in Figure \ref{fig:vga_layout_for_intro} and Figure \ref{fig:vga_layout_in_3D} on page \pageref{fig:vga_layout_in_3D} there is an interesting property: If horizontal lines of pixels are broken into four areas (and it looks like mashed potatoes), vertically the column of pixels are still linear and not broken down in banks. Indeed 320 is evenly divisible by 4 so vertically pixels are aligned and grouped in column of 80 pixels. This observation unlock a different algorithm where things are drawn vertically:\\
+\par
 
-\begin{verbatim}
-void CleanScreen(y, color) {
-  for(int x=0; x < 320 ; x++) {
-    selectPlan(x % 4);
-    for(int y=0 ; y < 200 ; y++) {
-      writePixel(x, y, color);   
-    }
-  }
-}
-\end{verbatim}\\
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/cleanScreenClever.c}
+\end{minipage}
+
+\par
 This code can run without issues at 70 frames per second: Only 200 slow out instruction are used.\\
 \par
 This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algorithms picked during 2D and 3D all the way up to the assets compression techniques. In wolf3d: Everything is vertical!\\
@@ -565,16 +557,11 @@ With this technique the 64KB of mapped RAM can access the full 256KB of the VGA.
 
 Compared to figure 
 TODO: New Drawing of VGA RAM.\\
-But there is still a problem: Switching the target RAM was very slow. So a routine drawing an horizontal line on the screen:
-
-\begin{verbatim}
-void DrawLine(y, color) {
-  for(int x=0; x < 320 ; x++) {
-    SelectBank(x % 4);
-    WritePixel(x, y, color);   
-  }
-}
-\end{verbatim}\\
+But there is still a problem: Switching the target RAM was very slow. So a routine drawing an horizontal line on the screen:\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/drawline.c}
+\end{minipage}
 Would have been unpractical. But something else can be done if you notice that 320 is a multiple of 4 (320/4=80): If you draw only columns you don't have to change the target plan often.\\
 TOOD: Drawing of how column line up in VGA RAM.\\
 

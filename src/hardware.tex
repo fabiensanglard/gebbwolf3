@@ -305,34 +305,28 @@ Real Mode could not use 32 bits registers for addressing (or even operations as 
 A near pointer was just a 16 bits offset that would point in the same segment. That may not sound too bad but in practice this segmented addressing led to many issues. The least problematic was about the language: Since the C language was invented on 32 bits machine, the language had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro would be provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. That was an ugly wart on the beautiful C but that was manageable.\\
 \\
 The really big issue however was how two pointers, referring to the same address could fail an equality test: In this model, the 1MB of RAM is divided in 65536 paragraphs by the segment pointer. So a paragraph is 16 bytes but an offset can be up to 65536 which result in a maze of overlaps! See the following example:\\
-\bigskip
-\\Pointer A defined as:
-\begin{Verbatim}[fontsize=\relsize{-1}]
-    0000 0000 0000 0000       Segment, 16 bits shifted 4 bits left  
-  +      0000 0001 0010 0000  Offet,   16 bits
-============================
-    0000 0000 0001 0010 0000  Address, 20 bits
-\end{Verbatim}
+\par
+Pointer A defined as:\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/pointer_madness1}
+\end{minipage}
 
 \bigskip
 
-Pointer B defined as:
-\begin{Verbatim}[fontsize=\relsize{-1}]
-    0000 0000 0001 0000       Segment, 16 bits shifted 4 bits left  
-  +      0000 0000 0010 0000  Offet,   16 bits
-============================
-    0000 0000 0001 0010 0000  Address, 20 bits
-\end{Verbatim}
+Pointer B defined as:\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/pointer_madness2}
+\end{minipage}
 
 \bigskip
 
-Pointer C defined as:
-\begin{Verbatim}[fontsize=\relsize{-1}]
-    0000 0000 0001 0010       Segment, 16 bits shifted 4 bits left  
-  +      0000 0000 0000 0000  Offet,   16 bits
-============================
-    0000 0000 0001 0010 0000  Address, 20 bits
-\end{Verbatim}
+Pointer C defined as:\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/pointer_madness3}
+\end{minipage}
 
 As defined A, B and C all points to the same memory location however they would fail a comparison test in the following code.\\
 

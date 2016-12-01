@@ -477,7 +477,7 @@ The raycasting algorithm is calld DDA\footnote{Digital Differential Analysis, co
 \lstinputlisting[language=C]{code/flipflop.c}
 \end{minipage}
 
-\note{Trivia:} To accelerate \cw{cos} and \cw{sin} calculation, the engine uses lookup table: One entry for each 360 degres.
+\bu{Trivia:} To accelerate \cw{cos} and \cw{sin} calculation, the engine uses lookup table: One entry for each 360 degres.
 
 
 
@@ -761,16 +761,27 @@ Example
 
 
 \subsubsection{Texturing}
-
-
-Pre-Lighted texture.\\
+A subtle but extremely efficient trick used to improve rendition is pre-back light texture. The wall textures are generated twice by the artists: Once light and once dark:\\
 
   \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/baked_lights.png}
- \caption{3D Rendere Phase 1: Backed lights} \label{fig:backee_lights}
+ \includegraphics[width=\textwidth]{imgs/baked_lights_wood.png}
+ \end{figure}
+\par
+At runtime, upon casting each ray: if the ray hit a vertical wall the engine uses a light texture. If the ray hits an horizontal wall, it uses the dark version of the same texture. it is not obvious but when the same scene is rendered with and without and both screenshots are next to each others, the difference is vivid:\\
+\begin{minipage}{\textwidth}
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{screenshots/backed_off.png}
+ \caption{Here: Backed texture off. Next: Backed texture on.}
  \end{figure}
 
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{screenshots/backed_on.png}
+ 
+ \end{figure}
+ \end{minipage}
 
 
 
@@ -925,18 +936,9 @@ TODO: Elaborate on drawing routines which uncompresse sprites on the fly.
 \subsubsection{Clipping}
 Drawing things far to near is good for transparency but does not guaranty correctness. When a sprite is partially behind a wall or a door, it has to be clipped. This is done thanks to an occlusion array: While drawing the walls and door, the engine also maintains an array in which it records the height of the column:\\
 \par
-\begin{verbatim}
-
-\\Write in HitVertWall, HitHorizWall, HitVertDoor, HitHorizDoor, HitHorizPWall, HitVertPWall
-wallheight[pixx] = CalcHeight();
-
-\\Read
-\#define MAXVIEWWIDTH    320
-unsigned  wallheight[MAXVIEWWIDTH];
-
-        if (wallheight[slinex] >= height)
-          continue;   // obscured by closer wall
-\end{verbatim}
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/wallheight.c}
+\end{minipage}
 \par
 Since all sprite and walls are in the same coordinate system, clipping is as easy as a heigh comparaision:\\
 
