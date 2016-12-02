@@ -566,7 +566,7 @@ The BIOS could be called to have the VGA configured with preset registers.
  
 
  \subsection{VGA Programming: Mode 12h}
-Mode 12h was planar which means there was no linear framebuffer to write to. Instead 8 pixels were packed in one byte. To write the color index of the first pixel, a developer had to write the first bit of the nibble in plane 0, the second in plane 1, the third in plane 2 and the fourth in plane 3. The CRT Controller would read 4 bytes at a time (which resulted in 8 pixels on screen).\\
+Mode 12h was planar which means there was no linear framebuffer to write to. Instead 8 pixels were packed in one byte. To write the color index of the first pixel, a developer had to write the first bit of the nibble in plane 0, the second in plane 1, the third in plane 2 and the fourth in plane 3. The CRT Controller would read 4 bytes at a time (which resulted in 8 pixels on screen).\\ This mode had double buffer. But not atomic switch :(.
 \par
 \begin{figure}[H]
 \centering

@@ -265,6 +265,13 @@ At the beginning of very frame, the engine switch to an unused buffer (TODO: sho
 
 \subsection{Casting a Ray}
 
+
+
+
+
+
+
+
 \subsubsection{Fixed point}
 The hardware chapter describing the CPU capabilities left the reader with a problem at hands: The machine cannot do floating point operations fast enough. This is a pretty big deal for a 3D engine and all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed point arithmetic":\\
 \par
@@ -345,6 +352,17 @@ Notice that you have to be careful: In the previous example some precision was l
  
  
  
+
+
+\subsubsection{Coordinate System}
+\par
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/coordinate_system.png}
+\end{figure}
+\par
+calcheigh is using 24:8 ?
+
 
 \subsubsection{Square World and RayCasting}
 With fraction possible, the engine still needs to find a way to render the walls in pseudo-3D. Per say, draw a wall bigger if it is closer and smaller if it is far. To do that, it cast a ray for each column of pixel on the screen. With the distance it calculates a height on screen.\\
@@ -590,6 +608,7 @@ This projection (z) is mathematically hard to calculate in one go (especially wi
  \caption{A combination of SOH A=($dx * \cos(\alpha)$) and CAH B=($ dy * \sin(\alpha) $) gives $d = dx * \cos(\alpha) - dy * \sin(\alpha) $ gives the expected result.}
 \end{figure}
 
+The overall operation can be seen as a rotation of y intercept around the viewpoint.\\
  Which is enough to give pleasant straigh lines. Following a wall uncorrected and the same location with projected distance:\\
  \begin{figure}[H]
 \centering
@@ -860,7 +879,9 @@ TODO: Explaih half step added.\\
 
 
 \subsubsection{Push walls} 
-Push walls are very similar to doors except they "open" away from the player instead of sideway.
+Push walls are very similar to doors except they "open" away from the player instead of sideway.\\
+\par
+Tom had to really push to get pushwalls (hidden walls).\\
 
 
 
@@ -1033,15 +1054,51 @@ Deaf guard\\
 Planes:
 =Ambush tile: enemy placed ohere are deaf to all attacks (normal enemy responds immediately to sound).\\
 An ambush tile-affected enemy is not blind but attack playe but won't react to dead soldiers or dogs.\\
+TODO:Screenshots.\\
 \par
 How does sound travel between areas ? If a door is open, and a fire is shot, enemies in other room will come.\\
 areabyplayer connect players\\
 \par
 I/A also faked with map waypoint for patrolling.\\
+\subsection{I.A: Firing}
+\subsection{I.A: Decision making}
+\subsection{I.A: Detecting the player}
+proximity\\
+sight\\
+sound\\
+\subsection{I.A: Pursuit and openind doors}
 
 
 
-\section{Heartbeats}
+
+
+
+
+
+
+
+
+\section{Heartbeats and Sound System}
+The audio and heatbeat system are started. This is done by reprogramming 8254-PIT and 8259-PIC timers to install an ISR\footnote{DOS Interrupt Service Routine}:\\
+\begin{figure}[H]
+\centering
+ \includegraphics[width=.5\textwidth]{imgs/heatbeats.png}
+ \end{figure}
+
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/three_blocks.png}
+ \end{figure}
+
+Different things could happen depending on the hardware available:
+\begin{itemize}
+\item With the default PC speaker or with , the isr is set on slow: 140Hz
+\item With an adlib or Disney Sound source, the isr is set on fast: 700Hz
+\item With Sound Blaster, the isr is set on extreme: 7000Hz
+\end{itemize}
+Every time the ISR triggers, it takes care of feeding music and audio to the sound chip and also updates TimeCount variable, the heat of the whole system, at 70Hz (like VGA refresh rate).\\
+\par
 Because the engine uses triple buffering, it is completely decoupled from the VGA refresg rate (70Hz). Yet it needs something not only to pace itself (not render too fast) and to keep track of wall time (so the player is presented with a linear game time progression). This is where the sound system performs two tasks. Not only the XXX chips triggers at a regular interval, it also updates a global variable (\cw{TimeCount}) at 70Hz. This variable is used in the renderer to make sure at least 1/70th of a second has passed before rendering something again but also to pace actor thinking (so player movement is proportionnal to frame rate and actor also think proportionnaly).\\
 \cw{CalcTics} maintains \cw{ticks} variable: The amount of walltime since last frame. An action takes a certain number of ticks.\\
 \par
@@ -1052,3 +1109,27 @@ haha joke about LONG time.\\
 haha: // if the game was paused a LONG time
 VGA: 70Hz
 audio: Depends on quality, three levels of fidelity.
+
+\par
+Stereo system:\\
+\par
+The sound source is rotated with the same formula as the raycaster. Using SOH-CAH-TOA. Intensity is hardcoded 0-15:\\
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/audio_y_rotate.png}
+ \end{figure}
+ \par
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/audio_x_rotate.png}
+ \end{figure}
+\par
+In sound part, trivia with a bunch of translations: https://www.gamefaqs.com/pc/564603-wolfenstein-3d/faqs/1824\\
+Talk about morse code in episode 3 and 6, echo with romero head in doom2\\
+
+
+\section{Pseudo random generator}
+US\_RndT\\
+rndtable\\
+During dying randon generation is done differently.
