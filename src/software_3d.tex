@@ -500,6 +500,38 @@ If you made extremely jagged block maps that would turn into many dozen independ
 
 
 
+\subsubsection{HighSchool math primer}
+Before proceeding to the next session about fish eye projection correction, here is a reminder of something we all learned in highschool: SOH-CAH-TOA.
+
+ \begin{fancyquotes}
+  I'm no super mathematician-- I learned high school math well enough to solve real world problems with it.
+ \bigskip \\
+It's "COLUMN", you dumb @\#\$\% !\\
+ \bigskip \\
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
+
+
+
+\par
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/sohcahtoa.png}
+\end{figure}
+\par
+$ sin(alpha) = O/H$\\
+$ cos(alpha) = A/H$\\
+$ tan(alpha) = O/A$\\
+This property is multiple places:\\
+This is all you need to understand fish eye correction and coordinate projection (used to place player, and calculate sounds).
+
+
+
+
+
+
+
+
 
 
 
@@ -762,10 +794,14 @@ Example
 
 \subsubsection{Texturing}
 A subtle but extremely efficient trick used to improve rendition is pre-back light texture. The wall textures are generated twice by the artists: Once light and once dark:\\
-
   \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/baked_lights_wood.png}
+ \end{figure}
+\par
+  \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/baked_lights_stone.png}
  \end{figure}
 \par
 At runtime, upon casting each ray: if the ray hit a vertical wall the engine uses a light texture. If the ray hits an horizontal wall, it uses the dark version of the same texture. it is not obvious but when the same scene is rendered with and without and both screenshots are next to each others, the difference is vivid:\\
