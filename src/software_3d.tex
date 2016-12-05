@@ -421,7 +421,7 @@ And this explains why Wolfenstein3D maps are all flat, 64x64 grid aligned square
 
 
 \subsubsection{Call Apogee}
-With map being simple and fast to draw, a contest was to be held: Find a special item in a particularly difficult to access place in the game and call the publisher (Apogee). The maze was located in Episode 2, Map 8:\\
+With map being simple and fast to draw, a contest was to be held: Find a special item in a particularly difficult to access place in the game and call the publisher (Apogee). The maze is located in Episode 2, Map 8:\\
 \par
 \begin{figure}[H]
   \centering
@@ -437,7 +437,7 @@ Behind a forest of push walls (white squares) and angry bosses (blue star), a si
  \includegraphics[width=\textwidth]{imgs/call_apogee.png}
 \end{figure}
 \par
-However due to people reverse engineering the map format and cheat sites allowing players to find the maze, the sign was replaced with a squeleton with all game shipping during 1992
+However due to people reverse engineering the map format and cheat sites allowing players to find the maze, the sign was replaced with a squeleton with all game shipping during 1992.
 \par
 \begin{fancyquotes}
 "Call Apogee and say Aardwolf."  It's a sign that to this day is something
@@ -465,6 +465,11 @@ or load a saved game from before you went into that maze.\\
 \\
 \textbf{Joe Siegler - Past Pioneers of the Shareware Revolution}
 \end{fancyquotes}
+\par
+Aardwolf. A maned striped mammal (Proteles cristatus) of southern and eastern
+Africa that resembles the related hyenas and feeds chiefly on carrion and insects.
+The aardwolf has sort of become the mascot of Id, appearing on Tom's Gotta
+Lists and the Commander Keen 6 Hint Sheet.
 
 
 
@@ -655,7 +660,8 @@ The overall operation can be seen as a rotation of y intercept around the viewpo
 \subsection{Drawing walls}
 Drawing the wall may sound easy. After how complicated can it be to scale a 64 pixels tall texture on the screen, centered vertically? It turns out if you want to do it fast you can apply a few optimization. This part is where lies the two secrets of the engine speed: Compiled scalers and defered column rendering.\\
 \par
-
+Walls are eight feet thick
+\par
 
 \subsubsection{Compiled scalers}
 With a distance available for a column, the engine is able to calculate a height for that column. All columns of pixels representing the walls are centered vertically and either magnified or minified:\\
@@ -1078,7 +1084,7 @@ sound\\
 
 
 
-\section{Heartbeats and Sound System}
+\section{Sound System}
 The audio and heatbeat system are started. This is done by reprogramming 8254-PIT and 8259-PIC timers to install an ISR\footnote{DOS Interrupt Service Routine}:\\
 \begin{figure}[H]
 \centering
@@ -1127,9 +1133,11 @@ The sound source is rotated with the same formula as the raycaster. Using SOH-CA
 \par
 In sound part, trivia with a bunch of translations: https://www.gamefaqs.com/pc/564603-wolfenstein-3d/faqs/1824\\
 Talk about morse code in episode 3 and 6, echo with romero head in doom2\\
-
-
+"BLASTER" oldschool parsing.
 \section{Pseudo random generator}
 US\_RndT\\
 rndtable\\
 During dying randon generation is done differently.
+
+
+\section{Heartbeats}

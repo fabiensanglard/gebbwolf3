@@ -587,7 +587,6 @@ Mode 12h was planar which means there was no linear framebuffer to write to. Ins
 
 
 
-
  
   \subsection{VGA Programming: Mode 13h}
   Mode 13h was far more appealing since it offered a lower resolution with appealing 256 colors (but still only one buffer). It also had the advantage of faking linear buffer: A special chip called Chain-4 used the lower 2 bit of the RAM address to match it in the VGA RAM:\\
@@ -662,8 +661,23 @@ If the engine updates the framebuffer while the CRT is drawing it (a.k.a: While 
 
 
 \section{Audio}
-Off all the parts in a PC, the audio system was the best. The card manufacturer had started to see a market and player actually had the opportunity to buy decent extension "sound card" from manufacturers like Ad Lib or Creative. As a result, the market was heterogenous.
-  \subsection{Speaker}
+Off all the parts in a PC, the audio system was the only one to not be terrible for games. Companies had started to see a market and they were manufacturing "sound cards", which you could purchase and insert into one of the ISA port of the machine. These cards could be connected to audio speakers and tremendously improve the audio capability of the machine. In 1991, two of these companies were at war\footnote{History would repeat itself in the late 90s in the field of Graphic Cards: Nvidia Vs ATI}: Adlib and Creative. Even though IBM PC came out of the box wit a PC speaker, it was a 1 bit DAC intended to signal hardware failure. Beeeeeeeeeeeeeeeeep was all it could (in theory produce)/\\
+\par
+Starting in 1988, after an initial struggle to convince game developers to use their card, Adlib finally convinced Sierra On-Line to support their hardware for their lates title: King's Quest IV (over 3 million copies sold). Soon, all game developers embraced the Adlib. But Creative came along the same year with a serious competitor: The SoundBlaster.\\
+\par
+
+Card manufacturers had started to see a market. Adlib, a Quebec based company was the first on the market with its Adlib audio card.  
+
+ and player actually had the opportunity to buy decent extension "sound card" from manufacturers like Ad Lib or Creative. As a result, the market was heterogenous but a player could enjoy decent sound and music as long as she did not stick to what came with the machine (the PC Speaker). Four cards were prevalent:\\
+\begin{itemize}
+\item Adlib music card.
+\item SoundBlaster sound and music soundcard.
+\item SoundBlaster Pro sound and music stereo soundcard.
+\item Disney Sound Source.
+\end{itemize}
+
+
+  \subsection{PC Speaker}
   PCs came out of the box with a binary beeper. It was capable to produce two frequencies. Of course hackers found clever way to exploit it as it is explained from Wikipedia page:\\
 \par
  \begin{fancyquotes}
@@ -678,13 +692,20 @@ Off all the parts in a PC, the audio system was the best. The card manufacturer 
   \subsection{Ad Lib}
   Ad Lib was a Canadian manufacturer of sound cards. As early as XXXX they identified the limitations of the PC Speakers and started to manufacture a card to connect to the ISA bus which Allowed MIDI playback.
   
-  Note: Canadian company and especially from Quebec were very innovative in the early 90s. Ad Lib manufactured Sound Card, Matrox made a killing with Millenium Graphic Card, Watcom compiler, ATI.\\
+  \bu{Trivia :} Canadian company and especially from Quebec were very innovative in the early 90s. Ad Lib manufactured Sound Card, Matrox made a killing with Millenium Graphic Card, Watcom compiler, ATI.\\
   
   Music (midi)
   
+  Equipped with a Yamaha YM3812 also known as the OPL2 the card can produce 9 channels of sound, each made of two oscillators or 6 channels with 5 percussion instruments available.\\
+
+
   \subsection{Sound Blaster}
-  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative labs. It was the best a gamer could purchage since it gave access not only to midi(music) playback but also digitized sound (8bits, mono, 23Hz sampling). It also added a very good port: A DA-15 allowing connection of a joystick!. The quality of the card would lead the Sound Blaster to be a de-factor standard in the 90s\footnote{The standard was broken by Windows 95 which standardized the programming interface at application level (eliminating the importance of backward compatibility with Sound Blaster)}.
+  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative labs. It was the best a gamer could purchage since it gave access not only to midi(music) playback but also digitized sound (8bits, mono, 23Hz sampling). It also added a very good port: A DA-15 allowing connection of a joystick!. That is right: The only way to connect a joystick was to buy a sound card\footnote{In the late 90s the only way to have a CD-ROM reader was also to buy a soundcard}. The quality of the card would lead the Sound Blaster to be a de-factor standard in the 90s\footnote{The standard was broken by Windows 95 which standardized the programming interface at application level (eliminating the importance of backward compatibility with Sound Blaster)}.
   
+Creative's soundblaster (Singapore): 11-voice FM synthesizer using the Yamaha YM3812 chip, also known as OPL2. With a DSP (MCS-51) (standing for Digital Sound Processor, not Digital Signal Processor) capable to play back PCM 8-bit monaural sampled sound at up to 23 kHz sampling frequency. An joystick port. Ultimately, Adlib died in 1992 after the failure of their AdLib Gold.
+
+
+  \subsection{Sound Blaster Pro}
 
   \subsection{Disney Sound Source}
   Plugged into the printer port (parrallel port) of the PC. Covox-idea based DAC, marketed by Disney Software in early 1990s. It consisted of 2 parts: a DAC plugged into printer port and separate amplifier / speaker box.[5] Its price was set to only \$14 and it was supported by many games (see below). It used external power (9 volt battery) and could be turned on/off by software. Contrary to the Speech Thing the output rate is determined by the hardware (7 kHz) and the design features a 16 byte FIFO allowing for autodetection and flow control of the output. In 2015 the hardware was reverse engineered so compatible circuits can be built from easily available off the shelf components.
