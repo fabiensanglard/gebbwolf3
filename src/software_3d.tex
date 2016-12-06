@@ -1084,60 +1084,6 @@ sound\\
 
 
 
-\section{Sound System}
-The audio and heatbeat system are started. This is done by reprogramming 8254-PIT and 8259-PIC timers to install an ISR\footnote{DOS Interrupt Service Routine}:\\
-\begin{figure}[H]
-\centering
- \includegraphics[width=.5\textwidth]{imgs/heatbeats.png}
- \end{figure}
 
 
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/three_blocks.png}
- \end{figure}
 
-Different things could happen depending on the hardware available:
-\begin{itemize}
-\item With the default PC speaker or with , the isr is set on slow: 140Hz
-\item With an adlib or Disney Sound source, the isr is set on fast: 700Hz
-\item With Sound Blaster, the isr is set on extreme: 7000Hz
-\end{itemize}
-Every time the ISR triggers, it takes care of feeding music and audio to the sound chip and also updates TimeCount variable, the heat of the whole system, at 70Hz (like VGA refresh rate).\\
-\par
-Because the engine uses triple buffering, it is completely decoupled from the VGA refresg rate (70Hz). Yet it needs something not only to pace itself (not render too fast) and to keep track of wall time (so the player is presented with a linear game time progression). This is where the sound system performs two tasks. Not only the XXX chips triggers at a regular interval, it also updates a global variable (\cw{TimeCount}) at 70Hz. This variable is used in the renderer to make sure at least 1/70th of a second has passed before rendering something again but also to pace actor thinking (so player movement is proportionnal to frame rate and actor also think proportionnaly).\\
-\cw{CalcTics} maintains \cw{ticks} variable: The amount of walltime since last frame. An action takes a certain number of ticks.\\
-\par
-It works but there is a major flaw with this technique: The engine is non-deterministic. Recording and replaying a demo, even on the same machine cannot work.\\\par
-haha joke about LONG time.\\
-\bu{Trivia :} When playing a recording, the engine bypasses the timer and hardcoded tics: (tics = DEMOTICS;). The demo was likely recorded at 15fps which is consistent with what a 386DX33 would have produced
-
-haha: // if the game was paused a LONG time
-VGA: 70Hz
-audio: Depends on quality, three levels of fidelity.
-
-\par
-Stereo system:\\
-\par
-The sound source is rotated with the same formula as the raycaster. Using SOH-CAH-TOA. Intensity is hardcoded 0-15:\\
-\par
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/audio_y_rotate.png}
- \end{figure}
- \par
- \begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/audio_x_rotate.png}
- \end{figure}
-\par
-In sound part, trivia with a bunch of translations: https://www.gamefaqs.com/pc/564603-wolfenstein-3d/faqs/1824\\
-Talk about morse code in episode 3 and 6, echo with romero head in doom2\\
-"BLASTER" oldschool parsing.
-\section{Pseudo random generator}
-US\_RndT\\
-rndtable\\
-During dying randon generation is done differently.
-
-
-\section{Heartbeats}
