@@ -373,7 +373,7 @@ DRAWING: Free objects, free size, no aligment: rays ???\\
 \par
 But if the word has two constraints:
 \begin{itemize}
-\item Square axis aligned block.
+\item Square axis aligned block: 8feet tall. TODO: How is the engine translating from imperial to decimal system?
 \item Grid space blocks.
 \end{itemize}
 \par
@@ -583,12 +583,24 @@ In this drawing the player is located at viewpoint with a view angle \begin{math
  \caption{Fish eye effect: Mild}. \label{fig:mips}
  \end{figure}
 
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=.3\textwidth]{imgs/fish_eye/fish_eye_top_far.png}
+\end{figure}
+\par
+
+
 But it gets worse when you get closer:
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/fish_eye/bad_ok.png}
  \caption{Fish eye effect: Bad} \label{fig:mips}
  \end{figure}
+ \begin{figure}[H]
+  \centering
+ \includegraphics[width=.3\textwidth]{imgs/fish_eye/fish_eye_top_mid.png}
+\end{figure}
+\par
 
 And become unbearable when very close:
  \begin{figure}[H]
@@ -596,6 +608,11 @@ And become unbearable when very close:
  \includegraphics[width=\textwidth]{imgs/fish_eye/bad_bad.png}
  \caption{Fish eye effect: AAAAARG} \label{fig:mips}
  \end{figure}
+ \begin{figure}[H]
+  \centering
+ \includegraphics[width=.3\textwidth]{imgs/fish_eye/fish_eye_top_close.png}
+\end{figure}
+\par
  
 To avoid this distortion and get a more pleasant rendition, what must be used is not the direct distance d but d projected on the perpendicular of the view direction (z):
 
@@ -939,7 +956,7 @@ In contrast, VSD is an open-ended problem, and there are dozens of approaches cu
   
 \begin{figure}[H]
   \centering
-  \input{imgs/ray_caster_explained/marked_out_room.tex}
+  \includegraphics[width=\textwidth]{imgs/ray_caster_explained/marked_out_room.pdf}
  \caption{Ray cast and visible spots.} 
 \end{figure}
 
@@ -1022,7 +1039,7 @@ Since all sprite and walls are in the same coordinate system, clipping is as eas
 
 \subsection{Drawing weapon}
 Drawing the weapon at the bottom is very straight forward. It just uses the precompiled scalar with no clipping. Nothing much to say abou that :/!\\
-
+\bu{Trivia :} About damage of machine gun?
 
 
 
@@ -1060,7 +1077,45 @@ Deaf guard\\
 Planes:
 =Ambush tile: enemy placed ohere are deaf to all attacks (normal enemy responds immediately to sound).\\
 An ambush tile-affected enemy is not blind but attack playe but won't react to dead soldiers or dogs.\\
-TODO:Screenshots.\\
+
+
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/ambush/map_unknown.png}
+\end{figure}
+\par
+
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=.5\textwidth]{imgs/ambush/map_unknown_drawing.png}
+\end{figure}
+\par
+
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/ambush/map_ambushed.png}
+\end{figure}
+\par
+
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=.5\textwidth]{imgs/ambush/map_ambushed_drawing.png}
+\end{figure}
+\par
+
+
+
+\begin{fancyquotes}
+Each enemy is given specific orders which dictate his actions once he knows of your presence. Some are ordered to immediately attack, while others are trained to act only upon visual contact.
+ \bigskip \\
+\bigskip \\
+\textbf{Kevin Cloud. The Official Hint Manual for Wolfenstein 3D}
+ \end{fancyquotes}
+
 \par
 How does sound travel between areas ? If a door is open, and a fire is shot, enemies in other room will come.\\
 areabyplayer connect players\\
@@ -1074,12 +1129,35 @@ sight\\
 sound\\
 \subsection{I.A: Pursuit and openind doors}
 
+\subsection{Sound propagation}
 
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/soud_propagation/map.png}
+\end{figure}
+\par
 
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/soud_propagation/areas.png}
+\end{figure}
+\par
 
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/soud_propagation/areaconnect.png}
+\end{figure}
+\par
 
-
-
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/soud_propagation/areabyplayer.png}
+\end{figure}
+\par
 
 
 

@@ -28,10 +28,23 @@ I talked to Jason Linhart, the founder and lead programmer of MicroMagic, in 199
 
 \subsection{Sound effects}
 \par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/audio/audio_settings.png}
+ \end{figure}
+\par
 
 \subsubsection{PCM}
 \subsubsection{PWM}
 
+\par
+ \begin{fancyquotes}
+  The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc.), the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC,[5] thereby enabling approximate playback of PCM audio. This technique is called pulse-width modulation (PWM).
+ \end{fancyquotes}
+\par
+  It gave surprisingly good results such as in Monkey Island music.\footnote{https://www.youtube.com/watch?v=a324ykKV-7Y}
+
+  \par
 The programming trick in the PC was to set the timer that drive PC speaker to one-shot mode, and set PC interrupt rate to needed output sample rate. So at every input one sound sample value was read, converted to timer control value, programmed to timer (starting the pulse). This trick allowed around 6 bits sample resolution / dynamics (or even slightly more with some tricks). When the sample rate was high enough, you can’t hear the high frequency noise on the signal.\\
 TODO: Drawing of PWM
 \par
@@ -96,3 +109,29 @@ Talk about morse code in episode 3 and 6, echo with romero head in doom2\\
 US\_RndT\\
 rndtable\\
 During dying randon generation is done differently.
+
+
+
+
+
+
+
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/pwm/original.png}
+ \end{figure}
+\par
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/pwm/reconstructed.png}
+ \end{figure}
+\par
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/pwm/reconstructed2.png}
+ \end{figure}
+\par
+

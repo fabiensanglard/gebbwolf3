@@ -661,58 +661,64 @@ If the engine updates the framebuffer while the CRT is drawing it (a.k.a: While 
 
 
 \section{Audio}
-Off all the parts in a PC, the audio system was the only one to not be terrible for games. Companies had started to see a market and they were manufacturing "sound cards", which you could purchase and insert into one of the ISA port of the machine. These cards could be connected to audio speakers and tremendously improve the audio capability of the machine. In 1991, two of these companies were at war\footnote{History would repeat itself in the late 90s in the field of Graphic Cards: Nvidia Vs ATI}: Adlib and Creative. Even though IBM PC came out of the box wit a PC speaker, it was a 1 bit DAC intended to signal hardware failure. Beeeeeeeeeeeeeeeeep was all it could (in theory produce)/\\
+A PC came equipped with a beeper, commonly known as a "PC Speaker" capable of generating square wave via only 2 levels of output:\\
 \par
-Starting in 1988, after an initial struggle to convince game developers to use their card, Adlib finally convinced Sierra On-Line to support their hardware for their lates title: King's Quest IV (over 3 million copies sold). Soon, all game developers embraced the Adlib. But Creative came along the same year with a serious competitor: The SoundBlaster.\\
+ \begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imgs/square_wave.png}
+\caption{A square wave of one tune driven by 0V and 5V. Only one tune of variable duration can be generated.}
+\end{figure}
+
 \par
-
-Card manufacturers had started to see a market. Adlib, a Quebec based company was the first on the market with its Adlib audio card.  
-
- and player actually had the opportunity to buy decent extension "sound card" from manufacturers like Ad Lib or Creative. As a result, the market was heterogenous but a player could enjoy decent sound and music as long as she did not stick to what came with the machine (the PC Speaker). Four cards were prevalent:\\
+ The purpose of this primitive loudspeaker was to signal hardware problems at runtime with beep codes:\\
+\par
+\begin{tabularx}{\textwidth}{l l}
+\textbf{Beep Code} & \textbf{Meaning}  \\ \hline
+No Beeps                         & Short, Bad CPU/MB, Loose Peripherals \\ \hline
+One Beep                         & Everything is normal\\ \hline
+Two Beeps                        & POST/CMOS Error \\ \hline 
+One Long Beep, One Short Beep    & Motherboard Problem \\ \hline
+One Long Beep, Two Short Beeps   & Video Problem \\ \hline
+One Long Beep, Three Short Beeps & Video Problem \\ \hline
+Three Long Beeps                 & Keyboard Error \\ \hline
+Repeated Long Beeps              & Memory Error \\ \hline
+Continuous Hi-Lo Beeps           & CPU Overheating \\ \hline
+\end{tabularx}\\
+\bigskip
+\par
+Needless to say one tune was not usable for anything. Some peoples had started to see a market and they were companies manufacturing what was known as "sound cards". You could buy them separatately and insert them into one of the ISA slot of the machine. These cards could be connected to real audio speakers via 3.5mm jack and tremendously improve the sound capabilities. In 1991, three companies competed to become the dominant sound card: Adlib, Creative and Disney drawing a small eco-sytem of four cards:\\
+\par
 \begin{itemize}
 \item Adlib music card.
-\item SoundBlaster sound and music soundcard.
-\item SoundBlaster Pro sound and music stereo soundcard.
+\item SoundBlaster 1.0 (Mono).
+\item SoundBlaster Pro (Stereo).
 \item Disney Sound Source.
 \end{itemize}
-
-
-  \subsection{PC Speaker}
-  PCs came out of the box with a binary beeper. It was capable to produce two frequencies. Of course hackers found clever way to exploit it as it is explained from Wikipedia page:\\
 \par
- \begin{fancyquotes}
-  The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc.), the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC,[5] thereby enabling approximate playback of PCM audio. This technique is called pulse-width modulation (PWM).
- \end{fancyquotes}
+Even though adoption was improving, a fast majority of PCs had no sound cards which once again was a huge problem for game developers.
+
+
+  \subsection{AdLib}
+  Started by Martin Prevel, a former professor of music in 1988. After an initial struggle to convince game developers to use their card, Adlib had convinced Sierra On-Line to support their hardware for their lates title: King's Quest IV (over 3 million copies sold). Soon, all game developers embraced the Adlib. Equipped with a Yamaha YM3812 also known as the OPL2 the card can produce 9 channels of sound, each made of two oscillators or 6 channels with 5 percussion instruments available. The FM synthetiser was limited but allowed to play pleasant musics.\\
 \par
-  It gave surprisingly good results such as in Monkey Island music.\footnote{https://www.youtube.com/watch?v=a324ykKV-7Y}
+\bu{Trivia :} Canadian company and especially Quebec were very innovative in the early 90s. Ad Lib manufactured Sound Card, Matrox made a killing with Millenium Graphic Card, Watcom a compiler. ATI\footnote{History would repeat itself in the late 90s in the field of Graphic Cards: Nvidia Vs ATI} would later emerge as AAA GPU manufacturer in the years 2000.\\
   
-
-
-
-  \subsection{Ad Lib}
-  Ad Lib was a Canadian manufacturer of sound cards. As early as XXXX they identified the limitations of the PC Speakers and started to manufacture a card to connect to the ISA bus which Allowed MIDI playback.
   
-  \bu{Trivia :} Canadian company and especially from Quebec were very innovative in the early 90s. Ad Lib manufactured Sound Card, Matrox made a killing with Millenium Graphic Card, Watcom compiler, ATI.\\
-  
-  Music (midi)
-  
-  Equipped with a Yamaha YM3812 also known as the OPL2 the card can produce 9 channels of sound, each made of two oscillators or 6 channels with 5 percussion instruments available.\\
 
 
   \subsection{Sound Blaster}
-  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative labs. It was the best a gamer could purchage since it gave access not only to midi(music) playback but also digitized sound (8bits, mono, 23Hz sampling). It also added a very good port: A DA-15 allowing connection of a joystick!. That is right: The only way to connect a joystick was to buy a sound card\footnote{In the late 90s the only way to have a CD-ROM reader was also to buy a soundcard}. The quality of the card would lead the Sound Blaster to be a de-factor standard in the 90s\footnote{The standard was broken by Windows 95 which standardized the programming interface at application level (eliminating the importance of backward compatibility with Sound Blaster)}.
-  
-Creative's soundblaster (Singapore): 11-voice FM synthesizer using the Yamaha YM3812 chip, also known as OPL2. With a DSP (MCS-51) (standing for Digital Sound Processor, not Digital Signal Processor) capable to play back PCM 8-bit monaural sampled sound at up to 23 kHz sampling frequency. An joystick port. Ultimately, Adlib died in 1992 after the failure of their AdLib Gold.
+  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative labs. It was a smart product which clearly came after Adlib dominant position. Not only they were equipped with the same OPL2 chip, prodiving 100\% compatibility with Adlib musics playback, they were technologicaly superior with a DSP\footnote{An Intel MCS-51 market as a "Digital Sound Processor", not "Digital Signal Processor"}  allowing PCM playback (digitized sounds) at 8 bits per sample and 23Hz. The card also came with a DA-15 port allowing connection of a joystick!. That is right: The only way to connect a joystick to a PC was to buy a sound card\footnote{In the late 90s the only way to have a CD-ROM reader was also to buy a soundcard}.\\ 
+\par
+  \bu{Trivia :} The quality of the card would lead the Sound Blaster to become a de-factor standard in the 90s annd bring Adlib to bankrupcy\footnote{The reign of the Sound Blaster came to an end with Windows 95 which standardized the programming interface at application level (eliminating the importance of backward compatibility with Sound Blaster)}.
 
 
   \subsection{Sound Blaster Pro}
+The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but with improved capabilities. In particular it was able to playback highe sampling of PCM and had two PCM channels allowing stereo sounds.
+
 
   \subsection{Disney Sound Source}
-  Plugged into the printer port (parrallel port) of the PC. Covox-idea based DAC, marketed by Disney Software in early 1990s. It consisted of 2 parts: a DAC plugged into printer port and separate amplifier / speaker box.[5] Its price was set to only \$14 and it was supported by many games (see below). It used external power (9 volt battery) and could be turned on/off by software. Contrary to the Speech Thing the output rate is determined by the hardware (7 kHz) and the design features a 16 byte FIFO allowing for autodetection and flow control of the output. In 2015 the hardware was reverse engineered so compatible circuits can be built from easily available off the shelf components.
-
-
-
-
+  Plugged into the printer port (parrallel port) of the PC. Covox-idea based DAC, marketed by Disney Software in early 1990s. It consisted of 2 parts: a DAC plugged into printer port and separate amplifier / speaker box.[5] Its price was set to only \$14 and it was originall ysupported by many games. It used external power (9 volt battery) and could be turned on/off by software. Contrary to the Speech Thing the output rate is determined by the hardware (7 kHz) and the design features a 16 byte FIFO allowing for autodetection and flow control of the output.
+  
 
 
 
