@@ -14,17 +14,37 @@ when the screen transition via fizzling:
 \end{itemize}
 
 
-Dying:\\
-  \begin{figure}[H] \centering \includegraphics[scale=1.0]{imgs/fizzlefade/dying/screenshot_16.png} \end{figure}
-    \begin{figure}[H] \centering \includegraphics[scale=1.0]{imgs/fizzlefade/dying/screenshot_19.png} \end{figure}
-      \begin{figure}[H] \centering \includegraphics[scale=1.0]{imgs/fizzlefade/dying/screenshot_52.png} \end{figure}
-        \begin{figure}[H] \centering \includegraphics[scale=1.0]{imgs/fizzlefade/dying/screenshot_86.png} \end{figure}
 
-Boss:\\
-\begin{figure}[H] \centering \includegraphics[scale=1.0]{imgs/fizzlefade/boss/screenshot_60.png} \end{figure}        
-\begin{figure}[H] \centering \includegraphics[scale=1.0]{imgs/fizzlefade/boss/screenshot_66.png} \end{figure}        
-\begin{figure}[H] \centering \includegraphics[scale=1.0]{imgs/fizzlefade/boss/screenshot_102.png} \end{figure}        
-\begin{figure}[H] \centering \includegraphics[scale=1.0]{imgs/fizzlefade/boss/screenshot_130.png} \end{figure}        
+
+\begin{minipage}{\textwidth}
+\centering
+  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/dying/screenshot_16.png}\\
+  \vspace*{0.5cm}
+  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/dying/screenshot_19.png}\\
+\end{minipage}
+
+\begin{minipage}{\textwidth}
+\centering
+  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/dying/screenshot_52.png} \\
+  \vspace*{0.5cm}
+  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/dying/screenshot_86.png} \\
+\end{minipage}
+
+
+\begin{minipage}{\textwidth}
+\centering
+  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/boss/screenshot_60.png} \\
+  \vspace*{0.5cm}
+  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/boss/screenshot_66.png}  \\
+\end{minipage}
+
+\begin{minipage}{\textwidth}
+\centering
+  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/boss/screenshot_102.png}\\
+\vspace*{0.5cm}
+  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/boss/screenshot_130.png}\\
+\end{minipage}
+
 
 The code responsible for this effect can be found in id\_vh.cpp, function FizzleFade. At first it is not obvious to understand how it works. I consider it to be one of the most beautiful trick of the engine:\\
 \par

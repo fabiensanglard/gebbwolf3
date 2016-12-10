@@ -425,6 +425,21 @@ PCs were connected to CRT monitors: Big, heavy, small diagonal, cathodic ray bas
 \\
 The main issue in this system is that CRT are analogic system while computers are digital. An interface system is needed between the two and it came as a serie of chipsets called "Adapters".
 
+
+\bu{Trivia :} There was no GPU market back then. Since all VGA cards had to be VGA compatible and have 256KB of RAM, most people just bought the cheapeast thing available. Note however that some cards only had a 8 bits ISA bus connector (like the trident below) and some had an ISA 16 bits connector (twice as fast).\\
+\par
+
+\begin{figure}[H] 
+  \centering \includegraphics[width=\textwidth]{imgs/hardware/suntra_trident_tvga8800br.png} 
+  \caption{A Trident 8800  (8 bits ISA). Photo courtesy of \cw{old.vgamuseum.info}.}
+\end{figure}
+\par
+\begin{figure}[H] 
+  \centering 
+  \includegraphics[width=\textwidth]{imgs/hardware/diamond_stealth_vram_revb2.png} 
+  \caption{A Diamond Stealth (16 bits ISA). Photo courtesy of \cw{old.vgamuseum.info}.}
+\end{figure}
+
   \subsection{History}
 
 The first adapter of the family was released in 1981. The Monochrome Display
@@ -700,6 +715,8 @@ Even though adoption was improving, a fast majority of PCs had no sound cards wh
 
   \subsection{AdLib}
   Started by Martin Prevel, a former professor of music in 1988. After an initial struggle to convince game developers to use their card, Adlib had convinced Sierra On-Line to support their hardware for their lates title: King's Quest IV (over 3 million copies sold). Soon, all game developers embraced the Adlib. Equipped with a Yamaha YM3812 also known as the OPL2 the card can produce 9 channels of sound, each made of two oscillators or 6 channels with 5 percussion instruments available. The FM synthetiser was limited but allowed to play pleasant musics.\\
+  \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/hardware/adlib.png} \end{figure}
+   \bu{Trivia :} Notice the 8 bits ISA bus connector at the bottom.
 \par
 \bu{Trivia :} Canadian company and especially Quebec were very innovative in the early 90s. Ad Lib manufactured Sound Card, Matrox made a killing with Millenium Graphic Card, Watcom a compiler. ATI\footnote{History would repeat itself in the late 90s in the field of Graphic Cards: Nvidia Vs ATI} would later emerge as AAA GPU manufacturer in the years 2000.\\
   
@@ -709,16 +726,23 @@ Even though adoption was improving, a fast majority of PCs had no sound cards wh
   \subsection{Sound Blaster}
   The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative labs. It was a smart product which clearly came after Adlib dominant position. Not only they were equipped with the same OPL2 chip, prodiving 100\% compatibility with Adlib musics playback, they were technologicaly superior with a DSP\footnote{An Intel MCS-51 market as a "Digital Sound Processor", not "Digital Signal Processor"}  allowing PCM playback (digitized sounds) at 8 bits per sample and 23Hz. The card also came with a DA-15 port allowing connection of a joystick!. That is right: The only way to connect a joystick to a PC was to buy a sound card\footnote{In the late 90s the only way to have a CD-ROM reader was also to buy a soundcard}.\\ 
 \par
+
+\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/hardware/sb.png} \end{figure}
+\bu{Trivia :} Notice the 8 bits ISA bus connector at the bottom.\\
   \bu{Trivia :} The quality of the card would lead the Sound Blaster to become a de-factor standard in the 90s annd bring Adlib to bankrupcy\footnote{The reign of the Sound Blaster came to an end with Windows 95 which standardized the programming interface at application level (eliminating the importance of backward compatibility with Sound Blaster)}.
 
 
   \subsection{Sound Blaster Pro}
-The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but with improved capabilities. In particular it was able to playback highe sampling of PCM and had two PCM channels allowing stereo sounds.
+The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but also supported faster digital input and output sampling rates (up to 22.05 kHz stereo or 44.1 kHz mono), added a "mixer" to provide a crude master volume control (the round thing on the picture), and a crude high pass or low pass filter. It used a pair of YM3812 chips to provide stereo music-synthesis (one for each channel).\\
+\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/hardware/sbpro.png} \end{figure}
+\bu{Trivia :} The card appears to have a 16 bits ISA bus connector (check the difference with Sound Blaster 1.0. However it does not have 'fingers' for data transfer on the higher "AT" portion of the bus connector. It uses the 16-bit extension to the ISA bus to provide the user with an additional choice for an IRQ (10) and DMA (0)m channel only found on the 16-bit portion of the edge connector.)\\
+\bu{Trivia :} Notice on the very left of the card in black a CD-ROM interface. The only way to connect a CD-ROM to a PC back then.
 
 
   \subsection{Disney Sound Source}
-  Plugged into the printer port (parrallel port) of the PC. Covox-idea based DAC, marketed by Disney Software in early 1990s. It consisted of 2 parts: a DAC plugged into printer port and separate amplifier / speaker box.[5] Its price was set to only \$14 and it was originall ysupported by many games. It used external power (9 volt battery) and could be turned on/off by software. Contrary to the Speech Thing the output rate is determined by the hardware (7 kHz) and the design features a 16 byte FIFO allowing for autodetection and flow control of the output.
-  
+  Plugged into the printer port (parrallel port) of the PC. Covox-idea based DAC, marketed by Disney Software in early 1990s. It consisted of 2 parts: a DAC plugged into printer port and separate amplifier / speaker box.[5] Its price was set to only \$14 and it was originall ysupported by many games. It used external power (9 volt battery) and could be turned on/off by software. Contrary to the Speech Thing the output rate is determined by the hardware (7 kHz) and the design features a 16 byte FIFO allowing for autodetection and flow control of the output.\\
+  \par
+  \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/hardware/ss.png} \end{figure}
 
 
 
