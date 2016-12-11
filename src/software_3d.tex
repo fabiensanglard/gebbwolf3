@@ -1063,73 +1063,49 @@ Using pages of 80*208 result in page 0 at 0x0000, page 1 at 0x4100 and page 2 at
 
 
 
-\subsection{I.A: State Machines}
-The 3D engine not only draw things, it also allows all objects to "think". All I.A is hardcoded in \cw{WL\_STATE.C}.\\ Enemies react to noise, sight or proximity.
+\subsection{A.I}
+The 3D engine not only draw things, it also allows all objects to "think": Those thinking objects are called "actors" and help to keep the game exciting and improve immersion. If enemies are too predictable and easy to defeat the game is boring. The designer and programmers worked in tandom on this one: The engine maintains a stae machine for each thinker but it also relies heavily on hints and clues on the map provided by the designers.\\
+\par
+
+
+
+
+
+
+
+"Actors" are what make Woflenstein3D exciting. They can be agressive, they can be sneaky and they can be dumb (like when they are a door). Without them the game would be a beautiful and boring maze. The game designer and developers did a great job.\\
+\par
+In the engine, an actor is a state machine with four states:
+\begin{itemize}
+\item Standing
+\item Attack
+\item Pursuit
+\item Retreat
+\end{itemize}
 \par
 TODO: Draw a state machine of a guard, starting at \cw{T\_Stand} and moving to \cw{SightPlayer}, \cw{T\_Attack}.
 \par
-Closely tied to sound system: Enemy responding to audio clue are deemed smarter!!\\
-Defined in WL\_ACT2.c\\
-Normal, standing guard\\
-Walking guard\\
-Deaf guard\\
+What makes enemies interesting to interact with is how the go from standing to being agressive. They have three ways to detect the player:\\
+\begin{itemize}
+\item Proximity
+\item Vision
+\item Sound
+\end{itemize}
+By far the sound is the most important and what makes the player feel like the A.I is smart. Sound propagation has always been well done in id Software engines (from wolf to doom3) yet received little coverage.
 
-Planes:
-=Ambush tile: enemy placed ohere are deaf to all attacks (normal enemy responds immediately to sound).\\
-An ambush tile-affected enemy is not blind but attack playe but won't react to dead soldiers or dogs.\\
-
-
-\par
-\begin{figure}[H]
- \centering
- \includegraphics[width=\textwidth]{imgs/ambush/map_unknown.png}
-\end{figure}
-\par
-
-\par
-\begin{figure}[H]
- \centering
- \includegraphics[width=.5\textwidth]{imgs/ambush/map_unknown_drawing.png}
-\end{figure}
-\par
-
-\par
-\begin{figure}[H]
- \centering
- \includegraphics[width=\textwidth]{imgs/ambush/map_ambushed.png}
-\end{figure}
-\par
-
-\par
-\begin{figure}[H]
- \centering
- \includegraphics[width=.5\textwidth]{imgs/ambush/map_ambushed_drawing.png}
-\end{figure}
-\par
-
-
-
-\begin{fancyquotes}
-Each enemy is given specific orders which dictate his actions once he knows of your presence. Some are ordered to immediately attack, while others are trained to act only upon visual contact.
- \bigskip \\
-\bigskip \\
-\textbf{Kevin Cloud. The Official Hint Manual for Wolfenstein 3D}
- \end{fancyquotes}
-
-\par
-How does sound travel between areas ? If a door is open, and a fire is shot, enemies in other room will come.\\
-areabyplayer connect players\\
-\par
+\subsubsection{Patrolling}
 I/A also faked with map waypoint for patrolling.\\
-\subsection{I.A: Firing}
-\subsection{I.A: Decision making}
-\subsection{I.A: Detecting the player}
-proximity\\
-sight\\
-sound\\
-\subsection{I.A: Pursuit and openind doors}
 
-\subsection{Sound propagation}
+
+
+
+
+
+
+
+\subsubsection{Sound propagation reaction}
+Early one the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience. The engine takes care of it in a simple and resource efficient way: Maps are preprocessed, with each room defining an area. At runtime, the engine keeps track of what door opens and what door closes and maintains a matrix of portal connecting areas.
+Knowing if an ememy can hear the main character gunfire is a simple lookup in a table.
 
 \par
 \begin{figure}[H]
@@ -1159,6 +1135,74 @@ sound\\
 \end{figure}
 \par
 
+
+
+
+
+
+
+
+
+However this is a simple model. When a gun is fired, all enemies which could hear it will shout "Achtung!" (Attention!") and converge toward the origin of the sound. That would get old pretty fast. So the designers introduced a little hack that goes a long way.
+
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/ambush/map_unknown.png}
+\end{figure}
+\par
+
+\begin{minipage}{.45\textwidth}
+Some tiles in the map can be marked as "AMBUSH" tile. If a guard is standing on it, he will NOT react to sounds. He is deaf. Or smart if you prefer. This is introduced early on in E1M1, the character just neutralized an enemy in a corridor. At this point it has never encountered an ambush so the player assumes the area is clear:\\
+\end{minipage}
+\begin{minipage}{.45\textwidth}
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=.5\textwidth]{imgs/ambush/map_unknown_drawing.png}
+\end{figure}
+\end{minipage}
+
+
+
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/ambush/map_ambushed.png}
+\end{figure}
+\par
+
+
+\begin{minipage}{.45\textwidth}
+So the player will relax and either go straight to the door or maybe go left (or worse: right) to see what is in these corners. And bam: AMBUSH.
+\end{minipage}
+\begin{minipage}{.45\textwidth}
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=.5\textwidth]{imgs/ambush/map_ambushed_drawing.png}
+\end{figure}
+\end{minipage}
+
+\par
+This is probably one of the cheapest feature in the engine which yet resulted in what most would agree is the soul of the game: Immersion.\\
+\par
+
+\bu{Trivia :} The ambush behavior is explained in the Hint Book as follow:\\
+\par
+\begin{fancyquotes}
+Each enemy is given specific orders which dictate his actions once he knows of your presence. Some are ordered to immediately attack, while others are trained to act only upon visual contact.
+ \bigskip \\
+\bigskip \\
+\textbf{Kevin Cloud. The Official Hint Manual for Wolfenstein 3D}
+ \end{fancyquotes}
+
+\bu{Trivia :} Bug or dedication to ambush, a guard on a n AMBUSH tile will react ONLY to the player sight. Seeing an other actor die in front of him will not activate him.\\
+
+\subsubsection{Vision reaction}
+\subsubsection{Proximity reaction}
+\subsection{Pursuit and opening doors}
+
+\subsubsection{Firing at player}
 
 
 
