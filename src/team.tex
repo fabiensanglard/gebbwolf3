@@ -49,14 +49,14 @@ Considering the magnitude and ambitions of the title, four more people were adde
   \textbf{Name} &  \textbf{Age} & \textbf{Occupation} \\
   \toprule 
    Jay Wilbur & ?? &  Business\\
-   Kevin Cloud & 27 &  Computer Artist\\
+   Kevin Cloud\footnote{Jay and Kevin were recruited on April 1st, 1992 but were still given credits for participating to the game development.} & 27 &  Computer Artist\\
    Robert Prince & ?? &  Composer\\
    Jason Blochowiak & ?? &   Programming\\
      \toprule
 \end{tabularx}
 \caption{id Software hires.}\label{fig:Id Software hires}
 \end{figure}
-\note{TODO Ask team members if they know how old were Jay, boddy, robert and Jason}
+\note{TODO Ask team members if they know how old were Jay, Bobby, Robert and Jason}
 \begin{fancyquotes}
 Jason was part of Id at the start, but we parted ways during Wolf development.
  \bigskip \\
@@ -69,7 +69,7 @@ which ultimately led to the purchase of a Next Color ColorStation.}
   \shadowbox{
       \includegraphics[width=\textwidth]{imgs/idTeam_team_pants.png}
   }  
-\caption{id software team circa 1993 as show from Wolfenstein 3D.}
+\caption{The team as it appears in Wolfenstein 3D credit screen.}
 \label{fig:id_team_1993}
 \end{figure}
  
@@ -82,7 +82,29 @@ which ultimately led to the purchase of a Next Color ColorStation.}
 \label{fig:id_team_1993}
 \end{figure}
 
-Every member was working with an high end 386-DX 33Mhz. As for combining engine, tools and assets:\\
+
+Development took seven months (from November 1991 to May 1992) during which id Software was located in Madison, WI
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{map/usa-id-software.eps}
+ \end{figure}
+
+\section{Office layout}
+The full team was working in one room which allowed fast communication (and a lot of noise disturbance given John Romero and Tom Halls type of interaction.). Notice on the upper floor, the SNES where countless games of F-Zero where played and the Donjon \& Dragons area extensively mentioned in "Masters of Doom" book.
+The team was setup as follow\footnote{Since they played Dungeons \& Dragons a lot, the map is drawn D\&D style.}:
+\par
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{map/id-software-office-madison_bottom_floor.eps}
+ \caption{Office bottom floor.} 
+\end{figure}
+\par
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{map/id-software-office-madison_top_floor.eps}
+ \caption{Office top floor.} 
+\end{figure}
+Of all the team members, John Carmack enjoyed the shortest commute! Everybody was working with an high end 386-DX 33Mhz. As for combining engine, tools and assets:\\
 
  \begin{fancyquotes}
 We started with floppy data transfer, but we had a Novell network on coax Ethernet by the end. We didn't have a version control system.  Surprisingly, we went all the way to Quake 3 without one, then we started using Visual Source Safe.\\
@@ -96,16 +118,21 @@ We started with floppy data transfer, but we had a Novell network on coax Ethern
 
 
 
-During Wold3D development (from November 1991 to May 1992: Roughly six months), id Software was located in Madison, WI
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{map/usa-id-software.eps}
- \end{figure}
 
 
-\par
-TODO: Summarize all tools used by name\\
-\par
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -135,13 +162,13 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA mode 13h and 4h (See figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting segment. This allows to plug two graphic cards in the PC: One in monochrome text and the other one in regular VGA. This allows a developer to debug the game engine in real-time.\\
+You may have noticed in the listing of VGA mode 13h and 4h (See figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting VRAM address. This allows for a neat trick where you plug two graphic cards in the PC: One in monochrome text picking up data at 0xB000 and the other one VGA picking up  data at 0xA000. This allows a developer to debug the game engine in real-time.\\
 \begin{figure}[H]
 \centering
   \shadowbox{
       \includegraphics[width=\textwidth]{screenshots/wolf_screen1.png}
   }  
-\caption{Dual-monitor: Screen 1.}
+\caption{Monitor 1 with Bordland Turbo Debugger 386}
 \label{fig:dm1}
 \end{figure}
 
@@ -150,7 +177,7 @@ You may have noticed in the listing of VGA mode 13h and 4h (See figure~\ref{fig:
   \shadowbox{
       \includegraphics[width=\textwidth]{screenshots/wolf_screen2.png}
   }  
-\caption{Dual-monitor: Screen 2.}
+\caption{Monitor 2 running the game as normal}
 \label{fig:dm1}
 \end{figure}
 
@@ -169,7 +196,7 @@ The graphic assets are divided as follow:
 \item 2D Menus items (pictures).
 \item 3D Action phase items (walls and sprites).
 \end{itemize}
-Those were the work of Adrian Carmack and Kevin Cloud. All of the work was done with Deluxe Paint (from Electronic Arts) on high-end 386 DX computers. 
+Those were the work of Adrian Carmack\cw{Kevin Cloud did a few textures and also worked on the design and layout of the Wofenstein 3D Hint book published eventually.}. All of the work was done with Deluxe Paint (from Electronic Arts) and saved to LBM files (Deluxe Paint format). 
 
 \begin{figure}[H]
   \centering
@@ -179,21 +206,38 @@ Those were the work of Adrian Carmack and Kevin Cloud. All of the work was done 
 
 
 
-Since the VGA is palette based (colors a not specific via RBG but by indices pointing to a pallete), the most difficult task was not to draw everything but to make the key decision of what colors would go in the palette\footnote{Some games (such as Monkey island) used many palettes depending on the section of the game but id went for a simple solution: One palette for the whole game.}.\\
+Since the VGA is palette based (colors a not specified via 24-bits RBG but by indices pointing to a palette) the creative process was difficult. The artist had first to make the key decision of what colors would go in the palette\footnote{Some games (such as Monkey island) used many palettes depending on the section of the game but id went for a simple solution: One palette for the whole game.} and then draw everything with only these colors.\\
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/palette.png}
- \caption{The Game palette: Horizontal from 0x00 to 0x0F, vertical from 0x00 to 0xF0. The blue gradiant starts at 0xF00 and ends at 0xFE. 0xFF (represented in pink) is transparent color and always skipped during rendition.}
+ 
 \end{figure}
+Above: the Game palette with Horizontal from 0x00 to 0x0F, vertical from 0x00 to 0xF0. The blue gradient starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is transparent color and always skipped during rendition.\\
+\par
 
-All assets were hand drawn and artist had to factor in how the framebuffer would be streched onto the screen due to non-square pixels.:\\
+All assets were hand drawn and artist had to factor in how the framebuffer would be stretched onto the screen due to non-square pixels.:\\
+\par
 \begin{fancyquotes}
 We didn't have any scanning tools at the time.\\
 \\
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-I was unable to get in touch with Adrian Carmack or Kevin Cloud but I would have loved to know if they have some sort of stylus or if they were just very good with a mouse.\\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Asset workflow}
 Once all the Deluxe Paint images were ready, a tool, IGRAB-ED, packed all the ILBMs files and generated a C header file:. The program could reference an asset directly by using its macro.\\
@@ -207,13 +251,13 @@ Once all the Deluxe Paint images were ready, a tool, IGRAB-ED, packed all the IL
  \lstinputlisting[language=C]{code/assets_header.c}\par
  \end{minipage}
  
- In the engine, assets usage were "hardcoded" via the enum. This way to work was efficient: Once the name was used in the engine, the assets would be changed and repackaged thanks to the enum indirection layer:\\
+ In the engine, assets usage were "hardcoded" via the enum. Thanks to this indirection layer, the assets could be used in the engine yet nothing would have to be changed if the order of the assets changed in the \cw{VGA*} archives:\\
  \par
  \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/assets_usage.c}\par
  \end{minipage}
-
-\textbf{\underline{Trivia :}} This system let to issues when the source code was released: The header provided did not match the asset file from the shareware or early version of Wolfenstein 3D: The header released were from Spears of Destiny. You can see the kind of graphic mess this let to in the appendix "Let's compile like it is 1994".\\
+\par
+\textbf{\underline{Trivia :}} This system let to issues when the source code was released: The \cw{.h} header files provided did not match the asset file from the shareware or early version of Wolfenstein 3D: The header released were from Spears of Destiny. You can see the kind of graphic mess this let to in the appendix "Let's compile like it is 1994".\\
 
 
 
@@ -222,7 +266,7 @@ Once all the Deluxe Paint images were ready, a tool, IGRAB-ED, packed all the IL
 \bu{Trivia :} "The Official Hint Manual for Wolfesnteind 3D" published in 1992 contains many drawing from Tom Hall and shows many behind the scene sketches made by Tom Halls and pixel arted by the graphic team.\\
 \par
  \begin{fancyquotes}
-When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a sketches for Adrian Carmck. Below are some of Tom's early design for the title screen. The third sketch was chosen.\\
+When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a sketches for Adrian Carmack. Below are some of Tom's early design for the title screen. The third sketch was chosen.\\
 \end{fancyquotes}
 \end{minipage}
 \begin{minipage}{0.3\textwidth}
@@ -242,35 +286,29 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
  \includegraphics[width=.7\textwidth]{imgs/sprites/woldf3d.png}
 \end{figure} 
 
-\footnotetext{The manual was entirely designed on a NeXT ColorStation. It was the only usage of NeXT for wolfenstein 3D (they purchased it in december 1991).}
+\footnotetext{The manual was entirely designed on a NeXT ColorStation. It was the only usage of NeXT for Wolfenstein 3D (they purchased it in december 1991).}
 
-    \begin{minipage}{.48\textwidth}
+
+\begin{figure}[H]
+\centering    
      \includegraphics[width=\textwidth]{imgs/tom_hall_sketch_adolf.png}
-  \end{minipage}
-      \begin{minipage}{.48\textwidth}
-     \includegraphics[width=\textwidth]{imgs/sprites/adolf.png}
-  \end{minipage}
+   \end{figure}
 
-     \begin{minipage}{.48\textwidth}
+     \begin{figure}[H]
+\centering
      \includegraphics[width=\textwidth]{imgs/tom_hall_sketch_dr_schabbs.png}
-  \end{minipage}
-      \begin{minipage}{.48\textwidth}
-     \includegraphics[width=\textwidth]{imgs/sprites/schabbs.png}
-  \end{minipage}
-
-
-
+   \end{figure}
  
-   \begin{figure}[H]
+  \begin{figure}[H]
 \centering
  \includegraphics[scale=0.8]{imgs/tom_hall_sketch_gretel.png}\\
-\end{figure}
-      \begin{minipage}{.48\textwidth}
-     \includegraphics[width=\textwidth]{imgs/sprites/hans_grosse.png}
-  \end{minipage}
-      \begin{minipage}{.48\textwidth}
-     \includegraphics[width=\textwidth]{imgs/sprites/gretel_hanse.png}
-  \end{minipage}
+ \end{figure}
+
+
+
+
+
+
 
 
       \begin{minipage}{.48\textwidth}
@@ -285,7 +323,7 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
   \end{minipage}
       \begin{minipage}{.48\textwidth}
      \includegraphics[width=\textwidth]{imgs/sprites/giftmacher.png}
-  \end{minipage}
+  \end{minipage}\\
 
 \par 
 The hint manual also contains several photos of the team back in the days. Go check it out!
@@ -303,7 +341,7 @@ The hint manual also contains several photos of the team back in the days. Go ch
 
 
 \section{Maps}
-Maps were created using the in-house editor called TED5 which is short for Tile EDitor. TED was not create specialy for wolf: It was actually used for Commander Keen serie (yes: a platform scroller).\\
+Maps were created using the in-house editor called TED5 which is short for Tile EDitor. TED was not create specially for wolf: It was actually created way back during Commander Keen serie (yes: a platform scroller) and improved over the years.\\
 
  \begin{figure}[H]
 \centering
@@ -318,7 +356,7 @@ Maps were created using the in-house editor called TED5 which is short for Tile 
  \caption{TED used for top view level design} 
  \end{figure}
 
-Since they had been using it for years, the entire team was proficient with TED. It allowed id to make many levels within a small amount of time:\\
+Reusing TED was a double win: It saved tool development time and since all team members had been using it for years, they were all proficient with it: No need to learn it. TED5 allowed id to make many levels within a small amount of time:\\
 \par
 
  \begin{fancyquotes}
@@ -327,7 +365,7 @@ After talking with Romero and Tom, Scott learned that it was taking the group on
  \textbf{- Masters of Doom}
  \end{fancyquotes}\\
 
-When the engine was licensed to Apogee for Rise of The Triad, TED5 was also used. Tom Halls wrote about it and you can find his comment in the Appendix section.
+\bu{Trivia :} When the engine was licensed to Apogee for Rise of The Triad, TED5 was also used. Tom Halls wrote about it and you can find his comment in the Appendix section.\\
 \par
 Everybody worked a little bit on the map but those were mostly the work of John Romero and Tom Hall.\\
 \par
@@ -361,7 +399,7 @@ anywhere.\\
 
 
 \section{Business}
-I was unable to get in touch with Jay Wilbur. Little is known...for now :) !\\
+WIP\\
 
 
 
@@ -376,18 +414,18 @@ I was unable to get in touch with Jay Wilbur. Little is known...for now :) !\\
 
 
 
-\section{Sounds and Musics}
-As we say in the hardware section, the audio hardware was of decent quality but highy fragmented. id decided to support four sound cards and the default PC speaker. Which meant generating assets multiple times and packed togeter with MUSE into AUDIOT:\\
+\section{Audio}
+
+\subsection{Sounds}
+As mentioned in the hardware section, the audio hardware was highly fragmented. id decided to support four sound cards and the default PC speaker. Which meant generating assets multiple times for each hardware and pack them together with an in-house too called MUSE into AUDIOT archives (an id software proprietary format):\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/muse.png}
  \end{figure}
  \par
-Music compatible with all 
 
-TODO: Drawing of AUDIOT format (compressed with huffman) with pc speaker and adlib sound effects effects.
-
-All this work was done by Robert Prince.:\\
+\subsection{Music}
+All composition was done by Robert Prince:\\
 \par
  \begin{fancyquotes}
 In the early days of the OPL soundcards, the "gold standard" sequencing software was Sequencer Plus Gold ("SPG") by Voyetra. The reason for this was it had an OPL instrument/instrument bank editor.\\
@@ -402,15 +440,12 @@ To rough out compositions, I used Cakewalk ("CW"). I had been using it for sever
   \shadowbox{
       \includegraphics[width=\textwidth]{imgs/music_editor.png}
   }  
-\caption{Bordland C++ 3.1 editor}
+\caption{Sequencer Plus Gold ("SPG") by Voyetra}
 \end{figure}
 
 
-Because Sound Blaster was trying to overtake Adlib, it shipped with the same yamaha processor. Music only had to be in IMF format. But sound effects had to be in three: PC Speaker, adlib and digitized (in VSWAP).
 
-
-
-\bu{Trivia :} Bobby's initiative or id request, in Episode 3 the music playing features a hidden Morse coded message. "To Big Bad Wolf. De Little Red Riding Hood. Eliminate Hitler. Imperative. Complete mission within 24 hours. Out.". The end boss of this episode indeed is Hitler in a Mech suit (see hint drawing).
+\bu{Trivia :} In Episode 3 the music playing features a hidden Morse coded message. "To Big Bad Wolf. De Little Red Riding Hood. Eliminate Hitler. Imperative. Complete mission within 24 hours. Out.". The end boss of this episode indeed is Hitler in a Mech suit (see hint drawing).
 
 
 
@@ -422,10 +457,7 @@ Because Sound Blaster was trying to overtake Adlib, it shipped with the same yam
 
 
 
-\section{Office layout}
-The team was setup as follow\footnote{Since they played Dungeons \& Dragons a lot, the map is drawn D\&D style.}:
-\par
-TODO: Insert map of the office as soon as john romero sends it.
+
 
 
 
@@ -443,7 +475,19 @@ TODO: Insert map of the office as soon as john romero sends it.
 
 
 \section{Results}
-The engine took six weeks to program. TED5 was constantly updated for the six months assets and maps design iterated. The game shipped as follow:
+The game distribution model was shareware: The game engine with the first episode of the game was given for free and encouraged to be copied and distributed to the maximum number of peoples. To get the five other episodes, player had to mail \$50 by mail:\\
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/shareware.png}
+ \caption{User exits the game: A message explains how to get the full version.}
+ \end{figure}
+
+\end{document}
+\par
+It was paramount to make the game easy to copy. In 1991, Internet was still in its infancy and the best medium was the  3\nicefrac{1}{2}-inch floppy. A particular attention to the size of the package was given. All assets combined accounted for 1,204KB but everything was compressed to 645KB (a 3\nicefrac{1}{2}-inch floppy can store 720KB). The full six episodes fit on two disks. Spears of Destiny would fit on three disks.
+The game shipped as follow:\\
+\par
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/result.png}
@@ -453,7 +497,7 @@ The engine took six weeks to program. TED5 was constantly updated for the six mo
  The files shipped can be divided in five parts:
  \begin{itemize}
  \item WOLF3D.EXE: The Game engine.
- \item VSWAP.WL1: Contains all the assets needed during 3D action phases.
+ \item VSWAP.WL1: Contains all the assets (sprites,textures, digitized effects) needed during 3D action phases.
  \item Music files:
      \begin{itemize}
      \item AUDIOHED.WL1 : Index to payload in \cw{AUDIOT} file.
@@ -462,7 +506,7 @@ The engine took six weeks to program. TED5 was constantly updated for the six mo
 \item Maps:
      \begin{itemize}
      \item MAPHEAD.WL1 : Index into \cw{GAMEMAPS} file.
-      \item GAMEMAPS.WL1 : Map payloads.
+      \item GAMEMAPS.WL1 : Compressed Map payloads.
       \end{itemize}
 \item Pictures for 2D menus:
     \begin{itemize} 
@@ -483,21 +527,11 @@ The engine took six weeks to program. TED5 was constantly updated for the six mo
 \item SOD: Spear of Destiny.
 \end{itemize}
  
-\par
- The engine was very tiny and only used 94KB (of it was 64KB dedicated to the Signon screen and 768B for the palette) which means the engine was only 29KB of code.\\
+\subsection{Engine}
+ The engine is very tiny and only occupy 94KB (with 64KB dedicated to the Signon screen and 768B for the palette) which means the engine is in fact only 29KB of code.\\
  \par
- All assets combined compressed accounted for 1,207KB.\\
- \par
- Everything was compressed to 645KB to fit on a 3\nicefrac{1}{2}-inch floppy (these could store 720KB). To make the game fit on one disk was very important given the distribution model
- of the game (shareware) which encouraged people to copy the game and give it to as many people as possible (the game shipped with only one episode, to get the five others
- one had to mail money. The full six episodes fit on two disks. Spears of Destiny would fit on three disks).
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/shareware.png}
- \caption{User exits the game and return to DOS. A message explains how to get the full version: Mail money.}
- \end{figure}
+ 
 
-\end{document}
 
 
 
