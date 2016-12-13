@@ -1,7 +1,6 @@
 mkdir output
-cd src/imgs
+cd src
 find . -name "*.eps" -exec epstopdf '{}' \;
-cd ..
 pdflatex -output-directory ../output book.tex
 cd ..
 cp output/book.pdf build/book.pdf
