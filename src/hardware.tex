@@ -663,15 +663,23 @@ If they picked this mode, pixels artists had to factor-in that deformation.\\
 
 
 \subsection{The importance of doublebuffer: Avoid tearing}
-Is it a big deal to have only one buffer in all the VGA modes described? Yes and very much so! With only one buffer the software has to work exactly at the frequency of the CRT (70Hz). Otherwise a phenomenon known as "tearing" appears. Let's take the example of a software rendering a circle moving from the left to the right:
+Is it a big deal to have only one buffer in all the VGA modes described? Yes and very much so! With only one buffer the software has to work exactly at the frequency of the CRT (70Hz). Otherwise a phenomenon known as "tearing" appears. Let's take the example of an animation rendering a circle moving from the left to the right:
 \par
- \begin{figure}[H]
+\begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/double_buffer_explained.png}
- \end{figure}
+\includegraphics[width=\textwidth]{imgs/doublebuffer_before.eps}
+\end{figure}
 \par
-If the engine updates the framebuffer while the CRT is drawing it (a.k.a: While the circle is moving), the visual result will be a composite of two frames. Hence the "cutting" visual artifact.
-
+In this example the CPU has finished writing the framebuffer (on the left) and the CRT (on the right) electron bean has started to scan it onto the screen. At this point in time the electron bean has scanned half the framebuffer and therefore the circle has been partially drawn on the screen.
+\par
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imgs/doublebuffer_after.eps}
+\end{figure}
+\par
+But if the CPU is fast eonugh (faster than 70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here: The next frame was drawn with the circle moved to the right. The electron bean did not know what and just kept on scanning the framebuffer. The result on screen is now a composite of two frames: It looks like two frames were torn and tapped together. Hence the name "tearing".\\
+\par
+With two buffers (a.k.a double buffering) the CPU can start writing in the second framebuffer without messing with the framebuffer being scanned to the screen\footnote{Now the CPU is capped by the CRT refresh rate. Triple buffering can solve this at the price of frame latency.}. No more tearing!
 
 
 
