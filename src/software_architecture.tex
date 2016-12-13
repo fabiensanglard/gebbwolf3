@@ -4,7 +4,7 @@
 The game engine source code was released on July 21st, 1995. Twenty years later it is still there on id software's ftp\footnote{Transfer File Protocol (along with Finger where J.C.Carmack used to blog) was commonly used in the 90s in the blessed time where you did not have to encrypt everything on the wire.}:\\ 
 \\\codeword{ftp://ftp.idsoftware.com/idstuff/source/wolfsrc.zip}.\\
 \\
-\bu{Trivia :} Before the times of nmap, WireShark and various eavesdropping techniques, FTP\footnote{File Transfer Protocol} was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
+\bu{Trivia :} Before the times of nmap, WireShark and various eavesdropping techniques, FTP was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
 
 \section{First Contact}
 The file \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical nowadays. You can deflate it with:\\
@@ -12,29 +12,47 @@ The file \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive.
 \par
 A few quick stats:\\
 
-\begin{minipage}{\textwidth}
-\begin{verbatim}
-wolfsrc\$ cloc-1.64.pl .
-
-      96 text files.
-      94 unique files.                              
-      27 files ignored.
-
----------------------------------------------------------------------
-Language           files          blank        comment           code
----------------------------------------------------------------------
-C++                   26           5750           6201          21169
-C/C++ Header          42            802            660           3900
-Assembly              10            669            732           2150
-DOS Batch              1              1              0              4
----------------------------------------------------------------------
-SUM:                  79           7222           7593          27223
----------------------------------------------------------------------
-\end{verbatim}
-\end{minipage}
-Twenty seven thousands lines of code. By 2016 standard it is very little. The game is written 90\% in C.\\
 \par
-TODO: Include lines of code other programs, with chart for comparaison\\
+\begin{minipage}{\textwidth}
+\lstinputlisting{code/cloc.txt}
+\end{minipage}
+
+\par
+Twenty seven thousands lines of code which by 2016 standard it is very little. The game is written 90\% in C (id Software would not switch to C++ until Doom 3 around 2000).\\
+\par
+\begin{figure}[H]
+\centering
+  \begin{tikzpicture}[font=\small]
+    \begin{axis}[
+      width=\textwidth,
+      height=0.6\textwidth,
+      ybar=0.6\textwidth,
+      bar width=20pt,
+      ylabel={Lines of Code},
+      ymin=0,
+      ytick=\empty,
+      xtick=data,
+      axis x line=bottom,
+      axis y line=left,
+      enlarge x limits=0.11,
+      symbolic x coords={Wolf 3D,Doom,Quake,Quake 2,Quake 3, Doom 3},
+      xticklabel style={},
+      yticklabel style={},
+      nodes near coords={\pgfmathprintnumber[fixed,precision=0]\pgfplotspointmeta}
+    ]
+      \addplot[fill=black!20,draw=black] coordinates {
+        (Wolf 3D,27223)
+        (Doom,57000)
+        (Quake,100000)
+        (Quake 2, 138240)
+        (Quake 3, 341994)
+        (Doom 3, 601047)
+      };
+    \end{axis}
+   \end{tikzpicture}
+   \caption{Line of codes from id Software game engines.}
+ \end{figure}
+ 
 \par
 
  \begin{fancyquotes}
@@ -490,6 +508,7 @@ An other example during a 3D sequence
  \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
  \par
+
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/vga_layout/wolf3d_7_bank.png}
