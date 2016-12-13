@@ -660,13 +660,13 @@ framebuffer to the CRT.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{imgs/circleframebuffer.eps}
+  \includegraphics[width=\textwidth]{imgs/circleframebuffer.png}
   \caption{Drawing a circle in the framebuffer}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{imgs/circlescreen.eps}
+  \includegraphics[width=\textwidth]{imgs/circlescreen.png}
   \caption{How the framebuffer looked once stretched on the CRT monitor :( !}
 \end{figure}
 \par
@@ -692,7 +692,7 @@ In this example the CPU has finished writing the framebuffer (on the left) and t
 \par
 But if the CPU is fast eonugh (faster than 70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here: The next frame was drawn with the circle moved to the right. The electron bean did not know what and just kept on scanning the framebuffer. The result on screen is now a composite of two frames: It looks like two frames were torn and tapped together. Hence the name "tearing".\\
 \par
-With two buffers (a.k.a double buffering) the CPU can start writing in the second framebuffer without messing with the framebuffer being scanned to the screen\footnote{Now the CPU is capped by the CRT refresh rate. Triple buffering can solve this at the price of frame latency.}. No more tearing!
+With two buffers (a.k.a double buffering) the CPU can start writing in the second framebuffer without messing with the framebuffer being scanned to the screen\footnote{Now the CPU speed is capped by the CRT refresh rate. Triple buffering can solve this at the price of frame latency.}. No more tearing!
 
 
 
