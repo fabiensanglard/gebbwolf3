@@ -439,10 +439,10 @@ Abstract interaction with joystick keyboard and mouse. Features a lot of boring 
 
 
 
-\section{Solving the VGA}\label{SetupPages}
-An important problem left open in the Hardware chapter, is the video output: None of the VGA modes described in the user manual are suited for a game engine. The more important being double buffer to avoid tearing.\\
+\section{Engine Startup}\label{SetupPages}
+As the engine starts up, it deals with an important problem left open in the Hardware chapter: the video output. None of the VGA modes offered by the BIOS are suited for a game engine. The more important being double buffering capability.\\
 
- The most appealing one (13h) offers a single framebuffer at a resolution of 320x200 with 256 indexed colors...which is not even square pixels (the 320x200 framebuffer is stretched to 320x240 on the CRT screen). Nothing can be done about the non square pixels but luckily something that can be done about the absence of double buffering:\\
+ The most appealing one (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. Nothing can be done about the non square pixels but something can be done about the absence of double buffering.\\
 \par
  In mode 13h, the VGA circuitry automatically maps the 16K address space to the four VGA banks. It is called "chaining" and even though it wastes 75\% of the RAM it offers a linear framebuffer to the developer.\\
  \par
