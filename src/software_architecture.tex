@@ -1,16 +1,19 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
 \section{Source Code}
-The game engine source code was released on July 21st, 1995. Twenty years later it is still there on id software's ftp\footnote{Transfer File Protocol (along with Finger where J.C.Carmack used to blog) was commonly used in the 90s in the blessed time where you did not have to encrypt everything on the wire.}:\\ 
+The game engine source code was released on July 21st, 1995. Twenty years later it is still there on id software's ftp\footnote{File Transfer Protocol.}:\\ 
 \\\codeword{ftp://ftp.idsoftware.com/idstuff/source/wolfsrc.zip}.\\
 \\
 \bu{Trivia :} Before the times of nmap, WireShark and various eavesdropping techniques, FTP was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
 
 \section{First Contact}
-The file \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical nowadays. You can deflate it with:\\
-\\\codeword{unzip WOLFSRC.1}.\\
+Once downloaded and decompressed, it turns out the archive \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical now. It is easy to deflate it with:\\
 \par
-A few quick stats:\\
+\begin{minipage}{\textwidth}
+\lstinputlisting{code/unzip.txt}
+\end{minipage}
+\par
+A few quick stats can be gathered with \cw{cloc.py} utility:\\
 
 \par
 \begin{minipage}{\textwidth}
@@ -18,7 +21,7 @@ A few quick stats:\\
 \end{minipage}
 
 \par
-Twenty seven thousands lines of code which by 2016 standard it is very little. The game is written 90\% in C (id Software would not switch to C++ until Doom 3 around 2000).\\
+Twenty seven thousands lines of code which by 2016 standard it is very little. The game is written 90\% in C\footnote{id Software would not switch to C++ until Doom 3 around 2000.}.\\
 \par
 \begin{figure}[H]
 \centering
@@ -43,9 +46,9 @@ Twenty seven thousands lines of code which by 2016 standard it is very little. T
       \addplot[fill=black!20,draw=black] coordinates {
         (Wolf 3D,27223)
         (Doom,57000)
-        (Quake,100000)
+        (Quake,80000)
         (Quake 2, 138240)
-        (Quake 3, 341994)
+        (Quake 3, 233952)
         (Doom 3, 601047)
       };
     \end{axis}
@@ -63,7 +66,7 @@ It's "COLUMN", you dumb @\#\$\% !\\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
  
-The archive actually contains more than just \codeword{.H} (headers) and \codeword{.C} (code) files. Also present are:
+The archive contains more than just \codeword{.H} (headers) and \codeword{.C} (code) files. Also present are:
 \begin{itemize}
 \item \codeword{GOODSTUF.TXT:} Two emails from fans demonstrating the success of the game: An ex-POW and a Microsoft employee.
 \item \codeword{.ASM:} Assembly routines to optimize 3D renderer. Also contains low level routines for I/O.
@@ -95,18 +98,18 @@ The engine can be divided in three blocks:
  \par
 
  
-These three systems are amply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are actually two dimensional designed with square blocks.: e.g, the first level E1M1:\par
+These three systems are amply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are two dimensional designed with square blocks.: e.g, the first level E1M1:\par
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/e1m1.png}
- \caption{The legendary E1M1 viewed from the top as in TED5 (The main character has just neutralized his guard and is in his cell: He is represented here as the green arrow at the bottom of the picture).}
+ \caption{The legendary E1M1 viewed from the top as in TED5 (The main character has just neutralized a guard and is in his cell: He is represented as the green arrow at the bottom of the map).}
 \end{figure}
 \par 
-A 3D dimensional view is faked at runtime:
+A 3D dimensional view of the 2D map is rendered at runtime:
 
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{imgs/ray_caster_explained/beginning.png}
+ \includegraphics[width=\textwidth]{screenshots/wolf3d_7_fullframe.png}
  \caption{As it is rendered at runtime in pseudo-3D from the player point of view.} 
 \end{figure}
 
@@ -118,7 +121,7 @@ A 3D dimensional view is faked at runtime:
  \caption{Complex scene: 320 ray cast.} 
 \end{figure}
 
-Raycasting is simple yet powerful. Even for a complex scene involving multiple door and rooms, it delivers fast intersection. Based on the distance a ray his a wall, a height for a wall is generated, giving an illusion of perspective.
+Raycasting is simple yet powerful. Even for a complex scene involving multiple door and rooms, it delivers fast intersection. Based on the distance a ray hits a wall, a height for that column is generated, giving an illusion of perspective.
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_door.png}
@@ -130,11 +133,25 @@ Raycasting is simple yet powerful. Even for a complex scene involving multiple d
  \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_room.pdf}
  \caption{The 320 rays cast to render the walls in the previous scene.} \label{fig:Raycasting2}
 \end{figure}
+In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
+
+
+
+
+
+
+
 
 
 \subsection{Unrolled loop}
-A quick overview of the engine code lets us see the two renderers (the sound system is interrupt driven and therefore is out of the loop).\\
+Unrolling the code (starting at \cw{int main()} reveals the two renderers in an endless loop (the sound system is interrupt driven and therefore is out of \cw{main}).\\ Before diving into the code, an important precision about data types: Because the game is using Real Mode (emulated 16 bits architecture), C types don't mean what people would expect from a 32 bits architecture:\\
+\par 
+\begin{itemize}
+\item \cw{int} and \cw{word} are 16 bits long.
+\item \cw{long} and \cw{dword} are 32 bits long.
+\end{itemize}
 \par
+
 The main function is very simple:\\
 \par
 \begin{minipage}{\textwidth}
@@ -142,31 +159,26 @@ The main function is very simple:\\
 \end{minipage}
 \par
 
-\cw{Trivia:} Because the game is using Real Mode, C types don't mean what people would expect from a 32 bits system: 
-\begin{itemize}
-\item \cw{int} and \cw{word} are 16 bits.
-\item \cw{long} and \cw{dword} are 32 bits.
-\end{itemize}
 \par
-The engine starts up (all managers are described later):\\
+In \cw{InitGame}, the engine starts up and bring up all the managers (those are described in details later):\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_init.c}
 \end{minipage}
 \par
-The core loop where 2D renderer and 3D renderer are called for ever:\\
+Then come the core loop where 2D renderer and 3D renderer are called forever:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_demoloop.c}
 \end{minipage}
 \par
-The play loop which is the 3D renderer. Pretty standard so far:\\
+\cw{PlayLoop} contains the 3D renderer. It is pretty standard with a get inputs, update world, render world approach:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_playloop.c}
 \end{minipage}
 \par
-The sound system which is not in a loop. Instead it is associated with Interrupt XX and called at a regular time interval:\\
+The sound system is started via the Sound Manager. It driven by Interrupt service routine 8. Notice how the ISR is tied to the PC timer and can run at at different frequency of 140, 700 or even 7000Hz depending on the needs of the sound system involved:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/soundsystem_interrupt.c}
@@ -191,7 +203,7 @@ The sound system which is not in a loop. Instead it is associated with Interrupt
 
 \section{Architecture}
 
-The engine is made of WL\_* files which rely on ID\_* sub-systems called Managers:
+The engine is made of WL\_* files which rely on ID\_* sub-systems called Managers. There are seven of them in total:\\
 \begin{itemize}
 	\item Memory
 	\item Page
@@ -201,7 +213,7 @@ The engine is made of WL\_* files which rely on ID\_* sub-systems called Manager
 	\item User
 	\item Input
 \end{itemize}
-The WL stuff was written specifically for Wolf3D while the ID\_ managers were taken from previous game (Catacomb 3D) and improved for the needs of the new engine.
+The WL stuff was written specifically for Wolf3D while the ID\_ managers were reused from the previous game (Catacomb 3D) and improved for the needs of the new engine.
 
 \begin{figure}[H]
 \centering

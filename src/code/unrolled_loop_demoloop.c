@@ -1,18 +1,18 @@
 void DemoLoop() {
     StartCPMusic(INTROSONG);
-    PG13 ();
+    PG13(); // Show Profund Carnage screen
     while (1) {
         CA_CacheScreen (TITLEPIC);
         CA_CacheScreen (CREDITSPIC);
         DrawHighScores ();
         PlayDemo (0); 
-        GameLoop ();  // 2D phase
+        GameLoop ();  // 2D renderer (menu)
         SetupGameLevel ();
         StartMusic ();
         PM_CheckMainMem ();
         PreloadGraphics ();
         DrawLevel (); 
-        PlayLoop () ; // 3D phase 
+        PlayLoop () ; // 3D renderer (action)
         StopMusic ();
     }
   }    

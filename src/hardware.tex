@@ -675,8 +675,8 @@ framebuffer to the CRT.
 
 
 
-\subsection{The importance of doublebuffer: Avoid tearing}
-Is it a big deal to have only one buffer in all the VGA modes described? Yes and very much so! With only one buffer the software has to work exactly at the frequency of the CRT (70Hz). Otherwise a phenomenon known as "tearing" appears. Let's take the example of an animation rendering a circle moving from the left to the right:
+\subsection{The importance of doublebuffering}
+Double buffering is paramount for smooth animation. With only one buffer the software has to work exactly at the frequency of the CRT (70Hz). Otherwise a phenomenon known as "tearing" appears. Let's take the example of an animation rendering a circle moving from the left to the right:
 \par
 \begin{figure}[H]
 \centering
@@ -693,6 +693,19 @@ In this example the CPU has finished writing the framebuffer (on the left) and t
 But if the CPU is fast eonugh (faster than 70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here: The next frame was drawn with the circle moved to the right. The electron bean did not know what and just kept on scanning the framebuffer. The result on screen is now a composite of two frames: It looks like two frames were torn and tapped together. Hence the name "tearing".\\
 \par
 With two buffers (a.k.a double buffering) the CPU can start writing in the second framebuffer without messing with the framebuffer being scanned to the screen\footnote{Now the CPU speed is capped by the CRT refresh rate. Triple buffering can solve this at the price of frame latency.}. No more tearing!
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
