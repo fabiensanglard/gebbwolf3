@@ -589,7 +589,7 @@ To write to the VRAM the 1MB address space maps 64KB starting as indicated in ta
  \begin{figure}[H]
 \centering
   
-      \includegraphics[width=\textwidth]{imgs/ram_to_vga_maping.png}
+      \includegraphics[width=\textwidth]{imgs/ram_to_vga_mapping.pdf}
     
 \caption{Mapping PC RAM to VGA banks.}
 \end{figure}
@@ -603,7 +603,7 @@ To write to the VRAM the 1MB address space maps 64KB starting as indicated in ta
 \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/mode_12h.png}
+ \includegraphics[width=\textwidth]{imgs/mode12h.pdf}
 \caption{Banks layout in mode 12h.}
 \end{figure}
 \par
@@ -634,7 +634,20 @@ Pretty much everything else is bad:\\
   \par
  \begin{figure}[H]
 \centering
-      \includegraphics[width=\textwidth]{imgs/mode_13h.png}
+      \includegraphics[width=\textwidth]{imgs/mode_13h.pdf}
+\end{figure}
+\par
+
+When writing or reading at an address K in RAM, the Chain-4 breaks down that address in two parts:
+\begin{itemize}
+\item The 2 low bits are used to configure the mask automatically. Hence 0x00 goes to bank 0, 0x01 to bank 1 and so on.
+\item The 14 high bits are switched right by two bits and used as offset in the bank.
+\end{itemize}
+  \par
+  For example, writing at 0x0AF11 would result in writing in bank 3 at offset 0x0AF. Since this is all hardwired it is fast and framebuffer could be refreshed at 70Hz.
+ \begin{figure}[H]
+\centering
+      \includegraphics[width=\textwidth]{imgs/mode_13h_example.pdf}
 \end{figure}
 \par
 The side effect is that 75\% of the RAM is wasted (since only 14 bits were usable for offset).\\

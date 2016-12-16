@@ -263,8 +263,13 @@ At the beginning of very frame, the engine switch to an unused buffer (TODO: sho
 
 
 
+
+
+
+
 \subsection{Casting a Ray}
 
+The hardware chapter describing the CPU capabilities left the reader with a problem at hands: The machine cannot do floating point operations fast enough. This is a pretty big deal for a 3D engine and all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed point arithmetic".
 
 
 
@@ -273,9 +278,7 @@ At the beginning of very frame, the engine switch to an unused buffer (TODO: sho
 
 
 \subsubsection{Fixed point}
-The hardware chapter describing the CPU capabilities left the reader with a problem at hands: The machine cannot do floating point operations fast enough. This is a pretty big deal for a 3D engine and all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed point arithmetic":\\
-\par
-The nomal layout of an \cw{int} is as follow:
+The normal layout of an \cw{int} is as follow:
 \begin{figure}[H]
 \centering
  \input{int.tex}
