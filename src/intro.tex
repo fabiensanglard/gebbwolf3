@@ -35,7 +35,7 @@ To draw all these pixels, they needed a powerful CPU. A PC CPU outperformed any 
   \begin{tikzpicture}[font=\small]
     \begin{axis}[
       width=\textwidth,
-      height=0.6\textwidth,
+      %height=0.6\textwidth,
       ybar=6pt,
       bar width=20pt,
       ylabel={MIPS},
@@ -50,15 +50,15 @@ To draw all these pixels, they needed a powerful CPU. A PC CPU outperformed any 
       nodes near coords={\pgfmathprintnumber\pgfplotspointmeta}
     ]
       \addplot[fill=black!20,draw=black] coordinates {
-        (Super NES,1.5)
-        (Genesis,0.96)
         (Amiga 500,0.7)
+        (Genesis,0.96)
+        (Super NES,1.5)
         (Neo Geo,5.4)
         (386DX-33Mhz,9.9)
       };
     \end{axis}
    \end{tikzpicture}
-   \caption{Game Console Vs PC: Raw power of the CPUs.} \label{fig:game_console_vs_PC}
+   \caption{Game Console Vs PC: CPU comparaison.} \label{fig:game_console_vs_PC}
  \end{figure}
  
 With its fast CPU and 256K framebuffer, the IBM looked promising at first. Except there were three seemingly impossible\footnote{The title of this book could have easily be: "The Impossible Machine".} to overcome obstacles:\\
