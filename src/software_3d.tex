@@ -353,6 +353,8 @@ Notice that you have to be careful: In the previous example some precision was l
 \end{figure}
 \par
  
+
+ E.G: Player position is 24:8, to get grid location just remove fraction part.
  
  
 
@@ -530,10 +532,8 @@ If you made extremely jagged block maps that would turn into many dozen independ
 Before proceeding to the next session about fish eye projection correction, here is a reminder of something we all learned in highschool: SOH-CAH-TOA.
 
  \begin{fancyquotes}
-  I'm no super mathematician-- I learned high school math well enough to solve real world problems with it.
- \bigskip \\
-It's "COLUMN", you dumb @\#\$\% !\\
- \bigskip \\
+  I'm no super mathematician-- I learned high school math well enough to solve real world problems with it.\\
+ \par
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
 
@@ -1055,9 +1055,18 @@ The trick is to use page adress which need only one byte update. Which explains 
 \par
 \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{imgs/triple_pages_trick.png}
+ \includegraphics[width=\textwidth]{imgs/triple_pages_trick.pdf}
 \end{figure}
 \par
+
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/triple_pages_trick_padding.pdf}
+\end{figure}
+\par
+
+
 Using pages of 80*200 result in page 0 at 0x0000, page 1 at 0x3E80 and page 2 at 0x7000. Moving from page 0 to 1 would require updating the high 0x00 to 0x3E and the low 0x00 to 0x80. If you are unlucky the CRT could start scanning after the high byte has bee updated but before the low byte has. This would present user with an ugly mess.\\
 \par
 Using pages of 80*208 result in page 0 at 0x0000, page 1 at 0x4100 and page 2 at 0x8200. Moving from any page to an other only requires updating the high 8 bits. Flipping buffer is now an atomic operation !!\\
@@ -1113,14 +1122,14 @@ Knowing if an ememy can hear the main character gunfire is a simple lookup in a 
 \par
 \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{imgs/soud_propagation/map.png}
+ \includegraphics[width=.75\textwidth]{imgs/sound_area/map.pdf}
 \end{figure}
 \par
 
 \par
 \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{imgs/soud_propagation/areas.png}
+ \includegraphics[width=.75\textwidth]{imgs/sound_area/area.pdf}
 \end{figure}
 \par
 
@@ -1155,16 +1164,16 @@ However this is a simple model. When a gun is fired, all enemies which could hea
 \end{figure}
 \par
 
-\begin{minipage}{.6\textwidth}
+\begin{minipage}{0.6\textwidth}
 Some tiles in the map can be marked as "AMBUSH" tile. If a guard is standing on it, he will NOT react to sounds. He is deaf. Or smart if you prefer. This is introduced early on in E1M1, the character just neutralized an enemy in a corridor. At this point it has never encountered an ambush so the player assumes the area is clear:\\
 \end{minipage}
-\begin{minipage}{.35\textwidth}
-\hfill
-\begin{figure}[H]
- \includegraphics[width=\textwidth]{imgs/ambush/map_unknown_drawing.png}
-\end{figure}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright}
+\includegraphics[width=0.98\textwidth]{imgs/ambush/map_unknown_drawing.pdf}
+\end{flushright}  
 \end{minipage}
-
+\noindent
+\\
 
 
 \par
@@ -1173,19 +1182,17 @@ Some tiles in the map can be marked as "AMBUSH" tile. If a guard is standing on 
  \includegraphics[width=\textwidth]{imgs/ambush/map_ambushed.png}
 \end{figure}
 \par
-
-
-\begin{minipage}{.6\textwidth}
+\begin{minipage}{0.6\textwidth}
 So the player will relax and either go straight to the door or maybe go left (or worse: right) to see what is in these corners. And bam: AMBUSH.
 \end{minipage}
-\begin{minipage}{.35\textwidth}
-\hfill
-\begin{figure}[H]
- \includegraphics[width=\textwidth]{imgs/ambush/map_ambushed_drawing.png}
-\end{figure}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright}
+\includegraphics[width=0.98\textwidth]{imgs/ambush/map_ambushed_drawing.pdf}
+\end{flushright}
 \end{minipage}
+\noindent
+\\
 
-\par
 This is probably one of the cheapest feature in the engine which yet resulted in what most would agree is the soul of the game: Immersion.\\
 \par
 

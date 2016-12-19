@@ -52,7 +52,33 @@ The code responsible for this effect can be found in id\_vh.cpp, function Fizzle
 \lstinputlisting[language=C]{code/fizzlefade.c}
 \end{minipage}
 \par
-        
+Which can be read as:\\
+\begin{itemize}
+\item Initialize \cw{rndval} to 1.
+\item Break it down in 8 + 89 bits: Ues these to generate X and Y coordinate.
+\item Subject \cw{rndval} to a soup of XORing.
+\item When \cw{rndval} value is magically back to 1: Stop.
+\end{itemize}        
+It looks like magic at first. How is \cw{rndval} supposed to be back to 1 ?!\\
+\par
+This technique is called Linear Feedback Shit Register. To make it work, one needs a register which will be right shifted each iteration. Since it is right shited, the right bit dissapear and a new one to the left is needed.\\
+TODO:DRAWING\\
+\par
+To generate this new bit we introduce "taps" which are bit offset used to XOR together values and generate the new bit value\\
+TODO:DRAWING\\
+\par
+A Fibonnaci representation shows a simple LFSR with one tap:\\
+TODO:DRAWING\\
+\par
+TODO:VALUES\\
+\par
+A slightly more complex one with two registers:\\
+TODO:DRAWING\\
+\par
+TODO:VALUES\\
+\par
+
+
 \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/fizzlefade/fibonnaci.png} \end{figure}
 \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/fizzlefade/galois.png} \end{figure}
       
@@ -70,20 +96,14 @@ Note: If you are curious about maximum-length taps, xilinx provides them from 3 
 
 
 \subsection{Palette}
-
-Every 1/70th of a second, the VGA output the framebuffer to the screen. Since what is stored are palette index, a translation layer is done in the VGA's DAC. The DAC convert a one byte index to a 3 bytes RGB color. The palette is stored a one block: 256*3 = 768bytes. 
-CODE\\
-256*3= 768 + setup out operations.\\
-This palette allow for fast fading. For example when the played is taking damage, the screen briedly fades to red:
+Even though it limit the graphic capabilities, the palette system can be turned into a strength: It is easy to fade the screen to white (when picking up an item) or red (when taking damages).\\
+It only takes 256*3 = 768 bytes and 768 out instructions to modify the full screen:
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/palette_damage.png}
  \caption{The palette RGB colors altered when taking damage.} \label{fig:palette_damage}
 \end{figure}
-There is a trick however: Only the 3D part should fade. UpdatePaletteShifts function.\\
-Palette are precomputed in 6 steps toward red or white.\\
-What is fast palette setting (via outsb instruction)?\\
-
+A fast path is provided (which ironically only works if the CPU is as slow at the VGA) to update the palette via one \cw{lobsb} instruction. Otherwise if not supported a loop of 768 \cw{outsb} is used.
 \begin{minipage}{\linewidth}
 \lstinputlisting[language=C,morekeywords={asm,byte,far}]{code/vl_setpalette.c}
 \end{minipage}
@@ -96,7 +116,7 @@ What is fast palette setting (via outsb instruction)?\\
 
 
 \subsection{Cos/Sin table}
-To avoid recomputing sin and cos, they are precalculated at startup. Array sintable is initialized as follow:\\
+\cw{cos} and \cw{sin} are expensive methods but they are heavily used at runtime. So speed things up the engine generates and precache them at startup and store them in a lookup array (one value per angle). But it does so in a smart way: It exploit a math property ($cos(X) = sin(X + 90)$) to avoid 360 \cw{sin} method calls and 240 bytes of RAM by reusing the cos table as follow:\\
 \par
 
 \begin{minipage}{\textwidth}
@@ -106,11 +126,6 @@ To avoid recomputing sin and cos, they are precalculated at startup. Array sinta
 
 \begin{figure}[H]
  \centering
-  \includegraphics[width=\textwidth]{imgs/cos_sin_table.png}
+  \includegraphics[width=\textwidth]{imgs/cos_sin_table.pdf}
  \caption{Finalez frame} 
 \end{figure}
-
-In order to save space, there is only one array: cos points 90 degres past sin.\\
-
-
-Trivia: Hard-coded cos and sin lookup table. Budget ?
