@@ -22,6 +22,15 @@ Following, screenshots of a slowdown version of the engine, showing each four st
  \includegraphics[width=\textwidth]{screenshots/wolf3d_1_background.png}
  \caption{3D Rendere Phase 1: Background}
  \end{figure}
+
+\par
+\begin{minipage}{\textwidth}
+ \lstinputlisting[language=C]{code/vgaCeiling.c}
+ \end{minipage}
+\par
+ 
+
+
 The floor was always the same color. The ceiling however changed see \codeword{WL\_DRAW.C} for a hard-coded index. TODO: Include a clear screen from a later level.\\
 \begin{figure}[H]
  \centering
@@ -81,8 +90,9 @@ At the beginning of the 3D sequence, the engine generates the HUD\footnote{Head-
 It also uploads all assets neeeded to update the HUD (weapon, font, keys, status face, paused).
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{imgs/hud.png}
+ \includegraphics[width=\textwidth]{imgs/hud.pdf}
 \end{figure}
+Notice how blocks are aligned on 4 bytes horizontally but there is no restriction vertically: The VGA four banks constraints.
 Sprites 91 to 134 are latched in VRAM.\\
 
 \begin{minipage}{.23\textwidth}
@@ -267,7 +277,7 @@ At the beginning of very frame, the engine switch to an unused buffer (TODO: sho
 
 
 
-\subsection{Casting a Ray}
+\subsection{Solving the CPU problem}
 
 The hardware chapter describing the CPU capabilities left the reader with a problem at hands: The machine cannot do floating point operations fast enough. This is a pretty big deal for a 3D engine and all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed point arithmetic".
 
@@ -321,40 +331,104 @@ The beauty of fixed point is that addition and subtraction work exactly like int
 
 
 
+
 \par
 \begin{figure}[H]
-  \centering
- \includegraphics[width=\textwidth]{imgs/fixed_point_addition.png}
-\end{figure}
+ \centering
+   \input{34_75.tex}
+
+   \caption{34.75} 
+\end{figure} 
+
+\begin{figure}[H]
+ \centering
+   \input{1_5.tex}
+  \caption{+ 1.5} 
+\end{figure} 
+
+\begin{figure}[H]
+ \centering
+   \input{36_25.tex}
+  {\caption{= 36.25}}
+\end{figure} 
+\par
 \par
 
 
  The special case is when performing multiplication. There are two ways to do it: Either multiply two 32 bits into a 64 bits or drop the precision of both fixed point and multiply then into a 32 bits. Since the 286 and 386 do not have 64 bits registers, wolf does the later (illustred here with 8:8 for readability):
 
+
 \par
 \begin{figure}[H]
-  \centering
- \includegraphics[width=\textwidth]{imgs/fixed_point_multiplication.png}
-\end{figure}
+ \centering
+   \input{98_7539.tex}
+   \caption{98.7539} 
+\end{figure} 
 \par
+\begin{figure}[H]
+ \centering
+   \input{1_5.tex}
+   \caption{* 1.5} 
+\end{figure} 
+\par
+First right shift both operators:\\
+\par
+\begin{figure}[H]
+ \centering
+   \input{rs_98_7539.tex}
+\end{figure} 
+\par
+\begin{figure}[H]
+ \centering
+   \input{rs_1_5.tex}
+\end{figure} 
+\par
+
+Finally multiply them together:
+
+\begin{figure}[H]
+ \centering
+   \input{148_125.tex}
+   \caption{148.125} 
+\end{figure} 
+$128 + 16 + 4 + 0.125 = 148.125 $
+
 
 Notice that you have to be careful: In the previous example some precision was lost ($ 2^{-8}$) bit disappeared during the $\gg 4$ operation) and an overflow could have occured (multiplying by 3 would have gone past the precision of 8:8). But with this system, fractions are possible and fast enough!\\
 \par
-
+\begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed_mul.c}
+ \end{minipage}
 \par
  \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game console manufactured in the 90s and later had no hardware floating point unit: Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples among many with a design choice that not only reduced the production cost but also maximized the CPU pipeline throughput.
  
  Even right shit and left shift trick work:\\
  
+ \par
 \begin{figure}[H]
-  \centering
- \includegraphics[width=\textwidth]{imgs/fixed_point_shifts.png}
-\end{figure}
+ \centering
+   \input{1_5.tex}
+   \caption{1.5} 
+\end{figure} 
+
 \par
+\begin{figure}[H]
+ \centering
+   \input{3.tex}
+   \caption{1.5 << 2  = 3} 
+\end{figure}
+
+\par
+\begin{figure}[H]
+ \centering
+   \input{0_75.tex}
+   \caption{1.5 >> 2 = 0.75} 
+\end{figure}
+
+
  
 
- E.G: Player position is 24:8, to get grid location just remove fraction part.
+ E.G: Player position is 16:16, to get grid location just remove fraction part player->x >> 16.
  
  
 

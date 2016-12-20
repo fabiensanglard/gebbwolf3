@@ -1,0 +1,24 @@
+\documentclass[tikz]{standalone}
+\usetikzlibrary{calc,arrows.meta,bending}   %%<<----- note here
+\begin{document}
+\begin{tikzpicture}
+  \tikzset{
+    tst/.style={
+      ultra thick, opacity=1
+    },
+    my-arc/.style={
+      start angle=0, end angle=360+10,radius=1
+    }
+  }
+
+  \draw (-1.2,0) -- (1.2,0);
+  \draw (0,-1.2) -- (0,1.2);
+
+  
+%  \draw[green,tst,->]  (0,1) arc [my-arc];
+  \draw[tst,-Latex]  (0,1) arc [my-arc];
+%  \draw[tst,-Stealth]  (0,1) arc [my-arc];
+
+\end{tikzpicture}
+
+\end{document}
