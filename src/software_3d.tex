@@ -90,7 +90,7 @@ At the beginning of the 3D sequence, the engine generates the HUD\footnote{Head-
 It also uploads all assets neeeded to update the HUD (weapon, font, keys, status face, paused).
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{imgs/hud.pdf}
+ \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
 \end{figure}
 Notice how blocks are aligned on 4 bytes horizontally but there is no restriction vertically: The VGA four banks constraints.
 Sprites 91 to 134 are latched in VRAM.\\
@@ -291,13 +291,13 @@ The hardware chapter describing the CPU capabilities left the reader with a prob
 The normal layout of an \cw{int} is as follow:
 \begin{figure}[H]
 \centering
- \input{int.tex}
+ \input{imgs/drawings/int.tex}
  \caption{Integer layout.} \label{fig:int_layout}
  \end{figure}
 The value of the sequence of bits \emph{0010010010010010}:
 \begin{figure}[H]
 \centering
-\input{int_example.tex}
+\input{imgs/drawings/int_example.tex}
  \caption{Integer example.} \label{fig:mips}
  \end{figure}
 
@@ -308,14 +308,14 @@ Fixed Point allows to keep track of fractions while still using the integer oper
 \par
 \begin{figure}[H]
  \centering
-  \input{fp.tex}
+  \input{imgs/drawings/fp.tex}
  \caption{Fixed point layout 8:8 (8bits for integer part and 8 bits for fractionnal part).} \label{fig:mips}
 \end{figure}
 
 So the same sequence of bits \emph{0010010010010010}:
 \begin{figure}[H]
  \centering
-   \input{fp_example.tex}
+   \input{imgs/drawings/fp_example.tex}
   \caption{Fixed point representation: 8738 is now 34.1328125.} \label{fig:mips}
 \end{figure} 
 
@@ -335,20 +335,20 @@ The beauty of fixed point is that addition and subtraction work exactly like int
 \par
 \begin{figure}[H]
  \centering
-   \input{34_75.tex}
+   \input{imgs/drawings/34_75.tex}
 
    \caption{34.75} 
 \end{figure} 
 
 \begin{figure}[H]
  \centering
-   \input{1_5.tex}
+   \input{imgs/drawings/1_5.tex}
   \caption{+ 1.5} 
 \end{figure} 
 
 \begin{figure}[H]
  \centering
-   \input{36_25.tex}
+   \input{imgs/drawings/36_25.tex}
   {\caption{= 36.25}}
 \end{figure} 
 \par
@@ -361,13 +361,13 @@ The beauty of fixed point is that addition and subtraction work exactly like int
 \par
 \begin{figure}[H]
  \centering
-   \input{98_7539.tex}
+   \input{imgs/drawings/98_7539.tex}
    \caption{98.7539} 
 \end{figure} 
 \par
 \begin{figure}[H]
  \centering
-   \input{1_5.tex}
+   \input{imgs/drawings/1_5.tex}
    \caption{* 1.5} 
 \end{figure} 
 \par
@@ -375,12 +375,12 @@ First right shift both operators:\\
 \par
 \begin{figure}[H]
  \centering
-   \input{rs_98_7539.tex}
+   \input{imgs/drawings/rs_98_7539.tex}
 \end{figure} 
 \par
 \begin{figure}[H]
  \centering
-   \input{rs_1_5.tex}
+   \input{imgs/drawings/rs_1_5.tex}
 \end{figure} 
 \par
 
@@ -388,7 +388,7 @@ Finally multiply them together:
 
 \begin{figure}[H]
  \centering
-   \input{148_125.tex}
+   \input{imgs/drawings/148_125.tex}
    \caption{148.125} 
 \end{figure} 
 $128 + 16 + 4 + 0.125 = 148.125 $
@@ -407,21 +407,21 @@ Notice that you have to be careful: In the previous example some precision was l
  \par
 \begin{figure}[H]
  \centering
-   \input{1_5.tex}
+   \input{imgs/drawings/1_5.tex}
    \caption{1.5} 
 \end{figure} 
 
 \par
 \begin{figure}[H]
  \centering
-   \input{3.tex}
+   \input{imgs/drawings/3.tex}
    \caption{1.5 << 2  = 3} 
 \end{figure}
 
 \par
 \begin{figure}[H]
  \centering
-   \input{0_75.tex}
+   \input{imgs/drawings/0_75.tex}
    \caption{1.5 >> 2 = 0.75} 
 \end{figure}
 
