@@ -19,6 +19,8 @@
        
 \def\Version{0.1}
 
+    \blankpage
+    \blankpage
     %Cover page
     \subfile{cover}
     
@@ -30,6 +32,10 @@
     % Table of content
     \addtolength{\cftsecnumwidth}{10pt}
     
+    \cleardoublepage % Make toc appear on right side.
+    
+    \subfile{thanks}
+
     \cleardoublepage % Make toc appear on right side.
 
     \setcounter{secnumdepth}{3} % toc is 2 level deep.
@@ -78,6 +84,8 @@
         \subfile{20years}
 
     
-
-\subfile{cover_back}
+    \cleartoleftpage % Make sure back cover is on a "back" page
+    \subfile{cover_back}
+    \blankpage
+    \blankpage
 \end{document}

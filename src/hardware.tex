@@ -307,7 +307,9 @@ As a result, out of the original 1024KB, only 640KB (called Conventional Memory)
 \caption{How registers are combined to address memory.}
 \label{fig:register_comb_to_20_bits}
 \end{figure}
-That may not sound too bad but in practice this segmented addressing led to many issues. The least problematic was about the language: Since the C language was invented on a flat memory machine, the language had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro would be provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. That was an ugly wart on the beautiful C but that was manageable.\\
+That may not sound too bad but in practice this segmented addressing led to many issues.\\
+\par 
+The least problematic was about the language C: Since it was invented on a flat memory machine, it had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro would be provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. That was an ugly wart on the beautiful C but that was manageable. And of course \cw{libc} was also different: \cw{malloc} returns \cw{near} and can therefor only allocate 64K. To allocate more \cw{farmalloc} is used.\\
 \\
 The really big issue however was how two pointers referring to the same address could fail an equality test: In this model, the 1MB of RAM is divided in 65536 paragraphs by the segment pointer. So a paragraph is 16 bytes but an offset can be up to 65536 which result in a maze of overlaps! See the following example:\\
 \par

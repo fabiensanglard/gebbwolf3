@@ -93,7 +93,7 @@ The engine can be divided in three blocks:
 \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/three_systems.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/three_systems.pdf}
  \end{figure}
  \par
 
@@ -144,15 +144,13 @@ In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
 
 
 \subsection{Unrolled loop}
-Unrolling the code (starting at \cw{int main()} reveals the two renderers in an endless loop (the sound system is interrupt driven and therefore is out of \cw{main}).\\ Before diving into the code, an important precision about data types: Because the game is using Real Mode (emulated 16 bits architecture), C types don't mean what people would expect from a 32 bits architecture:\\
+With the big picture in mind, we can dive into the code and unrolling the main loop (hence starting at \cw{int main()} to reveals two renderers (the sound system is interrupt driven and therefore is out of \cw{main}).\\ An important precision about data types: Because the game is using Real Mode (emulated 16 bits architecture), C types don't mean what people would expect from a 32 bits architecture.\\
 \par 
 \begin{itemize}
 \item \cw{int} and \cw{word} are 16 bits long.
 \item \cw{long} and \cw{dword} are 32 bits long.
 \end{itemize}
-\par
 
-The main function is very simple:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_main.c}
@@ -244,32 +242,45 @@ A block can be marked with attributes:
 \item \cw{PURGEBITS} : 0-3 level, 0= unpurgable, 3= purge first.
 \end{itemize}
 
-The memory manager starts by allocating all available RAM via \cw{malloc} and creates a \cw{LOCKED} block of size 1KB at the end. The linked list uses two pointers: \cw{HEAD} and \cw{ROVER} (for the tail).
+The memory manager starts by allocating all available RAM via \cw{malloc}/\cw{farmalloc} and creates a \cw{LOCKED} block of size 1KB at the end. The linked list uses two pointers: \cw{HEAD} and \cw{ROVER} (for the tail).
  \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/mm_start.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/mm_start.pdf}
  \end{figure}
  \par
- The engine interacts with the Memory Manager by requesting RAM (\cw{MM\_GetPtr}) and freeing RAM (\cw{MM\_FreePtr}). To allocate ram , the manager searches for "holes" in the layout. It take up to three passes of increasing complexity. The easier case is when there is enough space after the rover. A new node is added to the linked list and rover moves forward:\\
+ The engine interacts with the Memory Manager by requesting RAM (\cw{MM\_GetPtr}) and freeing RAM (\cw{MM\_FreePtr}). To allocate ram , the manager searches for "holes" in the layout. It take up to three passes of increasing complexity:
+\begin{enumerate}
+\item After rover
+\item After head
+\item Compacting and then after rover
+\end{enumerate}
+\par
+  The easier case is when there is enough space after the rover. A new node is added to the linked list and rover moves forward:\\
   \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/mm_after_rover.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/mm_after_rover.pdf}
  \end{figure}
  \par
- If the first pass fails, the second pass looks for a "hole" between the head and the rover:\\
+Eventually the free RAM will be exhausted and the first pass will fail:
   \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/mm_before_rover.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/mm_before_rover.pdf}
  \end{figure}
  \par
- In the third pass, it looks like there is nowhere a continuous block of memory big enough to satisfy the request. The manager is going to iterate through the entire linked list and do two things: Delete blocks marked as purgeable and compact the RAM.
+ If the first pass fails, the second pass looks for a "hole" between the head and the rover. If for example block B was marked as \cw{PURGEABLE}, it will be deleted and replaced with the new block E and fragmentation starts to appear (like if \cw{malloc} was used):\\
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/mm_after_head.pdf}
+ \end{figure}
+ \par
+ If the RAM reaches a point where the first and second pass failed, it means there is nowhere a continuous block of memory big enough to satisfy the request. The manager is going to iterate through the entire linked list and do two things: Delete blocks marked as purgeable and compact the RAM.
   \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/mm_compact.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/mm_compact.pdf}
  \end{figure}
  \par
 But if memory is moved around, how do previous allocation still point to what they had before the garbage collection phase? Notice that a \cw{mmblockstruct} has a \cw{useptr} pointer which point to the owner of a block: If it moves memory, it also updates the ower of the block.
@@ -277,7 +288,7 @@ But if memory is moved around, how do previous allocation still point to what th
    \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/mm_compact_bad_case.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/mm_bad_compact.pdf}
  \end{figure}
  \par
  Note that since some block can be marked as \cw{LOCKED}, the compacting will be disturbed: Upon encountering a locked lock, compacting start after it, even is there was space available between the last block and the locked block.
@@ -298,7 +309,7 @@ The Page Manager is dedicated to the 3D engine. Its task is to make sure assets 
  \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/page_manager_architecture.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/page_manager_architecture.pdf}
  \end{figure}
  \par
 In order to minimize the cost of page miss, the engine preload the page cache before a level start. This is known at the "Get Psyched" screen:

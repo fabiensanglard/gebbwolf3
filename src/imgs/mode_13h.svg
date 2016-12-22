@@ -50,10 +50,10 @@
      id="namedview5893"
      showgrid="false"
      inkscape:zoom="1.679558"
-     inkscape:cx="315.55921"
+     inkscape:cx="303.89888"
      inkscape:cy="203.75"
      inkscape:window-x="20"
-     inkscape:window-y="43"
+     inkscape:window-y="66"
      inkscape:window-maximized="0"
      inkscape:current-layer="g5899" /><g
      id="g5899"
@@ -155,21 +155,7 @@
        inkscape:connector-curvature="0"
        id="path5957"
        style="fill:none;stroke:#000000;stroke-width:0.80000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 319.40565,137.87918 37.8117,0 0,24.0941 -37.8117,0 0,-24.0941 z" /><text
-       transform="scale(1,-1)"
-       style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Verdana;-inkscape-font-specification:Verdana;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text5961"
-       x="364.71494"
-       y="-252.26617"><tspan
-         x="364.71494 374.25491 383.13492 392.67493 402.26004 411.80005 421.34003"
-         y="-252.26617"
-         sodipodi:role="line"
-         id="tspan5963">0x00000</tspan><tspan
-         x="480.83392 490.37393 499.25394 508.79391 518.37903 527.91907 537.45905"
-         y="-252.8904"
-         sodipodi:role="line"
-         id="tspan5965">0x10000</tspan></text>
-<path
+       d="m 319.40565,137.87918 37.8117,0 0,24.0941 -37.8117,0 0,-24.0941 z" /><path
        inkscape:connector-curvature="0"
        id="path5967"
        style="fill:none;stroke:#000000;stroke-width:0.77969152;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -246,7 +232,7 @@
            height="50.608551"
            x="36.31908"
            y="118.13816" /></flowRegion><flowPara
-         id="flowPara6649"></flowPara></flowRoot><rect
+         id="flowPara6649" /></flowRoot><rect
        style="fill:#0a0a0a;fill-opacity:0.27976194;stroke:#000000;stroke-width:0.79962867;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect6671"
        width="88.036644"
@@ -300,4 +286,30 @@
          x="260.49997"
          y="-146.31633"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:Sans;-inkscape-font-specification:'Sans, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start">2 bits</tspan></text>
+<text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:32px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="488.22372"
+       y="-253.87633"
+       id="text4224"
+       sodipodi:linespacing="125%"
+       transform="scale(1,-1)"><tspan
+         sodipodi:role="line"
+         id="tspan4226"
+         x="488.22372"
+         y="-253.87633"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:125%;font-family:Sans;-inkscape-font-specification:'Sans, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start">0x10000</tspan></text>
+<text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:32px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="366.48788"
+       y="-253.32747"
+       id="text4224-7"
+       sodipodi:linespacing="125%"
+       transform="scale(1,-1)"><tspan
+         sodipodi:role="line"
+         id="tspan4226-5"
+         x="366.48788"
+         y="-253.32747"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:125%;font-family:Sans;-inkscape-font-specification:'Sans, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start">0x00000</tspan></text>
 </g></svg>

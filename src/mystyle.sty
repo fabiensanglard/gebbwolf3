@@ -220,5 +220,18 @@ middleextra={\draw[dashed,line width=1pt,xshift=1pt] (O) -- (P|-O);\draw[dashed,
 \usepackage{caption2}
 \captionlabelfalse
 
+\usepackage{afterpage}
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+
+\newcommand*\cleartoleftpage{%
+  \clearpage
+  \ifodd\value{page}\hbox{}\newpage\fi
+}
+
+
 % adjustbox package which allows you to add alignment keys to \includegraphics
 % \usepackage{adjustbox}

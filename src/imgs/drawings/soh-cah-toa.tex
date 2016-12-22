@@ -1,0 +1,28 @@
+% \documentclass{standalone}% 'crop' is the default for v1.0, before it was 'preview'
+% \usepackage[x11names,dvipsnames]{xcolor} %Colocação de cores
+% \usepackage{tikz,tikz-3dplot} %Para fazer desenhos
+% \usepackage{tkz-euclide}
+% \usetkzobj{all}
+\begin{tikzpicture}[scale=1.5]
+
+% \begin{document}
+% \begin{tikzpicture}[]
+
+\coordinate(A) at (0,0);
+\coordinate(B) at (7,0);
+\coordinate(C) at (0,5);
+
+\draw[draw=black] (A) -- node[below] {\LARGE A} (B);
+\draw[draw=black] (B) -- node[above] {\LARGE H} (C);
+\draw[draw=black] (C) -- node[left] {\LARGE O} (A);
+
+\tkzMarkRightAngle(B,A,C);
+\tkzLabelAngle[pos = 1.0](A,B,C){$\alpha$}
+\tkzMarkAngle[fill= gray,size=1.8cm,opacity=.2](C,B,A)
+
+\node (A) at (7.5,3.5) {\Large $sin(\alpha) = \frac{O}{H}$};
+\node (A) at (7.5,2.5) {\Large $cos(\alpha) = \frac{A}{H}$};
+\node (A) at (7.5,1.5) {\Large $tan(\alpha) = \frac{O}{A}$};
+
+\end{tikzpicture}
+%\end{document}
