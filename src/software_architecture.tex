@@ -144,7 +144,7 @@ In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
 
 
 \subsection{Unrolled loop}
-With the big picture in mind, we can dive into the code and unrolling the main loop (hence starting at \cw{int main()} to reveals two renderers (the sound system is interrupt driven and therefore is out of \cw{main}).\\ An important precision about data types: Because the game is using Real Mode (emulated 16 bits architecture), C types don't mean what people would expect from a 32 bits architecture.\\
+With the big picture in mind, we can dive into the code and unroll the main loop (\cw{int main()}) to reveals two renderers (the sound system is interrupt driven and therefore is out of \cw{main}). An important precision about data types: Because the game is using Real Mode, C types don't mean what people would expect from a 32 bits architecture.\\
 \par 
 \begin{itemize}
 \item \cw{int} and \cw{word} are 16 bits long.
@@ -514,27 +514,27 @@ Note: Why use 208 height if the framebuffer is 200 pixels tall? That doesn't mak
 As a result from unchaining a complete framebuffer is divided into four banks. Horizontally it looks a little bit like mashed potatoes:
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/vga_layout/intro.png}
+ \fullimage{vga_layout/intro.png}
  \caption{Intro screen as it appear on screen}
  \end{figure}
  \par
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/vga_layout/intro_bank.png}
+ \fullimage{vga_layout/intro_bank.png}
  \caption{Intro screen as it is stored across 4 banks in a framebuffer} \label{fig:vga_layout_for_intro}
  \end{figure}
 \par
 An other example during a 3D sequence
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/vga_layout/wolf3d_7.png}
+ \fullimage{vga_layout/wolf3d_7.png}
  \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
  \par
 
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/vga_layout/wolf3d_7_bank.png}
+ \fullimage{vga_layout/wolf3d_7_bank.png}
  \caption{3D View as it is stored across 4 banks in a framebuffer}
  \end{figure}
 

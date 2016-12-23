@@ -13,8 +13,8 @@ void InitGame () {
     InitDigiMap ();
     ReadConfig ();
     CA_CacheGrChunk(STARTFONT); // Load font
-    MM_SetLock (&grsegs[STARTFONT],true);
-    LoadLatchMem ();         // Load picture asset to VRAM
-    BuildTables ();          // sin/cos/view loopu tables
-    SetupWalls ();           // Lookup table wall textures
+    MM_SetLock (&grsegs[STARTFONT],true); // Lock font
+    LoadLatchMem ();     // Load picture asset to VRAM
+    BuildTables ();      // sin/cos/view loopu tables
+    SetupWalls ();       // Lookup table wall textures
 }
