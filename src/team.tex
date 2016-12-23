@@ -175,7 +175,7 @@ You may have noticed in the listing of VGA mode 13h and 4h (See figure~\ref{fig:
 \begin{figure}[H]
 \centering
   \shadowbox{
-      \includegraphics[width=\textwidth]{screenshots/wolf_screen2.png}
+      \fullimage{wolf_screen2.png}
   }  
 \caption{Monitor 2 running the game as normal}
 \label{fig:dm1}
@@ -200,7 +200,7 @@ Those were the work of Adrian Carmack\cw{Kevin Cloud did a few textures and also
 
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{screenshots/deluxe_paint.png}
+ \fullimage{deluxe_paint.png}
  \caption{Deluxe Paint tool, used to draw all assets in the game.}
 \end{figure}
 
@@ -209,7 +209,7 @@ Those were the work of Adrian Carmack\cw{Kevin Cloud did a few textures and also
 Since the VGA is palette based (colors a not specified via 24-bits RBG but by indices pointing to a palette) the creative process was difficult. The artist had first to make the key decision of what colors would go in the palette\footnote{Some games (such as Monkey island) used many palettes depending on the section of the game but id went for a simple solution: One palette for the whole game.} and then draw everything with only these colors.\\
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{screenshots/palette.png}
+\fullimage{palette.png}
  
 \end{figure}
 Above: the Game palette with Horizontal from 0x00 to 0x0F, vertical from 0x00 to 0xF0. The blue gradient starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is transparent color and always skipped during rendition.\\
@@ -474,7 +474,7 @@ The game shipped as follow:\\
 \par
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/result.png}
+ \fullimage{result.png}
  \caption{Tile EDitor screen} 
   \end{figure}
   \par
