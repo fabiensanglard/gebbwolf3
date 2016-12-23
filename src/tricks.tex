@@ -18,31 +18,31 @@ when the screen transition via fizzling:
 
 \begin{minipage}{\textwidth}
 \centering
-  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/dying/screenshot_16.png}\\
+  \includegraphics[width=.9\textwidth]{screenshots/fizzlefade/dying/screenshot_16.png}\\
   \vspace*{0.5cm}
-  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/dying/screenshot_19.png}\\
+  \includegraphics[width=.9\textwidth]{screenshots/fizzlefade/dying/screenshot_19.png}\\
 \end{minipage}
 
 \begin{minipage}{\textwidth}
 \centering
-  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/dying/screenshot_52.png} \\
+  \includegraphics[width=.9\textwidth]{screenshots/fizzlefade/dying/screenshot_52.png} \\
   \vspace*{0.5cm}
-  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/dying/screenshot_86.png} \\
+  \includegraphics[width=.9\textwidth]{screenshots/fizzlefade/dying/screenshot_86.png} \\
 \end{minipage}
 
 
 \begin{minipage}{\textwidth}
 \centering
-  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/boss/screenshot_60.png} \\
+  \includegraphics[width=.9\textwidth]{screenshots/fizzlefade/boss/screenshot_60.png} \\
   \vspace*{0.5cm}
-  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/boss/screenshot_66.png}  \\
+  \includegraphics[width=.9\textwidth]{screenshots/fizzlefade/boss/screenshot_66.png}  \\
 \end{minipage}
 
 \begin{minipage}{\textwidth}
 \centering
-  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/boss/screenshot_102.png}\\
+  \includegraphics[width=.9\textwidth]{screenshots/fizzlefade/boss/screenshot_102.png}\\
 \vspace*{0.5cm}
-  \includegraphics[width=.9\textwidth]{imgs/fizzlefade/boss/screenshot_130.png}\\
+  \includegraphics[width=.9\textwidth]{screenshots/fizzlefade/boss/screenshot_130.png}\\
 \end{minipage}
 
 
@@ -79,8 +79,8 @@ TODO:VALUES\\
 \par
 
 
-\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/fizzlefade/fibonnaci.png} \end{figure}
-\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/fizzlefade/galois.png} \end{figure}
+\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/fibonnaci.png} \end{figure}
+\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/galois.png} \end{figure}
       
 Note: Because the effect works by plotting pixels individually, this effect was very hard to replicate when developers tried to port the game to hardware accelerated GPU. As far as I know none of the port managed to replicate the fizzlefade.
 
@@ -100,7 +100,7 @@ Even though it limit the graphic capabilities, the palette system can be turned 
 It only takes 256*3 = 768 bytes and 768 out instructions to modify the full screen:
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{imgs/palette_damage.png}
+ \includegraphics[width=\textwidth]{screenshots/palette_damage.png}
  \caption{The palette RGB colors altered when taking damage.} \label{fig:palette_damage}
 \end{figure}
 A fast path is provided (which ironically only works if the CPU is as slow at the VGA) to update the palette via one \cw{lobsb} instruction. Otherwise if not supported a loop of 768 \cw{outsb} is used.
@@ -126,6 +126,6 @@ A fast path is provided (which ironically only works if the CPU is as slow at th
 
 \begin{figure}[H]
  \centering
-  \includegraphics[width=\textwidth]{imgs/cos_sin_table.pdf}
+  \includegraphics[width=\textwidth]{imgs/drawings/cos_sin_table.pdf}
  \caption{Finalez frame} 
 \end{figure}

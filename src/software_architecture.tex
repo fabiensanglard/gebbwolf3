@@ -101,7 +101,7 @@ The engine can be divided in three blocks:
 These three systems are amply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are two dimensional designed with square blocks.: e.g, the first level E1M1:\par
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{imgs/e1m1.png}
+ \includegraphics[width=\textwidth]{screenshots/e1m1.png}
  \caption{The legendary E1M1 viewed from the top as in TED5 (The main character has just neutralized a guard and is in his cell: He is represented as the green arrow at the bottom of the map).}
 \end{figure}
 \par 
@@ -117,20 +117,20 @@ A 3D dimensional view of the 2D map is rendered at runtime:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{imgs/ray_caster_explained/beginning.pdf}
+  \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
  \caption{Complex scene: 320 ray cast.} 
 \end{figure}
 
 Raycasting is simple yet powerful. Even for a complex scene involving multiple door and rooms, it delivers fast intersection. Based on the distance a ray hits a wall, a height for that column is generated, giving an illusion of perspective.
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_door.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_door.png}
  \caption{Complex scene: rendition.} 
 \end{figure}
 \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/ray_caster_explained/out_room.pdf}
+ \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_room.pdf}
  \caption{The 320 rays cast to render the walls in the previous scene.} \label{fig:Raycasting2}
 \end{figure}
 In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
@@ -215,7 +215,7 @@ The WL stuff was written specifically for Wolf3D while the ID\_ managers were re
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/architecture.pdf}
+\includegraphics[width=\textwidth]{imgs/drawings/architecture.pdf}
 \caption{Architecture with engine and sub-systems (in white) connected to I/O (in gray).}
 \label{fig:architecture}
 \end{figure}
@@ -316,7 +316,7 @@ In order to minimize the cost of page miss, the engine preload the page cache be
  \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/get_psyched.png}
+ \includegraphics[width=\textwidth]{screenshots/get_psyched.png}
  \end{figure}
  \par
 The precaching mechanism is not particularly clever: It loads as many page from the swap file as possible. It doesn't try to look at what is actually used in the level. But the eviction policy (LRU) ultimately stabilize the cache and even a machine with only 1MB of RAM is able to play a level with no HDD access after a few minutes. This design had a small annoying flow: On a low memory machine a cache miss would occur at the worse possible moment: When the player opens the last door and is about to find himself confronted to the heavy powered final boss, the cache manager would not have the sprites available. This would incur a HDD access, a lag and an unfair death.\\
@@ -358,7 +358,7 @@ A small manager performing a lot: Interface with map, graphic and music. Assets 
  \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/cache_manager_architecture.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/cache_manager_architecture.png}
  \end{figure}
  \par
 \bu{Note:} All resources are compressed. The CM handle decompression transparently.
@@ -382,7 +382,7 @@ and then passes these information to the Video Manager (\cw{VW\_DrawPropString})
 \end{minipage}
 \begin{minipage}{0.3\textwidth}
 \begin{flushright}
-\includegraphics[width=0.8\textwidth]{imgs/US_explained.png}
+\includegraphics[width=0.8\textwidth]{imgs/drawings/US_explained.png}
 \end{flushright}
 \end{minipage}
 \noindent
@@ -404,7 +404,7 @@ The Sound Manager abstracts interaction with all four sound systems supported: P
  \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/sound_manager_architecture.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/sound_manager_architecture.png}
  \end{figure}
  \par
 The source manager is described extensively in the "Sound and Music" section.
@@ -469,7 +469,7 @@ The resulting system can be seen as follow:\\
  \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/vga_layout/wasted_vga_ram.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/vga_layout/wasted_vga_ram.png}
  \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
 
@@ -496,7 +496,7 @@ The resulting system can be seen as follow:\\
 \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/vga_layout/vga_ram_architecture.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/vga_layout/vga_ram_architecture.png}
  \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
 \par
@@ -514,27 +514,27 @@ Note: Why use 208 height if the framebuffer is 200 pixels tall? That doesn't mak
 As a result from unchaining a complete framebuffer is divided into four banks. Horizontally it looks a little bit like mashed potatoes:
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/vga_layout/intro.png}
+ \includegraphics[width=\textwidth]{screenshots/vga_layout/intro.png}
  \caption{Intro screen as it appear on screen}
  \end{figure}
  \par
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/vga_layout/intro_bank.png}
+ \includegraphics[width=\textwidth]{screenshots/vga_layout/intro_bank.png}
  \caption{Intro screen as it is stored across 4 banks in a framebuffer} \label{fig:vga_layout_for_intro}
  \end{figure}
 \par
 An other example during a 3D sequence
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/vga_layout/wolf3d_7.png}
+ \includegraphics[width=\textwidth]{screenshots/vga_layout/wolf3d_7.png}
  \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
  \par
 
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/vga_layout/wolf3d_7_bank.png}
+ \includegraphics[width=\textwidth]{screenshots/vga_layout/wolf3d_7_bank.png}
  \caption{3D View as it is stored across 4 banks in a framebuffer}
  \end{figure}
 
@@ -559,7 +559,7 @@ This VGA bank layout has a fundamental impact on the engine: To draw anything fa
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/vga_ram_screen_layout.eps}
+\includegraphics[width=\textwidth]{imgs/drawings/vga_ram_screen_layout.eps}
 \end{figure}
 
 Even though it was convoluted it allows clever tricks. Let's take the example of clearing the screen to black. A naive approach would be to write every pixels left to write and top to bottom:\\
@@ -586,7 +586,7 @@ Which results in $320*80=25600$ and 1 out operation !\\
 This is not always that easy: You can write up to four pixels in one write as long as they are properly aligned. See the example following:
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{imgs//vga_multiple_pixel_write.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/vga_multiple_pixel_write.png}
 \end{figure}
 
 \note{Ask John Carmack why they went for Mode-Y instead of Mode-X which offered square pixels.}
@@ -617,7 +617,7 @@ TOOD: Drawing of how column line up in VGA RAM.\\
 At this point, the memory manager and the vga are initialized but nothing else. In order to make player wait for the rest of system to initialize, the engine displays the famous "PG13" screen (called in the engine "signon").
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/signon.png}
+\includegraphics[width=\textwidth]{screenshots/signon.png}
 \caption{Architecture and sub-systems.}
 \end{figure}
 Since the graphic pipeline is not initialized at this point, the full 64K pg13 screen ships compiled in the executable. The engine only copies from RAM to the VGA banks.\\
@@ -639,7 +639,7 @@ Note the main (conventional memory) which goes only up to 320K: Between the exec
 The legendary "Profound Carnage-13" self-proclaimed rating, spoofing the movie industry PG-13 rating. Mark of the irreverent id software mindset at the time. Things like these would not fly these days.
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/pg13.png}
+\includegraphics[width=\textwidth]{screenshots/pg13.png}
 \caption{Architecture and sub-systems.}
 \end{figure}
 

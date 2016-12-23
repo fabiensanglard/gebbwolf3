@@ -6,7 +6,7 @@ The machine can be broken down in five sub-systems parts together forming one pi
  \bigskip
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/fun_pipeline.pdf}
+\includegraphics[width=\textwidth]{imgs/drawings/fun_pipeline.pdf}
 %\def\svgscale{1.5}
 %\input{imgs/fun_pipeline.pdf_tex}
 \caption{Hardware pipeline.}
@@ -86,7 +86,7 @@ Depite its power (at least compared to the 286), the architecture of a 386 is si
 \begin{figure}[H]
 \centering
   
-      \includegraphics[width=\textwidth]{imgs/hardware/80386DX_arch.png}
+      \includegraphics[width=\textwidth]{screenshots/hardware/80386DX_arch.png}
 \caption{Architecture of Intel i386 DX}
 \end{figure}
 
@@ -110,7 +110,7 @@ It is important to understand what floating point is and how it works to fully g
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/floating_point_layout.pdf}
+\includegraphics[width=\textwidth]{imgs/drawings/floating_point_layout.pdf}
 \caption{Floating Point internals.}
 \end{figure}
   \bigskip
@@ -119,7 +119,7 @@ It is important to understand what floating point is and how it works to fully g
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/floating_point_math.pdf}
+\includegraphics[width=\textwidth]{imgs/drawings/floating_point_math.pdf}
 \caption{Floating Point three sections.}
 \end{figure}
   \bigskip  
@@ -141,7 +141,7 @@ Although correct, this way to explain floating point usually leaves programmers 
   
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/floating_point_intuitive.pdf}
+\includegraphics[width=\textwidth]{imgs/drawings/floating_point_intuitive.pdf}
 \caption{Alternative Floating Point internals}
 \label{fig:fp_internals}
 \end{figure}
@@ -154,7 +154,7 @@ Figure \ref{fig:fp_internals_window} illustrates how the number 6.1 would be enc
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/floating_point_window.pdf}
+\includegraphics[width=\textwidth]{imgs/drawings/floating_point_window.pdf}
 
 \caption{Value 6.1 approximated with floating point}
 \label{fig:fp_internals_window}
@@ -178,7 +178,7 @@ Which in binary translate to:
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/floating_point_layout_pi.pdf}
+\includegraphics[width=\textwidth]{imgs/drawings/floating_point_layout_pi.pdf}
 \caption{Floating Point internals}
 \label{fig:fp_internals}
 \end{figure}
@@ -198,7 +198,7 @@ And finally the graphic representation with window and offset:\\
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/floating_point_window_pi.pdf}
+\includegraphics[width=\textwidth]{imgs/drawings/floating_point_window_pi.pdf}
 
 \caption{3.14 window and offset.}
 \label{fig:fp_internals}
@@ -220,7 +220,7 @@ This is not a problem when everything is hardwired within an hardware floating p
 \begin{figure}[H]
 \centering
   \shadowbox{
-      \includegraphics[width=\textwidth]{imgs/BOX_IntelBOX387SX20.jpg}
+      \includegraphics[width=\textwidth]{screenshots/BOX_IntelBOX387SX20.jpg}
   }
 \caption{Intel 1991 ad for "Math CoProcessor".}
 \label{fig:fp_internals}
@@ -285,7 +285,7 @@ Here is how the memory was layout: \\
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/real_mode.pdf}
+\includegraphics[width=\textwidth]{imgs/drawings/real_mode.pdf}
 
 \caption{3.14 window and offset.}
 \label{fig:fp_internals}
@@ -303,7 +303,7 @@ As a result, out of the original 1024KB, only 640KB (called Conventional Memory)
 386 has 32 bits registers but Real Mode cannot use them for addressing (or even operations as a matter of facts). Everything has to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There are two kinds of pointers: \cw{near} and \cw{far}. A \cw{near} pointer is 16 bits and considered \emph{fast} because it can be used as is (but it only allows the IP to \cw{jmp} 16K in the code section). A \cw{far} pointer allows a \cw{jmp} anywhere but it is slower since a 16 bits segment register has to be shifted left 4 bits and combined with an other 16 bits offset register to form a 20 bits address:\\
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/register_combination_20_bits_address.pdf}
+\includegraphics[width=\textwidth]{imgs/drawings/register_combination_20_bits_address.pdf}
 \caption{How registers are combined to address memory.}
 \label{fig:register_comb_to_20_bits}
 \end{figure}
@@ -358,7 +358,7 @@ The 20 bits address bus of Real Mode limited the addressable RAM to 1MB. But mac
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/expanded_ram}
+\includegraphics[width=\textwidth]{imgs/drawings/expanded_ram.pdf}
 \caption{Expanded memory layout}
 \label{fig:ems_xms_layout}
 \end{figure}
@@ -423,7 +423,7 @@ PCs were connected to CRT monitors: Big, heavy, small diagonal, cathodic ray bas
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/crt_lcd.eps}
+\includegraphics[width=\textwidth]{imgs/drawings/crt_lcd.pdf}
 \caption{CRT (left) vs LCD (right)}
 \label{fig:lcd_vs_crt}
 \end{figure}
@@ -468,13 +468,13 @@ The first adapter of the family was released in 1981. The Monochrome Display
 Each iteration added new features and in 1991 the ubiquitous graphic system was the VGA\footnote{Video Graphic Adapter}. All video cards purchased had to follow the standard started by IBM. The universality of that system was a two edged sword: On one side developers had to program for one graphic system only. But on the other side, there was no escape to the shortcoming of the Adapter.\\
 
 \begin{figure}[H] 
-  \centering \includegraphics[width=\textwidth]{imgs/hardware/suntra_trident_tvga8800br.png} 
+  \centering \includegraphics[width=\textwidth]{screenshots/hardware/suntra_trident_tvga8800br.png} 
   \caption{A VGA card Trident 8800 (8 bits ISA). Courtesy of \cw{vgamuseum.info}.}
 \end{figure}
 \par
 \begin{figure}[H] 
   \centering 
-  \includegraphics[width=\textwidth]{imgs/hardware/diamond_stealth_vram_revb2.png} 
+  \includegraphics[width=\textwidth]{screenshots/hardware/diamond_stealth_vram_revb2.png} 
   \caption{A VGA card Diamond Stealth (16 bits ISA). Courtesy of \cw{vgamuseum.info}.}
 \end{figure}
 \bu{Trivia :} There was no GPU market back then. Since all video cards "only" had to be VGA compatible and have 256KB of RAM, most people just bought the cheapeast thing available. Note however that some cards only had a 8 bits ISA bus connector (like the trident) and some had an ISA 16 bits connector like the Diamond which twice as fast.\\
@@ -502,7 +502,7 @@ But the real reason was physical limitations and the need for a minimum bandwidt
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/vga.eps}
+\includegraphics[width=\textwidth]{imgs/drawings/vga.pdf}
 \caption{Video Graphic Array Architecture.}
 \label{fig:vga_arch}
 \end{figure}
@@ -525,7 +525,7 @@ The problem with this design is that programmers did not have a linear framebuff
 \par
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/vga_ram_screen_layout.eps}
+\includegraphics[width=\textwidth]{imgs/drawings/vga_ram_screen_layout.eps}
 \caption{Video Graphic Array Architecture.}
 \label{fig:vga_arch}
 \end{figure}
@@ -539,7 +539,7 @@ The problem with this design is that programmers did not have a linear framebuff
 To configure this mess of planes and circuitry, the four controllers had a set of 300 poorly documented registers to setup. Needless to say few programmers got to dive in the internal of this thing. My first drawing of the VGA was actually deceiving: The register system and architecture of the VGA was hell as confirm the diagram from IBM VGA Reference:\\
  \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/ibm_vga.eps}
+\includegraphics[width=\textwidth]{imgs/drawings/ibm_vga.pdf}
 \caption{IBM's VGA Documentation}
 \label{fig:ibm_vga}
 \end{figure}
@@ -589,7 +589,7 @@ To write to the VRAM the 1MB address space maps 64KB starting as indicated in ta
  \begin{figure}[H]
 \centering
   
-      \includegraphics[width=\textwidth]{imgs/ram_to_vga_mapping.pdf}
+      \includegraphics[width=\textwidth]{imgs/drawings/ram_to_vga_mapping.pdf}
     
 \caption{Mapping PC RAM to VGA banks.}
 \end{figure}
@@ -603,7 +603,7 @@ To write to the VRAM the 1MB address space maps 64KB starting as indicated in ta
 \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/mode12h.pdf}
+ \includegraphics[width=\textwidth]{imgs/drawings/mode12h.pdf}
 \caption{Banks layout in mode 12h.}
 \end{figure}
 \par
@@ -620,7 +620,7 @@ Pretty much everything else is bad:\\
 
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/wolf3d_ega.png}
+ \includegraphics[width=\textwidth]{screenshots/wolf3d_ega.png}
  \caption{Wolfenstein3D in 16 colors}
 \end{figure}
 
@@ -634,7 +634,7 @@ Pretty much everything else is bad:\\
   \par
  \begin{figure}[H]
 \centering
-      \includegraphics[width=\textwidth]{imgs/mode_13h.pdf}
+      \includegraphics[width=\textwidth]{imgs/drawings/mode_13h.pdf}
 \end{figure}
 \par
 
@@ -647,7 +647,7 @@ When writing or reading at an address K in RAM, the Chain-4 breaks down that add
   For example, writing at 0x0AF11 would result in writing in bank 3 at offset 0x0AF. Since this is all hardwired it is fast and framebuffer could be refreshed at 70Hz.
  \begin{figure}[H]
 \centering
-      \includegraphics[width=\textwidth]{imgs/mode_13h_example.pdf}
+      \includegraphics[width=\textwidth]{imgs/drawings/mode_13h_example.pdf}
 \end{figure}
 \par
 The side effect is that 75\% of the RAM is wasted (since only 14 bits were usable for offset).\\
@@ -673,13 +673,13 @@ framebuffer to the CRT.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{imgs/circleframebuffer.png}
+  \includegraphics[width=\textwidth]{screenshots/circleframebuffer.png}
   \caption{Drawing a circle in the framebuffer}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{imgs/circlescreen.png}
+  \includegraphics[width=\textwidth]{screenshots/circlescreen.png}
   \caption{How the framebuffer looked once stretched on the CRT monitor :( !}
 \end{figure}
 \par
@@ -693,14 +693,14 @@ Double buffering is paramount for smooth animation. With only one buffer the sof
 \par
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/doublebuffer_before.eps}
+\includegraphics[width=\textwidth]{imgs/drawings/doublebuffer_before.eps}
 \end{figure}
 \par
 In this example the CPU has finished writing the framebuffer (on the left) and the CRT (on the right) electron bean has started to scan it onto the screen. At this point in time the electron bean has scanned half the framebuffer and therefore the circle has been partially drawn on the screen.
 \par
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/doublebuffer_after.eps}
+\includegraphics[width=\textwidth]{imgs/drawings/doublebuffer_after.eps}
 \end{figure}
 \par
 But if the CPU is fast eonugh (faster than 70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here: The next frame was drawn with the circle moved to the right. The electron bean did not know what and just kept on scanning the framebuffer. The result on screen is now a composite of two frames: It looks like two frames were torn and tapped together. Hence the name "tearing".\\
@@ -727,7 +727,7 @@ A PC came equipped with a beeper, commonly known as a "PC Speaker" capable of ge
 \par
  \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/square_wave.pdf}
+\includegraphics[width=\textwidth]{imgs/drawings/square_wave.pdf}
 \caption{Two beeps of different frequencies generated via PC Speaker.}
 \end{figure}
 
@@ -762,7 +762,7 @@ Even though adoption was improving, a fast majority of PCs had no sound cards wh
 
   \subsection{AdLib}
   Started by Martin Prevel, a former professor of music in 1988. After an initial struggle to convince game developers to use their card, Adlib had convinced Sierra On-Line to support their hardware for their lates title: King's Quest IV (over 3 million copies sold). Soon, all game developers embraced the Adlib. Equipped with a Yamaha YM3812 also known as the OPL2 the card can produce 9 channels of sound, each made of two oscillators or 6 channels with 5 percussion instruments available. The FM synthetiser was limited but allowed to play pleasant musics.\\
-  \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/hardware/adlib.png} \end{figure}
+  \begin{figure}[H] \centering \includegraphics[width=\textwidth]{screenshots/hardware/adlib.png} \end{figure}
    \bu{Trivia :} Notice the 8 bits ISA bus connector at the bottom.
 \par
 \bu{Trivia :} Canadian company and especially Quebec were very innovative in the early 90s. Ad Lib manufactured Sound Card, Matrox made a killing with Millenium Graphic Card, Watcom the best DOS C compiler which would be used for Doom. ATI\footnote{History would repeat itself in the late 90s in the field of Graphic Cards: Nvidia Vs ATI} would later emerge as AAA GPU manufacturer in the years 2000.\\
@@ -774,14 +774,14 @@ Even though adoption was improving, a fast majority of PCs had no sound cards wh
   The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative labs. It was a smart product which clearly came after Adlib dominant position. Not only they were equipped with the same OPL2 chip, prodiving 100\% compatibility with Adlib musics playback, they were technologically superior with a DSP\footnote{An Intel MCS-51 market as a "Digital Sound Processor", not "Digital Signal Processor"}  allowing PCM playback (digitized sounds) at 8 bits per sample and 23Hz. The card also came with a DA-15 port allowing connection of a joystick!. That is right: The only way to connect a joystick to a PC was to buy a sound card\footnote{In the late 90s the only way to have a CD-ROM reader was also to buy a soundcard}.\\ 
 \par
 
-\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/hardware/sb.png} \end{figure}
+\begin{figure}[H] \centering \includegraphics[width=\textwidth]{screenshots/hardware/sb.png} \end{figure}
 \bu{Trivia :} Notice the 8 bits ISA bus connector at the bottom.\\
   \bu{Trivia :} The quality of the card would lead the Sound Blaster to become a de-factor standard in the 90s annd bring Adlib to bankruptcy\footnote{The reign of the Sound Blaster came to an end with Windows 95 which standardized the programming interface at application level (eliminating the importance of backward compatibility with Sound Blaster)}.
 
 
   \subsection{Sound Blaster Pro}
 The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but also supported faster digital input and output sampling rates (up to 22.05 kHz stereo or 44.1 kHz mono), added a "mixer" to provide a crude master volume control (the round thing on the picture), and a crude high pass or low pass filter. It used a pair of YM3812 chips to provide stereo music-synthesis (one for each channel).\\
-\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/hardware/sbpro.png} \end{figure}
+\begin{figure}[H] \centering \includegraphics[width=\textwidth]{screenshots/hardware/sbpro.png} \end{figure}
 \bu{Trivia :} The card appears to have a 16 bits ISA bus connector (check the difference with Sound Blaster 1.0. However it does not have 'fingers' for data transfer on the higher "AT" portion of the bus connector. It uses the 16-bit extension to the ISA bus to provide the user with an additional choice for an IRQ (10) and DMA (0)m channel only found on the 16-bit portion of the edge connector.)\\
 \par
 \bu{Trivia :} Notice on the very left of the card in black a CD-ROM interface. The only way to connect a CD-ROM to a PC back then.
@@ -790,7 +790,7 @@ The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but also s
   \subsection{Disney Sound Source}
   Plugged into the printer port (parrallel port) of the PC. Covox-idea based DAC, marketed by Disney Software in early 1990s. It consisted of 2 parts: a DAC plugged into printer port and separate amplifier / speaker box.[5] Its price was set to only \$14 and it was originally supported by many games. It used external power (9 volt battery) and could be turned on/off by software.\\
   \par
-  \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/hardware/ss.png} \end{figure}
+  \begin{figure}[H] \centering \includegraphics[width=\textwidth]{screenshots/hardware/ss.png} \end{figure}
 
 
 
