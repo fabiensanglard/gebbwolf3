@@ -1,6 +1,6 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-id Software was funded during February 1991 by four people: 
+id Software was funded during February 1991 by four people departing from SoftDisk: 
 
  \begin{figure}[H]
 \centering  
@@ -17,7 +17,7 @@ id Software was funded during February 1991 by four people:
 \caption{id Software founding members.}\label{fig:Id Software team}
 \end{figure}
 
-Wolfenstein 3D was id first title but the team had already shipped no less than 13 games will working for their previous employer SoftDisk:\\
+Wolfenstein 3D was id first title but the team had already shipped no less than 13 games will working for their previous employer:\\
 \begin{itemize}
   \item Dangerous Dave (1988)\footnote{Dangerous Dave is a solo project of John Romero predating Id's formation, but Id Software produced its first sequel and it is sometimes regarded as an early Id Software title. Later Dangerous Dave sequels were not made by Id, nor were later Catacomb titles.}
   \item Commander Keen
@@ -41,7 +41,7 @@ Wolfenstein 3D was id first title but the team had already shipped no less than 
 
 
 Considering the magnitude and ambitions of the title, four more people were added to the team for a total of eight.\\
-
+\note{TODO Ask team members if they know how old were Jay, Bobby, Robert and Jason}
  \begin{figure}[H]
 \centering  
 \begin{tabularx}{\textwidth}{ X  X  X  }
@@ -56,7 +56,7 @@ Considering the magnitude and ambitions of the title, four more people were adde
 \end{tabularx}
 \caption{id Software hires.}\label{fig:Id Software hires}
 \end{figure}
-\note{TODO Ask team members if they know how old were Jay, Bobby, Robert and Jason}
+
 \begin{fancyquotes}
 Jason was part of Id at the start, but we parted ways during Wolf development.
  \bigskip \\
@@ -90,7 +90,7 @@ Development took seven months (from November 1991 to May 1992) during which id S
  \end{figure}
 
 \section{Office layout}
-The full team was working in one room which allowed fast communication (and a lot of noise disturbance given John Romero and Tom Halls type of interaction.). Notice on the upper floor, the SNES where countless games of F-Zero where played and the Donjon \& Dragons area extensively mentioned in "Masters of Doom" book.
+The full team was working in one room which allowed fast communication (and a lot of noise disturbance given John Romero and Tom Halls type of interaction). Notice on the upper floor, the SNES where countless games of F-Zero where played and the Donjon \& Dragons area extensively mentioned in "Masters of Doom" book.
 The team was setup as follow\footnote{Since they played Dungeons \& Dragons a lot, the map is drawn D\&D style.}:
 \par
 \begin{figure}[H]
@@ -104,7 +104,7 @@ The team was setup as follow\footnote{Since they played Dungeons \& Dragons a lo
   \includegraphics[width=\textwidth]{imgs/drawings/map/id-software-office-madison_top_floor.eps}
  \caption{Office top floor.} 
 \end{figure}
-Of all the team members, John Carmack enjoyed the shortest commute! Everybody was working with an high end 386-DX 33Mhz. As for combining engine, tools and assets:\\
+Everybody was working with an high end 386-DX 33Mhz. As for combining engine, tools and assets:\\
 
  \begin{fancyquotes}
 We started with floppy data transfer, but we had a Novell network on coax Ethernet by the end. We didn't have a version control system.  Surprisingly, we went all the way to Quake 3 without one, then we started using Visual Source Safe.\\
@@ -141,9 +141,9 @@ We started with floppy data transfer, but we had a Novell network on coax Ethern
 
 
 
-Development was done with Borland C++ 3.1 (the language used however was C): The editor used VGA mode 3: 80 characters wide and 25 characters tall.
-
-John Carmack took care of the runtime code. John Romero programmed many of the tools (editor, packers, ...). Jason Blochowiak was contracted to write important subsystems of the game (Input manager, Page Manager, Sound Manager, User Manager).\\
+Development was done with Borland C++ 3.1 (however the language used was C): The editor uses VGA mode 3 offering a real estate of 80 characters wide and 25 characters tall.\\
+\par
+John Carmack took care of the runtime code. John Romero programmed many of the tools (TED map editor, packers, ...). Jason Blochowiak was contracted to write important subsystems of the game (Input manager, Page Manager, Sound Manager, User Manager).\\
 \\
 \begin{figure}[H]
 \centering
@@ -154,7 +154,7 @@ John Carmack took care of the runtime code. John Romero programmed many of the t
 \end{figure}
 
 
-To compensate for the tiny CRT, some of the developers used two screens (an unusual thing at the time).\\
+To compensate for the tiny CRT display, some of the developers used two screens (an unusual thing at the time).\\
 
 \begin{fancyquotes}
 At that point, we wanted 21" monitors, but couldn't justify them.  I used a second mono monitor to allow Turbo Debugger 386 to keep the main screen in graphics mode while I stepped through the code.\\
@@ -162,7 +162,7 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA mode 13h and 4h (See figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting VRAM address. This allows for a neat trick where you plug two graphic cards in the PC: One in monochrome text picking up data at 0xB000 and the other one VGA picking up  data at 0xA000. This allows a developer to debug the game engine in real-time.\\
+You may have noticed in the listing of VGA modes: 13h and 4h (figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting VRAM address. This allows for a neat trick where two graphic cards are plugged in the PC: One in monochrome text picking up data at 0xB000:0000 and the other one VGA picking up data at 0xA000:0000. This setup allows a developer to debug the game engine in real-time.\\
 \begin{figure}[H]
 \centering
   \shadowbox{
@@ -196,7 +196,7 @@ The graphic assets are divided as follow:
 \item 2D Menus items (pictures).
 \item 3D Action phase items (walls and sprites).
 \end{itemize}
-Those were the work of Adrian Carmack\cw{Kevin Cloud did a few textures and also worked on the design and layout of the Wofenstein 3D Hint book published eventually.}. All of the work was done with Deluxe Paint (from Electronic Arts) and saved to LBM files (Deluxe Paint format). 
+Those were the work of Adrian Carmack\footnote{Kevin Cloud did a few textures and also worked on the design and layout of the Wofenstein 3D Hint book published eventually.}. All of the work was done with Deluxe Paint (from Electronic Arts) and saved in LBM files (Deluxe Paint format). 
 
 \begin{figure}[H]
   \centering
@@ -205,17 +205,17 @@ Those were the work of Adrian Carmack\cw{Kevin Cloud did a few textures and also
 \end{figure}
 
 
-
-Since the VGA is palette based (colors a not specified via 24-bits RBG but by indices pointing to a palette) the creative process was difficult. The artist had first to make the key decision of what colors would go in the palette\footnote{Some games (such as Monkey island) used many palettes depending on the section of the game but id went for a simple solution: One palette for the whole game.} and then draw everything with only these colors.\\
+\par
+Since the VGA is palette based (colors a not specified via 24-bits RBG but by indices pointing to a 256 colors table) the creative process was difficult. The artist had first to make the key decision of what colors would go in the palette\footnote{Some games (such as Monkey island) used many palettes depending on the section of the game but id went for a simple solution: One palette for the whole game.} and then draw everything with only these colors.\\
 \begin{figure}[H]
   \centering
 \fullimage{palette.png}
- 
+ \caption{Wolfentein 3D palette: Everthing in the game is drawn using one of these 256 colors.}
 \end{figure}
-Above: the Game palette with Horizontal from 0x00 to 0x0F, vertical from 0x00 to 0xF0. The blue gradient starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is transparent color and always skipped during rendition.\\
+The Game palette with Horizontal from 0x00 to 0x0F, vertical from 0x00 to 0xF0. The blue gradient starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is transparent color and always skipped during rendition.\\
 \par
 
-All assets were hand drawn and artist had to factor in how the framebuffer would be stretched onto the screen due to non-square pixels.:\\
+All assets were "hand" drawn with a mouse. Since the VGA would stretch the framebuffer when displaying it on the screen (from 320x200 to 320x240), Adrian had to be careful to draw at the same resolution as the game would run. To factor in these non-square pixels.\\
 \par
 \begin{fancyquotes}
 We didn't have any scanning tools at the time.\\
@@ -240,7 +240,7 @@ We didn't have any scanning tools at the time.\\
 
 
 \section{Asset workflow}
-Once all the Deluxe Paint images were ready, a tool, IGRAB-ED, packed all the ILBMs files and generated a C header file:. The program could reference an asset directly by using its macro.\\
+As the graphic assets were generated by artists, a tool (IGRAB-ED) packed all the ILBMs files together in an archive and generated a C header file with asset IDs:. The engine references an asset directly by using these IDs.\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/drawing_plain.eps}
@@ -458,13 +458,13 @@ To rough out compositions, I used Cakewalk ("CW"). I had been using it for sever
 
 
 
-\section{Results}
-The game distribution model was shareware: The game engine with the first episode of the game was given for free and encouraged to be copied and distributed to the maximum number of peoples. To get the five other episodes, player had to mail \$50 by mail:\\
+\section{Distribution}
+The game distribution model was shareware: The game engine with the first episode of the game was given for free and encouraged to be copied and distributed to a maximum number of peoples. To get the five other episodes, player had to mail \$50 by mail:\\
 \par
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{screenshots/shareware.png}
- \caption{User exits the game: A message explains how to get the full version.}
+ \caption{User exits the game back to DOS prompt: A message shows how to get the full version.}
  \end{figure}
 
 \end{document}
@@ -478,11 +478,11 @@ The game shipped as follow:\\
  \caption{Tile EDitor screen} 
   \end{figure}
   \par
- The files shipped can be divided in five parts:
+ The files can be divided in five parts:
  \begin{itemize}
  \item WOLF3D.EXE: The Game engine.
- \item VSWAP.WL1: Contains all the assets (sprites,textures, digitized effects) needed during 3D action phases.
- \item Music files:
+ \item VSWAP.WL1: Contains all the assets (sprites, textures, digitized sound) needed during 3D action phases.
+ \item Music files used during both 3D and 2D phases:
      \begin{itemize}
      \item AUDIOHED.WL1 : Index to payload in \cw{AUDIOT} file.
      \item AUDIOT.WL1: Uncompressed audio data. 
@@ -492,7 +492,7 @@ The game shipped as follow:\\
      \item MAPHEAD.WL1 : Index into \cw{GAMEMAPS} file.
       \item GAMEMAPS.WL1 : Compressed Map payloads.
       \end{itemize}
-\item Pictures for 2D menus:
+\item Pictures used during 2D menus phase:
     \begin{itemize} 
     \item VGAHEAD.WL1 : Index into \cw{VGAGRAPH} file.
     \item VGADICT.WL1 : Huffman-tree to decompress each the picture.
@@ -511,12 +511,4 @@ The game shipped as follow:\\
 \item SOD: Spear of Destiny.
 \end{itemize}
  
-\subsection{Engine}
- The engine is very tiny and only occupy 94KB (with 64KB dedicated to the Signon screen and 768B for the palette) which means the engine is in fact only 29KB of code.\\
- \par
- 
-
-
-
-
-
+\textbf{\underline{Trivia :}}The engine is very tiny and only occupy 94KB (with 64KB dedicated to the Signon screen and 768B for the palette) which means the engine is in fact only 29KB of code.\\

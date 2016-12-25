@@ -1,9 +1,14 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-PC performances in the 90s were so overwhelmingly dominated by their CPU that they were simply referred to not by their brand or GPU\footnote{There were no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by their Intel chip. If your PC had a 80386 or equivalent in it, it was a 386. If it had an Intel 80286, it was a 286. Wolfenstein was target at what was majoritarily found on people's desk: The 386s with degraded performances (yet still playable) on 286s.\\
-\\
-The machine can be broken down in five sub-systems parts together forming one pipeline: Input, Cpu, Ram, Video and Audio.\\
- \bigskip
+The machine can be broken down in five sub-systems parts together forming one pipeline:\\
+\begin{itemize}
+ \item Input
+ \item  Cpu
+ \item  Ram
+ \item  Video 
+ \item  Audio
+\end{itemize}
+ 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/fun_pipeline.pdf}
@@ -13,9 +18,8 @@ The machine can be broken down in five sub-systems parts together forming one pi
 \label{fig:digraph}
 \end{figure}
 
-As I will describe, none of theses part were good for a 3D game engine although some were worse than others:
-
- \bigskip
+This chapter treats all five parts independently but to be frank none of them were good for a game, not to mention a 3D game engine. But some were worse than others:\\
+\par
 
 \begin{figure}[H]
 \centering
@@ -31,10 +35,12 @@ As I will describe, none of theses part were good for a 3D game engine although 
 \caption{Component quality for a game engine.}
 \end{figure}
 
-The pipeline offered a lot of resistance: hardware manufacturers had not embraced the game industry yet and it showed: PC Gaming was a niche market.\\
+The pipeline offered a lot of resistance. Hardware manufacturers had not embraced the gaming industry yet and it showed a lot.\\
 
 \section{CPU: Central Processing Unit}
   \subsection{Overview}
+  PC performances in the 90s were so overwhelmingly dominated by their CPU that they were simply referred to not by their brand or GPU\footnote{There were no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by their Intel chip. If your PC had a 80386 or equivalent in it, it was a 386. If it had an Intel 80286, it was a 286. Wolfenstein was target at what was majoritarily found on people's desk: The 386s with degraded performances (yet still playable) on 286s.\\
+\par
   The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors. The machines based on the 16 bits 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor: The 80386 which was commonly called 386 or i386. Moore's law was in full swing as seen on a MIPS\footnote{Million Instructions Per Second.} histogram:
 
 
@@ -866,7 +872,9 @@ The width of the data bus depends on how many "fingers" a card has.\\
 
 
 \section{Summary}
-In a nutshell, to say a PC was difficult to program for games would be an understatement. The CPU was good at doing the wrong thing, the best graphic interface allowed neither double buffering nor square pixels, the memory model only allowed 1 standard MB...with address composed of two separate 16 bits registers. Last but not least the default sound system allowed only one tune...and the people who did have a sound card made an eco-system of four overlapping configurations. Yet, despite all these unfavorable conditions, teams of developers gathered to tame the beast and unleash its power to gamers. One of them was Ideas from the Deep, also know was id Software.
+In a nutshell, to say a PC was difficult to program for games would be an understatement. It was nightmare. The CPU was good at doing the wrong thing, the best graphic interface allowed neither double buffering nor square pixels, the memory model only allowed 1 standard MB...with address composed of two separate 16 bits registers. Last but not least the default sound system allowed only one tune...and the people who did have a sound card made an eco-system of four overlapping configurations.\\
+\par
+But despite all these unfavorable conditions, teams of developers gathered to tame the beast and unleash its power to gamers. One of them called itself id Software\footnote{They originally called themselves Ideas From the Deep but they decided to shortened it to simply id, which stands for "in demand," and is pronounced as in "did" or "kid." The name also had another meaning which is referring to id, one of the three parts (The other two being ego and super-ego) of the brain that behaves by the pleasure principle.}.
 \end{document}
 
 

@@ -1,13 +1,13 @@
-Wolfenstein 3D was released on May, 5th 1992 and established the First Person Shooter genre. The game design supported by beautiful 256 colors graphics, speed, high framerate, clever I.A, crisp sounds effects and engaging musics was universally acclaimed. Within a year more than 100,000 units had been sold over the mail\footnote{The game was distributed via shareware: You had to mail money to get the full version}, bringing fame and a little bit of fortune to the team who built it: id Software.\\
+Wolfenstein 3D was released on May, 5th 1992 and established the First Person Shooter genre. The game design supported by an engine allowing beautiful 256 colors graphics, speed, high framerate, clever I.A, crisp sounds effects and engaging musics was universally acclaimed. Within a year more than 100,000 units had been sold over the mail\footnote{The game was distributed via shareware.}, bringing fame and a little bit of fortune to the team who built it: id Software.\\
 \par
 \begin{figure}[H]
 \centering
 \fullimage{action_packed.png}
 \end{figure}
 \par
-The many fans did not stop at beating the game. Because they wanted to modify it and make their own characters and maps, they started to explore and reverse engineer the engine. Within a few months the assets formats were well known and people released mods\footnote{MODified version.} with altered graphics, sounds effects, music and maps. The core of the game however, the 3D engine and the secrets of its speed remained mostly unknown.\\
+But the many fans did not stop at beating the game. Because they wanted to modify it and make their own characters and maps, they started to explore and reverse engineer the engine. Within a few months the assets formats were well known and people released mods\footnote{MODified version.} with altered graphics, sounds effects, music and maps. The core of the game however, the 3D engine and the secrets of its speed remained mostly unknown.\\
 \\
-It was kept secret for an obvious reason: A good game engine was considered the main asset of a game company. As a mean to outperform competitors it was a good business practice to keep other programmers  uneducated in order to gain technological advantage and generate profit.\\
+It was kept secret for an obvious reason: A good game engine is considered the main asset of a game company. As a mean to outperform competitors it is a good business practice to keep other programmers clueless in order to gain technological advantage and generate more profit.\\
 \\
 But a few people within id Software did not see things that way. Instead of going along with what was common sense, they wanted to embrace players enthusiasm and fully open the source code to the public. After many internal debate, id Software did the unthinkable: On July 21, 1995 they uploaded a zip archive on \emph{ftp.idsoftware.com} containing the full source code of the engine with all instructions to build it\footnote{They were not totally crazy: They had built a game engine making Wolfenstein 3D obsolete: Doom was released on December 10, 1993}.\\
 
@@ -17,28 +17,28 @@ But a few people within id Software did not see things that way. Instead of goin
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}\\
 \\
-Opening the code did not only allow MODding and educate programmers. It had two unforeseen consequences:\\
+Opening the code did not only allow modding and educate programmers. It had two unforeseen consequences:\\
 \\
-First, it allowed the software to live long after the target hardware and operating system died. With access to the source, programmers were able to maintain and port the engine to new hardware and operating systems: Twenty years after the release of Wolfenstein 3D you can still play the game on anything with a CPU, some RAM and a framebuffer. \\
+First, it allowed the software to live long after the target hardware and operating system died. With access to the source, programmers were able to maintain and port the engine to new hardware and operating systems. Twenty years after the release of Wolfenstein 3D you can still play the game on anything with a CPU, some RAM and a framebuffer. \\
 \\
-Second, it create a window back in time looking right into 1991. After having reviewed Quake III and Doom III on \emph{fabiensanglard.net} I thought i would have merely skimmed over Wolfenstein 3D engine and its "simple" raycasting technology. But when out of curiosity I took a deeper look, something stroke me and I could not stop. The more I read, the more I came to realize one very important thing: The target machine, the IBM PC, was designed for office work and not gaming. It was meant to crunch integers and display static images for word processor and spreadsheet applications. That is when I thought there was a story to tell: what id Software\footnote{A few other companies, such as Origins and LucasArts where also doing amazing things: I focus on Id because we have the source code!} did in 1991 was not just program a machine. What they did was re-purpose something built to do office work and turned it into the best gaming platform in the world.\\
+Second, it created a window back in time looking right into 1991. Having reviewed complex engines such as Quake III and Doom III on \emph{fabiensanglard.net} I thought i would have merely skimmed over Wolfenstein 3D engine and its "simple" raycasting technology. But when out of curiosity I took a deeper look, something stroke me and I could not stop. The more I read, the more I came to realize one very important thing: The target machine, the IBM PC, was designed for office work. Not for gaming. It was meant to crunch integers and display static images for word processor and spreadsheet applications. This the story this book is trying to tell: what id Software\footnote{A few other companies, such as Origins and LucasArts where also doing amazing things: I focus on Id because we have the source code!} did in 1991 was not just program a machine. What they did was re-purpose something built to do office work by turning it into the best gaming platform in the world.\\
 \\
-But why go through so much trouble? After all if you were a game company and you wanted to make video games, you had hardware dedicated to this very specific thing: video game console! The Megadrive, the NES and the Neo-Geo had sprite engine which albeit small limitations such as size and number allowed to move something on the screen by simply updating its $(x,y)$ coordinates. They were able to easily generate smooth animation at 60 frames per second. If really you wanted to use a personal computer for gaming why not use an Amiga which was packed with coprocessors designed for animation?\\
+But why go through so much trouble? After all if you were a game company and you wanted to make video games, you had hardware dedicated to this very specific task: video game console! The Megadrive, the NES and the Neo-Geo had sprite engine which albeit small limitations such as size and number allowed to move something on the screen by simply updating its $(x,y)$ coordinates. They were able to easily generate smooth animation at 60 frames per second. They had controllers, they had an audio system for sound and music. They were homogeneous. If really you wanted to use a personal computer for a game why not use an Amiga which was packed with coprocessors designed for animation?\\
 \\
-The reason fits within one word: Framebuffer. The kind of game they wanted to do could not be done with a sprite engine or tricks from a Copper\footnote{Nickname of a powerful Amiga co-processor allowing operations at vsync level}. They wanted to shake the gaming world by providing an immersive experience in three dimensions. And in order to do that, every frames, 70 times per seconds, they needed to draw a full screen, pixel per pixel, in a framebuffer before it was sent to the monitor. \\
+The reason fits within one word: Framebuffer. The kind of game these people wanted to do could not be done with a sprite engine or tricks from a Copper\footnote{Nickname of a powerful Amiga co-processor allowing operations at vsync level}. They wanted to shake the gaming world by providing an immersive experience in three dimensions. And in order to do that they needed to draw a full screen, pixel per pixel, in a framebuffer before it was sent to the monitor. \\
 \par
-To draw all these pixels, they needed a powerful CPU. A PC CPU outperformed any console or Amiga\footnote{Jimmy Maher advances an interesting theory in his book "The Future was here: The Commodore Amiga": People wanted to play First Person Shooter, which the Amiga architecture did not allow: This inability ultimately provoked the downfall of Commodore's best seller.} could do the job as the mips\footnote{Million Instructions Per Second.} graph shows.
+And to draw all these pixels, they also needed a powerful CPU. A PC outperformed any console or Amiga\footnote{Jimmy Maher advances an interesting theory in his book "The Future was here: The Commodore Amiga": People wanted to play First Person Shooter, which the Amiga architecture did not allow: This inability ultimately provoked the downfall of Commodore's best seller.} could do the job as the mips\footnote{Million Instructions Per Second.} graph shows.
 \par
 \input{imgs/drawings/available_hardware_mips.tex}
 
  
-With its fast CPU and 256K framebuffer, the IBM looked promising at first. Except there were three seemingly impossible\footnote{The title of this book could have easily be: "The Impossible Machine".} to overcome obstacles:\\
+With its fast CPU and 256K framebuffer, the PC looked promising at first. Except according to the machine manual there were three seemingly impossible\footnote{The title of this book could have easily be "The Impossible Machine".} problems to overcome:\\
 \begin{itemize}
-\item The video output (the VGA) could not do double buffer: It was not possible to have smooth animations without tearing.
-\item The CPU could only do integer operations. But 3D engines and they trigonometric operations requires fractions.
-\item The PC Speaker, the default sound device could only produce one tune: A beeeeeeeeeep which was more annoying than anything.
+\item The video system (the VGA) could not do double buffer: It was not possible to have smooth animations without tearing.
+\item The CPU could only do integer operations...yet the mathematics required for 3D involves fractions.
+\item The PC Speaker, the default sound device could only produce one tune: A "beep" which was more annoying than anything.
 \end{itemize}
-On top of these major obstacles layed a myriad of serious difficulties:\\
+On top of these major blockers layed a myriad of major difficulties:\\
 \begin{itemize}
 \item The RAM addressing mode was not flat but segmented resulting in complex and error prone pointer mathematics.
 \item The pixel of the VGA were not square: the framebuffer was stretched vertically when transfered to the screen.
@@ -46,11 +46,11 @@ On top of these major obstacles layed a myriad of serious difficulties:\\
 \item The machine could only address 1MB or RAM. To go past that you had to enter a fragmented system of drivers.
 \end{itemize}
 
-It looked like the machine was DOOMed to do boring things. Yet teams of people made it go otherwise. But how ? This is the raison d'etre of this book: First explore the hardware with its limitations and then dig into the code to discover how the software circumvented and sometimes exploited weaknesses:
+Ovearll, it looked like the machine was \emph{doom}ed to do boring things. But teams of people around the world did not accept that and tinkered with the hardware to do unexpected things. How they did it is the raison d'etre of this book: By first showing the hard limitations I hope programers will grow a deep appreciation for the software. Therefore the book is organized as follow:
 \begin{itemize}
-\item Chapter I: Hardware, All five components of a PC and their limitations	.
-\item Chapter II: Team\footnote{This is an engineering book: The description is logistic. For the human aspect read David Kushner's chef d'oeuvre: "Masters of Doom''}, the people pushing the edges.
-\item Chapter III: Software, the Wolfenstein 3D game engine.
+\item Chapter I: The Hardware of 1991: All five components of a PC and their limitations.
+\item Chapter II: THe Team\footnote{This is an engineering book: The description is logistic. For the human aspect read David Kushner's chef d'oeuvre: "Masters of Doom''}, the people pushing the edges.
+\item Chapter III: The Software: Wolfenstein 3D game engine.
 \end{itemize}
 \par
 \bu{Trivia :} The game was inspired by the 1981 Apple II title "Castle Wolfesntein" by Silas Warner. The Apple version was stealth oriented (Wolfesntein "Profound Carnage" style was a clear departure from the original theme) but really stood out thanks to its unprecedented use of digitized voices. Initially the team believed that they would be unable to use the Wolfenstein name due to trademark issues, and came up with multiple possible titles, only to discover that the original developer, Muse Software, had gone out of business several years earlier and let the trademark lapse, leaving them the option to name their game Wolfenstein 3D.
