@@ -358,14 +358,14 @@ A small manager performing a lot: Interface with map, graphic and music. Assets 
  \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/cache_manager_architecture.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/cache_manager_architecture.pdf}
  \end{figure}
  \par
 \bu{Note:} All resources are compressed. The CM handle decompression transparently.
 \begin{verbatim}
 http://www.shikadi.net/moddingwiki/GameMaps_Format
 \end{verbatim}
-
+\bu{Trivia :} Is it a typo with filename \cw{AUDIOHEA.WL} ? Correct spelling would be \cw{AUDIOHEAD.WL}. Where is the \cw{D}? This is in fact a limition of the operatin system. DOS 5 only allows 8.3 filename (at most eight characters followed by at dot and at most three character for the extension).
 
 
 
@@ -404,10 +404,10 @@ The Sound Manager abstracts interaction with all four sound systems supported: P
  \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/sound_manager_architecture.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/sound_manager_architecture.pdf}
  \end{figure}
  \par
-The source manager is described extensively in the "Sound and Music" section.
+The sound manager is described extensively in the "Sound and Music" section.
 
 
 
@@ -555,11 +555,11 @@ The culprit being the 320*200=64000 slow instruction to set the mask. But if we 
 \par
 This code can run without issues at 70 frames per second: Only 200 slow out instruction are used.\\
 \par
-This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algorithms picked during 2D and 3D all the way up to the assets compression techniques. In wolf3d: Everything is vertical!\\
+This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algorithms picked during 2D and 3D all the way up to the assets compression techniques and how they are stored in RAM (rotated 90 degres). In wolf3d: Everything is vertical!\\
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/drawings/vga_ram_screen_layout.eps}
+\includegraphics[width=\textwidth]{imgs/drawings/vga_ram_screen_layout.pdf}
 \end{figure}
 
 Even though it was convoluted it allows clever tricks. Let's take the example of clearing the screen to black. A naive approach would be to write every pixels left to write and top to bottom:\\

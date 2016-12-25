@@ -842,13 +842,39 @@ Because there can be many combinations of VGA bank alignment and number of pixel
 
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation1.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/mask_banks.pdf}
+ \end{figure}
+
+
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation1.pdf}
  \end{figure}
  
  \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation2.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation2.pdf}
  \end{figure}
+
+  \begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation3.pdf}
+ \end{figure}
+
+  \begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation4.pdf}
+ \caption{Passes: 8,15,14}
+ \end{figure}
+
+   \begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation5.pdf}
+  \caption{Passes: 15,3,0}
+ \end{figure}
+
+
 The instruction \codeword{or al , al} can be surprising. It means test if al is equal to zero and set the flag. Back in the day it was more populate than \codeword{test al, al}
  the VGA bank masks are harcoded in an array: One for each pass:\\
  \par
