@@ -82,14 +82,14 @@ The archive contains more than just \codeword{.H} (headers) and \codeword{.C} (c
 
 
 
-\section{The Big Picture}
+\section{Big picture}
 The engine can be divided in three blocks:
 \begin{itemize}
 \item The 2D renderer let the user set the game.
 \item The 3D renderer where most of the time is spent in the game.
 \item The sound system which always run concurrently with either 2D or 3D renderer. 
 \end{itemize}
-These three components are all supported by sub-systems called managers which are described later.
+Note that both renderers communicate with the sound system via shared memory.
 \par
 \begin{figure}[H]
 \centering
@@ -98,45 +98,6 @@ These three components are all supported by sub-systems called managers which ar
  \par
 
  
-These three systems are amply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are two dimensional and designed with square blocks.: e.g, the first level E1M1:\par
-\begin{figure}[H]
-  \centering
- \fullimage{e1m1.png}
- \caption{The legendary E1M1 viewed from the top as in TED5 (The main character has just neutralized a guard and is in his cell: He is represented as the green arrow at the bottom of the map).}
-\end{figure}
-\par 
-A 3D dimensional view of the 2D map is rendered at runtime:
-
-\begin{figure}[H]
-  \centering
- \fullimage{wolf3d_7_fullframe.png}
- \caption{As it is rendered at runtime in pseudo-3D from the player point of view.} 
-\end{figure}
-
- The pseudo 3D is generated via a system of raycasting\footnote{Not to be confused with raytracing.}. The previous screenshot being 320 wide by 200 tall, it requested to cast 320 rays (one for each column of wall):
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
- \caption{Complex scene: 320 ray cast.} 
-\end{figure}
-
-Raycasting is simple yet powerful. Even for a complex scene involving multiple door and rooms, it delivers fast intersection. Based on the distance d a ray hits a wall, a height h for that column is generated, giving an illusion of perspective.
-
-$ \large h = \frac{X}{d} $
-
-\begin{figure}[H]
-  \centering
- \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_door.png}
- \caption{Complex scene: rendition.} 
-\end{figure}
-\par
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_room.pdf}
- \caption{The 320 rays cast to render the walls in the previous scene.} \label{fig:Raycasting2}
-\end{figure}
-\bu{Trivia :}In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
 
 
 
@@ -445,7 +406,8 @@ Abstract interaction with joystick keyboard and mouse. Features a lot of boring 
 
 
 
-
+\section{Startup}
+As the game engine starts, it deals with difficulties showed in the hardware section.
 
 \subsection{Signon}
 As the game engine starts, it has to factor in PC configuration issues. It especially had to figure out if the machine had enough RAM available and it the game was going to be able to run. This is where the "signon" screen comes into play:
@@ -512,17 +474,11 @@ The legendary "Profound Carnage-13" self-proclaimed rating, spoofing the movie i
 
 
 
-\section{Solving the VGA problem}\label{SetupPages}
-With the architecture and the managers covered, it is time to take a look at the renderers. But just before this, we need to figure out an important
-problem left open in the Hardware chapter: None of VGA modes offered by the BIOS are suited for a game engine. They all lack double buffering capability.\\
-
- The most appealing one (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. Nothing can be done about the non square pixels but something can be done about the absence of double buffering.\\
-\par
- In mode 13h, the VGA circuitry automatically maps the 16K address space to the four VGA banks. It is called "chaining" and even though it wastes 75\% of the RAM it offers a linear framebuffer to the developer.\\
+\subsection{Solving the VGA problem}
+The Hardware chapter describing the VGA left the reader with an unsolved problem: None of VGA modes offered by the BIOS are suited for a game engine. They all lack double buffering capability.\\
+]par
+ The most appealing one (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. In this mode, the VGA circuitry automatically maps the RAM 64K address space to the four VGA banks. It is called "chaining" and wastes 75\% of the RAM to offers a linear framebuffer to the developer.\\
  \par
- Mode 13h is how the engine initialize the graphic pipeline:\\
-\par
-
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/vga_layout/wasted_vga_ram.pdf}
@@ -530,7 +486,7 @@ problem left open in the Hardware chapter: None of VGA modes offered by the BIOS
  \end{figure}
 
  \par
- So the problem really is the Chain-4 chip. Even though it is undocumented there is a way to disable it. Nobody can remember who invented unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. By tweaking the VGA Sequence controller the chaining can be disabled. The developer now has to manually drive the VGA mask to plot pixel but the full 256k of ram is available. This VGA mode is commonly known as "Mode Y". Note: In the engine, unchaining is called "deplane" in VL\_DePlaneVGA.\\
+ The problem really is the Chain-4 chip. Even though it is undocumented there is a way to disable it. Nobody can remember who invented unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. By tweaking the VGA Sequence controller the chain-4 chip can be disabled. This is what wolf3d does: 
 
  \par
   \begin{minipage}{\textwidth}
@@ -552,7 +508,7 @@ The resulting system can be seen as follow:\\
 \end{minipage}
  \par
  With that much RAM available, wolf3d divides the VRAM in four parts:
- \begin{itemize}
+ \begin{itemize}\label{SetupPages}
  \item 64K for Framebuffer 0
  \item 64K for Framebuffer 1
  \item 64K for Framebuffer 1
@@ -572,7 +528,9 @@ However this tweaked Mode 13h solves one big problem but creates two others. One
 
 
 
-
+DELETE\\
+The developer now has to manually drive the VGA mask to plot pixel but the full 256k of ram is available. This VGA mode is commonly known as "Mode Y". Note: In the engine, unchaining is called "deplane" in VL\_DePlaneVGA.\\
+DELETE\\
 
 
 

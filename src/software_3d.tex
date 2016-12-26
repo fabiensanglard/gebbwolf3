@@ -81,6 +81,56 @@ The static part (ammo, face, etc) is not redrawn if not necessary. However cost 
 
 
 
+
+
+\subsection{To Delete}
+These three systems are amply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are two dimensional and designed with square blocks.: e.g, the first level E1M1:\par
+\begin{figure}[H]
+  \centering
+ \fullimage{e1m1.png}
+ \caption{The legendary E1M1 viewed from the top as in TED5 (The main character has just neutralized a guard and is in his cell: He is represented as the green arrow at the bottom of the map).}
+\end{figure}
+\par 
+A 3D dimensional view of the 2D map is rendered at runtime:
+
+\begin{figure}[H]
+  \centering
+ \fullimage{wolf3d_7_fullframe.png}
+ \caption{As it is rendered at runtime in pseudo-3D from the player point of view.} 
+\end{figure}
+
+ The pseudo 3D is generated via a system of raycasting\footnote{Not to be confused with raytracing.}. The previous screenshot being 320 wide by 200 tall, it requested to cast 320 rays (one for each column of wall):
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
+ \caption{Complex scene: 320 ray cast.} 
+\end{figure}
+
+Raycasting is simple yet powerful. Even for a complex scene involving multiple door and rooms, it delivers fast intersection. Based on the distance d a ray hits a wall, a height h for that column is generated, giving an illusion of perspective.
+
+$ \large h = \frac{X}{d} $
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_door.png}
+ \caption{Complex scene: rendition.} 
+\end{figure}
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_room.pdf}
+ \caption{The 320 rays cast to render the walls in the previous scene.} \label{fig:Raycasting2}
+\end{figure}
+\bu{Trivia :}In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
+
+
+
+
+
+
+
+
 \subsection{HUD}
 At the beginning of the 3D sequence, the engine generates the HUD\footnote{Head-up display} in all three buffers:\\
 \begin{figure}[H]
