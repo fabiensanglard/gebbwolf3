@@ -27,29 +27,29 @@ But why go through so much trouble? After all if you were a game company and you
 \\
 The reason fits within one word: Framebuffer. The kind of game these people wanted to do could not be done with a sprite engine or tricks from a Copper\footnote{Nickname of a powerful Amiga co-processor allowing operations at vsync level}. They wanted to shake the gaming world by providing an immersive experience in three dimensions. And in order to do that they needed to draw a full screen, pixel per pixel, in a framebuffer before it was sent to the monitor. \\
 \par
-And to draw all these pixels, they also needed a powerful CPU. A PC outperformed any console or Amiga\footnote{Jimmy Maher advances an interesting theory in his book "The Future was here: The Commodore Amiga": People wanted to play First Person Shooter, which the Amiga architecture did not allow: This inability ultimately provoked the downfall of Commodore's best seller.} could do the job as the mips\footnote{Million Instructions Per Second.} graph shows.
+And to draw all these pixels, they also needed a powerful CPU. A PC outperformed any console on the market and no Amiga\footnote{Jimmy Maher advances an interesting theory in his book "The Future was here: The Commodore Amiga": People wanted to play First Person Shooter, which the Amiga architecture did not allow: This inability ultimately provoked the downfall of Commodore's best seller.} even with their co-processor could rivalize in terms of raw power as the mips\footnote{Million Instructions Per Second.} graph shows.
 \par
 \input{imgs/drawings/available_hardware_mips.tex}
 
  
-With its fast CPU and 256K framebuffer, the PC looked promising at first. Except according to the machine manual there were three seemingly impossible\footnote{The title of this book could have easily be "The Impossible Machine".} problems to overcome:\\
+With its fast CPU and 256K framebuffer, a 1991 PC looked promising at first. Except according to the machine programmer manual there were three seemingly impossible\footnote{The title of this book could have easily be "The Impossible Machine".} problems to overcome:\\
 \begin{itemize}
 \item The video system (the VGA) could not do double buffer: It was not possible to have smooth animations without tearing.
-\item The CPU could only do integer operations...yet the mathematics required for 3D involves fractions.
-\item The PC Speaker, the default sound device could only produce one tune: A "beep" which was more annoying than anything.
+\item The CPU could only do integer operations...yet the mathematics required for 3D involves keep track of fractions.
+\item The PC Speaker, the default sound device could only produce square waves: A bunch of "beeps" which were more annoying than anything.
 \end{itemize}
 On top of these major blockers layed a myriad of major difficulties:\\
 \begin{itemize}
 \item The RAM addressing mode was not flat but segmented resulting in complex and error prone pointer mathematics.
 \item The pixel of the VGA were not square: the framebuffer was stretched vertically when transfered to the screen.
 \item The audio ecosystem was fragmented: Various sound systems had different capabilities and expectations.
-\item The machine could only address 1MB or RAM. To go past that you had to enter a fragmented system of drivers.
+\item The machine could only address 1MB or RAM. To go past that you had to enter a fragmented eco-system of drivers.
 \end{itemize}
 
-Ovearll, it looked like the machine was \emph{doom}ed to do boring things. But teams of people around the world did not accept that and tinkered with the hardware to do unexpected things. How they did it is the raison d'etre of this book: By first showing the hard limitations I hope programers will grow a deep appreciation for the software. Therefore the book is organized as follow:
+Overall, it looked like the machine was \emph{doom}ed to do boring things. But teams of people around the world did not accept that and tinkered with the hardware to achieve unexpected results. How they did it is the raison d'etre of this book. By first showing the hard limitations I hope programmers will grow a deep appreciation for the software. Therefore the book is organized as follow:
 \begin{itemize}
 \item Chapter I: The Hardware of 1991: All five components of a PC and their limitations.
-\item Chapter II: THe Team\footnote{This is an engineering book: The description is logistic. For the human aspect read David Kushner's chef d'oeuvre: "Masters of Doom''}, the people pushing the edges.
+\item Chapter II: The Team\footnote{This is an engineering book: The description is logistic. For the human aspect read David Kushner's chef d'oeuvre: "Masters of Doom''}, the people pushing the edges.
 \item Chapter III: The Software: Wolfenstein 3D game engine.
 \end{itemize}
 \par

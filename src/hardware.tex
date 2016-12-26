@@ -1,24 +1,23 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-The machine can be broken down in five sub-systems parts together forming one pipeline:\\
+To study the machine, I found it is easier to break it down in small parts. I isolated five sub-systems:\\
 \begin{itemize}
  \item Input
- \item  Cpu
- \item  Ram
+ \item  CPU
+ \item  RRAM
  \item  Video 
  \item  Audio
 \end{itemize}
- 
+ \par
+Together forming one pipeline:\\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/fun_pipeline.pdf}
-%\def\svgscale{1.5}
-%\input{imgs/fun_pipeline.pdf_tex}
 \caption{Hardware pipeline.}
 \label{fig:digraph}
 \end{figure}
 
-This chapter treats all five parts independently but to be frank none of them were good for a game, not to mention a 3D game engine. But some were worse than others:\\
+Overall, the pipeline offered a lot of resistance since hardware manufacturers had not embraced the gaming industry yet. Some parts were bad, some were very part and some were downward impossible to make work properly as described in the introduction:\\
 \par
 
 \begin{figure}[H]
@@ -35,13 +34,15 @@ This chapter treats all five parts independently but to be frank none of them we
 \caption{Component quality for a game engine.}
 \end{figure}
 
-The pipeline offered a lot of resistance. Hardware manufacturers had not embraced the gaming industry yet and it showed a lot.\\
+
 
 \section{CPU: Central Processing Unit}
   \subsection{Overview}
-  PC performances in the 90s were so overwhelmingly dominated by their CPU that they were simply referred to not by their brand or GPU\footnote{There were no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by their Intel chip. If your PC had a 80386 or equivalent in it, it was a 386. If it had an Intel 80286, it was a 286. Wolfenstein was target at what was majoritarily found on people's desk: The 386s with degraded performances (yet still playable) on 286s.\\
+  PC performances in the 90s were so overwhelmingly dominated by their CPU that a machine was simply referred to not by its brand or GPU\footnote{There were no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by their main chip inside. If a PC had a 80386 or equivalent in it, it was simply called a "386". If it had an Intel 80286, it was a "286".\\
 \par
-  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors. The machines based on the 16 bits 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor: The 80386 which was commonly called 386 or i386. Moore's law was in full swing as seen on a MIPS\footnote{Million Instructions Per Second.} histogram:
+  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors. The machines based on the 16 bits 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor: The 80386. Given the adoption curve, Wolfenstein was target at a 386 with degraded performances (yet still playable) on a 286.\\
+\par
+  \bu{Trivia }Moore's law was in full swing as seen on a MIPS\footnote{Million Instructions Per Second.} histogram:
 
 
 \definecolor{skyblue1}{rgb}{0.1,0.624,0.812}
@@ -74,20 +75,36 @@ The pipeline offered a lot of resistance. Hardware manufacturers had not embrace
     \end{axis}
     
    \end{tikzpicture}
-   \caption{Processor speeds comparison.} \label{fig:mips}
+   \caption{The 386SX and 386DX were identical processor. Yet the DX is twice faster than the SX thanks to a data bus between the CPU and the RAM twice as wide (32 bits vs 16 bits)!} \label{fig:mips}
  \end{figure}
+ \par
+ \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 Mips: Five orders of magnitude faster!\\
+\par
 
- \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 Mips: Five orders of magnitude faster!
+A 386 can be summarized by the following elements:
+\begin{itemize}
+\item An ALU.
+\item 15 registers:
+\begin{itemize}
+  \item 32-bits General purpose registers: EAX, EBX, ECX, EDX.
+  \item 32-bits Index registers: ESI, EDI, EBP, ESP.
+  \item 32-bits Program Counter: EIP.
+  \item 16-bits Segment Registers: CS, DS, ES, FS, GS, SS.
+  \item 16-bits Status Register.
+\end{itemize}
+\item Up to 4GB of flat adressable RAM.
+\item Memory Paging Unit.
+\end{itemize}
 
  \bigskip
  
- \textbf{\underline{Trivia :}} The 386SX and 386DX were identical processor. Yet the DX is twice faster than the SX thanks to a data bus between the CPU and the RAM twice as wide (32 bits vs 16 bits)!
+
 
 \par
 
- Two other companies were producing Intel clones: AMD and Cyrix. The mediocre performances did not justify the lower cost and as a result they never gathered a significant market share. Interestingly AMD evolved to become a serious challenger while Cyrix merged with National Semiconductor in 1997.
-
-Depite its power (at least compared to the 286), the architecture of a 386 is simple compared to 2016 Pentiums. In particular. notice the abscence of pipelineing, icache and dcache. The CPU essentially revolves around a 32 bits ALU crunching integers.
+ Two other companies were producing Intel clones: AMD and Cyrix. The mediocre performances did not justify the lower cost and as a result they never gathered a significant market share. Interestingly AMD evolved to become a serious challenger while Cyrix merged with National Semiconductor in 1997.\\
+\par
+Depite its power (at least compared to the 286), the architecture of a 386 is very simple. In particular. notice the absence of pipelineing, icache and dcache. The CPU essentially revolves around an ALU crunching 32-bits integers.
 
 \begin{figure}[H]
 \centering
@@ -105,9 +122,9 @@ Depite its power (at least compared to the 286), the architecture of a 386 is si
 
   \subsection{Floating Point}
   
-   All that CPU power was not necessarily useful. In order to perform all the trigonometry for a 3D game, the engine has to keep track of the fractional part of each operations. It may not look like an issue since the C programming language offers the types \codeword{float} and \codeword{double} precisely for that purpose\footnote{This is how modern 3D engines do all their calculations by the way.}.\\
+   All that CPU power was not necessarily useful. In order to perform all the trigonometry for a 3D game, the engine has to keep track of the fractional part of each operations. It may not look like an issue since the C programming language offers the types \codeword{float} and \codeword{double} precisely for that purpose\footnote{This is how modern 3D engines do all their calculations by the way.} which use Floating Point arithmetics.\\
 \\
-Let's take the time to understand what floating point is and how it works to fully grasp how useful it is when doing maths. In the C language, \codeword{float} are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
+As David Goldbert put it, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{What every Computer Scientist should know about Floating-Point} but it is very important to understant it to fully grasp how useful it is for 3D engine programming. In the C language, \codeword{float} are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
   \item One bit S for the sign.
   \item Seven bits E for the exponent.
@@ -213,7 +230,7 @@ And finally the graphic representation with window and offset:\\
 
 For a 3D engine floating point arithemtic is a good tool: It can represent very small values and huge ones while keeping track of fractional part of a number and also protecting from overflow by floating the window when necessary.\\
 \par
-Floating point is handy but also computationally intensive for a simple reason: In order to add, subtract, multiply or divide two numbers, they have to be expressed with the same window. Which mean converting one number to the representation used by the other. Usually with higher precision than 32 bits (typically 80 bits on Intel FPUs).\\
+Floating point is handy and the drawback is that it is also computationally intensive. The reason is very simple: In order to add, subtract, multiply or divide two numbers, they have to be expressed with the same window. Which mean converting one number to the representation used by the other. Usually with higher precision than 32 bits (typically 80 bits on Intel FPUs).\\
 \\
 This is not a problem when everything is hardwired within an hardware floating point unit...but it is a big problem for the 386: If you take a look again at the architecture diagram you will notice that it only has an ALU. \emph{A 386 doesn't have a hardware Floating Point Unit}. If \cw{float} operations are found in the code, they are emulated in software by the compiler, resulting in terribly slow processing. So slow they are not usable for anything real-time.\\ 
 \par
@@ -269,7 +286,22 @@ For compatibility reasons all PCs starts in Real Mode. You may assume that progr
 
 
   \subsection{DOS limitations}
-  Microsoft Corporation highly valued the applications running on their operating systems. As an excellent business priority, they were adamant to never ever break anything with a new system.  Since many applications were written during the 80s on machine having only Real-Mode, DOS 5.0 kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the \emph{de-facto} operating system delivered with every machine sold prevented programmers from using Protected Mode. Developers were forced to ignore all the neat features of their 1992 PC and use the machine like it was a very fast Intel 8086 CPU from 1976.
+  Microsoft Corporation highly valued the applications running on their operating systems. As an excellent business priority, they were adamant to never ever break anything with a new system.  Since many applications were written during the 80s on machine having only Real-Mode, DOS 5.0 kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the \emph{de-facto} operating system delivered with every machine sold prevented programmers from using Protected Mode. Developers were forced to ignore all the neat features of their 1992 PC and use the machine like it was a very fast Intel 8086 CPU from 1976:\\
+\par
+  A 386 operating in Real-Mode was a farcry of what it was capable of:\\
+\begin{itemize}
+\item ALU.
+\item 15 registers:
+\begin{itemize}
+  \item 16-bits General purpose registers: AX, BX, CX, DX.
+  \item 16-bits Index registeres: SI, DI, BP, SP.
+  \item 16-bits Program Counter: IP.
+  \item 16-bits Segment Registers: CS, DS, ES, FS, GS, SS.
+  \item 16-bits Status Register.
+\end{itemize}
+\item Up to 1MB of RAM.
+\end{itemize}
+
 
 \bigskip
 
@@ -387,7 +419,7 @@ To learn more about EMS be sure to read Edward Mendelson's excellent article: . 
 \par
 
 \subsubsection{Impossible to love}
-These two sections conclude on Intel CPUs. If you are puzzled you are not alone. Over the years I came around many ways to describe this madness but two particularely stand up:\\
+At this point, if you are puzzled by the CPU and its design you are not alone. Over the years I came around many ways to describe this madness but two particularely stand up:\\
 \par
  \begin{fancyquotes}
    The i386 \lbrack...\rbrack an architecture that is difficult to explain and impossible to love.\\
@@ -500,7 +532,7 @@ The VGA can be summarized as three major systems :
 \item The CRTC Controller and the DAC (Digital To Analog Converter) took care of converting the Palette indexed framebuffer to RGB and then to analogic signal (interface VRAM-CRT).
 \end{itemize}
 
-The most surprising part of the architecture is obviously the framebuffer. The first reaction of any engineer would be to ask themselves: Why four small fragment banks instead of one big linear one ?\\
+The most surprising part of the architecture is obviously the framebuffer. The first reaction of any engineer would be to ask themselves: Why four small fragmented banks instead of one big linear one ?\\
 \\
 The first part of the explanation comes from backward compatibility: The version before VGA, the EGA had only 64KB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
 \\
@@ -591,7 +623,7 @@ The BIOS could be called to have the VGA configured with preset registers.
 
 
  \subsection{VGA Programming: Memory mapping}
-To write to the VRAM the 1MB address space maps 64KB starting as indicated in table \ref{fig:vga_modes}. So a dev had from 0xA000 to 0x1A000 available. The immediate question is "How does one write to 256KB of RAM with only 64KB ?". The answer is: Banking. Write and Read operation are routed based on a mask.\\
+To write to the VRAM the 1MB address space maps 64KB starting as indicated in table \ref{fig:vga_modes}. So a dev had from 0xA000:0000 to 0xA000:FFFF available. The immediate question is "How does one write to 256KB of RAM with only 64KB ?". The answer is: Banking. Write and Read operation are routed based on a mask register indicating which bank should be read or written.\\
 \par
  \begin{figure}[H]
 \centering
@@ -739,7 +771,7 @@ A PC came equipped with a beeper, commonly known as a "PC Speaker" capable of ge
 \end{figure}
 
 \par
- The purpose of this primitive loudspeaker was to signal hardware problems at runtime with beep codes:\\
+ It is generally the first output device to be activated during the boot process. The purpose of this primitive loudspeaker was to signal hardware problems at runtime with beep codes:\\
 \par
 \begin{tabularx}{\textwidth}{l l}
 \textbf{Beep Code} & \textbf{Meaning}  \\ \hline
@@ -755,7 +787,7 @@ Continuous Hi-Lo Beeps           & CPU Overheating \\ \hline
 \end{tabularx}\\
 \bigskip
 \par
-Needless to say one tune was not usable for anything. But some peoples had started to see a market and they were companies manufacturing what were known as "sound cards". You could buy them separatately and insert them into one of the ISA slot of the machine. These cards could be connected to real audio speakers via 3.5mm jack and tremendously improve the sound capabilities. In 1991, three companies competed to become the dominant sound card: Adlib, Creative and Disney drawing a small eco-sytem of four cards:\\
+Needless to say square wave are not usable for anything nice to hear. But some peoples had started to see a market and they were companies manufacturing what were known as "sound cards". You could buy them separatately and insert them into one of the ISA slot of the machine. These cards could be connected to real audio speakers via 3.5mm jack and tremendously improve the sound capabilities. In 1991, three companies competed to become the dominant sound card: Adlib, Creative and Disney drawing a small eco-sytem of four cards:\\
 \par
 \begin{itemize}
 \item Adlib music card.
@@ -872,7 +904,7 @@ The width of the data bus depends on how many "fingers" a card has.\\
 
 
 \section{Summary}
-In a nutshell, to say a PC was difficult to program for games would be an understatement. It was nightmare. The CPU was good at doing the wrong thing, the best graphic interface allowed neither double buffering nor square pixels, the memory model only allowed 1 standard MB...with address composed of two separate 16 bits registers. Last but not least the default sound system allowed only one tune...and the people who did have a sound card made an eco-system of four overlapping configurations.\\
+In a nutshell, to say a PC was difficult to program for games would be an understatement. It was nightmare. The CPU was good at doing the wrong thing, the best graphic interface allowed neither double buffering nor square pixels, the memory model only allowed 1 standard MB...with address composed of two separate 16 bits registers. Last but not least the default sound system could only produce square waves...and the people who did have a sound card installeed made an eco-system of four overlapping configurations.\\
 \par
 But despite all these unfavorable conditions, teams of developers gathered to tame the beast and unleash its power to gamers. One of them called itself id Software\footnote{They originally called themselves Ideas From the Deep but they decided to shortened it to simply id, which stands for "in demand," and is pronounced as in "did" or "kid." The name also had another meaning which is referring to id, one of the three parts (The other two being ego and super-ego) of the brain that behaves by the pleasure principle.}.
 \end{document}

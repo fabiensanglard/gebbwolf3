@@ -57,6 +57,8 @@ Released on September 18, 1992 Spears Of Destiny used the same game engine but w
 Trivia: Angel of Death looked like a demon and was a good insight into what would come next: Doom.
 
 
+
+
 It was essentially a mod of Wolfenstein 3D. SOD helps to put things into perspective when it comes to being open source and allow people to figure out the file formats. SOD may not have sold as well had the game been open.\\
 No a shareware version  but  2-level playable demo was distributed\\
 Lost Episodes, Each of these, consists of 21 levels. New level textures, new enemies, and new appearances for old enemies. Published by FormGen Corporation in May 1994.''
@@ -69,9 +71,27 @@ Mission 3: Ultimate Challenge\\
 
 
 \section{Port: Super Nintendo}
-Story of Doom development: They had to stop working on Doom (see GDC for more details).\\
-\\
+The port to Super Nintendo was done during the development of Doom. id Software ported the game in three weeks after the guy in charge of porting Wolfenstein failed to deliver.
+
  \begin{fancyquotes}
+Disaster Struck.\\
+\par
+We all had to stop working on Doom. The Super Nintendo version that we had gotten a guy to work on was not finished. And Imagineer was not pleased. It had been since the summertime so it had been about nine months and they hadn't head anything from us. That guy was working on the port and we could not get ahold of the guy. It was a nightmare situation. We could not get it done with somebody else. So, basically, we stopped working on Doom and ported Wolfenstein to the Super Nintendo. The whole team jumped on it. It tooks us like three weeks to just blast out the port. And that is including all rats in there and green blood.
+
+The whole team jumped on it.
+\\
+\textbf{John Romero - Programmer}
+\end{fancyquotes}
+
+\par
+\begin{figure}[H]
+\centering
+ \fullimage{wolf3d_snes_box.jpg}
+ \end{figure}
+ \par
+
+
+\begin{fancyquotes}
     When I ported Wolf to the SNES, the ray casting performance cost was too much, so I had to make a new wall span renderer.  Learning about BSP trees allowed me  to much more accurately resolve the culling challenges, and it worked out ok, leading the way to the Doom renderer.\\
 \\
 Many years later, I made a very similar programming tradeoff for the mobile BREW version of Doom RPG.  The J2ME (java) Doom RPG looked like Wolfenstein, with a tile map world, textured walls, and solid color floor and ceiling, but it was done with a quite nice wall span renderer.  I had learned a thing or two since writing Wolf.  For the ARM native code BREW version, I wanted to add texture mapped floors and ceilings with per-tile texture choices.  I turned the tile maps into polygon windings and started writing a full texture mapped clipped polygon rasterizer for them, but I only had a couple days to work on the mobile renderer, and it became clear that I wasn’t going to be able to deliver a really solid implementation in that time.\\
@@ -80,8 +100,19 @@ The solution was to sacrifice performance for implementation simplicity.  Instea
 \\
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
+
+
+\par
+\begin{figure}[H]
+\centering
+ \fullimage{wolf3d_snes.png}
+ \caption{Extremely low resolution during 3D scene: 125x125! (but the HUB and weapon are higher resolution which helps a little.)}
+ \end{figure}
+ \par
+
+
 \section{Port: Jaguar}
-The jaguar port was release in 1994, it was the only port able to reach 60 frames per seconds. It was unique for having graphics in a resolution much superior to the PC release, and bilinear filtering. It also introduced two new weapons: the Flamethrower and Rocket Launcher:\\
+The jaguar port was release in 1994 and it was the only other port (along with the SNES) made by id Software. It was the only port able to reach 60 frames per seconds. It was unique for having graphics in a resolution much superior to the PC release, and bilinear filtering. It also introduced two new weapons: the Flamethrower and Rocket Launcher:\\
 \par
 
 The console was a mix of powerful components with severe bottleneck: 
@@ -108,6 +139,25 @@ If the jaguar had dumped the 68k and offered a dynamic cache on the risc process
 \\
 \textbf{John Carmack - Programmer (March 4th, 2000)}
 \end{fancyquotes}
+
+\par
+\begin{figure}[H]
+\centering
+ \fullimage{jaguar_port_cover.jpg}
+\end{figure}
+\par
+\begin{figure}[H]
+\centering
+ \fullimage{jaguar_port_gatling.png}
+\end{figure}
+\par
+
+\begin{figure}[H]
+\centering
+ \fullimage{jaguar_port_flamethrower.png}
+\end{figure}
+
+
 
 
 

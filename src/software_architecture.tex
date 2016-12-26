@@ -4,7 +4,7 @@
 The game engine source code was released on July 21st, 1995. Twenty years later it is still there on id software's ftp\footnote{File Transfer Protocol.}:\\ 
 \\\codeword{ftp://ftp.idsoftware.com/idstuff/source/wolfsrc.zip}.\\
 \\
-\bu{Trivia :} Before the times of nmap, WireShark and various eavesdropping techniques, FTP was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
+\bu{Trivia :} Before the times of nmap, WireShark and other ARP poisoning monstruosities, FTP was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
 
 \section{First Contact}
 Once downloaded and decompressed, it turns out the archive \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical now. It is easy to deflate it with:\\
@@ -89,7 +89,7 @@ The engine can be divided in three blocks:
 \item The 3D renderer where most of the time is spent in the game.
 \item The sound system which always run concurrently with either 2D or 3D renderer. 
 \end{itemize}
-
+These three components are all supported by sub-systems called managers which are described later.
 \par
 \begin{figure}[H]
 \centering
@@ -98,7 +98,7 @@ The engine can be divided in three blocks:
  \par
 
  
-These three systems are amply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are two dimensional designed with square blocks.: e.g, the first level E1M1:\par
+These three systems are amply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are two dimensional and designed with square blocks.: e.g, the first level E1M1:\par
 \begin{figure}[H]
   \centering
  \fullimage{e1m1.png}
@@ -121,7 +121,10 @@ A 3D dimensional view of the 2D map is rendered at runtime:
  \caption{Complex scene: 320 ray cast.} 
 \end{figure}
 
-Raycasting is simple yet powerful. Even for a complex scene involving multiple door and rooms, it delivers fast intersection. Based on the distance a ray hits a wall, a height for that column is generated, giving an illusion of perspective.
+Raycasting is simple yet powerful. Even for a complex scene involving multiple door and rooms, it delivers fast intersection. Based on the distance d a ray hits a wall, a height h for that column is generated, giving an illusion of perspective.
+
+$ \large h = \frac{X}{d} $
+
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_door.png}
@@ -133,7 +136,7 @@ Raycasting is simple yet powerful. Even for a complex scene involving multiple d
  \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_room.pdf}
  \caption{The 320 rays cast to render the walls in the previous scene.} \label{fig:Raycasting2}
 \end{figure}
-In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
+\bu{Trivia :}In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
 
 
 
@@ -145,7 +148,6 @@ In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
 
 \subsection{Unrolled loop}
 With the big picture in mind, we can dive into the code and unroll the main loop (\cw{int main()}) to reveals two renderers (the sound system is interrupt driven and therefore is out of \cw{main}). An important precision about data types: Because the game is using Real Mode, C types don't mean what people would expect from a 32 bits architecture.\\
-\par 
 \begin{itemize}
 \item \cw{int} and \cw{word} are 16 bits long.
 \item \cw{long} and \cw{dword} are 32 bits long.
@@ -445,13 +447,74 @@ Abstract interaction with joystick keyboard and mouse. Features a lot of boring 
 
 
 
+\subsection{Signon}
+As the game engine starts, it has to factor in PC configuration issues. It especially had to figure out if the machine had enough RAM available and it the game was going to be able to run. This is where the "signon" screen comes into play:
+\par 
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/signonscreen.c}
+\end{minipage}
+Since this screen is showed almost before anything else is initialized (even the graphic adapter)
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{screenshots/signon.png}
+\caption{Architecture and sub-systems.}
+\end{figure}
+Since the graphic pipeline is not initialized at this point, the full 64K pg13 screen ships compiled in the executable. The engine only copies from RAM to the VGA banks.\\
+
+Note: In an effort to get more RAM available, these 64K are unlinked for RAM.\\
+Note: The palette ($3*256=768$bytes) is also compiled in the executable. It is simply copied from RAM to VGA's DAC.
+Note the main (conventional memory) which goes only up to 320K: Between the executable and other residence routines it is all what was remaining of the original 640K. The game is able to run on 320KB but you needs to swap with the HD at runtime to load textures and sprites.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Profound Carnage}
+The legendary "Profound Carnage-13" self-proclaimed rating, spoofing the movie industry PG-13 rating. Mark of the irreverent id software mindset at the time. Things like these would not fly these days.
+\begin{figure}[H]
+\centering
+\fullimage{pg13.png}
+\caption{Architecture and sub-systems.}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 \section{Solving the VGA problem}\label{SetupPages}
-As the engine starts up, it deals with an important problem left open in the Hardware chapter: the video output. None of the VGA modes offered by the BIOS are suited for a game engine. The more important being double buffering capability.\\
+With the architecture and the managers covered, it is time to take a look at the renderers. But just before this, we need to figure out an important
+problem left open in the Hardware chapter: None of VGA modes offered by the BIOS are suited for a game engine. They all lack double buffering capability.\\
 
  The most appealing one (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. Nothing can be done about the non square pixels but something can be done about the absence of double buffering.\\
 \par
@@ -459,14 +522,7 @@ As the engine starts up, it deals with an important problem left open in the Har
  \par
  Mode 13h is how the engine initialize the graphic pipeline:\\
 \par
- \begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/init_vga.c}
-\end{minipage}
- \par
 
-The resulting system can be seen as follow:\\
-
- \par
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/vga_layout/wasted_vga_ram.pdf}
@@ -475,6 +531,15 @@ The resulting system can be seen as follow:\\
 
  \par
  So the problem really is the Chain-4 chip. Even though it is undocumented there is a way to disable it. Nobody can remember who invented unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. By tweaking the VGA Sequence controller the chaining can be disabled. The developer now has to manually drive the VGA mask to plot pixel but the full 256k of ram is available. This VGA mode is commonly known as "Mode Y". Note: In the engine, unchaining is called "deplane" in VL\_DePlaneVGA.\\
+
+ \par
+  \begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/init_vga.c}
+\end{minipage}
+ \par
+
+The resulting system can be seen as follow:\\
+
  \par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unchaining.c}
@@ -500,6 +565,18 @@ The resulting system can be seen as follow:\\
  \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
 \par
+However this tweaked Mode 13h solves one big problem but creates two others. One is about speed and the other is about correctness.\\
+\par
+
+
+
+
+
+
+
+
+
+
 In the code it is done like this:\\
 \par
  \begin{minipage}{\textwidth}
@@ -613,35 +690,12 @@ TOOD: Drawing of how column line up in VGA RAM.\\
 
 
 
-\subsection{Signon}
-At this point, the memory manager and the vga are initialized but nothing else. In order to make player wait for the rest of system to initialize, the engine displays the famous "PG13" screen (called in the engine "signon").
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{screenshots/signon.png}
-\caption{Architecture and sub-systems.}
-\end{figure}
-Since the graphic pipeline is not initialized at this point, the full 64K pg13 screen ships compiled in the executable. The engine only copies from RAM to the VGA banks.\\
-\par 
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/signonscreen.c}
-\end{minipage}
-Note: In an effort to get more RAM available, these 64K are unlinked for RAM.\\
-Note: The palette ($3*256=768$bytes) is also compiled in the executable. It is simply copied from RAM to VGA's DAC.
-Note the main (conventional memory) which goes only up to 320K: Between the executable and other residence routines it is all what was remaining of the original 640K. The game is able to run on 320KB but you needs to swap with the HD at runtime to load textures and sprites.
 
 
 
 
 
 
-
-\subsection{Profound Carnage}
-The legendary "Profound Carnage-13" self-proclaimed rating, spoofing the movie industry PG-13 rating. Mark of the irreverent id software mindset at the time. Things like these would not fly these days.
-\begin{figure}[H]
-\centering
-\fullimage{pg13.png}
-\caption{Architecture and sub-systems.}
-\end{figure}
 
 
 \end{document}
