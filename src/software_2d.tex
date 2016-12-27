@@ -8,18 +8,19 @@ With video system initialized, the game finally starts and displays the menu pha
 \end{figure}
 \par
 
-\begin{minipage}{.7\textwidth}
-With control over the bank mask, it is actually possible to write multiple pixel (up to four) with one write operation. In the drawing to the right, pixels 0, 1, 2 and 3 are in different banks but at the same address (0x0000). By configuring the bank mak to all banks, it is possible to write these four pixels simulaneously.
+\begin{minipage}{.6\textwidth}
+With control over the bank mask, it is actually possible to write multiple pixel (up to four) with one write operation. In the drawing to the right, pixels 0, 1, 2 and 3 are in different banks but at the same address (0x0000). By configuring the bank mak to all banks, it is possible to write these four pixels simulaneously.\\
+To clear the screen to red before drawing the menu, the engine only takes 320x200/4 = 16,000 writes instead of 64,000.\\
+\par
 \end{minipage}
-\begin{minipage}{.3\textwidth}
+\begin{minipage}{.4\textwidth}
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/vga_ram_screen_layout.pdf}
 \end{figure}
 \end{minipage}
 
-To clear the screen to red before drawing the menu, the engine only takes 320x200/4 = 16,000 writes instead of 64,000.\\
-\par
+
 
 \lstinputlisting[language=C]{code/vga_clear/optimal.c}
 
