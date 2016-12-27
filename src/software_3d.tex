@@ -317,7 +317,11 @@ Sprites 91 to 134 are latched in VRAM.\\
      \fullimage{latched/134.png}
   \end{minipage}\
 
-
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/latches_drawing.png}
+ \end{figure}
+ 
 All these assets account for $48*24*4+14*8*16+23*24*32+224*48=34,816$ bytes. There is therefore $2^18-320*208*3 - 34,816=27,648$ bytes unused VRAM in the VGA.
 All these assets are used with the VGA in order to copy 4 pixels at a time.
 

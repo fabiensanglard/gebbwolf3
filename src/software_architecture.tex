@@ -52,7 +52,7 @@ Twenty seven thousands lines of code which by 2016 standard it is very little. T
         (Doom 3, 601047)
       };
     \end{axis}
-   \end{tikzpicture}
+   \end{tikzpicture} 
    \caption{Line of codes from id Software game engines.}
  \end{figure}
  
@@ -540,11 +540,20 @@ The second issue introduced by Mode-Y is about correctness. With three pages ava
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}]{code/pageflip.c}
 \end{minipage}
-This code looks like it would work. But there is a major flow with it. If you were to run it, every once in a while the screen would show something like this:\\
+This code looks like it would work. But there is a major flaw with it. If you were to run it, every once in a while the expected screen :\\
 \par
-TODO: Show CRTC mess.\\
+ \begin{figure}[H]
+\centering
+ \fullimage{full_screen.png}
+ \end{figure}
+Would instead appear like that:\\
 \par
-The problem has to do with atomicity. Updating the CRTC starting address is 16-bits adress...but it can only be updated with 8-bits write operation. IT is not atomic. If you are unlucky, the CRTC could pickup the scan address just here:\\
+ \begin{figure}[H]
+\centering
+ \fullimage{crtc_scanstart_problem.png}
+ \end{figure}
+\par
+Showing part of one page and page of an other page and also unaligned.\\The problem has to do with atomicity. Updating the CRTC starting address is 16-bits adress...but it can only be updated with 8-bits write operation. IT is not atomic. If you are unlucky, the CRTC could pickup the scan address just here:\\
 \par
 \par
 \begin{minipage}{\textwidth}
@@ -587,83 +596,6 @@ An other example during a 3D sequence.
  \end{figure}
 But vertically each bank stores a column intact. This is an important property which is exploited later during the game.
 \par
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{imgs/drawings/vga_ram_screen_layout.pdf}
-\end{figure}
-
-% Even though it was convoluted it allows clever tricks. Let's take the example of clearing the screen to black. A naive approach would be to write every pixels left to write and top to bottom:\\
-\par
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/vga_clear/naive.c}
-\end{minipage}
-
-% The cost of this operation is $320*200=64000$ writes and 64000 out operation (to select the mask).
-% But the overhead of selecting the bank (a.k.a plan) would make the task impossibly slow. A better approach would be to do bottom up and left to right as follow:\\
-% \par
-% \begin{minipage}{\textwidth}
-% \lstinputlisting[language=C]{code/vga_clear/optimized.c}
-% \end{minipage}
-
-% The code is slightly more complicated but this way we only switch bank XXX times and write $320*200=64000$ writes and 320 out out operation. But there is a way to do even better:\\
-\par
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/vga_clear/optimal.c}
-\end{minipage}
-
-% Which results in $320*80=25600$ and 1 out operation !\\
-
-This is not always that easy: You can write up to four pixels in one write as long as they are properly aligned. See the example following:
-\begin{figure}[H]
-  \centering
- \includegraphics[width=\textwidth]{imgs/drawings/vga_multiple_pixel_write.png}
-\end{figure}
-
-% \par
-% With this technique the 64KB of mapped RAM can access the full 256KB of the VGA. This enables a mode offering:
-% \begin{itemize}
-%   \item Resolution of 320x200
-%   \item Double buffering
-%   \item Storage of sprites in VRAM.
-% \end{itemize}
-
-% Compared to figure 
-% TODO: New Drawing of VGA RAM.\\
-% But there is still a problem: Switching the target RAM was very slow. So a routine drawing an horizontal line on the screen:\\
-\par
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/drawline.c}
-\end{minipage}
-% Would have been unpractical. But something else can be done if you notice that 320 is a multiple of 4 (320/4=80): If you draw only columns you don't have to change the target plan often.\\
-
-
-
-
-
-
-
-
-
 
 
 
