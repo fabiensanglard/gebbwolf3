@@ -1,10 +1,19 @@
 \section{Menu Phase: 2D Renderer}
-The menu phase is renderer by the 2D renderer which is tile based. The screen is divided into tiles as follow:\\
+With the VGA problem out of the way, the game starts by displaying the menu phase. It is pretty simple and tile based.
+\par
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{screenshots/first_menu.png}
+\caption{Architecture and sub-systems.}
+\end{figure}
+\par
+ The screen is divided into tiles as follow:\\
 DRAWING\\
 Bla bla bla\\
 Assets are called "pic" as opposed to sprites in 3D phases. Pics  are all Huffman-compressed (VGADICT, VGAHEAD, 
 VGAGRAPH).
-
+\par
+Managers US and Cache are used a lot here.
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/latches_drawing.png}
@@ -21,9 +30,4 @@ Not at fast as it seems since things have to be drawn in all three buffers durin
 LatchDrawPic
 Chapter 48 from michael abrash book
 atches were not intended for use in 256-color mode; that was something I figured out as a hack and wrote about. The latches were used so that in 16-color mode any or all of the four planes could be written to at once.
-\par
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{screenshots/first_menu.png}
-\caption{Architecture and sub-systems.}
-\end{figure}
+

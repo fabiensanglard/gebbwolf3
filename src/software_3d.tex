@@ -1,9 +1,33 @@
 \section{Action Phase: 3D Renderer}
+When the player is done setting up the game finally comes time to dive into the 3D engine itself. Something that was kep secret for many years. The 3D engine is based on a simple raycasting technology which is simple yet powerful. The idea is to cast a ray for each column of pixel visible on the screen. Based on the distance d, a height h can be calculated:\\
+\par
+\begin{figure}[H]
+  \centering
+  \begin{equation}
+      \scalebox{2.0}{$h = \frac{X}{d}$}
+  \end{equation}
+\end{figure}
+\par
+Even for a complex scene involving multiple door and rooms, it delivers fast intersection.
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_room.pdf}
+ \caption{Casting 320 rays (one for each column) for a screen of resolution 320x200} \label{fig:Raycasting2}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_door.png}
+ \caption{Rendition of the height calculated from the rays distance to the pov.} 
+\end{figure}
+
+The secret of Wolfesnstein 3D speed lies in two tricks (described in details later): Precompiled scalers and Deffered column rendering.
 
 
 \subsection{Big Picture}
 
-During action sequences, the 3D scene is rendered in four passes:
+A 3D scene is rendered in four passes:
 \begin{enumerate}
  \item Clear the screen by drawing the floor and the ceiling (both solid color).
  \item Cast up to 320 rays and draw then according to the distance from the player.
@@ -85,11 +109,7 @@ The static part (ammo, face, etc) is not redrawn if not necessary. However cost 
 
 \subsection{To Delete}
 These three systems are amply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are two dimensional and designed with square blocks.: e.g, the first level E1M1:\par
-\begin{figure}[H]
-  \centering
- \fullimage{e1m1.png}
- \caption{The legendary E1M1 viewed from the top as in TED5 (The main character has just neutralized a guard and is in his cell: He is represented as the green arrow at the bottom of the map).}
-\end{figure}
+
 \par 
 A 3D dimensional view of the 2D map is rendered at runtime:
 
@@ -107,22 +127,8 @@ A 3D dimensional view of the 2D map is rendered at runtime:
  \caption{Complex scene: 320 ray cast.} 
 \end{figure}
 
-Raycasting is simple yet powerful. Even for a complex scene involving multiple door and rooms, it delivers fast intersection. Based on the distance d a ray hits a wall, a height h for that column is generated, giving an illusion of perspective.
 
-$ \large h = \frac{X}{d} $
 
-\begin{figure}[H]
-  \centering
- \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_door.png}
- \caption{Complex scene: rendition.} 
-\end{figure}
-\par
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_room.pdf}
- \caption{The 320 rays cast to render the walls in the previous scene.} \label{fig:Raycasting2}
-\end{figure}
-\bu{Trivia :}In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
 
 
 
@@ -494,6 +500,8 @@ calcheigh is using 24:8 ?
 
 
 \subsubsection{Square World and RayCasting}
+\bu{Trivia :}In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
+
 With fraction possible, the engine still needs to find a way to render the walls in pseudo-3D. Per say, draw a wall bigger if it is closer and smaller if it is far. To do that, it cast a ray for each column of pixel on the screen. With the distance it calculates a height on screen.\\
 \par
 To cast a ray and find the intersection, if the word is made of various shapes with no constraints, the cost is high:\\
@@ -1196,6 +1204,13 @@ Drawing the weapon at the bottom is very straight forward. It just uses the prec
 
 \subsection{Flipping buffer} \label{Flippingbuffer}
 Once a frame is completed, the engine instructs the CRT controller to scan the page just completed next time it has to refresh the screen. It doesn't have to wait for the end of a vsync, the CRTC will automatically pick up the new adress next time it has to refresh. But you still have to be VERY careful since updating the CRT scan starting adress is a 16 bits value....but you can only write 8 bits at a time. If you are unlucky, you could update the 8 bits high value, the CRT could read the adress and start refreshing the screen...then your routine could set the low value. That would result in an ugly mess on the screen...which at 70 updates a second could happen fairly often.\\
+\par
+Note: Why use 208 height if the framebuffer is 200 pixels tall? That doesn't make sense at first sight. I thought it was a typo (after all 0 and 8 are visually close). Think about it and find out why in section \ref{Flippingbuffer}!\\
+\par
+
+ \begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/vga_setup_pages.c}
+\end{minipage}
 \par
 The trick is to use page adress which need only one byte update. Which explains why the engine "wastes" 8*80 bytes per page in section \ref{SetupPages}:\\
 \par

@@ -407,53 +407,29 @@ Abstract interaction with joystick keyboard and mouse. Features a lot of boring 
 
 
 \section{Startup}
-As the game engine starts, it deals with difficulties showed in the hardware section.
+As the game engine starts, it deals with difficulties showed in the hardware section. This is where things become really interesting.
 
 \subsection{Signon}
-As the game engine starts, it has to factor in PC configuration issues. It especially had to figure out if the machine had enough RAM available and it the game was going to be able to run. This is where the "signon" screen comes into play:
-\par 
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/signonscreen.c}
-\end{minipage}
-Since this screen is showed almost before anything else is initialized (even the graphic adapter)
+Tne first (mild) issue to deal with is the heterogenous ecosystem of PCs on the market. With different drivers loaded and different sound cards, the engine has to figure out how much RAM is installed and if it will be able to run. If not it has to let the user know what is the problem. That was important since id Software was a small team and they did not have CSR around to pickup the phone.\\
+\par
+That is what the "signon" screen is for. Note how the screen and palette are just variable, already load in RAM by the operating system. After usage \cw{signon} is unloadede from RAM to make space for the actuall game.\\
+\par
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{screenshots/signon.png}
 \caption{Architecture and sub-systems.}
 \end{figure}
-Since the graphic pipeline is not initialized at this point, the full 64K pg13 screen ships compiled in the executable. The engine only copies from RAM to the VGA banks.\\
-
-Note: In an effort to get more RAM available, these 64K are unlinked for RAM.\\
-Note: The palette ($3*256=768$bytes) is also compiled in the executable. It is simply copied from RAM to VGA's DAC.
-Note the main (conventional memory) which goes only up to 320K: Between the executable and other residence routines it is all what was remaining of the original 640K. The game is able to run on 320KB but you needs to swap with the HD at runtime to load textures and sprites.
+\par
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Profound Carnage}
-The legendary "Profound Carnage-13" self-proclaimed rating, spoofing the movie industry PG-13 rating. Mark of the irreverent id software mindset at the time. Things like these would not fly these days.
-\begin{figure}[H]
-\centering
-\fullimage{pg13.png}
-\caption{Architecture and sub-systems.}
-\end{figure}
-
+\par 
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/signonscreen.c}
+\end{minipage}
+Since this screen is showed almost before anything else is initialized (video system, cache manager interfacing with HDD) the full 64K images (along with the pallete) is linked against the executable. The engine only has copies from RAM to the VGA banks.\\
+\par
+\note{Why only show the RAM only up to 320KB? Did the game ran on 320?}
+%Notice the main RAM (conventional memory) which goes only up to 320K: Between the executable and other residence routines it is all what was remaining of the original 640K. The game is able to run on 320KB but you needs to swap with the HDD at runtime to load textures and sprites.
 
 
 
@@ -475,39 +451,42 @@ The legendary "Profound Carnage-13" self-proclaimed rating, spoofing the movie i
 
 
 \subsection{Solving the VGA problem}
-The Hardware chapter describing the VGA left the reader with an unsolved problem: None of VGA modes offered by the BIOS are suited for a game engine. They all lack double buffering capability.\\
-]par
- The most appealing one (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. In this mode, the VGA circuitry automatically maps the RAM 64K address space to the four VGA banks. It is called "chaining" and wastes 75\% of the RAM to offers a linear framebuffer to the developer.\\
+The Hardware chapter describing the VGA left the reader with an unsolved problem: All of the VGA modes lack double buffering capability.\\
+\par
+ The most appealing mode (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. In this mode, the VGA circuitry automatically maps the RAM starting at \cw{A000:0000} up to 64K address to the four VGA banks. 
  \par
+ \begin{figure}[H]
+\centering
+      \includegraphics[width=\textwidth]{imgs/drawings/mode_13h.pdf}
+\end{figure}
+
+It is called "chaining" and wastes 75\% of the RAM to offers a linear framebuffer to the developer.\\
+
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/vga_layout/wasted_vga_ram.pdf}
- \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
 
  \par
- The problem really is the Chain-4 chip. Even though it is undocumented there is a way to disable it. Nobody can remember who invented unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. By tweaking the VGA Sequence controller the chain-4 chip can be disabled. This is what wolf3d does:\\
-
+ The problem really is the Chain-4 chip. And luckily, even though it is undocumented there is a way to disable it. Nobody can remember who discovered  unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. In his article he described how to turn the VGA into a 320x240 resolution (which features square pixesl) with four buffers and coined it Mode-X.\\
+ \par
+ Wolfenstein 3D does things slightly differently. It disables chain-4 but says in resolution 320x200. This mode is known as Mode-Y:\\
+\note{Why not use mode X. It offered square pixels ???!}
+\note{Ask John Carmack why they went for Mode-Y instead of Mode-X which offered square pixels.}
  \par
   \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/init_vga.c}
 \end{minipage}
  \par
 
-The resulting system can be seen as follow:\\
+The real magic is in function \cw{VL\_DePlaneVGA}:\\
 
  \par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unchaining.c}
 \end{minipage}
  \par
- To manually set the mask and select the bank were a value will be written can be done as follow:\\
- \par
- \begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/select_plan.c}
-\end{minipage}
- \par
- With that much RAM available, wolf3d divides the VRAM in four parts:
+ With that much RAM available, the VRAM is divided in four parts:
  \begin{itemize}\label{SetupPages}
  \item 64K for Framebuffer 0
  \item 64K for Framebuffer 1
@@ -523,30 +502,64 @@ The resulting system can be seen as follow:\\
 \par
 However this tweaked Mode 13h solves one big problem but creates two others. One is about speed and the other is about correctness.\\
 \par
-
-
-
-
-
-DELETE\\
-The developer now has to manually drive the VGA mask to plot pixel but the full 256k of ram is available. This VGA mode is commonly known as "Mode Y". Note: In the engine, unchaining is called "deplane" in VL\_DePlaneVGA.\\
-DELETE\\
-
-
-
-
-In the code it is done like this:\\
+Let's look at speed first. With chain-4 out of the picture, a developer is now in charge of selecting the bank to write to. This can easily be done with a simple function:\\
 \par
+ \par
  \begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/vga_setup_pages.c}
+\lstinputlisting[language=C]{code/select_plan.c}
+\end{minipage}
+ \par
+
+The code sample from the hardware chapter to clear the screen become:\\
+\par
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/cleanScreenNaive.c}
 \end{minipage}
 \par
-
-Note: Why use 208 height if the framebuffer is 200 pixels tall? That doesn't make sense at first sight. I thought it was a typo (after all 0 and 8 are visually close). Think about it and find out why in section \ref{Flippingbuffer}!\\
+The code looks innocuous...but as simple as it is, it cannot run at more than 5 frames per second. The problem is that we replaced something done in hardware with something done in software: the \cw{outp} instruction which is very VERY slow.\\
+\par
+Of course these is a tradeoff to be found and go past this problem. If we look carefully at the screenshot in Figure \ref{fig:vga_layout_for_intro} and Figure \ref{fig:vga_layout_in_3D} on page \pageref{fig:vga_layout_in_3D} there is an interesting property: Horizontal lines of pixels are broken into four areas (and it looks like mashed potatoes) but vertically the column of pixels are still linear and not broken down in banks. Indeed 320 is evenly divisible by 4 so vertically pixels are aligned and grouped in column of 80 pixels. This observation unlock a different algorithm where things are drawn vertically:\\
 \par
 
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/cleanScreenClever.c}
+\end{minipage}
 
-As a result from unchaining a complete framebuffer is divided into four banks. Horizontally it looks a little bit like mashed potatoes:
+\par
+This code can run without issues at 70 frames per second: Only 200 slow out instruction are used.\\
+\par
+This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algorithms picked during 2D and 3D all the way up to the assets compression techniques and how they are stored in RAM (rotated 90 degres). In wolf3d: Everything is vertical!\\
+
+
+
+
+\par
+The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3 and then goes back to page 1 (notice there are three buffers but this is not triple-buffering). To flip between page the CRT Controller is contacted and the new offest from \cw{A000:0000} is entered. The code would look like this:\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language={[x86masm]Assembler}]{code/pageflip.c}
+\end{minipage}
+This code looks like it would work. But there is a major flow with it. If you were to run it, every once in a while the screen would show something like this:\\
+\par
+TODO: Show CRTC mess.\\
+\par
+The problem has to do with atomicity. Updating the CRTC starting address is 16-bits adress...but it can only be updated with 8-bits write operation. IT is not atomic. If you are unlucky, the CRTC could pickup the scan address just here:\\
+\par
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language={[x86masm]Assembler}]{code/pageflip_error.c}
+\end{minipage}
+\par
+How do you update atomically a 2 bytes value with 1 byte operation? I will let you ponder that and find the solution in the section dedicated to page flipping.
+
+
+
+
+
+
+
+Notice how a frame is stored in a page across four banks. Horizontally it looks a little bit like mashed potatoes:
  \begin{figure}[H]
 \centering
  \fullimage{vga_layout/intro.png}
@@ -559,7 +572,7 @@ As a result from unchaining a complete framebuffer is divided into four banks. H
  \caption{Intro screen as it is stored across 4 banks in a framebuffer} \label{fig:vga_layout_for_intro}
  \end{figure}
 \par
-An other example during a 3D sequence
+An other example during a 3D sequence.
 \begin{figure}[H]
 \centering
  \fullimage{vga_layout/wolf3d_7.png}
@@ -572,51 +585,53 @@ An other example during a 3D sequence
  \fullimage{vga_layout/wolf3d_7_bank.png}
  \caption{3D View as it is stored across 4 banks in a framebuffer}
  \end{figure}
-
-\par
-But this solution only leads to an other problem. The Chain-4 chip hardwired and therefore it is fast while piloting the SC\_MASK manually via in/out BIOS operations is very VERY slow. A naive algorithm drawing left to right and top to bottom as follow could not go beyond 4-5 frames per seconds:\\
-\par
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/cleanScreenNaive.c}
-\end{minipage}
-\par
-The culprit being the 320*200=64000 slow instruction to set the mask. But if we look carefully at the screenshot in Figure \ref{fig:vga_layout_for_intro} and Figure \ref{fig:vga_layout_in_3D} on page \pageref{fig:vga_layout_in_3D} there is an interesting property: If horizontal lines of pixels are broken into four areas (and it looks like mashed potatoes), vertically the column of pixels are still linear and not broken down in banks. Indeed 320 is evenly divisible by 4 so vertically pixels are aligned and grouped in column of 80 pixels. This observation unlock a different algorithm where things are drawn vertically:\\
+But vertically each bank stores a column intact. This is an important property which is exploited later during the game.
 \par
 
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/cleanScreenClever.c}
-\end{minipage}
 
-\par
-This code can run without issues at 70 frames per second: Only 200 slow out instruction are used.\\
-\par
-This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algorithms picked during 2D and 3D all the way up to the assets compression techniques and how they are stored in RAM (rotated 90 degres). In wolf3d: Everything is vertical!\\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/vga_ram_screen_layout.pdf}
 \end{figure}
 
-Even though it was convoluted it allows clever tricks. Let's take the example of clearing the screen to black. A naive approach would be to write every pixels left to write and top to bottom:\\
+% Even though it was convoluted it allows clever tricks. Let's take the example of clearing the screen to black. A naive approach would be to write every pixels left to write and top to bottom:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/vga_clear/naive.c}
 \end{minipage}
 
-The cost of this operation is $320*200=64000$ writes and 64000 out operation (to select the mask).
-But the overhead of selecting the bank (a.k.a plan) would make the task impossibly slow. A better approach would be to do bottom up and left to right as follow:\\
-\par
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/vga_clear/optimized.c}
-\end{minipage}
+% The cost of this operation is $320*200=64000$ writes and 64000 out operation (to select the mask).
+% But the overhead of selecting the bank (a.k.a plan) would make the task impossibly slow. A better approach would be to do bottom up and left to right as follow:\\
+% \par
+% \begin{minipage}{\textwidth}
+% \lstinputlisting[language=C]{code/vga_clear/optimized.c}
+% \end{minipage}
 
-The code is slightly more complicated but this way we only switch bank XXX times and write $320*200=64000$ writes and 320 out out operation. But there is a way to do even better:\\
+% The code is slightly more complicated but this way we only switch bank XXX times and write $320*200=64000$ writes and 320 out out operation. But there is a way to do even better:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/vga_clear/optimal.c}
 \end{minipage}
 
-Which results in $320*80=25600$ and 1 out operation !\\
+% Which results in $320*80=25600$ and 1 out operation !\\
 
 This is not always that easy: You can write up to four pixels in one write as long as they are properly aligned. See the example following:
 \begin{figure}[H]
@@ -624,31 +639,50 @@ This is not always that easy: You can write up to four pixels in one write as lo
  \includegraphics[width=\textwidth]{imgs/drawings/vga_multiple_pixel_write.png}
 \end{figure}
 
-\note{Ask John Carmack why they went for Mode-Y instead of Mode-X which offered square pixels.}
+% \par
+% With this technique the 64KB of mapped RAM can access the full 256KB of the VGA. This enables a mode offering:
+% \begin{itemize}
+%   \item Resolution of 320x200
+%   \item Double buffering
+%   \item Storage of sprites in VRAM.
+% \end{itemize}
 
-\par
-With this technique the 64KB of mapped RAM can access the full 256KB of the VGA. This enables a mode offering:
-\begin{itemize}
-  \item Resolution of 320x200
-  \item Double buffering
-  \item Storage of sprites in VRAM.
-\end{itemize}
-
-Compared to figure 
-TODO: New Drawing of VGA RAM.\\
-But there is still a problem: Switching the target RAM was very slow. So a routine drawing an horizontal line on the screen:\\
+% Compared to figure 
+% TODO: New Drawing of VGA RAM.\\
+% But there is still a problem: Switching the target RAM was very slow. So a routine drawing an horizontal line on the screen:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/drawline.c}
 \end{minipage}
-Would have been unpractical. But something else can be done if you notice that 320 is a multiple of 4 (320/4=80): If you draw only columns you don't have to change the target plan often.\\
-TOOD: Drawing of how column line up in VGA RAM.\\
-
- \par
+% Would have been unpractical. But something else can be done if you notice that 320 is a multiple of 4 (320/4=80): If you draw only columns you don't have to change the target plan often.\\
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Profound Carnage}
+After the signon screen is discarded, a second screen appears: the "rating" screen. There were no official rating for video games in 1991 since the ESRB would be established in 1994 in response to criticism of controversial video games with excessively violent (a.k.a Doom) or sexual content. But the team came up with their own self-proclaimed PC-13: The now legendary "Profound Carnage-13".\\
+\begin{figure}[H]
+\centering
+\fullimage{pg13.png}
+\end{figure}
 
 
 
