@@ -10,6 +10,7 @@
 
 void VL_DePlaneVGA() {  
   // Make sure the mode bit 4 is at 0.
+  // (a.k.a: Disable Chain-4)
   outp(SC_INDEX, MEMORY_MODE);
   outp(SC_DATA, inp(SC_DATA)&~8)); 
 

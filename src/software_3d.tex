@@ -1,5 +1,5 @@
 \section{Action Phase: 3D Renderer}
-When the player is done setting up the game finally comes time to dive into the 3D engine itself. Something that was kep secret for many years. The 3D engine is based on a simple raycasting technology which is simple yet powerful. The idea is to cast a ray for each column of pixel visible on the screen. Based on the distance d, a height h can be calculated:\\
+After the player is done setting up the game finally comes time for the 3D engine to shine. Here are the internals of something that was kep secret for many years. The 3D engine is based on raycasting technology which is simple yet powerful. The idea is to cast a ray for each column of pixel visible on the screen. Based on the distance d from the point of view to where the ray htis a wall, a height h can be calculated:\\
 \par
 \begin{figure}[H]
   \centering
@@ -8,7 +8,7 @@ When the player is done setting up the game finally comes time to dive into the 
   \end{equation}
 \end{figure}
 \par
-Even for a complex scene involving multiple door and rooms, it delivers fast intersection.
+Even for a complex scene involving multiple door and rooms, this method can delivers fast intersection calculations.
 \par
 \begin{figure}[H]
 \centering
@@ -19,32 +19,32 @@ Even for a complex scene involving multiple door and rooms, it delivers fast int
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_door.png}
- \caption{Rendition of the height calculated from the rays distance to the pov.} 
+ \caption{Rendition of the height calculated from d (with texturing).} 
 \end{figure}
 
 The secret of Wolfesnstein 3D speed lies in two tricks (described in details later): Precompiled scalers and Deffered column rendering.
 
 
-\subsection{Big Picture}
+\subsection{Life of a frame}
 
 A 3D scene is rendered in four passes:
 \begin{enumerate}
  \item Clear the screen by drawing the floor and the ceiling (both solid color).
- \item Cast up to 320 rays and draw then according to the distance from the player.
+ \item For each column of pixel on screen. cast a ray for each column of pixel from the player the wall. Draw a textured column of pixels inversely proportional to the distance.
  \item Draw the things (enemies, lamps, barrels).
  \item Draw the weapon.	
 \end{enumerate}
 
-Assets come from file VMSWAP:
+During this process, all assets come from file VMSWAP (see Page Manager for more explanations)
 \begin{enumerate}
 	\item Textures for the wall are stored uncompressed.
-	\item Sprites are ...They are not compressed per say but because they contain a lot of optimization: Own many columns to skip on the left. How wide they are. Since scprite are drawn as column....chunk offsets ahd chunk length. Sprites are drawn bottom up
+	\item Sprites are ...They are not compressed per say but because they contain a lot of optimization: Own many columns to skip on the left. How wide they are. Since sprites are drawn as column....chunk offsets ahd chunk length. Sprites are drawn bottom up
 \end{enumerate}
 Following, screenshots of a slowdown version of the engine, showing each four step of rendition:
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{screenshots/wolf3d_1_background.png}
- \caption{3D Rendere Phase 1: Background}
+ \caption{Phase 1: Background}
  \end{figure}
 
 \par
@@ -59,14 +59,14 @@ The floor was always the same color. The ceiling however changed see \codeword{W
 \begin{figure}[H]
  \centering
   \includegraphics[width=\textwidth]{screenshots/wolf3d_4_partial_wall_32rays.png}
-  \caption{3D Rendere Phase 2: Walls (160 rays)}
+  \caption{Phase 2: Walls (160 rays)}
  
 \end{figure}
  
 \begin{figure}[H]
  \centering
   \includegraphics[width=\textwidth]{screenshots/wolf3d_5_partialwalls_160rays.png}
- \caption{Finalez frame} 
+ \caption{Finale frame} 
  
 \end{figure}
  
@@ -74,20 +74,20 @@ The floor was always the same color. The ceiling however changed see \codeword{W
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{screenshots/wolf4d_2_walls.png}
- \caption{3D Rendere Phase 2: Walls completed} 
+ \caption{Phase 2: Walls completed} 
  \end{figure}
  
  
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{screenshots/wolf3d_6_scaled}
- \caption{3D Rendere Phase 3: Scaled (a.k.a: Sprites)} 
+ \caption{Phase 3: Scaled (a.k.a: Sprites)} 
  \end{figure}
 
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{screenshots/wolf3d_7_fullframe.png}
- \caption{3D Rendere Phase 2: Weapon} 
+ \caption{Phase 4: Weapon} 
  \end{figure}
  
 
@@ -322,6 +322,22 @@ Sprites 91 to 134 are latched in VRAM.\\
  \includegraphics[width=\textwidth]{imgs/drawings/latches_drawing.png}
  \end{figure}
  
+
+Not at fast as it seems since things have to be drawn in all three buffers during action 3D phase:\\
+\par
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/StatusDrawPic.c}
+\end{minipage}
+
+
+LatchDrawPic
+Chapter 48 from michael abrash book
+atches were not intended for use in 256-color mode; that was something I figured out as a hack and wrote about. The latches were used so that in 16-color mode any or all of the four planes could be written to at once.
+
+
+
+
 All these assets account for $48*24*4+14*8*16+23*24*32+224*48=34,816$ bytes. There is therefore $2^18-320*208*3 - 34,816=27,648$ bytes unused VRAM in the VGA.
 All these assets are used with the VGA in order to copy 4 pixels at a time.
 

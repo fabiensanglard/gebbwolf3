@@ -286,6 +286,8 @@ The precaching mechanism is not particularly clever: It loads as many page from 
 \par
 The size of the swap file varies depending on the version of the game you play: \cw{VSWAP.WL1} (shareware) is 742KB while \cw{VSWAP.WL6} (full version) is 1,500KB. In both case a machine with 2MB of RAM on top of the factory issued 1MB is enough to have all assets loaded during pre-caching.\\
 \par
+TODO: Insert code sample to show what an ID is.
+\par
 \bu{Trivia:} In the code, the progress bar was called a "thermometer".\\
 \par
 \bu{Trashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, it is trashing. The HDD is put to heavy contribution and the framerate drops. Trashing can happen if two many different resources are visible on the screen. In order to help designers balance their creativity with the needs for a decent framerate, the engine detects trashing and flashes the screen border red when it occurs.\\
@@ -451,16 +453,16 @@ Since this screen is showed almost before anything else is initialized (video sy
 
 
 \subsection{Solving the VGA problem}
-The Hardware chapter describing the VGA left the reader with an unsolved problem: All of the VGA modes lack double buffering capability.\\
+The Hardware chapter describing the video system left us with an unsolved problem: All of the VGA modes lack double buffering capability.\\
 \par
- The most appealing mode (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. In this mode, the VGA circuitry automatically maps the RAM starting at \cw{A000:0000} up to 64K address to the four VGA banks. 
+ The most appealing mode (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. The Chain-4 chipset in the VGA circuitry automatically maps the RAM starting at \cw{A000:0000} to the four VRAM banks. 
  \par
  \begin{figure}[H]
 \centering
       \includegraphics[width=\textwidth]{imgs/drawings/mode_13h.pdf}
 \end{figure}
 
-It is called "chaining" and wastes 75\% of the RAM to offers a linear framebuffer to the developer.\\
+It is called "chaining" and because 2 bits out of the address are used to route a write/read operation to a bank, only 14 bits are used for the actuall offset in the bank. Since 14 bits can address 16384 values this system results in a waste of 75\% of the RAM to offers.\\
 
 \begin{figure}[H]
 \centering
@@ -468,7 +470,7 @@ It is called "chaining" and wastes 75\% of the RAM to offers a linear framebuffe
  \end{figure}
 
  \par
- The problem really is the Chain-4 chip. And luckily, even though it is undocumented there is a way to disable it. Nobody can remember who discovered  unchaining but it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. In his article he described how to turn the VGA into a 320x240 resolution (which features square pixesl) with four buffers and coined it Mode-X.\\
+ The problem really is the Chain-4 chip. Nobody can remember who discovered first but the process to disable it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. In his article he described was he called the Mode-X. An undocumented mode with a resolution of 320x240 allowing up to four buffers in VRAM.\\
  \par
  Wolfenstein 3D does things slightly differently. It disables chain-4 but says in resolution 320x200. This mode is known as Mode-Y:\\
 \note{Why not use mode X. It offered square pixels ???!}
@@ -485,12 +487,13 @@ The real magic is in function \cw{VL\_DePlaneVGA}:\\
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unchaining.c}
 \end{minipage}
+\note{What is long mode? What is byte mode?}
  \par
- With that much RAM available, the VRAM is divided in four parts:
+ With that much RAM available, the VRAM is divided in four parts.:
  \begin{itemize}\label{SetupPages}
  \item 64K for Framebuffer 0
  \item 64K for Framebuffer 1
- \item 64K for Framebuffer 1
+ \item 64K for Framebuffer 2
  \item 64K for Graphic assets
 \end{itemize}
 \par
@@ -500,9 +503,9 @@ The real magic is in function \cw{VL\_DePlaneVGA}:\\
  \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
 \par
-However this tweaked Mode 13h solves one big problem but creates two others. One is about speed and the other is about correctness.\\
+But the engine is not done yet. Tweaking Mode 13h into Mode-Y solves one big problem but introduced two new ones. One is about speed and the other is about correctness.\\
 \par
-Let's look at speed first. With chain-4 out of the picture, a developer is now in charge of selecting the bank to write to. This can easily be done with a simple function:\\
+Let's look at speed first. With chain-4 out of the picture a developer is now in charge of selecting the bank to write to. This can easily be done with a simple function:\\
 \par
  \par
  \begin{minipage}{\textwidth}
@@ -510,17 +513,16 @@ Let's look at speed first. With chain-4 out of the picture, a developer is now i
 \end{minipage}
  \par
 
-The code sample from the hardware chapter to clear the screen become:\\
+Now the code sample from the hardware chapter to clear the screen become:\\
 \par
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/cleanScreenNaive.c}
 \end{minipage}
 \par
-The code looks innocuous...but as simple as it is, it cannot run at more than 5 frames per second. The problem is that we replaced something done in hardware with something done in software: the \cw{outp} instruction which is very VERY slow.\\
+The code looks innocuous...but as simple as it is, it cannot run at more than 5 frames per second. The problem is that we replaced something done in hardware with something done in software: the \cw{outp} instructions which are slow.\\
 \par
-Of course these is a tradeoff to be found and go past this problem. If we look carefully at the screenshot in Figure \ref{fig:vga_layout_for_intro} and Figure \ref{fig:vga_layout_in_3D} on page \pageref{fig:vga_layout_in_3D} there is an interesting property: Horizontal lines of pixels are broken into four areas (and it looks like mashed potatoes) but vertically the column of pixels are still linear and not broken down in banks. Indeed 320 is evenly divisible by 4 so vertically pixels are aligned and grouped in column of 80 pixels. This observation unlock a different algorithm where things are drawn vertically:\\
-\par
+The solution is to change how we draw onto the screen. Instead of going top to bottom and left to right, we need to go left to right and top to bottom which minimize the number of bank switch.
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/cleanScreenClever.c}
@@ -529,17 +531,12 @@ Of course these is a tradeoff to be found and go past this problem. If we look c
 \par
 This code can run without issues at 70 frames per second: Only 200 slow out instruction are used.\\
 \par
-This VGA bank layout has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. This hardware constraints has deep ramification in the engine: From the algorithms picked during 2D and 3D all the way up to the assets compression techniques and how they are stored in RAM (rotated 90 degres). In wolf3d: Everything is vertical!\\
-
-
-
-
-
+This speed consideration has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. So everything in the engine is drawn this way: Walls, Sprites, Menu. Everything. The ramification of this hardware constraint are felt everywhere. From the way assets are stored (rotated 90 degres) and compressed.. In Wolfenstein 3D: Everything has to be vertical!\\
 
 \par
-The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3 and then goes back to page 1 (notice there are three buffers but this is not triple-buffering). It never stops. It just instructs the CRT Controller that it should scan the framebuffer at a different offset and keep on running.
-
-To flip between page the CRT Controller is contacted and the new offest from \cw{A000:0000} is entered. The code would look like this:\\
+The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3 and then goes back to page 1 (notice there are three buffers but this is not triple-buffering). It never stops. It just instructs the CRT Controller that it should scan the framebuffer at a different offset after the next vsync.\\
+\par
+The CRT Controller start scan offset is a 16 bits value which is updated with a little bit of assembly. The code would look as follow:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}]{code/pageflip.c}
@@ -557,7 +554,14 @@ Would instead appear like that:\\
  \fullimage{crtc_scanstart_problem.png}
  \end{figure}
 \par
-Showing part of one page and page of an other page and also unaligned.\\The problem has to do with atomicity. Updating the CRTC starting address is 16-bits adress...but it can only be updated with 8-bits write operation. IT is not atomic. If you are unlucky, the CRTC could pickup the scan address just here:\\
+Showing part of one page and a part of an other page. The framebuffer is also mis-aligned. The problem has to do with atomicity. Updating the CRTC starting address is a 16-bits value...but the \cw{out} instruction can only write 8-bits at a time. So if the pages are setup one after an other like this:
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{imgs/drawings/triple_pages_trick.pdf}
+\end{figure}
+\par
+Page 0 is at 0x0000, page 1 at 0x3E80 and page 2 at 0x7000. Moving from page 0 to 1 requires updating the high byte 0x00 to 0x3E and the low byte 0x00 to 0x80. Since update is not atomic, given a poor timing the CRTC could pickup a value of 0x3E00 instead of 0x3E80:\\
 \par
 \par
 \begin{minipage}{\textwidth}
@@ -567,18 +571,13 @@ Showing part of one page and page of an other page and also unaligned.\\The prob
 How do you update atomically a 2 bytes value with 1 byte operation? Take a look at how Wolfenstein setup its pages:\\
 \par
 \begin{minipage}{\textwidth}
+\begin{flushright}
 \lstinputlisting[language=C]{code/vga_setup_pages.c}
+\end{flushright}
 \end{minipage}
 \par
-Notice how it uses a value of 208 instead of 200 pixels for the height? That doesn't make sense at first sight. I thought it was a typo (after all 0 and 8 are visually close).
-\par
-The trick is to use page adress which need only one byte update. Which explains why the engine "wastes" 8*80 bytes per page in section \ref{SetupPages}:\\
-\par
-\begin{figure}[H]
- \centering
- \includegraphics[width=\textwidth]{imgs/drawings/triple_pages_trick.pdf}
-\end{figure}
-\par
+Notice how it uses a value of 208 instead of 200 pixels for the height? That doesn't make sense at first sight. I thought it was a typo (after all 0 and 8 are visually close). The trick is to use a little bit of padding after each page so the addresses only differ by their high byte value.
+
 
 \par
 \begin{figure}[H]
@@ -588,9 +587,9 @@ The trick is to use page adress which need only one byte update. Which explains 
 \par
 
 
-Using pages of 80*200 result in page 0 at 0x0000, page 1 at 0x3E80 and page 2 at 0x7000. Moving from page 0 to 1 would require updating the high 0x00 to 0x3E and the low 0x00 to 0x80. If you are unlucky the CRT could start scanning after the high byte has bee updated but before the low byte has. This would present user with an ugly mess.\\
+
 \par
-Using pages of 80*208 result in page 0 at 0x0000, page 1 at 0x4100 and page 2 at 0x8200. Moving from any page to an other only requires updating the high 8 bits. Flipping buffer is now an atomic operation !!\\
+Now page 0 is at 0x0000, page 1 at 0x4100 and page 2 at 0x8200. Moving from any page to an other only requires updating the high 8 bits. Making flipping buffer an atomic operation!\\
 
 
 
@@ -599,8 +598,9 @@ Using pages of 80*208 result in page 0 at 0x0000, page 1 at 0x4100 and page 2 at
 
 
 
-
-
+\par
+\par
+DELETE ?\\
 Notice how a frame is stored in a page across four banks. Horizontally it looks a little bit like mashed potatoes:
  \begin{figure}[H]
 \centering
@@ -643,7 +643,7 @@ But vertically each bank stores a column intact. This is an important property w
 
 
 \subsection{Profound Carnage}
-After the signon screen is discarded, a second screen appears: the "rating" screen. There were no official rating for video games in 1991 since the ESRB would be established in 1994 in response to criticism of controversial video games with excessively violent (a.k.a Doom) or sexual content. But the team came up with their own self-proclaimed PC-13: The now legendary "Profound Carnage-13".\\
+After the signon screen comes a second one: the "rating" screen. There were no official rating for video games in 1991 since the ESRB would be established in 1994 in response to criticism of controversial video games with excessively violent (a.k.a Doom) or sexual content. But the team came up with their own self-proclaimed PC-13: The now legendary "Profound Carnage-13".\\
 \begin{figure}[H]
 \centering
 \fullimage{pg13.png}
