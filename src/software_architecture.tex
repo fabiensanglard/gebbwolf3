@@ -4,7 +4,7 @@
 The game engine source code was released on July 21st, 1995. Twenty years later it is still there on id software's ftp\footnote{File Transfer Protocol.}:\\ 
 \\\codeword{ftp://ftp.idsoftware.com/idstuff/source/wolfsrc.zip}.\\
 \\
-\bu{Trivia :} Before the times of nmap, WireShark and other ARP poisoning monstruosities, FTP was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
+\bu{Trivia :} Before the times of nmap, WireShark and other ARP poisoning monstrosities, FTP was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
 
 \section{First Contact}
 Once downloaded and decompressed, it turns out the archive \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical now. It is easy to deflate it with:\\
@@ -89,7 +89,7 @@ The engine can be divided in three blocks:
 \item The 3D renderer where most of the time is spent in the game.
 \item The sound system which always run concurrently with either 2D or 3D renderer. 
 \end{itemize}
-Note that both renderers communicate with the sound system via shared memory.
+Note the three systems communicate via shared memory. The renderer issue music and sound request to the RAM (also making sure the assets are ready). The sound system also communicates with the renderers since it is in charge of the heartbeat of the whole engine. The renderer can update the world according to the wall-time tracked by \cw{TimeCount} variable.
 \par
 \begin{figure}[H]
 \centering

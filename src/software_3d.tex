@@ -26,7 +26,40 @@ The secret of Wolfesnstein 3D speed lies in two tricks (described in details lat
 
 
 \subsection{Life of a frame}
+As we saw when we unrolled the loop, the action scene is made of frames in a loop. In pseudo code:\\
+\par
+\begin{minipage}{\textwidth}
+ \lstinputlisting[language=C]{code/flawded_game_loop.c}
+ \end{minipage}
+\par
+Despite being state of the art for 1991, this architecture has a major flaw: Each slice of the game has a different duration which makes the game undeterministic from one machine to an other. Or even between two runs on the same machine.
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.png}
+ \caption{Phase 1: Background}
+ \end{figure}
+  That is why it is not possible to record and replay a session. Upon replaying the game would reach a time where no inputs are available, resulting in different outcomes.\\
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/timer/replay.png}
+ \caption{Phase 1: Background}
+ \end{figure}
+\par
+To solve this problem during the demo, the game disregards the timer and simulate things at fixed timesteps.\\
+\par
+Doom in 1993 would solve this issue by simulating the world at fixed intervals:
+\par
+\begin{minipage}{\textwidth}
+ \lstinputlisting[language=C]{code/fixed_game_loop.c}
+ \end{minipage}
+\par
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/timer/fixed.png}
+ \caption{Phase 1: Background}
+ \end{figure}
 
+\subsection{Life of a 3D frame}
 A 3D scene is rendered in four passes:
 \begin{enumerate}
  \item Clear the screen by drawing the floor and the ceiling (both solid color).
@@ -34,6 +67,7 @@ A 3D scene is rendered in four passes:
  \item Draw the things (enemies, lamps, barrels).
  \item Draw the weapon.	
 \end{enumerate}
+Each of these passes are described later in details. This was just an overview.
 
 During this process, all assets come from file VMSWAP (see Page Manager for more explanations)
 \begin{enumerate}
@@ -59,14 +93,14 @@ The floor was always the same color. The ceiling however changed see \codeword{W
 \begin{figure}[H]
  \centering
   \includegraphics[width=\textwidth]{screenshots/wolf3d_4_partial_wall_32rays.png}
-  \caption{Phase 2: Walls (160 rays)}
+  \caption{Phase 2: Walls (40 rays)}
  
 \end{figure}
  
 \begin{figure}[H]
  \centering
   \includegraphics[width=\textwidth]{screenshots/wolf3d_5_partialwalls_160rays.png}
- \caption{Finale frame} 
+ \caption{Phase 2: Walls (160 rays)} 
  
 \end{figure}
  
@@ -137,13 +171,13 @@ A 3D dimensional view of the 2D map is rendered at runtime:
 
 
 
-\subsection{HUD}
-At the beginning of the 3D sequence, the engine generates the HUD\footnote{Head-up display} in all three buffers:\\
+\subsection{3D setup}
+Before starting to draw frames, the 3D engine needs to setup VRAM with static elements. As you noticed the 3D view is not fullscreen. It is contained in a HUD\footnote{Head-up display}:
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{screenshots/hud_empty.png}
 \end{figure}
-It also uploads all assets neeeded to update the HUD (weapon, font, keys, status face, paused).
+This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the allocated region. The stats (Level, Score, Lives, Status, Health, Ammo, Current weapon) get a special treatment. In order to draw them as fast as possible they are uploaded to the VRAM (beyond the third page).\\
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
@@ -317,11 +351,12 @@ Sprites 91 to 134 are latched in VRAM.\\
      \fullimage{latched/134.png}
   \end{minipage}\
 
+Why is it faster to copy from VRAM to VRAM instead of RAM to VRAM? Because the VGA latches system allows to read and write four pixel at a time.\\
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/latches_drawing.png}
  \end{figure}
- 
+ By configuring the read operations to read from all banks and configuring the write operations to use the latched value.
 
 Not at fast as it seems since things have to be drawn in all three buffers during action 3D phase:\\
 \par
