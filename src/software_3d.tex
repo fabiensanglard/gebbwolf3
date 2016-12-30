@@ -3,9 +3,9 @@ After the player is done setting up the game finally comes time for the 3D engin
 \par
 \begin{figure}[H]
   \centering
-  \begin{equation}
+  \begin{equation*}
       \scalebox{2.0}{$h = \frac{X}{d}$}
-  \end{equation}
+  \end{equation*}
 \end{figure}
 \par
 Even for a complex scene involving multiple door and rooms, this method can delivers fast intersection calculations.
@@ -77,7 +77,7 @@ During this process, all assets come from file VMSWAP (see Page Manager for more
 Following, screenshots of a slowdown version of the engine, showing each four step of rendition:
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/wolf3d_1_background.png}
+ \fullimage{wolf3d_1_background.png}
  \caption{Phase 1: Background}
  \end{figure}
 
@@ -92,14 +92,14 @@ Following, screenshots of a slowdown version of the engine, showing each four st
 The floor was always the same color. The ceiling however changed see \codeword{WL\_DRAW.C} for a hard-coded index. TODO: Include a clear screen from a later level.\\
 \begin{figure}[H]
  \centering
-  \includegraphics[width=\textwidth]{screenshots/wolf3d_4_partial_wall_32rays.png}
+  \fullimage{wolf3d_4_partial_wall_32rays.png}
   \caption{Phase 2: Walls (40 rays)}
  
 \end{figure}
  
 \begin{figure}[H]
  \centering
-  \includegraphics[width=\textwidth]{screenshots/wolf3d_5_partialwalls_160rays.png}
+  \fullimage{wolf3d_5_partialwalls_160rays.png}
  \caption{Phase 2: Walls (160 rays)} 
  
 \end{figure}
@@ -107,20 +107,20 @@ The floor was always the same color. The ceiling however changed see \codeword{W
  
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/wolf4d_2_walls.png}
+ \fullimage{wolf3d_2_walls.png}
  \caption{Phase 2: Walls completed} 
  \end{figure}
  
  
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/wolf3d_6_scaled}
+ \fullimage{wolf3d_6_scaled}
  \caption{Phase 3: Scaled (a.k.a: Sprites)} 
  \end{figure}
 
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/wolf3d_7_fullframe.png}
+ \fullimage{wolf3d_7_fullframe.png}
  \caption{Phase 4: Weapon} 
  \end{figure}
  
@@ -175,7 +175,7 @@ A 3D dimensional view of the 2D map is rendered at runtime:
 Before starting to draw frames, the 3D engine needs to setup VRAM with static elements. As you noticed the 3D view is not fullscreen. It is contained in a HUD\footnote{Head-up display}:
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{screenshots/hud_empty.png}
+ \fullimage{hud_empty.png}
 \end{figure}
 This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the allocated region. The stats (Level, Score, Lives, Status, Health, Ammo, Current weapon) get a special treatment. In order to draw them as fast as possible they are uploaded to the VRAM (beyond the third page).\\
 \begin{figure}[H]
@@ -626,7 +626,7 @@ Behind a forest of push walls (white squares) and angry bosses (blue star), a si
 
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{screenshots/call_apogee.png}
+ \fullimage{call_apogee.png}
 \end{figure}
 \par
 However due to people reverse engineering the map format and cheat sites allowing players to find the maze, the sign was replaced with a squeleton with all game shipping during 1992.
@@ -765,7 +765,7 @@ In this drawing the player is located at viewpoint with a view angle \begin{math
 
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/fish_eye/bad_mild.png}
+  \fullimage{fish_eye/bad_mild.png}
  \caption{Fish eye effect: Mild}. \label{fig:mips}
  \end{figure}
 
@@ -779,7 +779,7 @@ In this drawing the player is located at viewpoint with a view angle \begin{math
 But it gets worse when you get closer:
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/fish_eye/bad_ok.png}
+  \fullimage{fish_eye/bad_ok.png}
  \caption{Fish eye effect: Bad} \label{fig:mips}
  \end{figure}
  \begin{figure}[H]
@@ -791,7 +791,7 @@ But it gets worse when you get closer:
 And become unbearable when very close:
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/fish_eye/bad_bad.png}
+  \fullimage{fish_eye/bad_bad.png}
  \caption{Fish eye effect: AAAAARG} \label{fig:mips}
  \end{figure}
  \begin{figure}[H]
@@ -813,21 +813,78 @@ This projection (z) is mathematically hard to calculate in one go (especially wi
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/fish_eye/correct_way.tex}
- \caption{A combination of SOH A=($dx * \cos(\alpha)$) and CAH B=($ dy * \sin(\alpha) $) gives $d = dx * \cos(\alpha) - dy * \sin(\alpha) $ gives the expected result.}
+ 
 \end{figure}
+Using CAH gives $A = dx * \cos(\alpha)$ and SOH gives $B = dy * \sin(\alpha) $. So:
 
-The overall operation can be seen as a rotation of y intercept around the viewpoint.\\
+\begin{figure}[H]
+  \centering
+  \begin{equation*}
+    \scalebox{1.3}{
+$d = A + B = dx * \cos(\alpha) + dy * \sin(\alpha) $. 
+ }
+  \end{equation*}
+\end{figure}
+But since dx and dy are not distances but vectors (with a sign) the equation becomes 
+
+\begin{figure}[H]
+  \centering
+  \begin{equation*}
+    \scalebox{1.3}{
+$d = A + B = dx * \cos(-\alpha) + dy * \sin(-\alpha) $ 
+ }
+  \end{equation*}
+\end{figure}
+which simplified becomes: 
+
+\begin{figure}[H]
+  \centering
+  \begin{equation*}
+    \scalebox{1.3}{
+$d = A + B = dx * \cos(\alpha) - dy * \sin(\alpha) $
+ }
+  \end{equation*}
+\end{figure}
+\par
+For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy), discarding the x component:
+\begin{figure}[H]
+  \centering
+  \begin{equation*}
+    \scalebox{1.3}{
+    $
+      \begin{bmatrix} 
+        \cos(\alpha) & -\sin(\alpha) \\ 
+        \sin(\alpha) & \cos(\alpha) 
+      \end{bmatrix} 
+       *
+      \begin{bmatrix} 
+        dx \\ 
+        dy 
+      \end{bmatrix}
+       =
+      \begin{bmatrix} 
+        dx*\cos(\alpha) - dy*\sin(\alpha) \\ 
+        dx*\sin(\alpha) + dy*\cos(\alpha) 
+      \end{bmatrix} 
+      $
+    }
+  \end{equation*}
+\end{figure}
+I personnaly find the graphic explanation with SOH-CAH-TOA much more clear!
+
+
+\par
  Which is enough to give pleasant straigh lines. Following a wall uncorrected and the same location with projected distance:\\
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/fish_eye/fish_eye.png}
+  \fullimage{fish_eye/fish_eye.png}
   \caption{Fish eye: Uncorrected} 
  \end{figure}
  
 
   \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/fish_eye/fish_eye_corrected.png}
+  \fullimage{fish_eye/fish_eye_corrected.png}
 \caption{Fish eye: Corrected} 
  \end{figure}
  \par
@@ -835,14 +892,14 @@ The overall operation can be seen as a rotation of y intercept around the viewpo
  \par
   \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/fish_eye/fish_eyed_start_screen2.png}
+  \fullimage{fish_eye/fish_eyed_start_screen2.png}
   \caption{Fish eye: Uncorrected} 
  \end{figure}
  \par
 
   \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/wolf3d_7_fullframe.png}
+ \fullimage{wolf3d_7_fullframe.png}
   \caption{Fish eye: Corrected} 
  \end{figure}
  \par
@@ -871,11 +928,11 @@ With a distance available for a column, the engine is able to calculate a height
 \par
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/scaler_valign.png}
+ \fullimage{scaler_valign.png}
  \end{figure}
 \par
 
-The naive approach would be to use a generic routine:\\
+ The naive approach would be to use a generic routine:\\
 \begin{verbatim}
 void drawRoutine(int height, void* src, void* dst) {
   
@@ -883,11 +940,6 @@ void drawRoutine(int height, void* src, void* dst) {
 \end{verbatim}
 \par
 But that would be a lot of instruction for sometimes only a few pixels generated. There is a faster way: Generate code specialized to drawing all height of wall from 1 pixels to 200 (the height of the screen).\\
-\par
- \begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{screenshots/scaling_walls.png}
- \end{figure}
 \par
 Everything not between the pink lines (64 pixels tall) is either minified or magnified. It is a significant task to perform at runtime, involving fraction (of course done via fixed point arithmetics). To speed up this phase, the engine generate executable x86 code when the screen size is set (at startup or upon user choices).
 TODO: Show a lower resolution photo.\\
@@ -999,24 +1051,24 @@ TODO: Were images stored rotated 90degres to increase cache hit ? No way, this w
 In the following example, the left wall is magnified. several rays hit the wall at the same texture location.
 \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{screenshots/post_optimization_1_pink_show.png}
+ \fullimage{post_optimization_1_pink_show.png}
 \end{figure}
 The engine takes advantage of it and draw several columns (posts) efficiently with the VGA. The engine was altered to show the optimized posts in pink.
 \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{screenshots/post_optimization_1_show.png}
+ \fullimage{post_optimization_1_show.png}
 \end{figure}
 
 In the previous scene, 20\% of the wall was optimized away. In the next two screenshot, the same process, this time with the `eagle' texture:
 \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{screenshots/post_optimization_2_show.png}
+ \fullimage{post_optimization_2_show.png}
 \end{figure}
 
 
 \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{screenshots/post_optimization_2_pink_show.png}
+ \fullimage{post_optimization_2_pink_show.png}
 \end{figure}
  
 To draw several column of pixels at the same time, the engine exploit the VGA banks and the masking mechanism seen in the Hardware section.
@@ -1050,25 +1102,25 @@ Example
 A subtle but extremely efficient trick used to improve rendition is pre-back light texture. The wall textures are generated twice by the artists: Once light and once dark:\\
   \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/baked_lights_wood.png}
+ \fullimage{baked_lights_wood.png}
  \end{figure}
 \par
   \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/baked_lights_stone.png}
+ \fullimage{baked_lights_stone.png}
  \end{figure}
 \par
 At runtime, upon casting each ray: if the ray hit a vertical wall the engine uses a light texture. If the ray hits an horizontal wall, it uses the dark version of the same texture. it is not obvious but when the same scene is rendered with and without and both screenshots are next to each others, the difference is vivid:\\
 \begin{minipage}{\textwidth}
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/backed_off.png}
+ \fullimage{backed_off.png}
  \caption{Here: Backed texture off. Next: Backed texture on.}
  \end{figure}
 
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/backed_on.png}
+ \fullimage{backed_on.png}
  
  \end{figure}
  \end{minipage}
@@ -1089,7 +1141,7 @@ doorposition[] holds the amount the door is open, ranging from 0 to 0xffff
   // don't close on anything solid\\
 \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{screenshots/door_flat.png}
+ \fullimage{door_flat.png}
 \end{figure}
 
 \par
@@ -1181,7 +1233,7 @@ Note that the engine does not place things vertically. They are always centered 
 \par
 \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{screenshots/drawing_things.png}
+ \fullimage{drawing_things.png}
 \end{figure}
 \par
 
@@ -1197,19 +1249,19 @@ Note that the engine does not place things vertically. They are always centered 
 Since wall and sprites are all in the same referencial (64x64), it is easy to clip: For each column just compare the heigh from the occlusion array to the height of the thing:\\
 \par
   \begin{minipage}{.5\textwidth}
-     \includegraphics[width=\textwidth]{screenshots/guard_sprite.png}
+     \fullimage{guard_sprite.png}
   \end{minipage}
    \begin{minipage}{.5\textwidth} 
-     \includegraphics[width=\textwidth]{screenshots/wall_texturw.png} 
+     \fullimage{wall_texturw.png} 
    \end{minipage}
 
 \par
 
   \begin{minipage}{.5\textwidth} 
-     \includegraphics[width=\textwidth]{screenshots/sprite_food.png} 
+     \fullimage{sprite_food.png} 
    \end{minipage}
   \begin{minipage}{.5\textwidth} 
-     \includegraphics[width=\textwidth]{screenshots/light_sprite.png}
+     \fullimage{light_sprite.png}
    \end{minipage}
 
 \par
@@ -1346,7 +1398,7 @@ However this is a simple model. When a gun is fired, all enemies which could hea
 \par
 \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{screenshots/ambush/map_unknown.png}
+ \fullimage{ambush/map_unknown.png}
 \end{figure}
 \par
 
@@ -1365,7 +1417,7 @@ Some tiles in the map can be marked as "AMBUSH" tile. If a guard is standing on 
 \par
 \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{screenshots/ambush/map_ambushed.png}
+ \fullimage{ambush/map_ambushed.png}
 \end{figure}
 \par
 \begin{minipage}{0.6\textwidth}
