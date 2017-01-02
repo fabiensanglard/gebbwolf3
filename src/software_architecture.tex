@@ -279,7 +279,7 @@ In order to minimize the cost of page miss, the engine preload the page cache be
  \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{screenshots/get_psyched.png}
+ \fullimage{get_psyched.png}
  \end{figure}
  \par
 The precaching mechanism is not particularly clever: It loads as many page from the swap file as possible. It doesn't try to look at what is actually used in the level. But the eviction policy (LRU) ultimately stabilize the cache and even a machine with only 1MB of RAM is able to play a level with no HDD access after a few minutes. This design had a small annoying flow: On a low memory machine a cache miss would occur at the worse possible moment: When the player opens the last door and is about to find himself confronted to the heavy powered final boss, the cache manager would not have the sprites available. This would incur a HDD access, a lag and an unfair death.\\
@@ -418,7 +418,7 @@ That is what the "signon" screen is for. Note how the screen and palette are jus
 \par
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{screenshots/signon.png}
+\fullimage{signon.png}
 \caption{Architecture and sub-systems.}
 \end{figure}
 \par
