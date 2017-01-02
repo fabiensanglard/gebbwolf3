@@ -1,5 +1,27 @@
 \section{Tricks}
 
+In this section are described random tricks used to speed up rendition. They range from simple cos/sin offset to what I consider one of the most beautiful hack in the engine: Linear Feedback Shit Register.
+
+
+
+
+\subsection{Cos/Sin table}
+\cw{cos} and \cw{sin} are expensive methods but they are heavily used at runtime. So speed things up the engine generates and precache them at startup and store them in a lookup array (one value per angle). But it does so in a smart way: It exploit a math property ($cos(X) = sin(X + 90)$) to avoid 360 \cw{sin} method calls and 240 bytes of RAM by reusing the cos table as follow:\\
+\par
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/sin_cos_table.c}
+\end{minipage}
+
+
+\begin{figure}[H]
+ \centering
+  \includegraphics[width=\textwidth]{imgs/drawings/cos_sin_table.pdf}
+ \caption{Finalez frame} 
+\end{figure}
+
+
+
 
 
 
@@ -127,17 +149,4 @@ A fast path is provided (which ironically only works if the CPU is as slow at th
 
 
 
-\subsection{Cos/Sin table}
-\cw{cos} and \cw{sin} are expensive methods but they are heavily used at runtime. So speed things up the engine generates and precache them at startup and store them in a lookup array (one value per angle). But it does so in a smart way: It exploit a math property ($cos(X) = sin(X + 90)$) to avoid 360 \cw{sin} method calls and 240 bytes of RAM by reusing the cos table as follow:\\
-\par
 
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/sin_cos_table.c}
-\end{minipage}
-
-
-\begin{figure}[H]
- \centering
-  \includegraphics[width=\textwidth]{imgs/drawings/cos_sin_table.pdf}
- \caption{Finalez frame} 
-\end{figure}

@@ -36,13 +36,13 @@ Despite being state of the art for 1991, this architecture has a major flaw: Eac
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.pdf}
- \caption{Phase 1: Background}
+ 
  \end{figure}
   That is why it is not possible to record and replay a session. Upon replaying the game would reach a time where no inputs are available, resulting in different outcomes.\\
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/replay.pdf}
- \caption{Phase 1: Background}
+ 
  \end{figure}
 \par
 To solve this problem during the demo, the game disregards the timer and simulate things at fixed timesteps.\\
@@ -56,7 +56,7 @@ Doom in 1993 would solve this issue by simulating the world at fixed intervals:
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/fixed.pdf}
- \caption{Phase 1: Background}
+ 
  \end{figure}
 
 \subsection{Life of a 3D frame}
@@ -182,7 +182,7 @@ This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
 \end{figure}
-Notice how blocks are aligned on 4 bytes horizontally but there is no restriction vertically: The VGA four banks constraints.
+Notice how blocks are aligned on 4 bytes horizontally but there is no restriction vertically. This is to allow four write/read in one while satisfying the VGA four banks constraints.
 Sprites 91 to 134 are latched in VRAM.\\
 
 \begin{minipage}{.23\textwidth}
@@ -545,13 +545,18 @@ Notice that you have to be careful: In the previous example some precision was l
 
 
 \subsubsection{Coordinate System}
-\par
+With the CPU/\cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. A quick reminder on the coordinate system used:
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/coordinate_system.png}
 \end{figure}
 \par
-calcheigh is using 24:8 ?
+A map is 64x64. Since one block is 8 feet, maps can be 512 feet wide and tall.\\
+Fixed point variable are used all over the place during this step:\\
+calcheigh is using 24:8.\\
+position is using 24:8.\\
+Angle is an int, [0, 360].\\
+
 
 
 \subsubsection{Square World and RayCasting}
@@ -795,12 +800,12 @@ In this drawing the player is located at viewpoint with a view angle \begin{math
 
 
 \begin{minipage}{.7\textwidth}
-But it gets worse when you get closer:
+To demonstrate the fish eye distorstion we will show three screenshots of a modified version of the engine. it was altered to use distance \cw{d} instead of "something else" to calculate column heights. In the next three screenshots the player get progressively closer to a wall. At first the distorsion is barely noticeable.
  \end{minipage}
 \begin{minipage}{.3\textwidth}
 \begin{figure}[H]
   \begin{flushright}
- \includegraphics[width=\textwidth]{imgs/drawings/fish_eye/fish_eye_top_far.png}
+ \includegraphics[width=.9\textwidth]{imgs/drawings/fish_eye/top_view_far.pdf}
    \end{flushright}
 \end{figure}
 \end{minipage}
@@ -808,7 +813,7 @@ But it gets worse when you get closer:
 \par
 
 
- It is not very noticeable when a wall is far (as above) but it gets worse when you get closer:
+
 
 \begin{figure}[H]
 \centering
@@ -820,12 +825,12 @@ But it gets worse when you get closer:
 
 
 \begin{minipage}{.7\textwidth}
-And become unbearable when very close:
+At a distance of 24 feet, the distorstion cannot be ignored. Note that even though the player is getting closer to the wall, the ratio of A and B remain the same. The absolute difference however becomes noticeable.
  \end{minipage}
 \begin{minipage}{.3\textwidth}
 \begin{figure}[H]
   \begin{flushright}
- \includegraphics[width=\textwidth]{imgs/drawings/fish_eye/fish_eye_top_mid.png}
+ \includegraphics[width=.9\textwidth]{imgs/drawings/fish_eye/top_view_far.pdf}
  \end{flushright}
 \end{figure}
 \end{minipage}
@@ -843,12 +848,12 @@ And become unbearable when very close:
  
 
 \begin{minipage}{.7\textwidth}
-To avoid this distortion and get a more pleasant rendition, what must be used is not the direct distance d but d projected on the perpendicular of the view direction (z):
+At close range (8 feet) the distorsion is straight up unpleasant. To avoid this distortion and get a more pleasant rendition, what must be used is not the direct distance \cw{d} but \cw{d} projected on the perpendicular of the view direction (\cw{z}):
  \end{minipage}
 \begin{minipage}{.3\textwidth}
  \begin{figure}[H]
   \begin{flushright}
- \includegraphics[width=\textwidth]{imgs/drawings/fish_eye/fish_eye_top_close.png}
+  \includegraphics[width=.9\textwidth]{imgs/drawings/fish_eye/top_view_far.pdf}
  \end{flushright}
 \end{figure}
  \end{minipage}
@@ -960,10 +965,8 @@ I personally find the graphic explanation with SOH-CAH-TOA much more clear!
 
 
  \par
- An other example with the starting screen:\\
- \par
+ 
  \begin{minipage}{\textwidth}
-
 \centering
   \scaledimage{0.9}{fish_eye/fish_eyed_start_screen2.png}
 \vspace*{0.5cm}
@@ -1065,31 +1068,37 @@ But the engine is different: It buffers what to draw:\\
 
 \par
 Notice how a frame is stored in a page across four banks. Horizontally it looks a little bit like mashed potatoes:
- \begin{figure}[H]
-\centering
- \fullimage{vga_layout/intro.png}
- \caption{Intro screen as it appear on screen}
- \end{figure}
- \par
- \begin{figure}[H]
-\centering
- \fullimage{vga_layout/intro_bank.png}
- \caption{Intro screen as it is stored across 4 banks in a framebuffer} \label{fig:vga_layout_for_intro}
- \end{figure}
+
 \par
-An other example during a 3D sequence.
-\begin{figure}[H]
+
+
+  \begin{minipage}{\textwidth}
+ 
 \centering
- \fullimage{vga_layout/wolf3d_7.png}
- \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
- \end{figure}
+  \scaledimage{0.9}{vga_layout/intro.png}
+\vspace*{0.5cm}
+\centering
+  \scaledimage{0.9}{vga_layout/intro_bank.png}
+
+
+ \end{minipage}
+
  \par
 
- \begin{figure}[H]
+
+  \begin{minipage}{\textwidth}
+ 
 \centering
- \fullimage{vga_layout/wolf3d_7_bank.png}
- \caption{3D View as it is stored across 4 banks in a framebuffer}
- \end{figure}
+  \scaledimage{0.9}{vga_layout/wolf3d_7.png}
+\vspace*{0.5cm}
+\centering
+  \scaledimage{0.9}{vga_layout/wolf3d_7_bank.png}
+
+
+ \end{minipage}
+
+
+
 But vertically each bank stores a column intact. This is an important property which is exploited later during the game.
 \par
 
@@ -1201,7 +1210,7 @@ Example
 
 
 \subsubsection{Texturing}
-A subtle but extremely efficient trick used to improve rendition is pre-back light texture. The wall textures are generated twice by the artists: Once light and once dark:\\
+A subtle but extremely efficient trick used to improve rendition is pre-baked light texture. The wall textures are generated twice by the artists: Once light and once dark:\\
   \begin{figure}[H]
 \centering
  \fullimage{baked_lights_wood.png}
@@ -1217,7 +1226,7 @@ At runtime, upon casting each ray: if the ray hit a vertical wall the engine use
 \begin{figure}[H]
 \centering
  \fullimage{backed_off.png}
- \caption{Here: Backed texture off. Next: Backed texture on.}
+ \caption{Here: Baked texture off. Next: Backed texture on.}
  \end{figure}
 
 \begin{figure}[H]
@@ -1376,14 +1385,23 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
 
+\par
+
+The transparency of the sprite is exploited to reduce the storage and RAM consumption. They are stored in a special format skipping transparent section. The routine in charge of drawing decompress a column of sprite while it draws.\\
+\par
 TODO: Elaborate on drawing routines which uncompress sprites on the fly.
 
-
 \subsubsection{Clipping}
-Drawing things far to near is good for transparency but does not guaranty correctness. When a sprite is partially behind a wall or a door, it has to be clipped. This is done thanks to an occlusion array: While drawing the walls and door, the engine also maintains an array in which it records the height of the column:\\
+Drawing things far to near is good for transparency but does not guaranty correctness. When a sprite is partially behind a wall or a door, it has to be clipped. This is done thanks to an occlusion array. While drawing the walls and doors, the engine also maintains an array in which it records the height of the column:\\
 \par
 \begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/wallheight.c}
+\lstinputlisting[language=C]{code/wallheight_declaration.c}
+\end{minipage}
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/wallheight_population.c}
+\end{minipage}
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/wallheight_usage.c}
 \end{minipage}
 \par
 Since all sprite and walls are in the same coordinate system, clipping is as easy as a height comparison:\\
@@ -1404,8 +1422,7 @@ Since all sprite and walls are in the same coordinate system, clipping is as eas
 
 
 \subsection{Drawing weapon}
-Drawing the weapon at the bottom is very straight forward. It just uses the precompiled scalar with no clipping. Nothing much to say about that :/!\\
-\bu{Trivia :} About damage of machine gun?
+Drawing the weapon at the bottom is straight forward. This part of the code just uses the precompiled scalar with no clipping. Nothing much to say about that :/!\\
 
 
 
@@ -1415,7 +1432,7 @@ Drawing the weapon at the bottom is very straight forward. It just uses the prec
 
 
 \subsection{A.I}
-The 3D engine not only draw things, it also allows all objects to "think": Those thinking objects are called "actors" and help to keep the game exciting and improve immersion. If enemies are too predictable and easy to defeat the game is boring. The designer and programmers worked in tandem on this one: The engine maintains a stae machine for each thinker but it also relies heavily on hints and clues on the map provided by the designers.\\
+The 3D engine not only draw things, it also allows all objects to "think". Those thinking objects are called "actors" and help to keep the game exciting and improve immersion. If enemies are too predictable and easy to defeat the game becomes boring. The designer and programmers worked in tandem on this one: The engine maintains a state machine for each thinker but it also relies heavily on hints and clues on the map provided by the designers.\\
 \par
 
 
@@ -1424,9 +1441,9 @@ The 3D engine not only draw things, it also allows all objects to "think": Those
 
 
 
-"Actors" are what make Woflenstein3D exciting. They can be aggressive, they can be sneaky and they can be dumb (like when they are a door). Without them the game would be a beautiful and boring maze. The game designer and developers did a great job.\\
+"Actors" can be aggressive, they can be sneaky or they can be dumb (like when they are a door).
 \par
-In the engine, an actor is a state machine with four states:
+All enemies are automaton with four states in their machine:
 \begin{itemize}
 \item Standing
 \item Attack
