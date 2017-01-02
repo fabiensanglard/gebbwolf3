@@ -347,7 +347,7 @@ and then passes these information to the Video Manager (\cw{VW\_DrawPropString})
 \end{minipage}
 \begin{minipage}{0.3\textwidth}
 \begin{flushright}
-\includegraphics[width=0.8\textwidth]{imgs/drawings/US_explained.png}
+\includegraphics[width=0.8\textwidth]{imgs/drawings/US_explained.pdf}
 \end{flushright}
 \end{minipage}
 \noindent
@@ -590,46 +590,6 @@ Notice how it uses a value of 208 instead of 200 pixels for the height? That doe
 
 \par
 Now page 0 is at 0x0000, page 1 at 0x4100 and page 2 at 0x8200. Moving from any page to an other only requires updating the high 8 bits. Making flipping buffer an atomic operation!\\
-
-
-
-
-
-
-
-
-\par
-\par
-DELETE ?\\
-Notice how a frame is stored in a page across four banks. Horizontally it looks a little bit like mashed potatoes:
- \begin{figure}[H]
-\centering
- \fullimage{vga_layout/intro.png}
- \caption{Intro screen as it appear on screen}
- \end{figure}
- \par
- \begin{figure}[H]
-\centering
- \fullimage{vga_layout/intro_bank.png}
- \caption{Intro screen as it is stored across 4 banks in a framebuffer} \label{fig:vga_layout_for_intro}
- \end{figure}
-\par
-An other example during a 3D sequence.
-\begin{figure}[H]
-\centering
- \fullimage{vga_layout/wolf3d_7.png}
- \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
- \end{figure}
- \par
-
- \begin{figure}[H]
-\centering
- \fullimage{vga_layout/wolf3d_7_bank.png}
- \caption{3D View as it is stored across 4 banks in a framebuffer}
- \end{figure}
-But vertically each bank stores a column intact. This is an important property which is exploited later during the game.
-\par
-
 
 
 

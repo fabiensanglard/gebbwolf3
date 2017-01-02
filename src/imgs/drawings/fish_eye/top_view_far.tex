@@ -1,0 +1,36 @@
+\documentclass[tikz,border=2pt,png]{standalone}
+\usepackage{tkz-euclide}
+\usetikzlibrary{intersections,decorations.markings}
+\usetkzobj{all}
+\begin{document}
+\begin{tikzpicture}[scale=2.0]
+
+
+\newcommand\roomwidth{3}
+\newcommand\roomheight{5}
+
+  \draw (-\roomwidth,0) coordinate (O) -- (-\roomwidth,\roomheight) coordinate (wall0) --
+        (\roomwidth,\roomheight) coordinate (wall1) -- (\roomwidth,0) coordinate (B);
+
+
+
+ \coordinate(player) at (0,2);
+
+
+\newcommand\halfviewfield{4}
+\newcommand\depthofview{7}
+
+\coordinate(rightFrustrum) at player ++ (\halfviewfield,\depthofview);
+\coordinate(leftFrustrum) at player ++ (-\halfviewfield,\depthofview);
+
+
+%\fill[red] (intersection of player--leftFrustrum and wall0--wall1) circle (2pt); 
+%\fill[red] (intersection of player--rightFrustrum and wall0--wall1) circle (2pt); 
+
+\draw [draw=black](player) -- (intersection of player--leftFrustrum and wall0--wall1);
+\draw [draw=black](player) -- (intersection of player--rightFrustrum and wall0--wall1);
+% \draw [draw=black](player) -- (rightFrustrum);
+% \draw [draw=black](player) -- (leftFrustrum);
+
+\end{tikzpicture}
+\end{document}

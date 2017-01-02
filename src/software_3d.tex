@@ -35,13 +35,13 @@ As we saw when we unrolled the loop, the action scene is made of frames in a loo
 Despite being state of the art for 1991, this architecture has a major flaw: Each slice of the game has a different duration which makes the game undeterministic from one machine to an other. Or even between two runs on the same machine.
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.pdf}
  \caption{Phase 1: Background}
  \end{figure}
   That is why it is not possible to record and replay a session. Upon replaying the game would reach a time where no inputs are available, resulting in different outcomes.\\
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/timer/replay.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/timer/replay.pdf}
  \caption{Phase 1: Background}
  \end{figure}
 \par
@@ -55,7 +55,7 @@ Doom in 1993 would solve this issue by simulating the world at fixed intervals:
 \par
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/timer/fixed.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/timer/fixed.pdf}
  \caption{Phase 1: Background}
  \end{figure}
 
@@ -769,44 +769,82 @@ In this drawing the player is located at viewpoint with a view angle \begin{math
  \caption{Fish eye effect: Mild}. \label{fig:mips}
  \end{figure}
 
+
+
+
+
+
+
+
+\begin{minipage}{.7\textwidth}
+But it gets worse when you get closer:
+ \end{minipage}
+\begin{minipage}{.3\textwidth}
 \begin{figure}[H]
-  \centering
- \includegraphics[width=.3\textwidth]{imgs/drawings/fish_eye/fish_eye_top_far.png}
+  \begin{flushright}
+ \includegraphics[width=\textwidth]{imgs/drawings/fish_eye/fish_eye_top_far.png}
+   \end{flushright}
 \end{figure}
+\end{minipage}
+
 \par
 
 
-But it gets worse when you get closer:
+
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{screenshots/fish_eye/bad_ok.png}
  \caption{Fish eye effect: Bad} \label{fig:mips}
  \end{figure}
- \begin{figure}[H]
-  \centering
- \includegraphics[width=.3\textwidth]{imgs/drawings/fish_eye/fish_eye_top_mid.png}
-\end{figure}
-\par
 
+
+
+
+\begin{minipage}{.7\textwidth}
 And become unbearable when very close:
+ \end{minipage}
+\begin{minipage}{.3\textwidth}
+\begin{figure}[H]
+  \begin{flushright}
+ \includegraphics[width=\textwidth]{imgs/drawings/fish_eye/fish_eye_top_mid.png}
+ \end{flushright}
+\end{figure}
+\end{minipage}
+
+
+
+
+
+
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{screenshots/fish_eye/bad_bad.png}
  \caption{Fish eye effect: AAAAARG} \label{fig:mips}
  \end{figure}
- \begin{figure}[H]
-  \centering
- \includegraphics[width=.3\textwidth]{imgs/drawings/fish_eye/fish_eye_top_close.png}
-\end{figure}
-\par
  
+
+\begin{minipage}{.7\textwidth}
 To avoid this distortion and get a more pleasant rendition, what must be used is not the direct distance d but d projected on the perpendicular of the view direction (z):
+ \end{minipage}
+\begin{minipage}{.3\textwidth}
+ \begin{figure}[H]
+  \begin{flushright}
+ \includegraphics[width=\textwidth]{imgs/drawings/fish_eye/fish_eye_top_close.png}
+ \end{flushright}
+\end{figure}
+ \end{minipage}
+
+\par
+
+
 
 \begin{figure}[H]
-\centering
+
  \input{imgs/drawings/fish_eye/d_vs_z.tex}
  \caption{blabla.} \label{fig:Raycasting2}
+ 
 \end{figure}
+
 
 This projection (z) is mathematically hard to calculate in one go (especially with fixed point). The trick is to break it down in two components and use your highschool mnemonic: SOH-CAH-TOA!\\
 
@@ -816,14 +854,17 @@ This projection (z) is mathematically hard to calculate in one go (especially wi
  \caption{A combination of SOH A=($dx * \cos(\alpha)$) and CAH B=($ dy * \sin(\alpha) $) gives $d = dx * \cos(\alpha) - dy * \sin(\alpha) $ gives the expected result.}
 \end{figure}
 
+
 The overall operation can be seen as a rotation of y intercept around the viewpoint.\\
- Which is enough to give pleasant straigh lines. Following a wall uncorrected and the same location with projected distance:\\
+ Which is enough to give pleasant straigh lines. Following a wall uncorrected and the same location with projected distance:
+
+
  \begin{figure}[H]
-\centering
+
  \includegraphics[width=\textwidth]{screenshots/fish_eye/fish_eye.png}
   \caption{Fish eye: Uncorrected} 
+  
  \end{figure}
- 
 
   \begin{figure}[H]
 \centering
@@ -939,6 +980,37 @@ But the engine is different: It buffers what to draw:\\
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wolf3d_raycaster_pseudocode.c}
 \end{minipage}
+
+\par
+Notice how a frame is stored in a page across four banks. Horizontally it looks a little bit like mashed potatoes:
+ \begin{figure}[H]
+\centering
+ \fullimage{vga_layout/intro.png}
+ \caption{Intro screen as it appear on screen}
+ \end{figure}
+ \par
+ \begin{figure}[H]
+\centering
+ \fullimage{vga_layout/intro_bank.png}
+ \caption{Intro screen as it is stored across 4 banks in a framebuffer} \label{fig:vga_layout_for_intro}
+ \end{figure}
+\par
+An other example during a 3D sequence.
+\begin{figure}[H]
+\centering
+ \fullimage{vga_layout/wolf3d_7.png}
+ \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
+ \end{figure}
+ \par
+
+ \begin{figure}[H]
+\centering
+ \fullimage{vga_layout/wolf3d_7_bank.png}
+ \caption{3D View as it is stored across 4 banks in a framebuffer}
+ \end{figure}
+But vertically each bank stores a column intact. This is an important property which is exploited later during the game.
+\par
+
 
 Rendition is deferred because the engine allows itself to cheat a little: If a ray is cast and hits the same block and in the same
 texture column, the two rays are considered similar. If two rays are similar they are drawn at the same height. The visual result is 
