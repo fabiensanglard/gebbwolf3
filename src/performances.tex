@@ -3,13 +3,27 @@ So, how well did the game run on most people desk?
 
 Note: Because of the engine undeterminism the timedemo recorded played at a fixed tickrate (18fps). It cannot reliably be used to benchmark.
 
-286 10Mhz 7 \\
-286 16Mhz 12 \\
-386 SX 25Mhz  18 \\
-386 DX 25Mhz 24 \\
-386 DX 33Mhz 30 <- recommended \\
+\begin{figure}[H]
+\centering
+\begin{tabularx}{\textwidth}{ X X X }
+  \toprule
+  \textbf{CPU} & \textbf{Frequency (Mhz)} & \textbf{Frames per seconds} \\ \bottomrule
+  286 & 10 & 7 \\
+286 & 16 & 12 \\
+386SX & 25 &  18 \\
+386DX & 25 & 24 \\
+386DX & 33 & 30 \\ \bottomrule
+\end{tabularx}
+\caption{Component quality for a game engine.}
+\end{figure}
 
-TODO: Make a graph out of them?
+To compensate for the differences of power, the engine allows to reduce the 3D view which reduces the number of rays to cast and the number of pixels to render on screen.
+
+Max: 304 rays and 46208 pixels (304*152).\\
+Min:  64 rays and  2432 pixels (64*38).
+
+
+
 
   \begin{figure}[H]
 \centering

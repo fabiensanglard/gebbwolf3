@@ -950,10 +950,10 @@ I personally find the graphic explanation with SOH-CAH-TOA much more clear!
  \begin{minipage}{\textwidth}
  
 \centering
-  \scaledimage{0.8}{fish_eye/fish_eye.png}
-\par
+  \scaledimage{0.9}{fish_eye/fish_eye.png}
+\vspace*{0.5cm}
 \centering
-  \scaledimage{0.8}{fish_eye/fish_eye_corrected.png}
+  \scaledimage{0.9}{fish_eye/fish_eye_corrected.png}
 
 
  \end{minipage}
@@ -965,10 +965,10 @@ I personally find the graphic explanation with SOH-CAH-TOA much more clear!
  \begin{minipage}{\textwidth}
 
 \centering
-  \scaledimage{0.8}{fish_eye/fish_eyed_start_screen2.png}
-  \par
+  \scaledimage{0.9}{fish_eye/fish_eyed_start_screen2.png}
+\vspace*{0.5cm}
 \centering
- \scaledimage{0.8}{wolf3d_7_fullframe.png}
+ \scaledimage{0.9}{wolf3d_7_fullframe.png}
 \end{minipage}
 
  \par
@@ -1002,11 +1002,13 @@ With a distance available for a column, the engine is able to calculate a height
 \par
 
  The naive approach would be to use a generic routine:\\
-\begin{verbatim}
-void drawRoutine(int height, void* src, void* dst) {
-  
-}
-\end{verbatim}
+
+
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/generic_draw.c}
+\end{minipage}
+
 \par
 But that would be a lot of instruction for sometimes only a few pixels generated. There is a faster way: Generate code specialized to drawing all height of wall from 1 pixels to 200 (the height of the screen).\\
 \par
