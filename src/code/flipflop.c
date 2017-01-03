@@ -1,28 +1,30 @@
 void AsmRefresh() {
-	for (int =0 ; i < num_columns ; i++) {
-
+	for (int =0 ; i < pixx ; i++) {
+        short angle=midangle+pixelangle[pixx];
+        // Setup xstep and ystep based on angle.
         do {
+            if (needed)
+                goto testhorizontal;
 testvertical:
             move_vertically()
             if (hitdoor)
                 HitVertDoor();
             if (hitwall)
                 HitVertWall();
-            if (needed)
-            	goto testhorizontal;
         } while (1);
 
 		continue;
 
 		do {
+            if (needed)
+                goto testvertical;               
 testhorizontal:
             move_horizontaly()
             if (hitdoor)
                 HitHorizDoor();
             if (hitwall)
                 HitHorizWall();
-            if (needed)
-            	goto testvertical;            
+         
         } while (1);
 	}
 }

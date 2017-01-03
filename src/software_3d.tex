@@ -696,8 +696,8 @@ The raycasting algorithm is called DDA\footnote{Digital Differential Analysis, c
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/flipflop.c}
 \end{minipage}
-
-\bu{Trivia:} To accelerate \cw{cos} and \cw{sin} calculation, the engine uses lookup table: One entry for each 360 degres.
+This algorithm results in \cw{jmp} heavy instructions but on a an architecture devoid of pipeline and code cache such as the 386 it is not a problem at am.\\
+\bu{Trivia:} To accelerate \cw{cos}, \cw{sin} and \cw{tan} calculation, the engine uses lookup table: One entry for each 360 degres.
 
 
 
@@ -799,10 +799,10 @@ In this drawing the player is located at viewpoint with a view angle \begin{math
 
 
 
-\begin{minipage}{.7\textwidth}
+\begin{minipage}{.5\textwidth}
 To demonstrate the fish eye distorstion we will show three screenshots of a modified version of the engine. it was altered to use distance \cw{d} instead of "something else" to calculate column heights. In the next three screenshots the player get progressively closer to a wall. At first the distorsion is barely noticeable.
  \end{minipage}
-\begin{minipage}{.3\textwidth}
+\begin{minipage}{.5\textwidth}
 \begin{figure}[H]
   \begin{flushright}
  \includegraphics[width=.9\textwidth]{imgs/drawings/fish_eye/top_view_far.pdf}
@@ -824,13 +824,13 @@ To demonstrate the fish eye distorstion we will show three screenshots of a modi
 
 
 
-\begin{minipage}{.7\textwidth}
+\begin{minipage}{.5\textwidth}
 At a distance of 24 feet, the distorstion cannot be ignored. Note that even though the player is getting closer to the wall, the ratio of A and B remain the same. The absolute difference however becomes noticeable.
  \end{minipage}
-\begin{minipage}{.3\textwidth}
+\begin{minipage}{.5\textwidth}
 \begin{figure}[H]
   \begin{flushright}
- \includegraphics[width=.9\textwidth]{imgs/drawings/fish_eye/top_view_far.pdf}
+ \includegraphics[width=.9\textwidth]{imgs/drawings/fish_eye/top_view_middle.pdf}
  \end{flushright}
 \end{figure}
 \end{minipage}
@@ -847,13 +847,13 @@ At a distance of 24 feet, the distorstion cannot be ignored. Note that even thou
  \end{figure}
  
 
-\begin{minipage}{.7\textwidth}
+\begin{minipage}{.5\textwidth}
 At close range (8 feet) the distorsion is straight up unpleasant. To avoid this distortion and get a more pleasant rendition, what must be used is not the direct distance \cw{d} but \cw{d} projected on the perpendicular of the view direction (\cw{z}):
  \end{minipage}
-\begin{minipage}{.3\textwidth}
+\begin{minipage}{.5\textwidth}
  \begin{figure}[H]
   \begin{flushright}
-  \includegraphics[width=.9\textwidth]{imgs/drawings/fish_eye/top_view_far.pdf}
+  \includegraphics[width=.9\textwidth]{imgs/drawings/fish_eye/top_view_close.pdf}
  \end{flushright}
 \end{figure}
  \end{minipage}
