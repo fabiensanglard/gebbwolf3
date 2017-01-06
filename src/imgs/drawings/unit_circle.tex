@@ -1,11 +1,11 @@
-\documentclass[crop,tikz,ifthenelse]{standalone}
+% \documentclass[crop,tikz,ifthenelse]{standalone}
 
-\usetikzlibrary{calc}
-\usepackage{tkz-euclide}
-\usetkzobj{all}
+% \usetikzlibrary{calc}
+% \usepackage{tkz-euclide}
+% \usetkzobj{all}
 
-\begin{document}
-\begin{tikzpicture}[]
+% \begin{document}
+\begin{tikzpicture}[scale=2]
 
 \coordinate(origin) at (0,0);
 \coordinate(yaxis) at (0,6.5);
@@ -25,13 +25,13 @@
 
 
 
-\node[below left] {\tiny (0,0)};
+\node[below left] {\Large $(0,0)$};
 
 \coordinate (procsin) at ($(origin)!(point)!(yaxis)$);
 \coordinate (projcos) at ($(origin)!(point)!(xaxis)$) ;
 
-\node[left]  at (procsin) {\tiny sin($\alpha$)};
-\node[below] at (projcos) {\tiny cos($\alpha$)};
+\node[left]  at (procsin) {\Large $sin(\alpha)$};
+\node[below] at (projcos) {\Large $cos(\alpha)$};
 
 \draw[dotted] (projcos) -- (point) ;
 \draw[dotted] (procsin) -- (point) ;
@@ -41,10 +41,10 @@
 \coordinate (extended_point) at (2,1.4);%(35:3);
 %\coordinate (tan_point) at (intersection of origin--extended_point and tanbottom -- tantop );
 
-\node[right] at (extended_point) {\tiny tan($\alpha$)};
+\node[right] at (extended_point) {\Large $tan(\alpha)$};
 
 \tkzMarkAngle[fill= gray,size=0.6](xaxis,origin,extended_point);
-\tkzLabelAngle[pos = 0.4](extended_point,origin,xaxis){\tiny $\alpha$};
+\tkzLabelAngle[pos = 0.4](extended_point,origin,xaxis){\Large $\alpha$};
 \draw (origin) -- (extended_point) ;
 \end{tikzpicture}
-\end{document}
+% \end{document}

@@ -1,6 +1,6 @@
 \section{Sound System}
 The sound system can be seen as an thread except it is not awaken by the operating system scheduler but rather by the Interrupt system. It relies heavily on 
-]\par
+\par
 PIT chips runs at 1.193182 MHz. That looks like an odd number which is once again due to history. Back in the 1980, when the first IBM PC 5150 was being designed, the common oscillator used in television circuitry was running at 14.31818 MHz. In order to reduce part cost, engineers built the PC timer around it dividing the frequency by 3 for the CPU (that is why the Intel ran at 4.7), dividing by 4 to 3.57Mhz for the CGA video card. By logically ANDing these signals together a frequency equivalent to the base frequency divided by 12 was created. This frequency is 1.1931816666 MHz. By 1991 the oscillator were much cheaper and it could have been anything....but backyward compatibility once again forbid it.\\
 \par
 At the heart of the PC, is the oscillator programmed via Programmable Interval Timer (PIT).\\
@@ -39,6 +39,10 @@ I talked to Jason Linhart, the founder and lead programmer of MicroMagic, in 199
 
 \subsubsection{Solving the PC Speaker problem: PWM}
 Pulse Width Modulation, or PWM, is a technique for getting analog results with digital means.
+
+
+
+
 \par
  \begin{fancyquotes}
   The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc.), the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC,[5] thereby enabling approximate playback of PCM audio. This technique is called pulse-width modulation (PWM).
@@ -55,11 +59,25 @@ Mode 2 - Rate Generator\\
 Mode 3 - Square Wave Generator\\
 Mode 4 - Software Triggered Strobe\\
 Mode 5 - Hardware Triggered Strobe\\
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/pwm/sinuois.png}
+ \end{figure}
+\par
+
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/pwm/pwm_approximation.png}
+ \end{figure}
+\par
+
 
 The audio and heatbeat system are started. This is done by reprogramming 8254-PIT and 8259-PIC timers to install an ISR\footnote{DOS Interrupt Service Routine}:\\
 \begin{figure}[H]
 \centering
- \includegraphics[width=.5\textwidth]{imgs/drawings/heatbeats.png}
+ \includegraphics[width=.5\textwidth]{imgs/drawings/heatbeats.pdf}
  \end{figure}
 \par
 frequency = 1193181 / (value * 60)\\
@@ -118,22 +136,4 @@ During dying randon generation is done differently.
 
 
 
-\par
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/pwm/original.png}
- \end{figure}
-\par
-\par
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/pwm/reconstructed.png}
- \end{figure}
-\par
-\par
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/pwm/reconstructed2.png}
- \end{figure}
-\par
 

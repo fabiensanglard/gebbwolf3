@@ -12,12 +12,12 @@
 \coordinate(B) at (7,0);
 \coordinate(C) at (0,5);
 
-\draw[draw=black] (A) -- node[below] {\LARGE A} (B);
-\draw[draw=black] (B) -- node[above] {\LARGE H} (C);
-\draw[draw=black] (C) -- node[left] {\LARGE O} (A);
+\draw[draw=black] (A) -- node[below] {\Large A} (B);
+\draw[draw=black] (B) -- node[above] {\Large H} (C);
+\draw[draw=black] (C) -- node[left] {\Large O} (A);
 
 \tkzMarkRightAngle(B,A,C);
-\tkzLabelAngle[pos = 1.0](A,B,C){$\alpha$}
+\tkzLabelAngle[pos = 1.0](A,B,C){\Large $\alpha$}
 \tkzMarkAngle[fill= gray,size=1.8cm,opacity=.2](C,B,A)
 
 \node (A) at (7.5,3.5) {\Large $sin(\alpha) = \frac{O}{H}$};
