@@ -1,2 +1,3 @@
-\\Write in HitVertWall, HitHorizWall, HitVertDoor, HitHorizDoor, HitHorizPWall, HitVertPWall
+// Write in methods HitVertWall, HitHorizWall, HitVertDoor, 
+// HitHorizDoor, HitHorizPWall and  HitVertPWall
 wallheight[pixx] = CalcHeight();

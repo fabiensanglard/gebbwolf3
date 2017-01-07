@@ -182,7 +182,7 @@ The hardware chapter described the Mode 12h which. Despite being unfit for games
 \par
  \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/latches_drawing.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/latches.pdf}
  \end{figure}
 In this architecture, each time VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written, it can be composed via the latched value and the ALU. Which allowed mode 12h programmer to plot a point easily:\\
 \par
@@ -598,34 +598,30 @@ VSD is not only complicated to get right, it is also expensive to perform. It is
 \par
 \begin{figure}[H]
 \centering
- \input{imgs/drawings/casting_a_ray/situation.tex}
+\includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/situation.pdf}
+ %\input{imgs/drawings/casting_a_ray/situation.tex}
 \end{figure}
-\note{REDO THIS DRAWING}
 
-With a naive approach we could check for intersection at a regular interval. As the two rays draws below, it would works for some rays and fail for most of them.
+
+A possible approach to find wall intersection would be to do ray marching which consist in checking at regular interval. But that would be very CPU intensive and even with fixed point that would not be fast enough.
 \begin{figure}[H]
 \centering
- \input{imgs/drawings/casting_a_ray/unaligned.tex}
+\includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/unaligned.pdf}
+ %\input{imgs/drawings/casting_a_ray/unaligned.tex}
 \end{figure}
-\note{REDO THIS DRAWING} 
 
-But if the word has two constraints:
-\begin{itemize}
-\item Square axis aligned block: 8 feet tall. TODO: How is the engine translating from imperial to decimal system?
-\item Grid space blocks.
-\end{itemize}
-\par
-The problem becomes much simpler:\\
-The solution for 100\% accuracy is to check for 'hit` when the ray cross the grid. This is why Wolfenstein 3D could only draw walls on a perpendicular grid.
+
+However by adding some contraint to the world the problem can becomes much simpler. If the world is made of square block alixed with axis and evenly distributed on a grid, the solution giving 100\% accuracy and low runtime is to check for 'hit` each time a ray cross the grid. This is the choice Wolfenstein 3D made and that explains why it can only draw perpendicular walls, all of them being 8 feet by 8 feet by 8 feet cubes.
 \begin{figure}[H]
 \centering
- \input{imgs/drawings/casting_a_ray/fixed.tex}
+\includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/fixed.pdf}
+ %\input{imgs/drawings/casting_a_ray/fixed.tex}
  
 \end{figure}
 \par
-This constraint enable a variant of the DDA Algorithm\footnote{Digital differential analyzer}: A fast and accurate way to detect where a ray hits a wall on the map.
-
-One could argue that a rasterizer approach would make more sense: With intersection easy to find, project the walls in screen space. That would avoid casting rays.\\
+These constraints enable a variant of the DDA algorithm\footnote{Digital differential analyzer}: A fast and accurate way to detect where a ray hits a wall on the map.
+\par
+In retroscpect a rasterizer approach would a made more sense:\\
 \begin{fancyquotes}
 \par
 Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacombs 3D.  C3D (and Hovertank before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn't really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel "rock solid".
@@ -1477,6 +1473,16 @@ Drawing the weapon at the bottom is straight forward. This part of the code just
 
 
 
+
+
+
+
+
+
+
+
+
+
 \subsection{A.I}
 The 3D engine not only draw things, it also allows all objects to "think" and take actions. Those thinking objects are called "actors" and help to keep the game exciting and improve immersion. If enemies are too predictable and easy to defeat the game becomes boring. The designer and programmers worked in tandem on this one: The engine maintains a state machine for each thinker but it also relies heavily on hints and clues on the map provided by the designers to make enemies appear smarter than they are.\\
 \par
@@ -1487,9 +1493,7 @@ The 3D engine not only draw things, it also allows all objects to "think" and ta
 
 
 
-"Actors" can be aggressive, they can be sneaky or they can be dumb (like when they are a door).
-\par
-All enemies are automaton with states:
+"Actors" can be aggressive, they can be sneaky or they can be dumb (like when they are a rockets). To mode the behavior, all enemies have an associated state:
 \begin{itemize}
 \item Standing
 \item Attack
@@ -1501,25 +1505,38 @@ All enemies are automaton with states:
 \item Special Boss state
 \end{itemize}
 
-state = statetype. Use stand and path as example
+With each state are associated think and action method pointer. There is also a \cw{next} to indicate which state the actor should transition to once it is finished with the current state/action:\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/statetype.c}
+\end{minipage}
+\par
 
 
+A guard in standing position always stays in the same state (\cw{next} points to itself):\\
 \par
-TODO: Draw a state machine of a guard, starting at \cw{T\_Stand} and moving to \cw{SightPlayer}, \cw{T\_Attack}.
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C,style=mystyle,basicstyle=\small,morekeywords={statetype, NULL, true, false}]{code/s_grdstand.c}
+\end{minipage}
 \par
-What makes enemies interesting to interact with is how the go from standing to being aggressive. They have three ways to detect the player:\\
+Some state chain are more complex like for example chasing:\\
+
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C,style=mystyle,basicstyle=\small]{code/s_grdchase.c}
+\end{minipage}
+\par
+This example was just for guards. All different types of enemies including bosses have their own state machine. They often share action (e.g: \cw{T\_Stand} and \cw{T\_Path} but they also occassionally have their own).\\
+
+\par
+What makes enemies interesting to interact with is how the go from standing to being aggressive via \cw{T\_Stand}. They have three ways to detect the player:\\
 \begin{itemize}
 \item Proximity
 \item Sight
 \item Noise
 \end{itemize}
-By far the sound is the most important and what makes the player feel like the A.I is smart. Sound propagation has always been well done in id Software engines (from wolf to doom3) yet received little coverage.
-
-\subsubsection{Patrolling}
-I/A also faked with map waypoint for patrolling.\\
-
-
-
+By far the sound is the most important and what makes the player feel like the A.I is smart. Sound propagation has always been well done in id Software engines despite receiving little coverage.
 
 
 
@@ -1619,11 +1636,21 @@ Each enemy is given specific orders which dictate his actions once he knows of y
 
 \bu{Trivia :} Bug or dedication to ambush, a guard on a n AMBUSH tile will react ONLY to the player sight. Seeing an other actor die in front of him will not activate him.\\
 
-\subsubsection{Vision reaction}
-\subsubsection{Proximity reaction}
-\subsection{Pursuit and opening doors}
 
-\subsubsection{Firing at player}
+\subsubsection{Patrolling}
+I/A also faked with map waypoint for patrolling.\\
+\par
+\par
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=0.98\textwidth]{imgs/drawings/path.png}
+\end{figure}
+\par
+
+% \subsubsection{Vision reaction}
+% \subsubsection{Proximity reaction}
+% \subsection{Pursuit and opening doors}
+% \subsubsection{Firing at player}
 
 
 

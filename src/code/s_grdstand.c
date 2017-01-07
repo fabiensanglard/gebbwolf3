@@ -1,0 +1,1 @@
+statetype s_grdstand = {true,SPR_GRD_S_1,0,T_Stand,NULL,&s_grdstand};
