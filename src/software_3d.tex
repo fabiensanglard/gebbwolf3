@@ -992,7 +992,7 @@ $d = A + B = dx * \cos(\alpha) - dy * \sin(\alpha) $
   \end{equation*}
 \end{figure}
 \par
-For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy), discarding the x component:
+For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy), which transforms coordinate from map space (origin in upper left corner with axis aligned with the map) to player space (origin at player position with axis aligned with player orientation).
 \begin{figure}[H]
   \centering
   \begin{equation*}
@@ -1016,10 +1016,16 @@ For people who like equations, the overall operation can be seen as the multipli
     }
   \end{equation*}
 \end{figure}
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
+ \end{figure}
+
+
 I personally find the graphic explanation with SOH-CAH-TOA much more clear!
-
-
 \par
+
  Which is enough to give pleasant straight lines. Following a wall uncorrected and the same location with projected distance:\\
 
  \begin{minipage}{\textwidth}
@@ -1334,49 +1340,53 @@ Tom had to really push to get pushwalls (hidden walls).\\
 
 
 \subsection{Drawing things}
-Once the walls are rendered, it is time to render sprites such as enemies and decoration (lamps, table, ammos, weapons, ...). The raycaster and column renderer both provide assistance to make sure things are draw properly and does two things:
+Once the walls are drawn, it is time to render sprites such as enemies, items (ammos, weapons) and decoration (lamps, table, etc). Two goals must be reached:
  \begin{enumerate}
-  \item While casting each ray, memorize which cells were visited by the ray. This is used build a list of "things" at least partially visible.
-  \item Upon drawing a wall column, save the height of that wall at this X coordinate. This is done to clip "things" and hide what is behind a wall.
+  \item Find which sprites are visible.
+  \item Draw them correctly (parts hidden behind a wall should not be drawn)
  \end{enumerate}
- 
 
 
- At the beginning of each 3D rendition, the engine clears the:
- \lstinputlisting[language=C]{code/clear_vis_wold3d.c}
- Note that because register are 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations. Nowadays it is more efficient to use the C library.
- \lstinputlisting[language=C]{code/clear_vis_modern.c}
- Later in the assembly hand crafted procedure \codeword{AsmRefresh} we can find where this array is populated:
-  \lstinputlisting[language={[x86masm]Assembler}]{code/mark_vis_wold3d.asm}
-  If we take the example of the starting screen, we can see which tile were marked at visible:
-  
-  
+
+\subsubsection{Visible Sprite Determination}
+Building a list of visible sprite is done indirectly by leveraging raycaster information. The visible sprites are on visible tiles. So the raycaster remember all tiles it visited.\\
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/marked_out_room.pdf}
  \caption{Ray cast and visible spots.} 
 \end{figure}
+This is done with a 64x64 boolean array indicating if a tile was visited during raycasting. At the beginning of each frame, the engine clears the array:
+ \lstinputlisting[language=C]{code/clear_vis_wold3d.c}
+ Note that because register are 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations. Nowadays it is more efficient to use the C library.
+ \lstinputlisting[language=C]{code/clear_vis_modern.c}
+ Later in the assembly hand crafted procedure \codeword{AsmRefresh}
+  \lstinputlisting[language={[x86masm]Assembler}]{code/mark_vis_wold3d.asm}
+  
+ To build a list of visible sprites, the engine goes over the full map and for each entity, check if a ray passed by its tile coordinate. If yes, the sprite is added to the visible list.
+\par
+\bu{Trivia :} MAXVISABLE=50\\
+\par
+
+
+
+
+\subsubsection{Rendition}
+With a list of visible entities, the engine news to draw them on screen correctly. Each sprites is transformed from map space to player space. 
 
 \par
-MAXVISABLE=50\\
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
+ \end{figure}
 \par
-
-
-Note that the engine does not place things vertically. Like walls, they are also always centered vertically. The artists cleverly drew the sprites in the same space as the wall: Not centered vertically but at the bottom of each images. This allows for a non-expensive perspective effect even though all sprites are vertically aligned.
+The X coordinate is used to place a sprite horizontally on the screen. They don't need to be place vertically for the good reason that all sprites and texture are drown in the same 64x64 space representing 8 feet by 8 feet. As shown in the following screenshot, scaling vertically a sprite is enough to give the illusion of perspective:\\
 \par
 \begin{figure}[H]
  \centering
  \fullimage{drawing_things.png}
 \end{figure}
-\par
 
-
-  \begin{figure}[H]
-\centering
- 
- \caption{3D Renderer Phase 1: Backed lights} \label{fig:backee_lights}
- \end{figure}
-
+Even objects with only a part on the ground (meat) of with wide empty in between (lamp with shadow) are actually just one sprite centered and scaled vertically:\\
 
 \par
   \begin{minipage}{.5\textwidth}
@@ -1407,10 +1417,9 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 
 \par
 
-The transparency of the sprite is exploited to reduce the storage and RAM consumption. They are stored in a special format skipping transparent section. The routine in charge of drawing decompress a column of sprite while it draws.\\
+The transparency of the sprite is exploited to reduce the storage and RAM consumption. They are stored in a special format skipping transparent section. The routine in charge of drawing decompress a column of sprite while it draws which mean the precomiled scaler cannot be used to draw sprite since they don't handle transparency. Instead a custom assembly crafter routine takes care of decompressing sprite and scaling them on screen.
 \par
-TODO: Elaborate on drawing routines which uncompress sprites on the fly.
-
+TODO: C code sample?
 
 
 
@@ -1469,7 +1478,7 @@ Drawing the weapon at the bottom is straight forward. This part of the code just
 
 
 \subsection{A.I}
-The 3D engine not only draw things, it also allows all objects to "think". Those thinking objects are called "actors" and help to keep the game exciting and improve immersion. If enemies are too predictable and easy to defeat the game becomes boring. The designer and programmers worked in tandem on this one: The engine maintains a state machine for each thinker but it also relies heavily on hints and clues on the map provided by the designers.\\
+The 3D engine not only draw things, it also allows all objects to "think" and take actions. Those thinking objects are called "actors" and help to keep the game exciting and improve immersion. If enemies are too predictable and easy to defeat the game becomes boring. The designer and programmers worked in tandem on this one: The engine maintains a state machine for each thinker but it also relies heavily on hints and clues on the map provided by the designers to make enemies appear smarter than they are.\\
 \par
 
 
@@ -1480,21 +1489,29 @@ The 3D engine not only draw things, it also allows all objects to "think". Those
 
 "Actors" can be aggressive, they can be sneaky or they can be dumb (like when they are a door).
 \par
-All enemies are automaton with four states in their machine:
+All enemies are automaton with states:
 \begin{itemize}
 \item Standing
 \item Attack
-\item Pursuit
-\item Retreat
+\item Path
+\item Pain
+\item Shoot
+\item Chase
+\item Die
+\item Special Boss state
 \end{itemize}
+
+state = statetype. Use stand and path as example
+
+
 \par
 TODO: Draw a state machine of a guard, starting at \cw{T\_Stand} and moving to \cw{SightPlayer}, \cw{T\_Attack}.
 \par
 What makes enemies interesting to interact with is how the go from standing to being aggressive. They have three ways to detect the player:\\
 \begin{itemize}
 \item Proximity
-\item Vision
-\item Sound
+\item Sight
+\item Noise
 \end{itemize}
 By far the sound is the most important and what makes the player feel like the A.I is smart. Sound propagation has always been well done in id Software engines (from wolf to doom3) yet received little coverage.
 
