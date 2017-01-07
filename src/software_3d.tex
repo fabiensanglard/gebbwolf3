@@ -1,5 +1,7 @@
 \section{Action Phase: 3D Renderer}
-After the player is done setting up the game finally comes time for the 3D engine to shine. Here are the internals of something that was kep secret for many years. The 3D engine is based on raycasting technology which is simple yet powerful. The idea is to cast a ray for each column of pixel visible on the screen. Based on the distance d from the point of view to where the ray hits a wall, a height h can be calculated:\\
+After the player is done setting up the game via the 2D renderer, comes time for the 3D engine to shine.
+\par
+It is based on raycasting technology which is simple yet powerful where the core idea is to cast a ray for each column of pixel visible on the screen. Based on the distance \cw{d} from the point of view to where the ray hits a wall, a height \cw{h} can be calculated:\\
 \par
 \begin{figure}[H]
   \centering
@@ -19,26 +21,24 @@ Even for a complex scene involving multiple door and rooms, this method can deli
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_door.png}
- \caption{Rendition of the height calculated from d (with texturing).} 
+ \caption{Rendition of the 320 column of pixels (with texturing).} 
 \end{figure} 
-
-The secret of Wolfenstein 3D speed lies in two tricks (described in details later): Precompiled scalers and deferred column rendering.
 
 
 \subsection{Life of a frame}
-As we saw when we unrolled the loop, the action scene is made of frames in a loop. In pseudo code:\\
+As we saw when we unrolled the loop, the action scene is made of frames in a loop which is pseudo code looks as follow:\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/flawded_game_loop.c}
  \end{minipage}
 \par
-Despite being state of the art for 1991, this architecture has a major flaw: Each slice of the game has a different duration which makes the game nondeterministic from one machine to an other. Or even between two runs on the same machine.
+This is a pretty standard loop for an engine from the 90s however this architecture has a major flaw. Each slice of the game has a different duration which makes the game nondeterministic from one machine to an other. Or even between two runs on the same machine. In the next drawing, all three timeslice have different durations:\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.pdf}
  
  \end{figure}
-  That is why it is not possible to record and replay a session. Upon replaying the game would reach a time where no inputs are available, resulting in different outcomes.\\
+  Which explains why it is not possible to record and replay a session. Upon replaying a recorded game the engine would reach point where it is supposed to update the world at a point in time where no inputs are available, resulting in a different world outcome.\\
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/replay.pdf}
@@ -47,7 +47,7 @@ Despite being state of the art for 1991, this architecture has a major flaw: Eac
 \par
 To solve this problem during the demo, the game disregards the timer and simulate things at fixed timesteps.\\
 \par
-Doom in 1993 would solve this issue by simulating the world at fixed intervals:
+\bu{Trivia :} In 1993, Doom engine would solve this issue by simulating the world at fixed intervals:\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed_game_loop.c}
@@ -60,106 +60,104 @@ Doom in 1993 would solve this issue by simulating the world at fixed intervals:
  \end{figure}
 
 \subsection{Life of a 3D frame}
-A 3D scene is rendered in four passes:
+Before diving into details, here is an overview of the five stages involved in drawing a 3D scene.\\
 \begin{enumerate}
- \item Clear the screen by drawing the floor and the ceiling (both solid color).
+ \item Clear the framebuffer by drawing the floor and the ceiling (both solid color).
  \item For each column of pixel on screen. cast a ray for each column of pixel from the player the wall. Draw a textured column of pixels inversely proportional to the distance.
  \item Draw the things (enemies, lamps, barrels).
  \item Draw the weapon.	
+ \item Flip buffers: Instruct CRT Controller to use the framebuffer just composed on next vsync.
 \end{enumerate}
-Each of these passes are described later in details. This was just an overview.
-
-During this process, all assets come from file VMSWAP (see Page Manager for more explanations)
+During the entire process, all assets come from one file VMSWAP via the Page Manager.\\
 \begin{enumerate}
 	\item Textures for the wall are stored uncompressed.
-	\item Sprites are ...They are not compressed per say but because they contain a lot of optimization: Own many columns to skip on the left. How wide they are. Since sprites are drawn as column....chunk offsets ahd chunk length. Sprites are drawn bottom up
+	\item Sprites are stored in RAM compressed (via RLE encoding skipping transparent parts). They are decompressed on the fly upon drawing each column of pixels.
 \end{enumerate}
-Following, screenshots of a slowdown version of the engine, showing each four step of rendition:
+As a visual aid here is what the framebuffer looks like after each stage:\\
 \begin{figure}[H]
 \centering
  \fullimage{wolf3d_1_background.png}
- \caption{Phase 1: Background}
+ \caption{Phase 1: Clear screen}
  \end{figure}
 
-\par
-\begin{minipage}{\textwidth}
- \lstinputlisting[language=C]{code/vgaCeiling.c}
- \end{minipage}
-\par
- 
 
 
-The floor was always the same color. The ceiling however changed see \codeword{WL\_DRAW.C} for a hard-coded index. TODO: Include a clear screen from a later level.\\
+
 \begin{figure}[H]
  \centering
   \fullimage{wolf3d_4_partial_wall_32rays.png}
-  \caption{Phase 2: Walls (40 rays)}
- 
+  \caption{Phase 2: Drawing Walls: 40 rays} 
 \end{figure}
+\begin{minipage}{.4\textwidth}
+ \end{minipage}
+\begin{minipage}{.6\textwidth}
+\begin{figure}[H]
+  \begin{flushright}
+ \includegraphics[width=.9\textwidth]{imgs/drawings/ray_caster_explained/beginning10.pdf}
+   \end{flushright}
+\end{figure}
+\end{minipage}
+
+
+
+
  
 \begin{figure}[H]
  \centering
   \fullimage{wolf3d_5_partialwalls_160rays.png}
- \caption{Phase 2: Walls (160 rays)} 
- 
+ \caption{Phase 2: Drawing Walls: 160 rays}  
 \end{figure}
- 
+ \begin{minipage}{.4\textwidth}
+ \end{minipage}
+\begin{minipage}{.6\textwidth}
+\begin{figure}[H]
+  \begin{flushright}
+ \includegraphics[width=.9\textwidth]{imgs/drawings/ray_caster_explained/beginning50.pdf}
+   \end{flushright}
+\end{figure}
+\end{minipage}
+
+
+
  
  \begin{figure}[H]
 \centering
  \fullimage{wolf3d_2_walls.png}
- \caption{Phase 2: Walls completed} 
+ \caption{Phase 2: Drawing Walls: completed} 
  \end{figure}
+\begin{minipage}{.4\textwidth}
+ \end{minipage}
+\begin{minipage}{.6\textwidth}
+\begin{figure}[H]
+  \begin{flushright}
+ \includegraphics[width=.9\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
+   \end{flushright}
+\end{figure}
+\end{minipage}
+
+
+
+
  
  
  \begin{figure}[H]
 \centering
  \fullimage{wolf3d_6_scaled}
- \caption{Phase 3: Scaled (a.k.a: Sprites)} 
+ \caption{Phase 3: Drawing Things (a.k.a: Scaled, a.k.a: Sprites)} 
  \end{figure}
+Note that during this step, clipping is performed.
+
+
+
 
  \begin{figure}[H]
 \centering
  \fullimage{wolf3d_7_fullframe.png}
- \caption{Phase 4: Weapon} 
+ \caption{Phase 4: Drawing Weapon} 
  \end{figure}
  
 
-   Synergy: VGA column drawing, raycasting, occlusion array\\
 
-
-The static part (ammo, face, etc) is not redrawn if not necessary. However cost is high since the new part of the screen has to be draw in three buffers (e\.g:StatusDrawPic) .
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{To Delete}
-These three systems are amply described in the next sections. The most interesting one is of course the 3D renderer. It is in fact not really 3D: Maps are two dimensional and designed with square blocks.: e.g, the first level E1M1:\par
-
-\par 
-A 3D dimensional view of the 2D map is rendered at runtime:
-
-\begin{figure}[H]
-  \centering
- \fullimage{wolf3d_7_fullframe.png}
- \caption{As it is rendered at runtime in pseudo-3D from the player point of view.} 
-\end{figure}
-
- The pseudo 3D is generated via a system of raycasting\footnote{Not to be confused with raytracing.}. The previous screenshot being 320 wide by 200 tall, it requested to cast 320 rays (one for each column of wall):
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
- \caption{Complex scene: 320 ray cast.} 
-\end{figure}
 
 
 
@@ -172,18 +170,27 @@ A 3D dimensional view of the 2D map is rendered at runtime:
 
 
 \subsection{3D setup}
-Before starting to draw frames, the 3D engine needs to setup VRAM with static elements. As you noticed the 3D view is not fullscreen. It is contained in a HUD\footnote{Head-up display}:
+Before starting to draw frames, the 3D renderer needs to setup the VRAM with static elements. The 3D view is not fullscreen but it is contained in a HUD\footnote{Head-up display}:
 \begin{figure}[H]
   \centering
  \fullimage{hud_empty.png}
 \end{figure}
-This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the allocated region. The stats (Level, Score, Lives, Status, Health, Ammo, Current weapon) get a special treatment. In order to draw them as fast as possible they are uploaded to the VRAM (beyond the third page).\\
-\begin{figure}[H]
-  \centering
- \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
-\end{figure}
-Notice how blocks are aligned on 4 bytes horizontally but there is no restriction vertically. This is to allow four write/read in one while satisfying the VGA four banks constraints.
-Sprites 91 to 134 are latched in VRAM.\\
+This HUD is drawn only once at the beginning of the 3D phase and it has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the allocated region. The stats contained in the blue part at the bottom of the screen (Level, Score, Lives, Status, Health, Ammo, Current weapon) get a special treatment via an other VGA trick.\\
+\par
+
+The hardware chapter described the Mode 12h which. Despite being unfit for games it still had something interesting. Mode 12h is a 16 colors mode where each four bits are spread across the VGA banks. Since all write operation are one byte, you can see how it would have been difficult to plot a single pixel without changing the other stored in the same bytes. One would have to do four read, four xor and four writes. But the designed of the VGA were not complete sadist they added some circuitry to simplify this operation. For each bank, they added one latche in from of a configurable ALU:\\
+\par
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/latches_drawing.png}
+ \end{figure}
+In this architecture, each time VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written, it can be composed via the latched value and the ALU. Which allowed mode 12h programmer to plot a point easily:\\
+\par
+TODO: Insert code sample.\\
+\par
+Mode Y does not need latches to operate since values are stored in byte and banks can be updated individually thanks to the mask. However hackers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. And by getting a little bit creative and repurposing them, one could copy four pixels from one area of the VRAM to an other with just one read and write to the RAM!\\
+\par
+To take full advantage of this optimization, the 3D renderer upload images to the VRAM above the third page. Sprites 91 to 134 are latched in VRAM.\\
 
 \begin{minipage}{.23\textwidth}
      \fullimage{latched/91.png}
@@ -350,38 +357,45 @@ Sprites 91 to 134 are latched in VRAM.\\
 \begin{minipage}{.3\textwidth}
      \fullimage{latched/134.png}
   \end{minipage}\
-
-Why is it faster to copy from VRAM to VRAM instead of RAM to VRAM? Because the VGA latches system allows to read and write four pixel at a time.\\
- \begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/latches_drawing.png}
- \end{figure}
- By configuring the read operations to read from all banks and configuring the write operations to use the latched value.
-
-Not at fast as it seems since things have to be drawn in all three buffers during action 3D phase:\\
+All these assets account for $48*24*4+14*8*16+23*24*32+224*48=34,816$ bytes. There is therefore $2^18-320*208*3 - 34,816=27,648$ bytes unused VRAM in the VGA.\\
 \par
+Of course, for this trick to work images source and destination have to be aligned on four byte. If you take a look at the location of each elements on screen you can see that elements are aligned on four horizontally. Vertically there is no such issue.
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
+\end{figure}
 
+While it is faster to write four pixel in two operations, the trick does not provide whic 300\% speed increase since all writes have to be done in all three buffers:\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/StatusDrawPic.c}
 \end{minipage}
 
 
-LatchDrawPic
-Chapter 48 from michael abrash book
-atches were not intended for use in 256-color mode; that was something I figured out as a hack and wrote about. The latches were used so that in 16-color mode any or all of the four planes could be written to at once.
-
-
-
-
-All these assets account for $48*24*4+14*8*16+23*24*32+224*48=34,816$ bytes. There is therefore $2^18-320*208*3 - 34,816=27,648$ bytes unused VRAM in the VGA.
-All these assets are used with the VGA in order to copy 4 pixels at a time.
-
 
 \subsection{Clearing the screen}
-At the beginning of very frame, the engine switch to an unused buffer (TODO: show triple buffering in action) and clear it. To this effect, it uses the latch seen in the 2D renderer: 
+At the beginning of a frame, the engine switch to the next buffer and clears the 3D area with ceiling and floor colors. To this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15. However since values are written 16 bits at a time, that allows to write 8 pixels at a time:\\ 
+\par
+\begin{minipage}{\textwidth}
+ \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
+ \end{minipage}
+\par
+As a result, clearing the screen made of 64000 pixels requires only 64000/8 = 8000 write operations. An impressive way to turn an awkward four bank based architecture into a tremendous source of optimizations!\\
+\par
+Note that the colors are not coming from the maps. They are hardcoded in the engine:\\
+\par
+\begin{minipage}{\textwidth}
+ \lstinputlisting[language=C,morekeywords=byte]{code/vgaCeiling.c}
+ \end{minipage}
+\par
 
 
-
+Following, ceiling colors \cw{0x1D}, \cw{0xBF}, \cw{0x4E} and \cw{0x8D}.\\ 
+\par
+\scaledimage{.24}{palette_1d.png}
+\scaledimage{.24}{palette_bf.png}
+\scaledimage{.24}{palette_8d.png}
+\scaledimage{.24}{palette_4e.png}
 
 
 
@@ -390,7 +404,7 @@ At the beginning of very frame, the engine switch to an unused buffer (TODO: sho
 
 \subsection{Solving the CPU problem}
 
-The hardware chapter describing the CPU capabilities left the reader with a problem at hands: The machine cannot do floating point operations fast enough. This is a pretty big deal for a 3D engine and all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed point arithmetic".
+The hardware chapter describing the CPU capabilities had left the reader with a problem at hands: The machine cannot do floating point operations fast enough. This is a pretty big deal for a 3D engine and all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed point arithmetic".
 
 
 
@@ -412,7 +426,7 @@ The value of the sequence of bits \emph{0010010010010010}:
  \caption{Integer example.} \label{fig:mips}
  \end{figure}
 
- Is equal to $ 2^{13} + 2^9 + 2^5 + 2^1 =  8738 $.\\
+Represents $ 2^{13} + 2^9 + 2^5 + 2^1 =  8738 $.\\
  \par
 
 Fixed Point allows to keep track of fractions while still using the integer operations of the CPU. The machine manipulates what are supposed to be integer numbers but the programmers sees them as a value containing an integer part and a fractional part:\\
@@ -431,7 +445,7 @@ So the same sequence of bits \emph{0010010010010010}:
 \end{figure} 
 
 Now represents:\\
-\\
+
 $ 2^5 + 2^1 = 34 $ for the integer part.\\
 $ 2^{-3}+2^{-7} = 0.1328125 $ for the fractional part.\\
 $ = 34.1328125$\\
@@ -463,7 +477,30 @@ The beauty of fixed point is that addition and subtraction work exactly like int
   {\caption{= 36.25}}
 \end{figure} 
 \par
+ Even right shit and left shift trick work:\\
+ 
+ \par
+\begin{figure}[H]
+ \centering
+   \input{imgs/drawings/1_5.tex}
+   \caption{1.5} 
+\end{figure} 
+
 \par
+\begin{figure}[H]
+ \centering
+   \input{imgs/drawings/3.tex}
+   \caption{1.5 << 2  = 3} 
+\end{figure}
+
+\par
+\begin{figure}[H]
+ \centering
+   \input{imgs/drawings/0_75.tex}
+   \caption{1.5 >> 2 = 0.75} 
+\end{figure}
+
+The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PAR:BITS\_FOR\_FRACTIONNAL\_PART}. In the game, player position is \cw{16:16}. The grid location is one shift operation away \cw{player->x >> 16}.
 
 
  The special case is when performing multiplication. There are two ways to do it: Either multiply two 32 bits into a 64 bits or drop the precision of both fixed point and multiply then into a 32 bits. Since the 286 and 386 do not have 64 bits registers, wolf does the later (illustrated here with 8:8 for readability):
@@ -513,33 +550,7 @@ Notice that you have to be careful: In the previous example some precision was l
 \par
  \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game console manufactured in the 90s and later had no hardware floating point unit: Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples among many with a design choice that not only reduced the production cost but also maximized the CPU pipeline throughput.
  
- Even right shit and left shift trick work:\\
- 
- \par
-\begin{figure}[H]
- \centering
-   \input{imgs/drawings/1_5.tex}
-   \caption{1.5} 
-\end{figure} 
 
-\par
-\begin{figure}[H]
- \centering
-   \input{imgs/drawings/3.tex}
-   \caption{1.5 << 2  = 3} 
-\end{figure}
-
-\par
-\begin{figure}[H]
- \centering
-   \input{imgs/drawings/0_75.tex}
-   \caption{1.5 >> 2 = 0.75} 
-\end{figure}
-
-
- 
-
- E.G: Player position is 16:16, to get grid location just remove fraction part player->x >> 16.
  
  
 
@@ -551,23 +562,53 @@ With the CPU/\cw{float}/\cw{int} problem out of the way, it is almost time to st
  \includegraphics[width=\textwidth]{imgs/drawings/coordinate_system.png}
 \end{figure}
 \par
-A map is 64x64. Since one block is 8 feet, maps can be 512 feet wide and tall.\\
-Fixed point variable are used all over the place during this step:\\
-calcheigh is using 24:8.\\
-position is using 24:8.\\
-Angle is an int, [0, 360].\\
+A map is 64 by 64. Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place: column height are 24:8. Position is also 24:8. Angle however is an int representing 10th of degrees with range [0, 3600].
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 \subsubsection{Square World and RayCasting}
-\bu{Trivia :}In Wolfenstein3D all blocks are cubes 8 feet by 8 feet by 8 feet.
+Drawing the walls is all about determining what is visible, what is not and what is in front of what. Michael Abrash's view on the topic tells it all:\\
+\par
+\begin{fancyquotes}
+I want to talk about what is, in my book, the toughest 3-D problem of all, visible surface determination (drawing the proper surface at each pixel), and its close relative, culling (discarding non-visible polygons as quickly as possible, a way of accelerating visible surface determination). In the interests of brevity, I’ll use the abbreviation VSD to mean both visible surface determination and culling from now on.
+ \bigskip \\
+Why do I think VSD is the toughest 3-D challenge? Although rasterization issues such as texture mapping are fascinating and important, they are tasks of relatively finite scope, and are being moved into hardware as 3-D accelerators appear; also, they only scale with increases in screen resolution, which are relatively modest.
+ \bigskip \\
+In contrast, VSD is an open-ended problem, and there are dozens of approaches currently in use. Even more significantly, the performance of VSD, done in an unsophisticated fashion, scales directly with scene complexity, which tends to increase as a square or cube function, so this very rapidly becomes the limiting factor in doing realistic worlds. I expect VSD increasingly to be the dominant issue in realtime PC 3-D over the next few years, as 3-D worlds become increasingly detailed.
+ \bigskip \\
+\textbf{Michael Abrash - Programmer}
+ \end{fancyquotes}
+ \par
+VSD is not only complicated to get right, it is also expensive to perform. It is easy to understand with a small example where objects are of free form with no alignment.
 
-With fraction possible, the engine still needs to find a way to render the walls in pseudo-3D. Per say, draw a wall bigger if it is closer and smaller if it is far. To do that, it cast a ray for each column of pixel on the screen. With the distance it calculates a height on screen.\\
 \par
-To cast a ray and find the intersection, if the word is made of various shapes with no constraints, the cost is high:\\
-\par
-DRAWING: Free objects, free size, no alignment: rays ???\\
-\par
+\begin{figure}[H]
+\centering
+ \input{imgs/drawings/casting_a_ray/situation.tex}
+\end{figure}
+\note{REDO THIS DRAWING}
+
+With a naive approach we could check for intersection at a regular interval. As the two rays draws below, it would works for some rays and fail for most of them.
+\begin{figure}[H]
+\centering
+ \input{imgs/drawings/casting_a_ray/unaligned.tex}
+\end{figure}
+\note{REDO THIS DRAWING} 
+
 But if the word has two constraints:
 \begin{itemize}
 \item Square axis aligned block: 8 feet tall. TODO: How is the engine translating from imperial to decimal system?
@@ -575,19 +616,6 @@ But if the word has two constraints:
 \end{itemize}
 \par
 The problem becomes much simpler:\\
-\par
-\begin{figure}[H]
-\centering
- \input{imgs/drawings/casting_a_ray/situation.tex}
-\end{figure}
-
-With a naive approach we could check for intersection at a regular interval. As the two rays draws below, it would works for some rays and fail for most of them.
-\begin{figure}[H]
-\centering
- \input{imgs/drawings/casting_a_ray/unaligned.tex}
- 
-\end{figure}
-
 The solution for 100\% accuracy is to check for 'hit` when the ray cross the grid. This is why Wolfenstein 3D could only draw walls on a perpendicular grid.
 \begin{figure}[H]
 \centering
@@ -595,13 +623,21 @@ The solution for 100\% accuracy is to check for 'hit` when the ray cross the gri
  
 \end{figure}
 \par
-DDA Algorythm:
-% \begin{figure}[H]
-% \centering
-%  \input{imgs/drawings/dda.tex}
- 
-% \end{figure}
-% \par
+This constraint enable a variant of the DDA Algorithm\footnote{Digital differential analyzer}: A fast and accurate way to detect where a ray hits a wall on the map.
+
+One could argue that a rasterizer approach would make more sense: With intersection easy to find, project the walls in screen space. That would avoid casting rays.\\
+\begin{fancyquotes}
+\par
+Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacombs 3D.  C3D (and Hovertank before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn't really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel "rock solid".
+ \bigskip \\
+There was a clear performance cost to it - doing 320 traces through a tile map and treating each column independently is much slower than looping through a few long wall segments.  However, the resulting code was small and very regular compared to the hairball of my wall span renderers, and it did deliver the rock-solid feel I wanted.
+ \bigskip \\
+If you made extremely jagged block maps that would turn into many dozen independent wall segments, the ray casting could start to look like a good performance choice, but few scenes were even close to that.  This is exactly the same ray tracing versus rasterization performance tradeoff that is still being made today, but now it is "how many tens of millions of triangles per frame to ray tracing break-even" instead of "how many dozen wall segments".
+ \bigskip \\
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
+
+
 
  \par
 \begin{figure}[H]
@@ -609,19 +645,53 @@ DDA Algorythm:
  \includegraphics[width=\textwidth]{imgs/drawings/dda.pdf}
 \end{figure}
 \par
-
-This way is fast. For the ray above, only four intersections checks had to done. For the one below only 3.\\
-\par
-And this explains why Wolfenstein3D maps are all flat, 64x64 grid aligned square blocks:\\
+The reason DDA is so fast is because on the first intersection with an axis is known (A for Y axi and B for Y axis on the drawings) all subsequent intersection coordinate are one simple addition away.
 \par
 
+
+\begin{equation*}
+    \scalebox{1.3}{
+$C = (A.x +1, A.y + xstep)$\\
+}
+\end{equation*}
+\begin{equation*}
+    \scalebox{1.3}{
+$D = (C.x +1, C.y + xstep)$\\
+}
+\end{equation*}
+\begin{equation*}
+    \scalebox{1.3}{
+$F = (D.x +1, D.y + xstep)$\\
+}
+\end{equation*}
+\begin{equation*}
+    \scalebox{1.3}{
+$G = (F.x +1, F.y + xstep)$\\
+}
+\end{equation*}
+
+
+
+In a similar fashion:\\
+  \begin{equation*}
+    \scalebox{1.3}{
+
+$E = (B.x + ystep, A.y + 1)$\\
+}
+\end{equation*}
+  \begin{equation*}
+    \scalebox{1.3}{
+$D = (E.x + ystep, E.y + 1)$\\
+}
+\end{equation*}
+
+This CPU limitation and grid solution bubbled up all the way to the game designer and it explains why all Wolfenstein 3D maps are made of square elements all aligned on axis:\\
+\par
 \begin{figure}[H]
   \centering
  \fullimage{e1m1.png}
  \caption{The legendary E1M1. Player is the green arrow at the bottom.}
 \end{figure}
-
-
 
 
 \subsubsection{Call Apogee}
@@ -641,7 +711,7 @@ Behind a forest of push walls (white squares) and angry bosses (blue star), a si
  \fullimage{call_apogee.png}
 \end{figure}
 \par
-However due to people reverse engineering the map format and cheat sites allowing players to find the maze, the sign was replaced with a squeleton with all game shipping during 1992.
+However due to people reverse engineering the map format and cheat sites allowing players to find the maze, the sign was replaced with a skeleton with all game shipping during 1992.
 \par
 \begin{fancyquotes}
 "Call Apogee and say Aardwolf."  It's a sign that to this day is something
@@ -670,10 +740,7 @@ or load a saved game from before you went into that maze.\\
 \textbf{Joe Siegler - Past Pioneers of the Shareware Revolution}
 \end{fancyquotes}
 \par
-Aardwolf. A maned striped mammal (Proteles cristatus) of southern and eastern
-Africa that resembles the related hyenas and feeds chiefly on carrion and insects.
-The aardwolf has sort of become the mascot of Id, appearing on Tom's Gotta
-Lists and the Commander Keen 6 Hint Sheet.
+\bu{Trivia :} What is Aardwolf? A maned striped mammal (Proteles cristatus) of southern and eastern Africa that resembles the related hyenas and feeds chiefly on carrion and insects. It was back them the mascot of Id, appearing on Tom's Gotta Lists and the Commander Keen 6 Hint Sheet.
 
 
 
@@ -697,8 +764,14 @@ Lists and the Commander Keen 6 Hint Sheet.
  
  
 \subsubsection{Raycasting: DDA Algorithm}
-The raycasting algorithm is called DDA\footnote{Digital Differential Analysis, commonly used in CG world to draw a line.}. It is a fully handcrafted 740 lines of assembly routine name \cw{PROC AsmRefresh}. Represented in C for readability it consists of two while looks (one checking vertical intersection and one checking the horizontal) ping-ponging with each other via goto. It is highly unorthodox and super efficient:\\
+The variant of DDA is a fully handcrafted 740 lines of assembly routine \cw{PROC AsmRefresh}. Represented in C for readability it consists of two while looks (one checking vertical intersection and one checking the horizontal) ping-ponging with each other via goto. It is highly unorthodox and super efficient:\\
 \par
+
+\par
+\begin{figure}[H]
+\centering
+ \input{imgs/drawings/unit_circle.tex}
+\end{figure}
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/flipflop.c}
@@ -709,17 +782,6 @@ This algorithm results in \cw{jmp} heavy instructions but on a an architecture d
 
 
 
-\begin{fancyquotes}
-Why a raycaster instead of a rasterizer?\\
-\par
-Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacombs 3D.  C3D (and Hovertank before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn't really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel "rock solid".
- \bigskip \\
-There was a clear performance cost to it - doing 320 traces through a tile map and treating each column independently is much slower than looping through a few long wall segments.  However, the resulting code was small and very regular compared to the hairball of my wall span renderers, and it did deliver the rock-solid feel I wanted.
- \bigskip \\
-If you made extremely jagged block maps that would turn into many dozen independent wall segments, the ray casting could start to look like a good performance choice, but few scenes were even close to that.  This is exactly the same ray tracing versus rasterization performance tradeoff that is still being made today, but now it is "how many tens of millions of triangles per frame to ray tracing break-even" instead of "how many dozen wall segments".
- \bigskip \\
-\textbf{John Carmack - Programmer}
- \end{fancyquotes}
 
 
 
@@ -727,7 +789,17 @@ If you made extremely jagged block maps that would turn into many dozen independ
 
 
 
-\subsubsection{HighSchool math primer}
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Calculate column height}
 Before proceeding to the next session about fish eye projection correction, here is a reminder of something we all learned in highschool: SOH-CAH-TOA.
 
  \begin{fancyquotes}
@@ -743,27 +815,12 @@ Before proceeding to the next session about fish eye projection correction, here
  \input{imgs/drawings/soh-cah-toa.tex}
 \end{figure}
 
-\par
-\begin{figure}[H]
-\centering
- \input{imgs/drawings/unit_circle.tex}
-\end{figure}
+
 
 This property is multiple places:\\
 This is all you need to understand fish eye correction and coordinate projection (used to place player, and calculate sounds).
 
-
-
-
-
-
-
-
-
-
-
-
-\subsubsection{Calculate column heigh}
+\par
 Once a ray has hit a wall (from coordinate (\cw{viewx},\cw{viewy} to (\cw{xintercept},\cw{yintercept}) it is time to calculate how tall the 
 column of pixel should be. This happens in function \cw{CalcHeight}:\\
 
@@ -1003,21 +1060,21 @@ I personally find the graphic explanation with SOH-CAH-TOA much more clear!
 
 
 \subsection{Drawing walls}
-Drawing the wall may sound easy. After how complicated can it be to scale a 64 pixels tall texture on the screen, centered vertically? It turns out if you want to do it fast you can apply a few optimization. This part is where lies the two secrets of the engine speed: Compiled scalers and deferred column rendering.\\
-\par
-Walls are eight feet thick
+Drawing the wall column for each rays may sound easy but it is in fact difficult. It is not hard in terms of mathematics but hard in terms of instructions clock consumption. To scale a texture of 64 pixels tall on the screen centered vertically is expensive. It turns out if you want to do it fast you need a few optimization. This part is where wolfenstein 3d took off and left other 3d engine in the dust. This is the part where lies the two secrets of the engine speed: Compiled scalers and deferred column rendering.\\
 \par
 
 \subsubsection{Compiled scalers}
-With a distance available for a column, the engine is able to calculate a height for that column. All columns of pixels representing the walls are centered vertically and either magnified or minified. the goal of the exercice is to scale as fast as possible a column of 64 pixels to any height ranging from 2 pixels to max view height (152):\\
+With a distance available for a column, the engine is able to calculate a corresponding pixel height. All columns of pixels representing the walls are centered vertically and either magnified or minified. The goal of the exercice is to scale as fast as possible a column of 64 pixels to any height ranging from 2 pixels to max view height (152 pixels):\\
 \par
  \begin{figure}[H]
 \centering
  \fullimage{scaler_valign.png}
+ \caption{As the added pink line show, every column of pixels are centered vertically. There is no horizontal placing.}
  \end{figure}
 \par
 
- The naive approach would be to use a generic routine:\\
+\par
+ The naive approach would be to use a generic routine with the following prototype:\\
 
 
 \par
@@ -1026,28 +1083,14 @@ With a distance available for a column, the engine is able to calculate a height
 \end{minipage}
 
 \par
-But that would be a lot of instruction for sometimes only a few pixels generated. There is a faster way: Generate code specialized to drawing all height of wall from 1 pixels to 200 (the height of the screen).\\
-\par
-Everything not between the pink lines (64 pixels tall) is either minified or magnified. It is a significant task to perform at runtime, involving fraction (of course done via fixed point arithmetics). To speed up this phase, the engine generate executable x86 code when the screen size is set (at startup or upon user choices).
-TODO: Show a lower resolution photo.\\
-TODO: Show precompiled scaler ram consumption.\\
-Every column of pixels are centered vertically.
-
-
-
-TODO: Pseudo-code here\\
-\par
-Builds a compiled scaler object that will scale a 64 tall object to the given height (centered vertically on the screen).
-\codeword{SetupScaling}\\
-\codeword{BuildCompScale}
-Trivia: What as the memory budget of the scaler? JC had to cut corners. What was the cost before cutting corners.\\
+But that would be a lot of instruction due mostly to the genericity of the function: Indeed it can accept any height from \cw{0} to \cw{INT\_MAX}. But there is a faster way and it involves the eternal RAM vs speed tradeoff: Pre-generate x86 code specialized to drawing all height of wall from 1 pixels to 200 (the height of the screen).\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/compscale.c}
 \end{minipage}
 
 \par
-Is the tradeof speed/memory worse it for compiled scalers ? How much RAM does it use? According to the code sample, it takes 7 instructions of one byte each to write a pixel. So if all size were generated from 2,4,6...152, we could use Gauss method to calculate the size:\\
+What is the cost of the precompiling these scalers? How much RAM does it use? It takes 7 instructions of one byte each to write a pixel. So if all size were generated from 2,4,6...152, we could use Gauss method to calculate the size:\\
 \par
 $154*38*7=40,964$ bytes\\
 \par
@@ -1066,36 +1109,23 @@ $78*19*7+9*230*7=26,474$ bytes\\
 
 
 
-\subsubsection{Deferred drawing}
-A naive implementation of the raycaster would be:\\
+\subsubsection{Deferred column drawing}
+There is a second level of tricks to draw a column of pixel. A naive raycaster/compiled scaler coupling would look like this:\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/naive_raycaster_pseudocode.c}
 \end{minipage}
 \par
-But the engine is different: It buffers what to draw:\\
+But the engine is not done this way. Instead it buffers what to draw:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wolf3d_raycaster_pseudocode.c}
 \end{minipage}
 
 \par
-Notice how a frame is stored in a page across four banks. Horizontally it looks a little bit like mashed potatoes:
-
-\par
-
-
-  \begin{minipage}{\textwidth}
- 
-\centering
-  \scaledimage{0.9}{vga_layout/intro.png}
-\vspace*{0.5cm}
-\centering
-  \scaledimage{0.9}{vga_layout/intro_bank.png}
-
-
- \end{minipage}
-
+The important thing to understand with this approach is that if a ray is deemed similar enough to the last casts, the height
+is not calculated again. Instead if uses the same height as the other similar rays. Allowing itself to cheat a little bit introduce a little distortion but unlock formidable speed up: now the engine can write multiple column (up to eight) simulatenously.\par
+To understand how this work, let's take a look at a frame and how it is stored in the VGA banks.
  \par
 
 
@@ -1109,17 +1139,11 @@ Notice how a frame is stored in a page across four banks. Horizontally it looks 
 
 
  \end{minipage}
-
-
-
-But vertically each bank stores a column intact. This is an important property which is exploited later during the game.
+Notice how column representing wall are at the same address in the banks. Leveraging the VGA mask allowing to write in multiple banks at the same time, it is possible to render column of pixels simultaneously. But this is only done when the distortion would not be too noticeable. Columns of wall must be deemed similar enough. Now the interesting question is: What makes rays similar? The answer is two rays hiting the same wall and resulting in the same
+texture coordinate.
 \par
 
-
-Rendition is deferred because the engine allows itself to cheat a little: If a ray is cast and hits the same block and in the same
-texture column, the two rays are considered similar. If two rays are similar they are drawn at the same height. The visual result is 
-barely noticeable. But this cheat allows to draw up to eight column of pixel in three write operations (in practice it is more like two columns
-with one write operation). The details of this are in the method \codeword{ScalePost} in \codeword{WL\_DRAW.C}.\\
+That is theory. In practice the engine must be very careful. The engine allows itself to cheat and render up to eight column at the same height. But it means factoring in the four bytes alignment. The details of this are in the method \codeword{ScalePost} in \codeword{WL\_DRAW.C}.\\
 
 Note: A \quotes{post} is a column of pixel belonging to a wall.\\
 ScalePost is written in assembly and performs a maximum of three pass to draw a maximum of eight columns of pixels.\\
@@ -1138,29 +1162,29 @@ Because there can be many combinations of VGA bank alignment and number of pixel
 
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation1.pdf}
+ \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation1.pdf}
  \end{figure}
- 
+ One pass with mask set to 1+2=3.\\
  \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation2.pdf}
+ \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation2.pdf}
+ \end{figure}
+Two passes with mask set to 8 and then 1.
+  \begin{figure}[H]
+ \centering
+ \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation3.pdf}
  \end{figure}
 
   \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation3.pdf}
- \end{figure}
-
-  \begin{figure}[H]
- \centering
- \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation4.pdf}
- \caption{Passes: 8,15,14}
+ \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation4.pdf}
+ \caption{Thee Passes with mask set to: 8,15,14}
  \end{figure}
 
    \begin{figure}[H]
  \centering
- \includegraphics[width=\textwidth]{imgs/drawings/scalePost_explanation5.pdf}
-  \caption{Passes: 15,3,0}
+ \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation5.pdf}
+  \caption{wo Passes with mask set to: 15 and then 3}
  \end{figure}
 
 
@@ -1175,12 +1199,12 @@ TODO: Were images stored rotated 90 degres to increase cache hit ? No way, this 
 In the following example, the left wall is magnified. several rays hit the wall at the same texture location.
 \begin{figure}[H]
  \centering
- \fullimage{post_optimization_1_pink_show.png}
+ \fullimage{post_optimization_1_show.png}
 \end{figure}
 The engine takes advantage of it and draw several columns (posts) efficiently with the VGA. The engine was altered to show the optimized posts in pink.
 \begin{figure}[H]
  \centering
- \fullimage{post_optimization_1_show.png}
+ \fullimage{post_optimization_1_pink_show.png}
 \end{figure}
 
 In the previous scene, 20\% of the wall was optimized away. In the next two screenshot, the same process, this time with the `eagle' texture:
@@ -1197,8 +1221,6 @@ In the previous scene, 20\% of the wall was optimized away. In the next two scre
  
 To draw several column of pixels at the same time, the engine exploit the VGA banks and the masking mechanism seen in the Hardware section.
 Since up to eight column can be similar, there are many case of figure depending on the alignment with the VGA banks and how many pixels to draw:
-
-Example
 
 
 
@@ -1312,23 +1334,10 @@ Tom had to really push to get pushwalls (hidden walls).\\
 
 
 \subsection{Drawing things}
-To determine what is visible and draw things properly is hard. Michael Abrash summarized the domain of the problem well:\\
-
-\begin{fancyquotes}
-I want to talk about what is, in my book, the toughest 3-D problem of all, visible surface determination (drawing the proper surface at each pixel), and its close relative, culling (discarding non-visible polygons as quickly as possible, a way of accelerating visible surface determination). In the interests of brevity, I’ll use the abbreviation VSD to mean both visible surface determination and culling from now on.
- \bigskip \\
-Why do I think VSD is the toughest 3-D challenge? Although rasterization issues such as texture mapping are fascinating and important, they are tasks of relatively finite scope, and are being moved into hardware as 3-D accelerators appear; also, they only scale with increases in screen resolution, which are relatively modest.
- \bigskip \\
-In contrast, VSD is an open-ended problem, and there are dozens of approaches currently in use. Even more significantly, the performance of VSD, done in an unsophisticated fashion, scales directly with scene complexity, which tends to increase as a square or cube function, so this very rapidly becomes the limiting factor in doing realistic worlds. I expect VSD increasingly to be the dominant issue in realtime PC 3-D over the next few years, as 3-D worlds become increasingly detailed.
- \bigskip \\
-\bigskip \\
-\textbf{Michael Abrash - Programmer}
- \end{fancyquotes}
- 
- Wolf3D uses two mechanism to make sure things are draw properly:
+Once the walls are rendered, it is time to render sprites such as enemies and decoration (lamps, table, ammos, weapons, ...). The raycaster and column renderer both provide assistance to make sure things are draw properly and does two things:
  \begin{enumerate}
-  \item While casting each ray, memorize which cells were visited by the ray. This is used to know which "things" to draw.
-  \item Upon drawing a wall column, save the height of that wall. This is done to clip "things" to draw.
+  \item While casting each ray, memorize which cells were visited by the ray. This is used build a list of "things" at least partially visible.
+  \item Upon drawing a wall column, save the height of that wall at this X coordinate. This is done to clip "things" and hide what is behind a wall.
  \end{enumerate}
  
 
@@ -1353,7 +1362,7 @@ MAXVISABLE=50\\
 \par
 
 
-Note that the engine does not place things vertically. They are always centered vertically. The artists cleverly drew the sprites not centered vertically but at the bottom of each images. This allows for a non-expensive perspective effect even though all sprites are vertically aligned.
+Note that the engine does not place things vertically. Like walls, they are also always centered vertically. The artists cleverly drew the sprites in the same space as the wall: Not centered vertically but at the bottom of each images. This allows for a non-expensive perspective effect even though all sprites are vertically aligned.
 \par
 \begin{figure}[H]
  \centering
@@ -1369,8 +1378,6 @@ Note that the engine does not place things vertically. They are always centered 
  \end{figure}
 
 
-\par
-Since wall and sprites are all in the same referential (64x64), it is easy to clip: For each column just compare the height from the occlusion array to the height of the thing:\\
 \par
   \begin{minipage}{.5\textwidth}
      \fullimage{guard_sprite.png}
@@ -1404,7 +1411,24 @@ The transparency of the sprite is exploited to reduce the storage and RAM consum
 \par
 TODO: Elaborate on drawing routines which uncompress sprites on the fly.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \subsubsection{Clipping}
+There is a second benefit to have wall and sprite in the same 64x64 coordinate system: It is easy to clip. Once the actor's distance is calculated, a height can be generated. There height are the same type calculated for the walls. As a result, for each column to find out if a column if behind a wall, the engine just compare the height from the occlusion array to the height of the actor:\\
+\par
 Drawing things far to near is good for transparency but does not guaranty correctness. When a sprite is partially behind a wall or a door, it has to be clipped. This is done thanks to an occlusion array. While drawing the walls and doors, the engine also maintains an array in which it records the height of the column:\\
 \par
 \begin{minipage}{\textwidth}

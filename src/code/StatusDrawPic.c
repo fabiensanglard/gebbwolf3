@@ -1,4 +1,4 @@
-void StatusDrawPic (unsigned x, unsigned y, unsigned picnum)
+void StatusDrawPic (int x, int y, int picnum)
 {
 	unsigned	temp;
 

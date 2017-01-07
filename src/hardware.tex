@@ -244,7 +244,8 @@ This is not a problem when everything is hardwired within an hardware floating p
 
 
 \par
-As a result, a game engine designed was stuck in an awkward situation with two half solutions to his problem: \cw{int}(integer) operations which were fast but not accurate enough and \cw{float} operations which were accurate but not fast enough!
+A possible solution would have been to simply multiply an integer by 100 or 1000 to perform fractionnal operation and then divide to go back to integers. That is unfortunately not possible: An multiply \cw{imul} instruction takes a minimum of 6-9 cycles and a divide (\cw{div}) is even worse with 22/25 cycles depending if operands comes from RAM or a register. As a result, a game engine designed was stuck in an awkward situation with two half solutions to his problem: \cw{int}(integer) operations which were fast but not accurate enough and \cw{float} operations which were accurate but not fast enough!\\
+\par
   
 
 
