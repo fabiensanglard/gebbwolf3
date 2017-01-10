@@ -17,7 +17,7 @@ id Software was funded during February 1991 by four people departing from SoftDi
 \caption{id Software founding members.}\label{fig:Id Software team}
 \end{figure}
 
-Wolfenstein 3D was id first title but the team had already shipped no less than 13 games will working for their previous employer:
+Wolfenstein 3D was id first title but the team had already shipped no less than 13 games while working for their previous employer:
 \begin{itemize}
   \item Dangerous Dave (1988)\footnote{Dangerous Dave is a solo project of John Romero predating Id's formation, but Id Software produced its first sequel and it is sometimes regarded as an early Id Software title. Later Dangerous Dave sequels were not made by Id, nor were later Catacomb titles.}
   \item Commander Keen
@@ -90,9 +90,7 @@ Development took seven months (from November 1991 to May 1992) during which id S
  \end{figure}
 
 \section{Office layout}
-The organisation of the team was pretty much standard for a game studio of the early 90s: Four guys crammed in one room which allowed fast communication (and a lot of noise disturbance given John Romero and Tom Halls type of interaction). Notice on the upper floor, the SNES where countless games of F-Zero where played and the Donjon \& Dragons area extensively mentioned in "Masters of Doom" book. Not even having a team member with his apartment directly above the studio was out of the ordinary\footnote{90 Hours A Week And Loving It!}.\\
-\par
-The team was setup as follow\footnote{Since they played Dungeons \& Dragons a lot, the map is drawn D\&D style.}:
+The organization of the team was pretty much standard for a game studio of the early 90s: Four guys crammed in one room which allowed fast communication (and a lot of noise disturbance given John Romero and Tom Halls type of interaction). Notice on the upper floor, the SNES where countless games of F-Zero where played and the Donjon \& Dragons area extensively mentioned in "Masters of Doom" book. To have a team member with his apartment directly above the studio was not out of the ordinary\footnote{90 Hours A Week And Loving It!}. The team was setup as follow\footnote{Since they played Dungeons \& Dragons a lot, the map is drawn D\&D style.}:
 \par
 \begin{figure}[H]
   \centering
@@ -163,7 +161,7 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA modes: 13h and 4h (figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting VRAM address. This allows for a neat trick where two graphic cards are plugged in the PC: One in monochrome text picking up data at 0xB000:0000 and the other one VGA picking up data at 0xA000:0000. This setup allows a developer to debug the game engine in real-time.\\
+You may have noticed in the listing of VGA modes: 13h and 4h (figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting VRAM address. This allows for a neat trick where two graphic cards are plugged in the PC: One in monochrome text picking up data at 0xB8000 and the other one VGA picking up data at 0xA0000. This setup allows a developer to debug the game engine in real-time.\\
 \begin{figure}[H]
 \centering
   \shadowbox{
@@ -194,10 +192,10 @@ You may have noticed in the listing of VGA modes: 13h and 4h (figure~\ref{fig:vg
 \section{Graphics assets}
 The graphic assets are divided as follow:
 \begin{itemize}
-\item 2D Menus items (pictures).
+\item 2D Menus items (images).
 \item 3D Action phase items (walls and sprites).
 \end{itemize}
-Those were the work of Adrian Carmack\footnote{Kevin Cloud did a few textures and also worked on the design and layout of the Wofenstein 3D Hint book published eventually.}. All of the work was done with Deluxe Paint (from Electronic Arts) and saved in LBM files (Deluxe Paint format). 
+Those were the work of Adrian Carmack\footnote{Kevin Cloud did a few textures and also worked on the design and layout of the Wolfenstein 3D Hint book published eventually.}. All of the work was done with Deluxe Paint (from Electronic Arts) and saved in LBM files (Deluxe Paint format). 
 
 \begin{figure}[H]
   \centering
@@ -211,9 +209,9 @@ Since the VGA is palette based (colors a not specified via 24-bits RBG but by in
 \begin{figure}[H]
   \centering
 \fullimage{palette.png}
- \caption{Wolfentein 3D palette: Everthing in the game is drawn using one of these 256 colors.}
+ \caption{Wolfentein 3D palette: Everything in the game is drawn using one of these 256 colors.}
 \end{figure}
-The Game palette with Horizontal from 0x00 to 0x0F, vertical from 0x00 to 0xF0. The blue gradient starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is transparent color and always skipped during rendition.\\
+The Game palette with horizontal coordinates ranging from 0x00 to 0x0F and vertical coordinates from 0x00 to 0xF0. The blue gradient at the bottom starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is transparent color and always skipped during rendition.\\
 \par
 
 All assets were "hand" drawn with a mouse. Since the VGA would stretch the framebuffer when displaying it on the screen (from 320x200 to 320x240), Adrian had to be careful to draw at the same resolution as the game would run. To factor in these non-square pixels.\\
@@ -287,7 +285,7 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
  \scaledimage{.7}{sprites/woldf3d.png}
 \end{figure} 
 
-\footnotetext{The manual was entirely designed on a NeXT ColorStation. It was the only usage of NeXT for Wolfenstein 3D (they purchased it in december 1991).}
+\footnotetext{The manual was entirely designed on a NeXT ColorStation. It was the only usage of NeXT for Wolfenstein 3D (they purchased it in December 1991).}
 
 
 \begin{figure}[H]
@@ -342,7 +340,7 @@ The hint manual also contains several photos of the team back in the days. Go ch
 
 
 \section{Maps}
-Maps were created using the in-house editor called TED5 which is short for Tile EDitor. TED was not create specially for wolf: It was actually created way back during Commander Keen serie (yes: a platform scroller) and improved over the years. TED does not stand-alone. In order to start it needs an asset archive and the header associated (as described in the graphic asset workflow). This way texture ids are directely encoded in the map.\\
+Maps were created using the in-house editor called TED5 which is short for Tile EDitor. TED was not create specially for wolf: It was actually created way back during Commander Keen series (yes: a platform scroller) and improved over the years. TED does not stand-alone. In order to start it needs an asset archive and the header associated (as described in the graphic asset workflow). This way texture ids are directly encoded in the map.\\
 
  \begin{figure}[H]
 \centering
@@ -408,6 +406,12 @@ As mentioned in the hardware section, the audio hardware was highly fragmented. 
  \fullimage{muse.png}
  \end{figure}
  \par
+ Three sets of the same audio effect shipped with the game:
+\begin{enumerate}
+\item For PC Speaker
+\item For Adlib
+\item For SoundBlaster
+\end{enumerate}
 \note{Sound production pipeline. How were voice recorded ? Where are Mein Leben (My life) and Achtung(Attention) coming from?}
 
 
@@ -418,7 +422,7 @@ All composition was done by Robert Prince:\\
 In the early days of the OPL soundcards, the "gold standard" sequencing software was Sequencer Plus Gold ("SPG") by Voyetra. The reason for this was it had an OPL instrument/instrument bank editor.\\
 \par
 To rough out compositions, I used Cakewalk ("CW"). I had been using it for several years already and had it all set up to use the analog boxes for sound output. Having "real" sounds from those boxes helped me visualize (audiolize?) what I wanted musically. I would save the CW files in *.mid format and load them into SPG to create the OPL instrument for each track. I built different instrument banks for the different genres of music.
-
+\bigskip
 \textbf{Bobby Prince - Composer}
  \end{fancyquotes}\\
 

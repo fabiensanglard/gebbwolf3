@@ -325,11 +325,11 @@ Here is how the memory was layout: \\
 \end{figure}
 
 
-As a result, out of the original 1024KB, only 640KB (called Conventional Memory) were usable. 384KB were reserved for the UMA\footnote{Upper Memory Area} and every single driver installed (\codeword{.SYS} and \codeword{.COM})  took away from the remaining 640KB.
+Out of the original 1024KB, only 640KB (called Conventional Memory) were usable. 384KB were reserved for the UMA\footnote{Upper Memory Area} and every single driver installed (\codeword{.SYS} and \codeword{.COM})  took away from the remaining 640KB.
 
 \bigskip
 
-\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KB of Conventional Memory. Needless to say French people learned pretty fast that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a querty keyboard but iddAd on an azery keyboard without the French driver loaded.}.\\
+\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KB of Conventional Memory. Needless to say French people learned pretty fast that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a querty keyboard but IDDAD on an azery keyboard without the French driver loaded.}.\\
 \\
 
 \subsection{The infamous Real Mode: 16 bits Segmented addressing}
@@ -342,7 +342,7 @@ As a result, out of the original 1024KB, only 640KB (called Conventional Memory)
 \end{figure}
 That may not sound too bad but in practice this segmented addressing led to many issues.\\
 \par 
-The least problematic was about the language C: Since it was invented on a flat memory machine, it had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro would be provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. That was an ugly wart on the beautiful C but that was manageable. And of course \cw{libc} was also different: \cw{malloc} returns \cw{near} and can therefor only allocate 64K. To allocate more \cw{farmalloc} is used.\\
+The least problematic was about the language: Since C was invented on a flat memory machine, it had to be augmented by compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro would be provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. That was an ugly wart on the beautiful C but that was manageable. And of course \cw{libc} was also different: \cw{malloc} returns \cw{near} and can therefor only allocate 64K. To allocate more than 64K, \cw{farmalloc} is needed.\\
 \\
 The really big issue however was how two pointers referring to the same address could fail an equality test: In this model, the 1MB of RAM is divided in 65536 paragraphs by the segment pointer. So a paragraph is 16 bytes but an offset can be up to 65536 which result in a maze of overlaps! See the following example:\\
 \par
@@ -395,7 +395,7 @@ The 20 bits address bus of Real Mode limited the addressable RAM to 1MB. But mac
 \caption{Expanded memory layout}
 \label{fig:ems_xms_layout}
 \end{figure}
-With this system, programmer could map part of the upper memory to RAM located beyond the addressable space.
+With this system, programmer could map part of the upper memory to RAM located beyond the addressable space. But only to store assets. 
 Unfortunately once again, nothing was standardized. Users could load different drivers providing different memory mapping systems:
 \begin{itemize}
 \item Expanded Memory Specification (EMS) drivers: EMM368.SYS.
@@ -416,7 +416,7 @@ To learn more about EMS be sure to read Edward Mendelson's excellent article: . 
 At this point, if you are puzzled by the CPU and its design you are not alone. Over the years I came around many ways to describe this madness but two particularly stand up:\\
 \par
  \begin{fancyquotes}
-   The i386 \lbrack...\rbrack an architecture that is difficult to explain and impossible to love.\\
+   The x86 is an architecture that is difficult to explain and impossible to love.\\
    \par
 \textbf{David Patterson \& John Hennessy - Computer Organization and Design.}
  \end{fancyquotes}\\
@@ -432,7 +432,7 @@ And:
 
 
 \par
-\bu{Trivia :} 640KB was all a game could have. But people writing compilers got clever. Strike Commander (a very famous flight arcade game released in 1993) executable is 745KB which obviously doesn't fit in. The trick was to use a technique of "overlays". The compiler inserted instructions at compile time to detect when the IP was about to beyond a page. These instructions swapped code segment from RAM to CPU and issued a \cw{jmp} to reset the CPU at the beginning of the new code. To get a better idea of how it works: Think of Gromit seating on top of the train and inserting rails as the machine is moving forward at full speed.
+\bu{Trivia :} 640KB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a very famous flight arcade game released in 1993) executable is 745KB which obviously doesn't fit in. The trick was to use a technique of "overlays". The compiler inserted instructions at compile time to detect when the IP was about to beyond a page. These instructions swapped code segment from RAM to CPU and issued a \cw{jmp} to reset the CPU at the beginning of the new code. A good methaphor to visualize how it works: Think of Gromit seating on top of the train and inserting rails as the machine is moving forward at full speed.
 
 
 
@@ -468,7 +468,7 @@ The main issue in this system is that CRT are analogic system while computers ar
   \subsection{History}
 
 The first adapter of the family was released in 1981. The Monochrome Display
-   Adapter (\codeword{MDA}) was monochrome with low resolutions but it had the merit to be on every PC sold. Many other systems followed over the years, always preserving backward compatibility like it was the tradition at the time:
+   Adapter (\codeword{MDA}) was monochrome with low resolutions but it had the merit to be on every PC sold. Many other systems followed over the years. Each of them preserving backward compatibility.
 \bigskip
   
  \begin{figure}[H]
@@ -498,7 +498,7 @@ The first adapter of the family was released in 1981. The Monochrome Display
 \caption{Video interface history.}\label{fig:vga_history}
 \end{figure}
 
-Each iteration added new features and in 1991 the ubiquitous graphic system was the VGA\footnote{Video Graphic Adapter}. All video cards purchased had to follow the standard started by IBM. The universality of that system was a two edged sword: On one side developers had to program for one graphic system only. But on the other side, there was no escape to the shortcoming of the Adapter.\\
+Each iteration added new features and in 1991 the ubiquitous graphic system was the VGA\footnote{Video Graphic Adapter}. All video cards installed on PCs had to follow the standard set by IBM. The universality of that system was a two edged sword: On one side developers had to program for one graphic system only. But on the other side, there was no escape to the shortcoming of the Adapter.\\
 
 \begin{figure}[H] 
   \centering 
@@ -594,21 +594,21 @@ The BIOS could be called to have the VGA configured with preset registers.
 \begin{tabularx}{\textwidth}[c]{llllr}
 \hline
 \textbf{Mode} & \textbf{Type} & \textbf{Format} & \textbf{Colors}          & \multicolumn{1}{l}{\textbf{Segment}} \\ \hline
-0             & text          & 40x25           & 16 gradient (monochrome) & b800h                                \\ \hline
-1             & text          & 40x25           & 16                       & b800h                                \\ \hline
-2             & text          & 80x25           & 16 gradient (monochrome) & b800h                                \\ \hline
-3             & text          & 80x25           & 16                       & b800h                                \\ \hline
-4             & CGA Graphics  & 320x200         & 4                        & b800h                                \\ \hline
-5             & CGA Graphics  & 320x200         & 4 gradient (monochrome)  & b800h                                \\ \hline
-6             & CGA Graphics  & 640x200         & 2                        & b800h                                \\ \hline
-7             & MDA text      & 9x14            & 3 gradient (monochrome)  & b000h                                \\ \hline
-0Dh           & EGA graphic   & 320x200         & 16                       & A000h                                \\ \hline
-0Eh           & EGA graphic   & 640x200         & 16                       & A000h                                \\ \hline
-0Fh           & EGA graphic   & 640x350         & 3                        & A000h                                \\ \hline
-10h           & EGA graphic   & 640x350         & 16                       & A000h                                \\ \hline
-11h           & VGA graphic   & 640x480         & 2                        & A000h                                \\ \hline
-12h           & VGA graphic   & 640x480         & 16                       & A000h                                \\ \hline
-13h           & VGA graphic   & 320x200         & 256                      & A000h                                \\ \hline
+0             & text          & 40x25           & 16 gradient (monochrome) & b8000h                                \\ \hline
+1             & text          & 40x25           & 16                       & b8000h                                \\ \hline
+2             & text          & 80x25           & 16 gradient (monochrome) & b8000h                                \\ \hline
+3             & text          & 80x25           & 16                       & b8000h                                \\ \hline
+4             & CGA Graphics  & 320x200         & 4                        & b8000h                                \\ \hline
+5             & CGA Graphics  & 320x200         & 4 gradient (monochrome)  & b8000h                                \\ \hline
+6             & CGA Graphics  & 640x200         & 2                        & b8000h                                \\ \hline
+7             & MDA text      & 9x14            & 3 gradient (monochrome)  & b0000h                                \\ \hline
+0Dh           & EGA graphic   & 320x200         & 16                       & A0000h                                \\ \hline
+0Eh           & EGA graphic   & 640x200         & 16                       & A0000h                                \\ \hline
+0Fh           & EGA graphic   & 640x350         & 3                        & A0000h                                \\ \hline
+10h           & EGA graphic   & 640x350         & 16                       & A0000h                                \\ \hline
+11h           & VGA graphic   & 640x480         & 2                        & A0000h                                \\ \hline
+12h           & VGA graphic   & 640x480         & 16                       & A0000h                                \\ \hline
+13h           & VGA graphic   & 320x200         & 256                      & A0000h                                \\ \hline
 \end{tabularx}
 \end{table}
 \caption{VGA Modes available from BIOS.}\label{fig:vga_modes}
@@ -618,7 +618,7 @@ The BIOS could be called to have the VGA configured with preset registers.
 
 
  \subsection{VGA Programming: Memory mapping}
-To write to the VRAM the 1MB address space maps 64KB starting as indicated in table \ref{fig:vga_modes}. So a dev had from 0xA000:0000 to 0xA000:FFFF available. The immediate question is "How does one write to 256KB of RAM with only 64KB ?". The answer is: Banking. Write and Read operation are routed based on a mask register indicating which bank should be read or written.\\
+To write to the VRAM the 1MB address space maps 64KB starting as indicated in table \ref{fig:vga_modes}. So a dev had from 0xA0000 to 0xAFFFF available. The first question is "How does one write to 256KB of RAM with only 64KB of address space?". The answer is: bank switching. Write and Read operation are routed based on a mask register indicating which bank should be read or written.\\
 \par
  \begin{figure}[H]
 \centering
@@ -664,7 +664,7 @@ Pretty much everything else is bad:\\
 
  
   \subsection{VGA Programming: Mode 13h}
-  Mode 13h is far more appealing since it offers a lower resolution with 256 colors. It also has the advantage of faking linear buffer: A special chip called Chain-4 uses the lower 2 bit of the RAM address to match it in the VGA RAM:\\
+  Mode 13h is far more appealing since it offers a lower resolution with 256 colors. It also has the advantage of faking linear buffer: A special chip called Chain-4 uses the lower 2 bit of the RAM address to match it in the VGA RAM. This convenience mechanism was added because Mode 13h was meant to display static images and a linear address space would make it easy for developer to copy from RAM to VRAM.\\
   \par
  \begin{figure}[H]
 \centering
@@ -678,7 +678,7 @@ When writing or reading at an address K in RAM, the Chain-4 breaks down that add
 \item The 14 high bits are switched right by two bits and used as offset in the bank.
 \end{itemize}
   \par
-  For example, writing at 0x0AF11 would result in writing in bank 3 at offset 0x0AF. Since this is all hardwired it is fast and framebuffer could be refreshed at 70Hz.
+  For example, writing at 0xABF13 would result in writing in bank 3 at offset 0xBF1. Since this is all hardwired it is fast and framebuffer could be refreshed at 70Hz.
  \begin{figure}[H]
 \centering
       \includegraphics[width=\textwidth]{imgs/drawings/mode_13h_example.pdf}
@@ -701,8 +701,7 @@ The side effect is that 75\% of the RAM is wasted (since only 14 bits were usabl
   Mode 13h looks a bit better than 12h but it is in fact also terrible for game or even photos:\\
   \begin{itemize}
 \item With Chain-4, all the RAM address space is used and there is no way to have a double buffer.
-\item Since the resolution is 320x200, the aspect ration (1.6) does not fit the monitor (which is 1.5). As a result the image is stretched when transfered from the 
-framebuffer to the CRT.
+\item Since the resolution is 320x200, the aspect ration (1.6) does not fit the monitor (which is 1.333). As a result the framebuffer stored in the VRAM is stretched when transfered to the CRT.
 \end{itemize}
 
 \begin{figure}[H]
@@ -886,7 +885,7 @@ Note that without a sound card you were unable to connect a joystick !
 
 
 \section{Bus}
-Altought developers had no control over it, it is still worth mentioning how these component are connected together via the Northbridge and Southbridge chipsets:\\ 
+Although developers have no control over it, it is still worth mentioning how these component are connected together via the Northbridge and Southbridge chipsets:\\ 
 \par
 \begin{figure}[H]
 \centering
@@ -903,17 +902,17 @@ The Southbridge run on ISA\footnote{Industry Standard Architecture}. Invented in
 The width of the data bus depends on how many "fingers" a card has.\\
 \par
 
- In practice, due to packet overhead and interrupts, the effective bandwidth of the bus is divided by two. As a result, a PC equipped with an 8-bits ISA VGA card can push 19.1Mbits/s/2 = 1.5MB/s. In Mode 13h, a frame is 320x200 bytes = 64,000bytes. The theoretical maximum framerate with a CPU taking 0ms to render a frame is 1,500,000 / 64,000 = 23 frames per seconds.\\
+ In practice, due to packet overhead and interrupts, the effective bandwidth of the bus is divided by two. As a result, a PC equipped with an 8-bits ISA VGA card can push 19.1Mbits/s/2 = 1.5MB/s. In Mode 13h, a frame is 320x200 bytes = 64,000 bytes. The theoretical maximum framerate with a CPU taking 0ms to render a frame is 1,500,000 / 64,000 = 23 frames per seconds.\\
  \par
  On a 16 bits VGA card, 33,400,000 bits per seconds gives 33,400,000/8/64000 = 65 frames per seconds.\\
  \par
- If you factor in other things which had to transit on the bus such as palette, keyboard interrupt, mouse inputs and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) you understand well why no PC of the era could max out the VGA's 70 frame per seconds. The best demos and games usually reached 35 frames per seconds.
+ If you factor in other things which had to transit on the bus such as palette, keyboard interrupt, mouse inputs and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand why no PC of the era could max out the VGA's 70 frame per seconds. The best demos and games usually reached 60 frames per seconds.
 
 
 \section{Summary}
-In a nutshell, to say a PC was difficult to program for games would be an understatement. It was nightmare. The CPU was good at doing the wrong thing, the best graphic interface allowed neither double buffering nor square pixels, the memory model only allowed 1 standard MB...with address composed of two separate 16 bits registers. Last but not least the default sound system could only produce square waves...and the people who did have a sound card installed made an ecosystem of four overlapping configurations.\\
+In a nutshell, to say a PC was difficult to program for games would be an understatement. It was nightmare. The CPU was good at doing the wrong thing, the best graphic interface allowed neither double buffering nor square pixels, the memory model only allowed 1 standard MB...with address composed of two separate 16 bits registers..and the \cw{near}/\cw{far} pointers fordade using standard C. Last but not least the default sound system could only produce square waves...and the people who did have a sound card installed made an ecosystem of four overlapping configurations\footnote{These numerous constraints hindered efforts to port Wolfenstein 3D to modern systems. Compared to Doom or Quake which were developed with portability in mind, Wolfenstein 3D is so tied to the hardware that few had the tenacity to clean up the 16 bits and VGA logics.}.\\
 \par
-But despite all these unfavorable conditions, teams of developers gathered to tame the beast and unleash its power to gamers. One of them called itself id Software\footnote{They originally called themselves Ideas From the Deep but they decided to shortened it to simply id, which stands for "in demand," and is pronounced as in "did" or "kid." The name also had another meaning which is referring to id, one of the three parts (The other two being ego and super-ego) of the brain that behaves by the pleasure principle.}.
+Yet despite all these unfavorable conditions, teams of developers gathered to tame the beast and unleash its power to gamers. One of them called itself id Software\footnote{They originally called themselves Ideas From the Deep but they decided to shortened it to simply id, which stands for "in demand," and is pronounced as in "did" or "kid." The name also had another meaning which is referring to id, one of the three parts (The other two being ego and super-ego) of the brain that behaves by the pleasure principle.}.
 \end{document}
 
 
