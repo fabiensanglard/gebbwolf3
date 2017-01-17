@@ -142,7 +142,7 @@ We started with floppy data transfer, but we had a Novell network on coax Ethern
 
 Development was done with Borland C++ 3.1 (however the language used was C): The editor uses VGA mode 3 offering a real estate of 80 characters wide and 25 characters tall.\\
 \par
-John Carmack took care of the runtime code. John Romero programmed many of the tools (TED map editor, packers, ...). Jason Blochowiak was contracted to write important subsystems of the game (Input manager, Page Manager, Sound Manager, User Manager).\\
+John Carmack took care of the runtime code. John Romero programmed many of the tools (TED map editor, Graphic assets packers, Muse sound packer...). Jason Blochowiak was contracted to write important subsystems of the game (Input manager, Page Manager, Sound Manager, User Manager).\\
 \\
 \begin{figure}[H]
 \centering
@@ -161,7 +161,7 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA modes: 13h and 4h (figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting VRAM address. This allows for a neat trick where two graphic cards are plugged in the PC: One in monochrome text picking up data at 0xB8000 and the other one VGA picking up data at 0xA0000. This setup allows a developer to debug the game engine in real-time.\\
+You may have noticed in the listing of VGA modes: 13h and 4h (figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting RAM address. This allows for a neat trick where two graphic cards are plugged in the PC: One in monochrome text picking up data at 0xB8000 and the other one VGA picking up data at 0xA0000. This setup allows a developer to debug the game engine in real-time.\\
 \begin{figure}[H]
 \centering
   \shadowbox{
@@ -270,7 +270,7 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
 \end{minipage}
 \begin{minipage}{0.3\textwidth}
 \begin{flushright}
-\fullimage{hint_manual_cover.png}
+\scaledimage{0.9}{hint_manual_cover.png}
 \end{flushright}
 \end{minipage}
 
@@ -400,7 +400,7 @@ anywhere.\\
 \section{Audio}
 
 \subsection{Sounds}
-As mentioned in the hardware section, the audio hardware was highly fragmented. id decided to support four sound cards and the default PC speaker. Which meant generating assets multiple times for each hardware and pack them together with an in-house too called MUSE into AUDIOT archives (an id software proprietary format):\\
+As mentioned in the hardware section, the audio hardware was highly fragmented. id decided to support four sound cards and the default PC speaker. Which meant generating assets multiple times for each hardware and pack them together with an in-house tool called MUSE generating AUDIOT archives (an id software proprietary format):\\
 \begin{figure}[H]
 \centering
  \fullimage{muse.png}
@@ -410,8 +410,10 @@ As mentioned in the hardware section, the audio hardware was highly fragmented. 
 \begin{enumerate}
 \item For PC Speaker
 \item For Adlib
-\item For SoundBlaster
+\item For SoundBlaster and SoundBlaster Pro
 \end{enumerate}
+
+\par
 \note{Sound production pipeline. How were voice recorded ? Where are Mein Leben (My life) and Achtung(Attention) coming from?}
 
 
@@ -466,7 +468,7 @@ To rough out compositions, I used Cakewalk ("CW"). I had been using it for sever
 
 
 \section{Distribution}
-The game distribution model was shareware: The game engine along with one single episode were given for free and encouraged to be copied and distributed to a maximum number of peoples. To get the five other episodes, player had to mail \$50 by mail.\\
+The game distribution model was shareware: The game engine along with the first episode of the game were given for free and encouraged to be copied and distributed to a maximum number of peoples. To get the five other episodes, player had to mail \$50 by mail.\\
 \par
 \begin{figure}[H]
 \centering

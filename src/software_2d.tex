@@ -18,7 +18,8 @@ Indeed with control over the bank mask, it is possible to write up to four pixel
 
 \par
 Therefore in order to clear the screen to red before drawing the menu, the 2D engine only performs 320x200/4 = 16,000 writes instead of 64,000. In the drawing above, pixels 0,1,2 and 3 would be written with one write operation. Then pixels 4,5,6 and 7 with an other write. And so on...\\
-
+\par
+Even better: Since the RAM can be written with 16 bits register, 8 pixels can be written in one RAM operation. A full screen can be cleared with 320x200/8 = 8000 writes.
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/vga_clear/optimal.c}
@@ -31,7 +32,7 @@ However there is a limitation to this trick: Only bytes at the same address in a
  \end{figure}
 Pixels 0, 1, 2, 3 can be written in one write.\\
 Pixels 3 and 4 need two write operations.\\
-Pixels 3, 4, 5, 6, 7, 8 would need three.\\
+Pixels 3, 4, 5, 6, 7, 8 would need three writes.\\
 
 
 \par

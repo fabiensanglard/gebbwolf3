@@ -21,7 +21,7 @@ A few quick stats can be gathered with \cw{cloc.py} utility:\\
 \end{minipage}
 
 \par
-Twenty seven thousands lines of code which by 2016 standard it is very little. The game is written 90\% in C\footnote{id Software would not switch to C++ until Doom 3 around 2000.}.\\
+Twenty seven thousands lines of code which by 2016 standard it is very little. As the stats show the game is written 90\% in C\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code are deceiving. For a game so inherently tied to the hardward it is much more difficult to understand what is going on compared to Doom or Quake.\\
 \par
 \begin{figure}[H]
 \centering
@@ -61,7 +61,7 @@ Twenty seven thousands lines of code which by 2016 standard it is very little. T
  \begin{fancyquotes}
    We didn't have spell checkers in our editors back then, and I always had poor spelling.  The word "collumn" appears in the source code dozens of times.  After I released the source code, one of the emails that stands out in memory read:
  \bigskip \\
-It's "COLUMN", you dumb @\#\$\% !\\
+It's "COLUMN", you dumb FUCK!\\
  \bigskip \\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
@@ -85,7 +85,7 @@ The archive contains more than just \codeword{.H} (headers) and \codeword{.C} (c
 \section{Big picture}
 The engine can be divided in three blocks:
 \begin{itemize}
-\item The 2D renderer let the user set the game.
+\item The 2D renderer let the user setup the game.
 \item The 3D renderer where most of the time is spent in the game.
 \item The sound system which always run concurrently with either 2D or 3D renderer. 
 \end{itemize}
@@ -139,7 +139,7 @@ Then come the core loop where 2D renderer and 3D renderer are called forever:\\
 \lstinputlisting[language=C]{code/unrolled_loop_playloop.c}
 \end{minipage}
 \par
-The sound system is started via the Sound Manager. It driven by Interrupt service routine 8. Notice how the ISR is tied to the PC timer and can run at at different frequency of 140, 700 or even 7000Hz depending on the needs of the sound system involved:\\
+The sound system is started via the Sound Manager. It driven by Interrupt service routine 8. Notice how the ISR is tied to the PC timer and can run at at various frequencies of 140, 700 or even 7000Hz depending on the needs of the sound system being driven.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/soundsystem_interrupt.c}
@@ -164,7 +164,7 @@ The sound system is started via the Sound Manager. It driven by Interrupt servic
 
 \section{Architecture}
 
-The engine is made of WL\_* files which rely on ID\_* sub-systems called Managers. There are seven of them in total:\\
+The engine is contained in WL\_* files which rely on ID\_* sub-systems called Managers. There are seven of them in total:\\
 \begin{itemize}
 	\item Memory
 	\item Page
@@ -174,7 +174,7 @@ The engine is made of WL\_* files which rely on ID\_* sub-systems called Manager
 	\item User
 	\item Input
 \end{itemize}
-The WL stuff was written specifically for Wolf3D while the ID\_ managers were reused from the previous game (Catacomb 3D) and improved for the needs of the new engine.
+The WL stuff was written specifically for Wolf3D while the ID\_ managers were reused from previous games (likely Catacomb 3D) and improved for the needs of the new engine.
 
 \begin{figure}[H]
 \centering
@@ -268,7 +268,7 @@ But if memory is moved around, how do previous allocation still point to what th
 
 
 \subsection{Page Manager (PM)}
-The Page Manager is dedicated to the 3D engine. Its task is to make sure assets such a wall texture, sprites and sound effect at available in RAM. Jason Blochowiak seems to be the main author and his previous experience with Unix system clearly influenced the design of this component. It is built around the idea of asset container called "Page". When the engine needs a resource, its requests a page with the resource Id to the Page Manager. To fulfill the request as fast as possible, it taps in all types of RAM: Conventional, EMS and XMS. If a page is located in conventional memory or EMS, the request is considered a cache "hit" and page is returned to caller. Otherwise the request is a cache "miss". The PM looks for the page in XMS RAM and ultimately if all failed in \cw{VSWAP.WL1} file on the HDD which contains all 3D assets.\\
+The Page Manager is dedicated to the 3D engine. Its task is to make sure assets such a wall texture, sprites and sound effect stored on HDD at available in RAM for the CPU to use. Jason Blochowiak seems to be the main author and his previous experience with Unix system clearly influenced the design of this component. It is built around the Unix concept of page and swap. Except insteaf of a memory address identifying a page, an asset ID is used. Each asset consums a full "page". When the engine needs a resource, its requests a page with the resource Id to the Page Manager. To fulfill the request as fast as possible, all types of RAM: Conventional, EMS and XMS and used as cace. If a page is located in conventional memory or EMS, the request is considered a cache "hit" and page is returned to caller. Otherwise the request is a cache "miss". The PM looks for the page in XMS RAM and ultimately if all failed in \cw{VSWAP.WL1} file on the HDD which contains all 3D assets.\\
  \par
 \begin{figure}[H]
 \centering
@@ -282,7 +282,7 @@ In order to minimize the cost of page miss, the engine preload the page cache be
  \fullimage{get_psyched.png}
  \end{figure}
  \par
-The precaching mechanism is not particularly clever: It loads as many page from the swap file as possible. It doesn't try to look at what is actually used in the level. But the eviction policy (LRU) ultimately stabilize the cache and even a machine with only 1MB of RAM is able to play a level with no HDD access after a few minutes. This design had a small annoying flow: On a low memory machine a cache miss would occur at the worse possible moment: When the player opens the last door and is about to find himself confronted to the heavy powered final boss, the cache manager would not have the sprites available. This would incur a HDD access, a lag and an unfair death.\\
+The precaching mechanism is not particularly clever: It loads as many page from the swap file as possible. It doesn't try to look at what is actually used in the level but instead load assets in the order they are stored in \cw{VSWAP} file on the HDD. The eviction policy (LRU) ultimately stabilize the cache and even a machine with only 1MB of RAM is able to play a level with no HDD access after a few minutes. This design had a small annoying flow: On a low memory machine a cache miss would occur at the worse possible moment when the player opens the last door of a level and is about to find himself confronted to the heavy powered final boss, the cache manager would not have the sprites available. This would incur a HDD access, a lag and an undeserved and humiliating death.\\
 \par
 The size of the swap file varies depending on the version of the game you play: \cw{VSWAP.WL1} (shareware) is 742KB while \cw{VSWAP.WL6} (full version) is 1,500KB. In both case a machine with 2MB of RAM on top of the factory issued 1MB is enough to have all assets loaded during pre-caching.\\
 \par
@@ -307,11 +307,10 @@ TODO: Insert code sample to show what an ID is.
 \subsection{Video Manager (VL \& VH)}
 The video manager features two parts:
 \begin{itemize}
-\item A part dedicated to VGA register manipulation.
-\item A part dedicated to 2D menu drawings.
+\item A low level dedicated to hardward VGA register manipulation.
+\item A high level dedicated to 2D menu drawings.
 \end{itemize}
 \par
-This part features what I think is one of the most beautiful trick in the game: FizzleFade which is explained later.
 
 
 
@@ -319,7 +318,7 @@ This part features what I think is one of the most beautiful trick in the game: 
 
 
 \subsection{Cache Manager (CA)}
-A small manager performing a lot: Interface with map, graphic and music. Assets are stored in two files: One header file performing the translation between resource ID and offset in the DATA file and an other file containing he actually payload.\\
+A small manager performing a lot: Loading and decompressing map, graphic and music contained on the HDD are avaialble in RAM for CPU to yse. Assets are stored in two files: For each three types of ressources, two files are present. One header file performing the translation from resource ID to  offset in the data file and the data file containing the actual payload.\\
  \par
 \begin{figure}[H]
 \centering
@@ -327,10 +326,7 @@ A small manager performing a lot: Interface with map, graphic and music. Assets 
  \end{figure}
  \par
 \bu{Note:} All resources are compressed. The CM handle decompression transparently.
-\begin{verbatim}
-http://www.shikadi.net/moddingwiki/GameMaps_Format
-\end{verbatim}
-\bu{Trivia :} Is it a typo with filename \cw{AUDIOHEA.WL} ? Correct spelling would be \cw{AUDIOHEAD.WL}. Where is the \cw{D}? This is in fact a limition of the operatin system. DOS 5 only allows 8.3 filename (at most eight characters followed by at dot and at most three character for the extension).
+\bu{Trivia :} Is it a typo with filename \cw{AUDIOHEA.WLX} ? Correct spelling would be \cw{AUDIOHEAD.WL}. Where is the \cw{D}? This is in fact a limition of the operating system. DOS 5 only allows 8.3 filename (at most eight characters followed by at dot and at most three character for the extension).
 
 
 
@@ -365,7 +361,7 @@ and then passes these information to the Video Manager (\cw{VW\_DrawPropString})
 
 
 \subsection{Sound Manager (SD)}
-The Sound Manager abstracts interaction with all four sound systems supported: PC Speaker, ADLib (Music only), Sound Blaster and SoundSource. It is a beast of his own since it doesn't run inside the engine. Instead it called via IRQ at a much higher frequency than that engine (the engine runs at 70Hz, the sound manager ranges from 150Hz to 7000Hz). For efficiency it is written in assembly and is privileged when it comes to memory allocation: All its allocation are in Conventional Memory and its assets can never miss the cache in the Page Manager.\\
+The Sound Manager abstracts interaction with all four sound systems supported: PC Speaker, ADLib (Music only), Sound Blaster and SoundSource. It is a beast of his own since it doesn't run inside the engine. Instead it called via IRQ at a much higher frequency than the engine (the engine runs at maximum 70Hz, the sound manager ranges from 150Hz to 7000Hz). Being IRQ driven, it must run very fast. Therefore not only it is written in assembly, its assets are also privileged when it comes to memory allocation: All of them are done in Conventional Memory to avoid a miss the cache in the Page Manager which would result in a slow XMS or HDD fetch.\\
  \par
 \begin{figure}[H]
 \centering
@@ -391,7 +387,7 @@ The sound manager is described extensively in the "Sound and Music" section.
 
 
 \subsection{Input Manager (IN)}
-Abstract interaction with joystick keyboard and mouse. Features a lot of boring boilerplate code to deal with PS/2, Serial and DA-15 ports.
+Abstract interaction with joystick keyboard and mouse. Features a lot of boring boilerplate code to deal with PS/2, Serial and DA-15 ports. Each using their own I/O addresses for programming.
 
 
 
@@ -412,9 +408,9 @@ Abstract interaction with joystick keyboard and mouse. Features a lot of boring 
 As the game engine starts, it deals with difficulties showed in the hardware section. This is where things become really interesting.
 
 \subsection{Signon}
-Tne first (mild) issue to deal with is the heterogenous ecosystem of PCs on the market. With different drivers loaded and different sound cards, the engine has to figure out how much RAM is installed and if it will be able to run. If not it has to let the user know what is the problem. That was important since id Software was a small team and they did not have CSR around to pickup the phone.\\
+The first (mild) issue to deal with is the heterogeneous ecosystem of PCs on the market. With different drivers loaded and different sound cards, the engine has to figure out how much RAM is installed and if it will be able to run. If not it has to let the user know what is the problem. That was important since id Software was a small team and they did not have CSR around to pickup the phone and help unhappy customer to troubleshot their issue.\\
 \par
-That is what the "signon" screen is for. Note how the screen and palette are just variable, already load in RAM by the operating system. After usage \cw{signon} is unloadede from RAM to make space for the actuall game.\\
+That is what the "signon" screen is for: Self diagnostic. Note how the screen and palette are just variable, already load in RAM by the operating system. After usage \cw{signon} is unloaded from RAM to make space for the actual game.\\
 \par
 \begin{figure}[H]
 \centering
@@ -428,7 +424,7 @@ That is what the "signon" screen is for. Note how the screen and palette are jus
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/signonscreen.c}
 \end{minipage}
-Since this screen is showed almost before anything else is initialized (video system, cache manager interfacing with HDD) the full 64K images (along with the pallete) is linked against the executable. The engine only has copies from RAM to the VGA banks.\\
+Since this screen is showed almost before anything else is initialized (video system, cache manager interfacing with HDD) the full 64K images (along with the palette) is linked against the executable. The engine only has copies from RAM to the VGA banks.\\
 \par
 \note{Why only show the RAM only up to 320KB? Did the game ran on 320?}
 %Notice the main RAM (conventional memory) which goes only up to 320K: Between the executable and other residence routines it is all what was remaining of the original 640K. The game is able to run on 320KB but you needs to swap with the HDD at runtime to load textures and sprites.
@@ -462,7 +458,7 @@ The Hardware chapter describing the video system left us with an unsolved proble
       \includegraphics[width=\textwidth]{imgs/drawings/mode_13h.pdf}
 \end{figure}
 
-It is called "chaining" and because 2 bits out of the address are used to route a write/read operation to a bank, only 14 bits are used for the actuall offset in the bank. Since 14 bits can address 16384 values this system results in a waste of 75\% of the RAM to offers.\\
+It mapping is also called "chaining" and because 2 bits out of the address are used to route a write/read operation to a bank, only 14 bits are used for the actuall offset in the bank. Since 14 bits can only address 16384 values this system results in a waste of 75\% of the RAM to offers.\\
 
 \begin{figure}[H]
 \centering
@@ -470,11 +466,10 @@ It is called "chaining" and because 2 bits out of the address are used to route 
  \end{figure}
 
  \par
- The problem really is the Chain-4 chip. Nobody can remember who discovered first but the process to disable it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. In his article he described was he called the Mode-X. An undocumented mode with a resolution of 320x240 allowing up to four buffers in VRAM.\\
+ So the problem really is the Chain-4 chip. Nobody knows who discovered it first but the process to disable it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. In his article he described was he coined the Mode-X. An undocumented sequence of operations disabling Chain-4 allowing a resolution of 320x240 and full access to the 256K of RAM.\\
  \par
- Wolfenstein 3D does things slightly differently. It disables chain-4 but says in resolution 320x200. This mode is known as Mode-Y:\\
-\note{Why not use mode X. It offered square pixels ???!}
-\note{Ask John Carmack why they went for Mode-Y instead of Mode-X which offered square pixels.}
+ Wolfenstein 3D does things slightly differently. It disables chain-4 but keeps the resolution in 320x200. This mode is known as Mode-Y:\\
+\note{Ask John Carmack and John Romero why they went for Mode-Y instead of Mode-X which offered square pixels.}
  \par
   \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/init_vga.c}
@@ -489,7 +484,7 @@ The real magic is in function \cw{VL\_DePlaneVGA}:\\
 \end{minipage}
 \note{What is long mode? What is byte mode?}
  \par
- With that much RAM available, the VRAM is divided in four parts.:
+ By writing directely to the VGA registers SC (Sequence Controller) and CRTC (CRT Controller)the VGA VRAM is divided in four parts.:
  \begin{itemize}\label{SetupPages}
  \item 64K for Framebuffer 0
  \item 64K for Framebuffer 1
@@ -513,7 +508,7 @@ Let's look at speed first. With chain-4 out of the picture a developer is now in
 \end{minipage}
  \par
 
-Now the code sample from the hardware chapter to clear the screen become:\\
+Now the code sample from the hardware chapter to clear the screen just adds a modulo:\\
 \par
 \par
 \begin{minipage}{\textwidth}
@@ -522,8 +517,8 @@ Now the code sample from the hardware chapter to clear the screen become:\\
 \par
 The code looks innocuous...but as simple as it is, it cannot run at more than 5 frames per second. The problem is that we replaced something done in hardware with something done in software: the \cw{outp} instructions which are slow.\\
 \par
-The solution is to change how we draw onto the screen. Instead of going top to bottom and left to right, we need to go left to right and top to bottom which minimize the number of bank switch.
-
+The solution is to change how we draw onto the screen. Instead of going top to bottom and left to right, we need to go left to right and top to bottom which minimize the number of bank switch.\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/cleanScreenClever.c}
 \end{minipage}
@@ -531,10 +526,10 @@ The solution is to change how we draw onto the screen. Instead of going top to b
 \par
 This code can run without issues at 70 frames per second: Only 200 slow out instruction are used.\\
 \par
-This speed consideration has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. So everything in the engine is drawn this way: Walls, Sprites, Menu. Everything. The ramification of this hardware constraint are felt everywhere. From the way assets are stored (rotated 90 degres) and compressed.. In Wolfenstein 3D: Everything has to be vertical!\\
+This speed consideration has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. So everything in the engine is drawn this way: Walls, Sprites, Menu. Everything, absolutely everything is drawn vertically. The ramification of this hardware constraint are felt everywhere all the way to how assets are stored in RAM (rotated 90 degres). In Wolfenstein 3D: Everything has to be vertical!\\
 
 \par
-The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3 and then goes back to page 1 (notice there are three buffers but this is not triple-buffering). It never stops. It just instructs the CRT Controller that it should scan the framebuffer at a different offset after the next vsync.\\
+The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3 and then goes back to page 1 (notice there are three buffers but this is not triple-buffering). This solves tearing and it never stops drawing. It just instructs the CRT Controller that it should scan a framebuffer in VRAM at a different offset after the next vsync.\\
 \par
 The CRT Controller start scan offset is a 16 bits value which is updated with a little bit of assembly. The code would look as follow:\\
 \par
@@ -554,7 +549,7 @@ Would instead appear like that:\\
  \fullimage{crtc_scanstart_problem.png}
  \end{figure}
 \par
-Showing part of one page and a part of an other page. The framebuffer is also mis-aligned. The problem has to do with atomicity. Updating the CRTC starting address is a 16-bits value...but the \cw{out} instruction can only write 8-bits at a time. So if the pages are setup one after an other like this:
+Showing part of one page and a part of an other page and also showing a misalignment. The problem has to do with atomicity. Updating the CRTC starting address is a 16-bits value...but the \cw{out} instruction can only write 8-bits at a time. So if the pages are setup one after an other like this:
 \par
 \begin{figure}[H]
  \centering
@@ -576,7 +571,7 @@ How do you update atomically a 2 bytes value with 1 byte operation? Take a look 
 \end{flushright}
 \end{minipage}
 \par
-Notice how it uses a value of 208 instead of 200 pixels for the height? That doesn't make sense at first sight. I thought it was a typo (after all 0 and 8 are visually close). The trick is to use a little bit of padding after each page so the addresses only differ by their high byte value.
+Notice how it uses a value of 208 instead of 200 pixels for the height? That doesn't make sense at first sight. I thought it was a typo (after all 0 and 8 are visually close) but this was done on purpose. The trick achieved here is to use a little bit of padding after each page so the addresses only differ by their high byte value.
 
 
 \par
@@ -603,7 +598,7 @@ Now page 0 is at 0x0000, page 1 at 0x4100 and page 2 at 0x8200. Moving from any 
 
 
 \subsection{Profound Carnage}
-After the signon screen comes a second one: the "rating" screen. There were no official rating for video games in 1991 since the ESRB would be established in 1994 in response to criticism of controversial video games with excessively violent (a.k.a Doom) or sexual content. But the team came up with their own self-proclaimed PC-13: The now legendary "Profound Carnage-13".\\
+After the signon screen comes a second one: the "rating" screen. There were no official rating for video games in 1991 since the ESRB would not be established until 1994 in response to criticism of controversial video games with excessively violent (a.k.a Doom) or sexual content. But the team came up with their own self-proclaimed PC-13: The now legendary "Profound Carnage-13".\\
 \begin{figure}[H]
 \centering
 \fullimage{pg13.png}
