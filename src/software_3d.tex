@@ -1046,7 +1046,11 @@ I personally find the graphic explanation with SOH-CAH-TOA much more clear!
 
 
 \subsection{Drawing walls}
-Drawing the wall column for each rays may sound easy but it is in fact difficult. It is not hard in terms of mathematics but hard in terms of instructions clock consumption. To scale a texture of 64 pixels tall on the screen centered vertically is expensive. It turns out if you want to do it fast you need a few optimization. This part is where wolfenstein 3d took off and left other 3d engine in the dust. This is the part where lies the two secrets of the engine speed: Compiled scalers and deferred column rendering.\\
+Drawing the columns for each rays may sound easy but it is in fact difficult. It is not hard in terms of mathematics but hard in terms of instructions clock consumption. To scale a line a 64 pixels tall texture on the screen centered vertically is expensive. It turns out if you want to do it fast you need a few optimization. This is where Wolfenstein 3D took off and left other 3D engine in the dust. This is the part where lies the two secrets of the engine speed:
+\begin{enumerate}
+\item Compiled scalers
+\item deferred column rendering.
+\end{enumerate}
 \par
 
 \subsubsection{Compiled scalers}
@@ -1055,12 +1059,9 @@ With a distance available for a column, the engine is able to calculate a corres
  \begin{figure}[H]
 \centering
  \fullimage{scaler_valign.png}
- \caption{As the added pink line show, every column of pixels are centered vertically. There is no horizontal placing.}
  \end{figure}
 \par
-
-\par
- The naive approach would be to use a generic routine with the following prototype:\\
+As the manually added pink line shows, every column of pixels are centered vertically. There is no horizontal offset. In order to do that, a naive approach would be to use a generic routine looking something like:\\
 
 
 \par
@@ -1069,23 +1070,23 @@ With a distance available for a column, the engine is able to calculate a corres
 \end{minipage}
 
 \par
-But that would be a lot of instructions due mostly to the genericity of the function: Indeed it can accept any height from \cw{0} to \cw{INT\_MAX}. But there is a faster way and it involves the eternal RAM vs speed tradeoff: Pre-generate x86 code specialized to drawing all height of wall from 1 pixels to 200 (the height of the screen). This is done in \cw{BuildCompScale}:\\
+Which would involves a loop, a fixed point accumulator and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function since it can accept any height from \cw{0} to \cw{INT\_MAX}. But there is a faster way and it involves the usual RAM vs CPU tradeoff. By using a bit of RAM one can consume less CPU. The way the engine does it is by removing the genericity of the scaler and generate x86 code specialized to drawing specific height of wall ranging from 1 pixels to 200 (the height of the screen). This is all done in \cw{BuildCompScale}:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/compscale.c}
 \end{minipage}
 \par
-With this optimization, minifying a 64 textures to a 2 pixel height takes 13 instructions. Minifying to 4 pixels take 25 instructions. It doesn't get any faster than that!
+With this optimization, minifying a 64 textures to a 2 pixel height takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 120 pixels takes 841 instructions. The precompiled scaler have a fixed cost of 7 instructions per pixel: It doesn't get any faster than that!\\
 \par
-What is the cost of the precompiling these scalers? How much RAM does it use? It takes 1 + 6 instructions per pixel to scale a column. So if all size were generated from 2,4,6...152 (38 pairs of size), we could use Gauss method to calculate the size:\\
+What is the cost of the precompiling these scalers? How much RAM does it use? It takes 1 + 7 instructions per pixel to scale a column. So if all size were generated from 2,4,6...152 (38 pairs of size), we can use Gauss method to calculate the size:\\
 \par
-$154*38*6=35,112$ bytes\\
+$154*38*7=40,964$ bytes\\
 \par
-That cost was deemed too high, so past size 76 only every other size are generated (2,4,6,,..,72,74,76) and (78,82,86,...,144,148,152):\\
+That cost was deemed too high, so past size 76 only every other size are generated (2,4,6,,..,72,74,76) and (78,82,86,...,144,148,152). RAM consumption becomes:\\
 \par
-$78*19*6+9*230*6=21,312$ bytes\\
+$78*19*7+9*230*7=24,8642$ bytes\\
 \par
-
+A small price to pay for a huge boost in performances.
 
 
 
@@ -1097,7 +1098,7 @@ $78*19*6+9*230*6=21,312$ bytes\\
 
 
 \subsubsection{Deferred column drawing}
-There is a second level of trick to speed up rendering. The idea is to defer rendering a column of pixels with certain conditions are met. A naive raycaster/compiled scaler coupling would look like this:\\
+There is a second level of trick to speed up rendering. The idea is to defer rendering a column of pixels when certain conditions are met. A naive raycaster/compiled scaler coupling would look like this:\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/naive_raycaster_pseudocode.c}
@@ -1110,16 +1111,14 @@ But the engine is not done this way. Instead it buffers what to draw:\\
 \end{minipage}
 
 \par
-This buffering is done because the renderer allows itself to cheat a little when two rays a deemed similar enough. If rays are similar, they are all drawn to the same height, regardless of their distance from the player point of view. This process introduces a little distortion but unlock a formidable speed up: now the engine can write multiple column on the screen (up to eight) simultaneously.\\
+This buffering is done because the renderer allows itself to cheat a little when two rays a deemed similar enough. If rays are similar, they are all drawn to the same height, regardless of their distance from the player point of view. This process introduces a little distortion but unlock a formidable speed up: now the engine can write multiple column on the screen (up to eight) very fast.\\
 \par
-But what makes rays similar? The answer is two rays hitting the same wall and resulting in the same texture coordinate. In short this trick leverage wall magnification:
+What makes rays similar? The answer is two rays hitting the same wall and resulting in the same texture coordinate. In short this trick leverage wall magnification. In the following screenshots, the player is very close to a wall which completely cover the left part of the screen. It is obvious that the texture is magnified. Multiple consecutive rays hit a texture at the same horizontal coordinate:
 \begin{figure}[H]
  \centering
  \fullimage{post_optimization_1_show.png}
-\end{figure}
-In the previous screenshot, the player is so close to the wall that one column of wall texture spread across multiple column on the screen. Normally, because each column on the screen are at a different distance from the POV, there column should be magnified differently.\\
-\par
-The reason this works find it explanation if the way a frame is stored across the four VGA banks:
+% If we take a close look at how a framebuffer is stored in VRAM across banks we notice that consecutive column of walls are stored at the same memory location.
+
  \par
   \begin{minipage}{\textwidth}
  
