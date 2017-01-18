@@ -1047,10 +1047,10 @@ I personally find the graphic explanation with SOH-CAH-TOA much more clear!
 
 \subsection{Drawing walls}
 Drawing the columns for each rays may sound easy but it is in fact difficult. It is not hard in terms of mathematics but hard in terms of instructions clock consumption. To scale a line a 64 pixels tall texture on the screen centered vertically is expensive. It turns out if you want to do it fast you need a few optimization. This is where Wolfenstein 3D took off and left other 3D engine in the dust. This is the part where lies the two secrets of the engine speed:
-\begin{enumerate}
+\begin{itemize}
 \item Compiled scalers
-\item deferred column rendering.
-\end{enumerate}
+\item deferred column rendering
+\end{itemize}
 \par
 
 \subsubsection{Compiled scalers}
@@ -1104,7 +1104,7 @@ There is a second level of trick to speed up rendering. The idea is to defer ren
 \lstinputlisting[language=C]{code/naive_raycaster_pseudocode.c}
 \end{minipage}
 \par
-But the engine is not done this way. Instead it buffers what to draw:\\
+But the engine is not done this way. Instead it buffers what to draw like this:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wolf3d_raycaster_pseudocode.c}
@@ -1113,12 +1113,18 @@ But the engine is not done this way. Instead it buffers what to draw:\\
 \par
 This buffering is done because the renderer allows itself to cheat a little when two rays a deemed similar enough. If rays are similar, they are all drawn to the same height, regardless of their distance from the player point of view. This process introduces a little distortion but unlock a formidable speed up: now the engine can write multiple column on the screen (up to eight) very fast.\\
 \par
-What makes rays similar? The answer is two rays hitting the same wall and resulting in the same texture coordinate. In short this trick leverage wall magnification. In the following screenshots, the player is very close to a wall which completely cover the left part of the screen. It is obvious that the texture is magnified. Multiple consecutive rays hit a texture at the same horizontal coordinate:
+What makes rays similar? The answer is: Two rays hitting the same wall and resulting in the same \cw{v} texture coordinate. In short this optimization leverages wall magnification.\\
+
+\par
+The best case for this trick is shown in the following screenshot. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiples pixesl. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
 \begin{figure}[H]
  \centering
  \fullimage{post_optimization_1_show.png}
+\end{figure}
 % If we take a close look at how a framebuffer is stored in VRAM across banks we notice that consecutive column of walls are stored at the same memory location.
-
+It we take a closer look at how a frame is stored accross all four banks in the VGA, we notice that four consecutive column of pixels are stored at the same location in all four banks.\\
+\par
+With this property in mind, the engine buy cheating a little allows itself to write up to 8 columns in two passes (and three passes when column are not aligned on four bytes).
  \par
   \begin{minipage}{\textwidth}
  
@@ -1130,7 +1136,7 @@ What makes rays similar? The answer is two rays hitting the same wall and result
 
 
  \end{minipage}
-Notice how column representing wall are at the same address in the banks. Leveraging the VGA mask allows to write in multiple banks at the same time and therefore render column of pixels next to each others simultaneously. \\
+
 \par
 
 In practice, to achieve this trick, the engine must be very careful and factor in the four bank bytes alignment. The details of this are in the method \codeword{ScalePost} in \codeword{WL\_DRAW.C}.\\
@@ -1139,35 +1145,61 @@ In practice, to achieve this trick, the engine must be very careful and factor i
 \lstinputlisting[language=C]{code/ScalePost.c}
 \end{minipage}
 Because there can be many combinations of VGA bank alignment and number of pixels to draw:
-The VGA banks writing configuration is set via the 8 bits VGA mask as follow:
+The VGA banks writing configuration is set via the 8 bits VGA mask as follow:\\
+\par
+ \par
+ \begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/hardcoded_masks.c}
+\end{minipage}
+How these hard-coded mask values are used is easier to understand with a drawing of the VGA mask. 
+\begin{itemize}
+\item Bank 0 is selected when 1<<1 (1) is set to 1.
+\item Bank 1 is selected when 1<<2 (2) is set to 1.
+\item Bank 2 is selected when 1<<3 (4) is set to 1.
+\item Bank 3 is selected when 1<<4 (8) is set to 1.
+\end{itemize}
+\par
+
+
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/mask_banks.pdf}
  \end{figure}
 
 
-With the following layout:
+With these in mind, we can take a few example using the following layout where the engine wants to draw column of pixels:
 \begin{figure}[H]
 \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation1.pdf}
  \end{figure}
- One pass with mask set to 1+2=3.\\
+
+
+ To draw two column of pixels (under pixel 0 and 1) can be done with only one pass using VGA mask set to 1+2=3.\\
  \begin{figure}[H]
  \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation2.pdf}
  \end{figure}
-Two passes with mask set to 8 and then 1.
+
+
+
+
+
+If the two column are not properly aligned (like columns under pixels 3 and 4), the maks is of no help. Two passes with mask set to 8 and then 1 will be needed.
   \begin{figure}[H]
  \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation3.pdf}
  \end{figure}
 
+
+In the worse case scenario, the engine needs to draw eight column of pixels, under pixels 3,4,5,6,7,8,9 and A. Because of the poor alignemnt, three passes are needed.
   \begin{figure}[H]
  \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation4.pdf}
  \caption{Thee Passes with mask set to: 8,15,14}
  \end{figure}
 
+
+A better case where two passes allow to draw 6 columns of pixels:
    \begin{figure}[H]
  \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation5.pdf}
@@ -1177,37 +1209,38 @@ Two passes with mask set to 8 and then 1.
 
 The instruction \codeword{or al , al} can be surprising. It means test if al is equal to zero and set the flag. Back in the day it was more populate than \codeword{test al, al}
  the VGA bank masks are harcoded in an array: One for each pass:\\
- \par
- \begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/hardcoded_masks.c}
+
+
+
+In the following example, the engine has been modified to draw in pink column of pixels which were written "for free" thanks to the VGA mask manipulation. We can see that performances improvement is very significant with 50\% of wall pixels saved.
+
+\begin{minipage}{\textwidth}
+\begin{figure}[H]
+ \centering
+ \scaledimage{0.9}{post_optimization_1_show.png}
+\end{figure}
+\begin{figure}[H]
+ \centering
+ \scaledimage{0.9}{post_optimization_1_pink_show.png}
+\end{figure}
 \end{minipage}
 
 
-In the following example, the left wall is magnified. several rays hit the wall at the same texture location.
-\begin{figure}[H]
- \centering
- \fullimage{post_optimization_1_show.png}
-\end{figure}
-The engine takes advantage of it and draw several columns (posts) efficiently with the VGA. The engine was altered to show the optimized posts in pink.
-\begin{figure}[H]
- \centering
- \fullimage{post_optimization_1_pink_show.png}
-\end{figure}
+The defered renderer is less helpful when less magnification happens on the screen:\\
+\par
 
-In the previous scene, 20\% of the wall was optimized away. In the next two screenshot, the same process, this time with the `eagle' texture:
+\begin{minipage}{\textwidth}
 \begin{figure}[H]
  \centering
- \fullimage{post_optimization_2_show.png}
+ \scaledimage{0.9}{post_optimization_2_show.png}
 \end{figure}
 
 
 \begin{figure}[H]
  \centering
- \fullimage{post_optimization_2_pink_show.png}
+ \scaledimage{0.9}{post_optimization_2_pink_show.png}
 \end{figure}
- 
-To draw several column of pixels at the same time, the engine exploit the VGA banks and the masking mechanism seen in the Hardware section.
-Since up to eight column can be similar, there are many case of figure depending on the alignment with the VGA banks and how many pixels to draw:
+\end{minipage}
 
 
 
@@ -1268,17 +1301,20 @@ At runtime, upon casting each ray: if the ray hit a vertical wall the engine use
 
 
 \subsubsection{Door}
-Doors have no tickness.\\
-doorposition[] holds the amount the door is open, ranging from 0 to 0xffff
-  this is directly accessed by AsmRefresh during rendering\\
-  // don't close on anything solid\\
+Doors have no tickness. That would have been too complicated to do.\\
+\par
 \begin{figure}[H]
  \centering
  \fullimage{door_flat.png}
 \end{figure}
 
 \par
-TODO: Explaih half step added.\\
+This has to do with how the raycaster is detecting how far along a door is opened:\\
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/door.c}
+\end{minipage}
+
 \par 
  \par
 \begin{figure}[H]
@@ -1299,9 +1335,8 @@ TODO: Explaih half step added.\\
 
 
 \subsubsection{Push walls} 
-Push walls are very similar to doors except they "open" away from the player instead of sideway.\\
-\par
-Tom had to really push to get pushwalls (hidden walls).\\
+TODO.\\
+\note{Ask John Carmack and John Romero how it is done. And how much Tom had to push to get his pushwalls. This is especially suprising since Catacomb-3D had secret walls.}
 
 
 
@@ -1321,7 +1356,7 @@ Tom had to really push to get pushwalls (hidden walls).\\
 
 
 \subsection{Drawing things}
-Once the walls are drawn, it is time to render sprites such as enemies, items (ammos, weapons) and decoration (lamps, table, etc). Two goals must be reached:
+Once the walls are drawn, it is time to render sprites such as enemies, items (ammos, weapons) and decoration (lamps, table, etc) with two goals in mind:
  \begin{enumerate}
   \item Find which sprites are visible.
   \item Draw them correctly (parts hidden behind a wall should not be drawn)
@@ -1330,29 +1365,37 @@ Once the walls are drawn, it is time to render sprites such as enemies, items (a
 
 
 \subsubsection{Visible Sprite Determination}
-Building a list of visible sprite is done indirectly by leveraging raycaster information. The visible sprites are on visible tiles. So the raycaster remember all tiles it visited.\\
+Building a list of visible sprite is done indirectly by leveraging information gathered by the raycaster. The visible sprites are on visible tiles. So the raycaster mark all tiles visited when looking for a wall hit.\\
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/marked_out_room.pdf}
  \caption{Ray cast and visible spots.} 
 \end{figure}
-This is done with a 64x64 boolean array indicating if a tile was visited during raycasting. At the beginning of each frame, the engine clears the array:
+This is done in the simplest way with a 64x64 boolean array indicating if a tile was visited. At the beginning of each frame, the engine clears the array:
  \lstinputlisting[language=C]{code/clear_vis_wold3d.c}
+ \par
  Note that because register are 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations. Nowadays it is more efficient to use the C library.
  \lstinputlisting[language=C]{code/clear_vis_modern.c}
- Later in the assembly hand crafted procedure \codeword{AsmRefresh}
+ \par
+The ray caster (\codeword{AsmRefresh}) write \cw{true} in the visible tile array.
+
+\begin{minipage}{\textwidth}
   \lstinputlisting[language={[x86masm]Assembler}]{code/mark_vis_wold3d.asm}
-  
- To build a list of visible sprites, the engine goes over the full map and for each entity, check if a ray passed by its tile coordinate. If yes, the sprite is added to the visible list.
+\end{minipage}
+\par 
+
+The array allow to build a list of visible sprites. It is not the most subtle part of the engine since all sprites on the map are tested but it works:\\
 \par
-\bu{Trivia :} MAXVISABLE=50\\
-\par
+\begin{minipage}{\textwidth}
+ \lstinputlisting[language=C]{code/build_vis_list.c}
+ \end{minipage}
+ \par
 
 
 
 
 \subsubsection{Rendition}
-With a list of visible entities, the engine news to draw them on screen correctly. Each sprites is transformed from map space to player space. 
+With a list of visible entities, the engine needs to draw them on screen correctly. Each sprites is transformed from map space to player space using the same SOH-CAH-TOA math seen in the "Drawing Walls" section.
 
 \par
 \begin{figure}[H]
@@ -1360,15 +1403,7 @@ With a list of visible entities, the engine news to draw them on screen correctl
  \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
  \end{figure}
 \par
-The X coordinate is used to place a sprite horizontally on the screen. They don't need to be place vertically for the good reason that all sprites and texture are drown in the same 64x64 space representing 8 feet by 8 feet. As shown in the following screenshot, scaling vertically a sprite is enough to give the illusion of perspective:\\
-\par
-\begin{figure}[H]
- \centering
- \fullimage{drawing_things.png}
-\end{figure}
-
-Even objects with only a part on the ground (meat) of with wide empty in between (lamp with shadow) are actually just one sprite centered and scaled vertically:\\
-
+The X coordinate is used to place a sprite horizontally on the screen (the Y coordinate is used for clipping). Sprites don't need to be place vertically for the good reason that all sprites and texture are drown in the same 64x64 space representing 8 feet by 8 feet.\\
 \par
   \begin{minipage}{.5\textwidth}
      \fullimage{guard_sprite.png}
@@ -1378,6 +1413,19 @@ Even objects with only a part on the ground (meat) of with wide empty in between
    \end{minipage}
 
 \par
+
+
+
+ As shown in the following screenshot, scaling vertically a sprite is enough to give the illusion of perspective:\\
+\par
+\begin{figure}[H]
+ \centering
+ \fullimage{drawing_things.png}
+\end{figure}
+
+Even objects with only a part on the ground (meat) of with wide empty in between (lamp with shadow) are actually just one sprite centered and scaled vertically:\\
+
+
 
   \begin{minipage}{.5\textwidth} 
      \fullimage{sprite_food.png} 
@@ -1400,7 +1448,8 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 
 The transparency of the sprite is exploited to reduce the storage and RAM consumption. They are stored in a special format skipping transparent section. The routine in charge of drawing decompress a column of sprite while it draws which mean the precomiled scaler cannot be used to draw sprite since they don't handle transparency. Instead a custom assembly crafter routine takes care of decompressing sprite and scaling them on screen.
 \par
-TODO: C code sample?
+TODO: C code sample?\\
+TODO: How much RAM is saved?\\
 
 
 
@@ -1417,7 +1466,7 @@ TODO: C code sample?
 
 
 \subsubsection{Clipping}
-There is a second benefit to have wall and sprite in the same 64x64 coordinate system: It is easy to clip. Once the actor's distance is calculated, a height can be generated. There height are the same type calculated for the walls. As a result, for each column to find out if a column if behind a wall, the engine just compare the height from the occlusion array to the height of the actor:\\
+There is a second benefit to have wall and sprite in the same 64x64 coordinate system: It is easy to clip. Once the actor's position is transformed in player space, the distance Y allows to generate a height. These height are the same type calculated for the walls. As a result, for each column to find out if a column if behind a wall, the engine just compare the height from the occlusion array to the height of the actor:\\
 \par
 Drawing things far to near is good for transparency but does not guaranty correctness. When a sprite is partially behind a wall or a door, it has to be clipped. This is done thanks to an occlusion array. While drawing the walls and doors, the engine also maintains an array in which it records the height of the column:\\
 \par
@@ -1431,7 +1480,7 @@ Drawing things far to near is good for transparency but does not guaranty correc
 \lstinputlisting[language=C]{code/wallheight_usage.c}
 \end{minipage}
 \par
-Since all sprite and walls are in the same coordinate system, clipping is as easy as a height comparison:\\
+TODO: Clipping drawing with sprite and walls.\\
 
 
 
@@ -1560,7 +1609,8 @@ Knowing if an enemy can hear the main character gunfire is a simple lookup in a 
  \includegraphics[width=.5\textwidth]{imgs/drawings/soud_propagation/areabyplayer.pdf}
 \end{figure}
 \par
-37 long. Empirical value?
+37 long. Empirical value?\\
+\par
 
 
 
@@ -1569,7 +1619,7 @@ Knowing if an enemy can hear the main character gunfire is a simple lookup in a 
 
 
 
-However this is a simple model. When a gun is fired, all enemies which could hear it will shout "Achtung!" (Attention!") and converge toward the origin of the sound. That would get old pretty fast. So the designers introduced a little hack that goes a long way.
+However this is a simple model. When a gun is fired, all enemies which could hear it will shout "Achtung!" (Attention!") and converge toward the origin of the sound. That would get old pretty fast. So the designers introduced a little hack that goes a long way to simulate ambushes.
 
 \par
 \begin{figure}[H]
@@ -1619,7 +1669,7 @@ Each enemy is given specific orders which dictate his actions once he knows of y
 \textbf{Kevin Cloud. The Official Hint Manual for Wolfenstein 3D}
  \end{fancyquotes}
 
-\bu{Trivia :} Bug or dedication to ambush, a guard on a n AMBUSH tile will react ONLY to the player sight. Seeing an other actor die in front of him will not activate him.\\
+\bu{Trivia :} Bug or dedication, a guard on an \cw{AMBUSH} tile will react ONLY to the player sight. Seeing an other actor die in front of him will not activate him.\\
 
 
 \subsubsection{Patrolling}

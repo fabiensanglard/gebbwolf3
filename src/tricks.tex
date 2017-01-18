@@ -67,8 +67,9 @@ when the screen transition via fizzling:
   \scaledimage{.9}{fizzlefade/boss/screenshot_130.png}\\
 \end{minipage}
 
-
-The code responsible for this effect can be found in id\_vh.cpp, function FizzleFade. At first it is not obvious to understand how it works. I consider it to be one of the most beautiful trick of the engine:\\
+A naive approach would have been to reuse the pseudo random generator \cw{US\_RndT} and keep track of which pixels had been fizzled. But that would make the fade non-deterministic with regard to duration and that would also be a waste of CPU cycles since a same pixel coordinate (X,Y) could come up several times.\\
+\par
+It turns out there is a much faster and elegant way to do it. The code responsible for this effect can be found in id\_vh.cpp, function FizzleFade. It is in my humble opinion one of the most beautiful hack in Wolfenstein 3D. At first it is not obvious to understand how it works:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/fizzlefade.c}
@@ -77,13 +78,11 @@ The code responsible for this effect can be found in id\_vh.cpp, function Fizzle
 Which can be read as:\\
 \begin{itemize}
 \item Initialize \cw{rndval} to 1.
-\item Break it down in 8 + 89 bits: Ues these to generate X and Y coordinate.
+\item Break it down in 8 + 7 bits: Use 8 bits generate an X coordinate and 7 bits for a Y coordinate.
 \item Subject \cw{rndval} to a soup of XORing.
-\item When \cw{rndval} value is magically back to 1: Stop.
+\item When \cw{rndval} value is somehow back to 1: Stop.
 \end{itemize}        
-It looks like magic at first. How is \cw{rndval} supposed to be back to 1 ?!\\
-\par
-This technique is called Linear Feedback Shit Register. To make it work, one needs a register which will be right shifted each iteration. Since it is right shited, the right bit dissapear and a new one to the left is needed.\\
+It looks like magic at first. How is \cw{rndval} supposed to be back to 1?! This technique is called Linear Feedback Shit Register. To make it work, one needs a register which will be right shifted each iteration. Since it is right shited, the right bit dissapear and a new one to the left is needed.\\
 TODO:DRAWING\\
 \par
 To generate this new bit we introduce "taps" which are bit offset used to XOR together values and generate the new bit value\\

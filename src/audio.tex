@@ -7,9 +7,9 @@ At the heart of the PC, is the oscillator programmed via Programmable Interval T
 
 
 
-\subsection{Architecture}
+\subsection{Architecture and hearbeats}
 
-
+Blabla
 
 
 \subsection{Music}
@@ -125,7 +125,28 @@ The sound source is rotated with the same formula as the raycaster. Using SOH-CA
 In sound part, trivia with a bunch of translations: https://www.gamefaqs.com/pc/564603-wolfenstein-3d/faqs/1824\\
 Talk about morse code in episode 3 and 6, echo with romero head in doom2\\
 "BLASTER" oldschool parsing.
+
+
+
+
+
+
+
+
 \section{Pseudo random generator}
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[language={[x86masm]Assembler}, style=mystyle,basicstyle=\small]{code/rndtable.asm}
+\end{minipage}
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[language={[x86masm]Assembler}]{code/US_InitRndT.asm}
+\end{minipage}
+
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[ language={[x86masm]Assembler}]{code/US_RndT.asm}
+\end{minipage}
 US\_RndT\\
 rndtable\\
 During dying randon generation is done differently.
