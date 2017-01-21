@@ -1,13 +1,59 @@
-\section{Sound System}
-The sound system can be seen as an thread except it is not awaken by the operating system scheduler but rather by the Interrupt system. It relies heavily on 
+\section{Audio and Heatbeats System}
+The audio and hearbeat system run concurently with the rest of the program. On an operating system supporting neither processes nor threads that means using interrupts to stop normal execution and perform tasks on the side.\\
 \par
-PIT chips runs at 1.193182 MHz. That looks like an odd number which is once again due to history. Back in the 1980, when the first IBM PC 5150 was being designed, the common oscillator used in television circuitry was running at 14.31818 MHz. In order to reduce part cost, engineers built the PC timer around it dividing the frequency by 3 for the CPU (that is why the Intel ran at 4.7), dividing by 4 to 3.57Mhz for the CGA video card. By logically ANDing these signals together a frequency equivalent to the base frequency divided by 12 was created. This frequency is 1.1931816666 MHz. By 1991 the oscillator were much cheaper and it could have been anything....but backyward compatibility once again forbid it.\\
+But it is not as easy as working with threads: When an IRQ triggers, an ISR\footnote{Interrupt Service Routine} is called:
+
+\includegraphics[width=.9\textwidth]{imgs/drawings/irqs/explanation.png}
 \par
-At the heart of the PC, is the oscillator programmed via Programmable Interval Timer (PIT).\\
+ Since Interrupt keep coming from all sources, an ISR has two choices: Decide it needs a "long" time to run and disable other IRQs via the IMR \footnote{Interrupt Mask Register. Some interrupts like are not maskable}. This way to go introduces the problem of discarding information such as keyboard input or mouse inputs. Or not mask other IRQs and opt to run as fast as possible, keeping in mind the routine can be stopped (and never resumed).\\
+ \par
+ Wolfenstein 3D uses the latter approach and keep things in its ISR very small and short. To this effect everything in the audio and heartbeat system is written in assembly and it avoid "heavy" processing.
+
+\subsection{IRQs and ISRs}
+The IRQ and ISR system relies on two chips: The Intel 8254 which is a PIT \footnote{Programmable Interval Timers} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Controller}. The PIT features a crystal oscillating in square waves. On each edges, it decrements its three counters. When the counter hits zero, it generate an IRQ. One of the counter is connected to the PIC. 
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=.5\textwidth]{imgs/drawings/heatbeats.pdf}
+ \end{figure}
+\par
+
+The PIC's IRQ0-IRQ8 is mapped to the Interrupt Vector Offset 8 (resulting in mappoing to INT08-INT0F).\\
+
+\par
+\begin{figure}[H]
+\centering
+\begin{tabularx}{\textwidth}{ X X  }
+  \toprule
+  \textbf{IRQ} & \textbf{Type} \\ \bottomrule
+0 & System timer \\
+1 & Keyboard controller \\
+3 & Serial port COM2 \\ 
+4 & Serial port COM1 \\
+5 & Line print terminal 2 \\
+6 & Floppy controller \\
+7 & Line print terminal 1 \\
+8 & RTC timer \\
+12 & Mouse controller \\
+13 & Math co-processor \\
+14 & ATA channel 1 \\
+15 & ATA channel 2  \\
+\bottomrule
+\end{tabularx}
+\caption{Component quality for a game engine.}
+\end{figure}
+Using these two chips and writing on of its function address into the Interrupt Vector Table, the engine can have one of its method called at a regular time interval, effectively implementing a subsystem running concurently with everything else.\\
 
 
 
-\subsection{Architecture and hearbeats}
+\subsection{PIT and PIC}
+The PIT chips runs at 1.193182 MHz. That sounds like an odd arbitrary number which has an uncanny origin. Back in the 1980 when the first IBM PC 5150 was designed, the common oscillator used in television circuitry was running at 14.31818 MHz. In order to reduce part cost, engineers built the PC timer around it, dividing the frequency by 3 for the CPU (that is why the Intel ran at 4.7Mhz), dividing by 4 to 3.57Mhz for the CGA video card. By logically ANDing these signals together a frequency equivalent to the base frequency divided by 12 was created. This frequency is 1.1931816666 MHz. By 1991 the oscillator were much cheaper and it could have been anything but backyward compatibility once again dictated otherwise.\\
+\par
+CODE HERE TO SHOW ISR installation and diff frequencies.
+
+
+
+\subsection{Hearbeats}
 
 Blabla
 
@@ -75,11 +121,7 @@ Mode 5 - Hardware Triggered Strobe\\
 
 
 The audio and heatbeat system are started. This is done by reprogramming 8254-PIT and 8259-PIC timers to install an ISR\footnote{DOS Interrupt Service Routine}:\\
-\begin{figure}[H]
-\centering
- \includegraphics[width=.5\textwidth]{imgs/drawings/heatbeats.pdf}
- \end{figure}
-\par
+
 frequency = 1193181 / (value * 60)\\
 Inverse Frequency Sound format\\
 \par

@@ -1215,33 +1215,25 @@ The instruction \codeword{or al , al} can be surprising. It means test if al is 
 In the following example, the engine has been modified to draw in pink column of pixels which were written "for free" thanks to the VGA mask manipulation. We can see that performances improvement is very significant with 50\% of wall pixels saved.
 
 \begin{minipage}{\textwidth}
-\begin{figure}[H]
+
  \centering
  \scaledimage{0.9}{post_optimization_1_show.png}
-\end{figure}
-\begin{figure}[H]
- \centering
+\vspace*{0.5cm}
  \scaledimage{0.9}{post_optimization_1_pink_show.png}
-\end{figure}
+
 \end{minipage}
 
 
-The defered renderer is less helpful when less magnification happens on the screen:\\
+
 \par
 
 \begin{minipage}{\textwidth}
-\begin{figure}[H]
  \centering
  \scaledimage{0.9}{post_optimization_2_show.png}
-\end{figure}
-
-
-\begin{figure}[H]
- \centering
+ \vspace*{0.5cm}
  \scaledimage{0.9}{post_optimization_2_pink_show.png}
-\end{figure}
 \end{minipage}
-
+The defered renderer is less helpful when less magnification happens on the screen:\\
 
 
 
