@@ -355,6 +355,9 @@ To take full advantage of this optimization, the 3D renderer upload images to th
 \begin{minipage}{.3\textwidth}
      \fullimage{latched/134.png}
   \end{minipage}\
+
+\note{Images are stored woven. So each bank can be loaded in one \cw{memcpy}.}
+
 All these assets account for $48*24*4+14*8*16+23*24*32+224*48=34,816$ bytes. There is therefore $2^18-320*208*3 - 34,816=27,648$ bytes unused VRAM in the VGA.\\
 \par
 Of course, for this trick to work images source and destination have to be aligned on four byte. If you take a look at the location of each elements on screen you can see that elements are aligned on four horizontally. Vertically there is no such issue.
@@ -560,7 +563,7 @@ With the CPU/\cw{float}/\cw{int} problem out of the way, it is almost time to st
  \includegraphics[width=\textwidth]{imgs/drawings/coordinate_system.png}
 \end{figure}
 \par
-A map is 64 by 64. Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place: column height are 24:8. Position is also 24:8. Angle however is an int representing 10th of degrees with range [0, 3600].
+A map is 64 by 64. Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place: column height are 29:3. Position is 24:8. Angle however is an int representing 10th of degrees with range [0, 3600].
 
 
 
@@ -1077,6 +1080,7 @@ Which would involves a loop, a fixed point accumulator and intermediate variable
 \end{minipage}
 \par
 With this optimization, minifying a 64 textures to a 2 pixel height takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 120 pixels takes 841 instructions. The precompiled scaler have a fixed cost of 7 instructions per pixel: It doesn't get any faster than that!\\
+\note{Drawing showing compiler scaler scaling 64 pixels vertically to 16,32 and 120.}
 \par
 What is the cost of the precompiling these scalers? How much RAM does it use? It takes 1 + 7 instructions per pixel to scale a column. So if all size were generated from 2,4,6...152 (38 pairs of size), we can use Gauss method to calculate the size:\\
 \par
@@ -1151,6 +1155,7 @@ The VGA banks writing configuration is set via the 8 bits VGA mask as follow:\\
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/hardcoded_masks.c}
 \end{minipage}
+mapmasks[x\%4][numpixels]
 How these hard-coded mask values are used is easier to understand with a drawing of the VGA mask. 
 \begin{itemize}
 \item Bank 0 is selected when 1<<1 (1) is set to 1.
@@ -1284,7 +1289,9 @@ At runtime, upon casting each ray: if the ray hit a vertical wall the engine use
  \end{minipage}
 
 
-
+\bu{Trivia :} Textures are stored on HDD and RAM rotated 90 degres. This is because they are rendered as columns. It is easier to read them this way.\\
+\par
+\note{TODO: Insert image here.}
 
  
 
@@ -1440,6 +1447,7 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 
 The transparency of the sprite is exploited to reduce the storage and RAM consumption. They are stored in a special format skipping transparent section. The routine in charge of drawing decompress a column of sprite while it draws which mean the precomiled scaler cannot be used to draw sprite since they don't handle transparency. Instead a custom assembly crafter routine takes care of decompressing sprite and scaling them on screen.
 \par
+sprites are stored as segments in segment lists described by commands.\\
 TODO: C code sample?\\
 TODO: How much RAM is saved?\\
 
@@ -1479,7 +1487,14 @@ TODO: Clipping drawing with sprite and walls.\\
 
 
 
-
+\subsubsection{Drawing}
+Rendition of sprites is also done with scaler. But they cannot be used as it. The reason has to do with RAM consumption: Sprites are too many and too voluminous.\\
+\par
+The commercial version ships with XXX wall textures. They are opaque and uncompressed, therefore consum XXX bytes on HDD and RAM. Sprites are different and stored compressed. There are XXX sprites. At 64x64 resolution and one byte per pixel that would use XXX of RAM. But with the special format id used it only accounts for XXX . That is XXX byte less and XX\% of the uncompressed format.\\
+\par
+Sprites are stored as array of 64 columns (remmeber that because of the VGA, everything is drawn vertically). Each column entry uses RLE to code what is visible. Transparent sections are completely discarded. The encoding of a column is as follow:\\
+\par
+Precompiledscaler are patched on the fly to draw only all segments in the segment list.
 
 
 
@@ -1490,10 +1505,10 @@ TODO: Clipping drawing with sprite and walls.\\
 
 
 \subsection{Drawing weapon}
-Drawing the weapon at the bottom is straight forward. This part of the code just uses the precompiled scalar with no clipping. Nothing much to say about that :/!\\
-
-
-
+Drawing the weapon at the bottom is straight forward. It uses the same type of rendition for sprite but with specific code where clipping is disabled. Because weapon sprites features transparency it cannot be rendered with precompiled scaler.\\ \cw{ScaleShape}
+\par
+\cw{SimpleScaleShape} is a version of \cw{ScaleShape} with no clipping. Shapes are called compiled shapes.\\
+\note{Show 4 weapon sprites}
 
 
 
