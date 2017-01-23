@@ -17,7 +17,6 @@ A few quick stats can be gathered with \cw{cloc.py} utility:\\
 
 \par
 \begin{minipage}{\textwidth}
-\lstinputlisting{code/cloc.txt}
 \end{minipage}
 
 \par
@@ -531,7 +530,7 @@ This speed consideration has a fundamental impact on the engine: To draw anythin
 \par
 The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3 and then goes back to page 1 (notice there are three buffers but this is not triple-buffering). This solves tearing and it never stops drawing. It just instructs the CRT Controller that it should scan a framebuffer in VRAM at a different offset after the next vsync.\\
 \par
-The CRT Controller start scan offset is a 16 bits value which is updated with a little bit of assembly. The code would look as follow:\\
+The CRT Controller start scan offset is a 16 bits value which is updated with a little bit of assembly. First the high byte and then the low byte. The code would look as follow:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}]{code/pageflip.c}
@@ -571,7 +570,7 @@ How do you update atomically a 2 bytes value with 1 byte operation? Take a look 
 \end{flushright}
 \end{minipage}
 \par
-Notice how it uses a value of 208 instead of 200 pixels for the height? That doesn't make sense at first sight. I thought it was a typo (after all 0 and 8 are visually close) but this was done on purpose. The trick achieved here is to use a little bit of padding after each page so the addresses only differ by their high byte value.
+Notice how it uses a value of 208 for the height of a framebuffer? That doesn't make sense at first sight since the screen is 200 pixels tall. I thought it was a typo at first (after all \cw{0} and \cw{8} are visually close) but this was done on purpose. The trick achieved here is to use a little bit of padding after each page so the addresses only differ by their high byte value.
 
 
 \par

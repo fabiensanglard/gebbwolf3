@@ -1488,13 +1488,26 @@ TODO: Clipping drawing with sprite and walls.\\
 
 
 \subsubsection{Drawing}
-Rendition of sprites is also done with scaler. But they cannot be used as it. The reason has to do with RAM consumption: Sprites are too many and too voluminous.\\
+Rendition of sprites is also done with compiled scaler. However they cannot be used as they were generated. A compiler scaler draws its speed from its absence of parameters. It is essentially an unrolled loop, hardcoded with instructions reading from a fixed length of 64 pixels and writing an hardcoded length of minified/magnified pixels.\\
 \par
-The commercial version ships with XXX wall textures. They are opaque and uncompressed, therefore consum XXX bytes on HDD and RAM. Sprites are different and stored compressed. There are XXX sprites. At 64x64 resolution and one byte per pixel that would use XXX of RAM. But with the special format id used it only accounts for XXX . That is XXX byte less and XX\% of the uncompressed format.\\
+But sprites are almost never 64 pixels tall. They are usually small and feature transparent parts. Some even have "holes" and are composed of sequences of pixels separated by transparent areas. It is the case of the lamp which for most columns has an upper segment (the lamp) and a lower segment (the shadow).\\
 \par
-Sprites are stored as array of 64 columns (remmeber that because of the VGA, everything is drawn vertically). Each column entry uses RLE to code what is visible. Transparent sections are completely discarded. The encoding of a column is as follow:\\
+How to get the best of both words? The speed of hardcoded instructions combined with variable height capability? At first it seems impossible. But there is a little trick that can be used: The engine patches the generated code with early return instruction \cw{ret}. In order to to that, the patch location are generated along when the scaler are compiled.\\
 \par
-Precompiledscaler are patched on the fly to draw only all segments in the segment list.
+\note{struct of a compiler scaler pointer}
+\par
+There are 64 patch location per scaler (one for each length of pixels besides 64 desired), allowing to write a \cw{ret} instruction causing an early return.\\
+\par
+Patching the scaler is not enough. It only allows to draw a segment smaller than 64 pixels. But in order to draw a "hole" properly, the engine also needs to know how many pixels skip vertically in screenspace before starting the scaler on the next segment. This is were the \cw{width} property is used. The scaler compiler also saved 64 entries to convert sprites transparent height into screen space height. This operation is only a cheap lookup.\\
+\par
+But wait, there is more, It has to do with RAM consumption. The commercial version ships with XXX wall textures. They are opaque and uncompressed consuming 64x64xXXX=YYY bytes on HDD and RAM. But since sprites have transparency they are stored compressed.XXX sprites at 64x64 resolution and one byte per pixel that would use XXX of RAM. But with the special format id used it only accounts for XXX . That is XXX byte less and XX\% of the uncompressed format.\\
+\par
+\note{Sprite format inserted here}
+\par
+\par
+Sprites are stored as array of 64 columns (remmeber that because of the VGA, everything is drawn vertically). Each column entry uses RLE to code what is visible. Transparent sections are completely discarded.\\
+\par
+
 
 
 
@@ -1505,7 +1518,7 @@ Precompiledscaler are patched on the fly to draw only all segments in the segmen
 
 
 \subsection{Drawing weapon}
-Drawing the weapon at the bottom is straight forward. It uses the same type of rendition for sprite but with specific code where clipping is disabled. Because weapon sprites features transparency it cannot be rendered with precompiled scaler.\\ \cw{ScaleShape}
+Drawing the weapon at the bottom is straight forward. It uses the same type of rendition for sprite but with specific code where clipping is disabled.\\ \cw{ScaleShape}
 \par
 \cw{SimpleScaleShape} is a version of \cw{ScaleShape} with no clipping. Shapes are called compiled shapes.\\
 \note{Show 4 weapon sprites}

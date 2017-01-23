@@ -1,5 +1,5 @@
 \section{Menu Phase: 2D Renderer}
-With the VGA up and running and a robust double buffering system the game finally starts. The player enters the 2D renderer which displays the menu to setup the 3D game. It is pretty simple yet features a nice VGA trick where the four bank weak and cumbersome design turns into a strength.
+With the VGA up and running and a robust double buffering system ready to operate, the game finally starts. The player enters the 2D renderer which displays the menu to setup the 3D game. It is pretty simple yet features a nice VGA trick where the four bank weak and cumbersome design is turned into a strength.
 \par
 \begin{figure}[H]
 \centering
@@ -7,9 +7,7 @@ With the VGA up and running and a robust double buffering system the game finall
 \end{figure}
 \par
 
-
-
-Indeed with control over the bank mask, it is possible to write up to four pixels to the VRAM with only one write operation to the RAM! In the VGA layout below, you can see how pixels 0, 1, 2 and 3 are in different banks but at the same address (0x0000). By configuring the bank mask to 8+4+2+1 (15), it is possible to write to all banks simultaneously.\\
+With control over the bank mask, it is possible to write up to four pixels can be written to the VRAM with only one write operation to the RAM! In the VGA layout below, you can see how pixels 0, 1, 2 and 3 are in different banks but at the same address (0x0000). By configuring the bank mask to 8+4+2+1 (15), it is possible to write to all banks simultaneously.\\
 \par
 \begin{figure}[H]
 \centering
