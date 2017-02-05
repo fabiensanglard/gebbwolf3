@@ -1,16 +1,16 @@
 \section{Audio and Heartbeat}
 The audio and heartbeat system run concurrently with the rest of the program. On an operating system supporting neither processes nor threads that means using interrupts to stop normal execution and perform tasks on the side.\\
 \par
-But it is not as easy as working with threads: When an IRQ triggers, an ISR\footnote{Interrupt Service Routine} is called:
+When an IRQ triggers an ISR\footnote{Interrupt Service Routine} is called:
 
 \includegraphics[width=.9\textwidth]{imgs/drawings/irqs/explanation.png}
 \par
- Since Interrupt keep coming from all sources, an ISR has two choices: Decide it needs a "long" time to run and disable other IRQs via the IMR \footnote{Interrupt Mask Register. Some interrupts like are not maskable}. This way to go introduces the problem of discarding information such as keyboard input or mouse inputs. Or not mask other IRQs and opt to run as fast as possible, keeping in mind the routine can be stopped (and never resumed).\\
+ Since interrupts keep triggering constantly from various sources, an ISR must make a choice between two ways of operations: Decide it needs a "long" time to run and disable other IRQs via the IMR \footnote{Interrupt Mask Register. Some interrupts like are not maskable}. This way to go introduces the problem of discarding information such as keyboard input or mouse inputs. Or the ISR can decide not to mask other IRQs and return as fast as possible, keeping in mind the routine can be stopped (and never resumed).\\
  \par
  Wolfenstein 3D uses the latter approach and keep things in its ISR very small and short. To this effect everything in the audio and heartbeat system is written in assembly and it avoid "heavy" processing.
 
 \subsection{IRQs and ISRs}
-The IRQ and ISR system relies on two chips: The Intel 8254 which is a PIT \footnote{Programmable Interval Timers} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Controller}. The PIT features a crystal oscillating in square waves. On each edges, it decrements its three counters. When the counter hits zero, it generate an IRQ. One of the counter is connected to the PIC. 
+The IRQ and ISR system relies on two chips: The Intel 8254 which is a PIT \footnote{Programmable Interval Timers} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Controller}. The PIT features a crystal oscillating in square waves. On each edges, it decrements its three counters. When a counter hits zero it generate an IRQ. One of the three counters is connected to the PIC. 
 \par
 \begin{figure}[H]
 \centering
@@ -55,37 +55,131 @@ CODE HERE TO SHOW ISR installation and diff frequencies.
 
 \subsection{Hearbeats}
 
-Blabla
+The only output of the heartbeat system is a 64 bits variable call \cw{TimeCount}:\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C,morekeywords={longword}]{code/timecount.c}
+\end{minipage}
+\par
+It is updated at a rate of 70 units per seconds (to match VGA which runs at 70Hz). Thse units are called "ticks". Depending on how fast the audio system runs (from 150Hz to 7000Hz) it adjust how much it should increase \cw{TimeCount}.\\
+\par
+Every system in the engine uses this variable to pace itself. The renderer will not start rendering a frame until at least one tick has passed. The A.I system express action duration in tick units. And so on.\\
 
 
 \subsection{Music}
-IMF format. 0 sound effects, 8 channels for music. IMF files store the actual bytes sent to the AdLib's OPL2 chip, which uses FM synthesis to produce audio output.
+Only PC equipped with a FM synthetizer can play music (a.k.a: With an Adlib or a Soundblaster inside). The music system streams data to the sound cards.  Musics in the 90s are not in digitalized format like CD or MP3 nowadays (that would have taken too much storage space and bandwidth). Instead musics are stored on channels (simulating instruments) to which are streamed notes. The format used is close to the notorious MIDI but IMF\footnote{Id Music Format} is proprietary to id software and designed with OPL2 in mind (the raw format is exactly what is sent to the Adlib/Soundblaster synthetiser with no transformations). IMF has hardcoded playback rate and Wolfenstein 3D music run at 700 Hz.\\
 \par
-How to program the AdLib: quote trixter\\
+Hardware limitations dictated certain aspect of the design of the musics. The FM synthetiser (OPL2) has 9 channels (a.k.a instruments). Yet the composer, Bobby Prince, was asked to use only channel 1 to 8. This little trick wastes a channel on SoundBlaster cards but allows AdLib cards to use channel 0 to play sound simulatenously with the music (the SoundBlaster plays sound differently.).\\
+
+
+
+
+
+
+
+
+
+\subsubsection{AdLib/Soundblaster music programming}
 \par
-The Adlib (and the FM portion of the Sound Blaster, as it's a clone of the Adlib) is controlled by sending a series of instructions to a certain port (388h). When the Adlib was first conceived in 1986, it was tested on IBM PCs and ATs, none of which exceeded a speed of 6 MHz. They wrote their specification based on this, writing that while the Adlib required a certain amount of "wait time" between commands, it was okay to send them as fast as possible because no PC was faster than the minimum wait time. They later found out that a 386 was fast enough to send commands faster than the Adlib was expecting them, and they changed their specification to mention a minimum 35ms wait time between commands.\\
+Programming the OPL2 ouput was esoteric to say the least. Adlib and Creative did publish SDK but they were very expensive. Documentation was sparse and often cryptic. Two ports, one to select the card register and the other one to read/write data are used:\\
 \par
-Unfortunately, some games (Sky Shark, Budokan, and Windwalker, amongst others) had already been published using the older specification. Running these on today's modern PCs produces garbled sound because the FM chip on your sound card is being pushed beyond it's original specification.\\
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C,morekeywords={longword}]{code/audio_ports.c}
+\end{minipage}
 \par
-I talked to Jason Linhart, the founder and lead programmer of MicroMagic, in 1997 about this very phenomenon in Windwalker:\\
+When the AdLib first got released in 1986, developers were instructed to send music  to these ports "as fast as possible". At 4.77Mhz a PC was no able to outpace the Adlib. But as CPU got faster issues started to arise. User manual were amended: 
+
+
+\begin{fancyquotes}
+After writing to the register port, you must wait twelve cycles before sending the data; after writing the data, eighty-four cycles must elapse before any other sound card operation may be performed\footnote{http://www.oldskool.org/guides/oldonnew/sound}.
+ \bigskip \\
+ Alternatively you can issue one IN instruction.
+ \bigskip \\
+ \end{fancyquotes}
+\\
+\par
+Later, reliable specs were published: "Wait three point three (3.3) microseconds for the address, and twenty-three (23) microseconds for the data."\\
 \par
 
-"The original AdLib manual (before they shipped) did not call for ANY delays. The original IBM PC (4.77 Mhz) couldn't get ahead of the card. By the time it shipped they were telling use to do one IN instruction, and every time a new faster processor came out they added some delay to their recomendation. The old 8088 machines would not have worked with the 35 IN instructions now required, it would have slowed the machine down so much nothing else could get done."
-\par
 
-\subsection{Sound effects}
+
+
+
+
+
+
+
+
+\subsection{Sound effects and Digitized audio}
+The engine differenciates between Sound Effects and Digitized Sounds. That is where things become complex:
 \par
 \begin{figure}[H]
 \centering
  \fullimage{audio/audio_settings.png}
  \end{figure}
 \par
+The audio configuration screen is confusing. Sound effects and Digitized sounds are the same thing: Play sound for a short amount of time but because of the diversity of hardware, sound effects are stored in three formats: Once for PC Speaker, once for Adlib and once for SoundBlaster/Disney Sound Source. The sounds were stored in the same order and separated by format by Muse. The header generated by Muse is seft explanatory.\\
+
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C,morekeywords={longword}]{code/muse_header.c}
+\end{minipage}
+\par
+To transparently store all these sound effects, they are packed in AudioT format, once again an id Software proprietary format. An oditiy: The format can store PC speaker sound, Adlib sound and digitized sounds...but the later is never used. Only PC speaker and Adlib sounds are stored in the \cw{AUDIO.*} files, the digitized sound are in thecw{VMSWAP.*} archive.\\
+\note{Question to Johns : Why such a design?} 
+\par
+
+
+
+
 
 \subsubsection{PCM}
+Today (2016), digitized sounds have become standard but they were high end in the early 90s. The gave SoundBlaster an edge over Adlib which made them the defactor standard. Sounds are stored in PCM\footnote{Pulse-Code modulation} format where sound is sample at a certain rate, over two channels (left and right) at a certain precision (usually 16 bits values).\\
+That encoding it is enough to reconstruct something of high fidelity (as a reference point audio CD uses 44Hz, 16 bits stereo sampling).\\
+\par
+
+Wolfenstein 3D sounds are stored in XXX format at XXX rate.
 
 
-\subsubsection{Solving the PC Speaker problem: PWM}
-Pulse Width Modulation, or PWM, is a technique for getting analog results with digital means.
+
+haha: // if the game was paused a LONG time
+VGA: 70Hz
+audio: Depends on quality, three levels of fidelity.
+
+\par
+Stereo system:\\
+\par
+
+On a "high-end" stereo SoundBlaster Pro with left and right channel, the sound is more elaborated: The sound source is rotated with the same formula as the raycaster. Using SOH-CAH-TOA. Intensity is hardcoded 0-15:\\
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/audio_y_rotate.png}
+ \end{figure}
+ \par
+ \begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/audio_x_rotate.png}
+ \end{figure}
+\par
+In sound part, trivia with a bunch of translations: https://www.gamefaqs.com/pc/564603-wolfenstein-3d/faqs/1824\\
+Talk about morse code in episode 3 and 6, echo with romero head in doom2\\
+"BLASTER" oldschool parsing.
+
+
+
+\subsubsection{Sounds on Adlib}
+\subsubsection{Sounds on Disney Sound Source}
+
+
+
+\subsubsection{Sound on PC Speaker}
+Solving the PC Speaker problem: PWM\\
+\par
+\begin{verbatim}
+"http://www.shikadi.net/moddingwiki/Inverse_Frequency_Sound_format"
+\end{verbatim}
+The hardware chapter described a problem for sound effects: The default PC speaker can only generate square waves. Pulse Width Modulation, or PWM, is a technique for getting analog results with digital means.
 
 
 
@@ -146,28 +240,10 @@ It works but there is a major flaw with this technique: The engine is non-determ
 haha joke about LONG time.\\
 \bu{Trivia :} When playing a recording, the engine bypasses the timer and hardcoded tics: (tics = DEMOTICS;). The demo was likely recorded at 15fps which is consistent with what a 386DX33 would have produced
 
-haha: // if the game was paused a LONG time
-VGA: 70Hz
-audio: Depends on quality, three levels of fidelity.
-
-\par
-Stereo system:\\
-\par
-The sound source is rotated with the same formula as the raycaster. Using SOH-CAH-TOA. Intensity is hardcoded 0-15:\\
-\par
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/audio_y_rotate.png}
- \end{figure}
- \par
- \begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/audio_x_rotate.png}
- \end{figure}
-\par
-In sound part, trivia with a bunch of translations: https://www.gamefaqs.com/pc/564603-wolfenstein-3d/faqs/1824\\
-Talk about morse code in episode 3 and 6, echo with romero head in doom2\\
-"BLASTER" oldschool parsing.
+\subsubsection{TODO}
+TAlk about soud blaster parsing of options.\\
+Talk about DMA requests from Sound Blaster.\\
+PC Speaker to play Digitized sounds ? How  ?\footnote{You can hear the difference here: https://www.youtube.com/watch?v=1BtlsjJRnFU}\\
 
 
 
@@ -176,23 +252,11 @@ Talk about morse code in episode 3 and 6, echo with romero head in doom2\\
 
 
 
-\section{Pseudo random generator}
-
-\begin{minipage}{\textwidth}
-\lstinputlisting[language={[x86masm]Assembler}, style=mystyle,basicstyle=\small]{code/rndtable.asm}
-\end{minipage}
-
-\begin{minipage}{\textwidth}
-\lstinputlisting[language={[x86masm]Assembler}]{code/US_InitRndT.asm}
-\end{minipage}
 
 
-\begin{minipage}{\textwidth}
-\lstinputlisting[ language={[x86masm]Assembler}]{code/US_RndT.asm}
-\end{minipage}
-US\_RndT\\
-rndtable\\
-During dying randon generation is done differently.
+
+
+
 
 
 

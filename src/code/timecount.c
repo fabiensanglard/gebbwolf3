@@ -1,0 +1,1 @@
+longword TimeCount;

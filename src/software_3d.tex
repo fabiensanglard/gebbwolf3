@@ -930,7 +930,7 @@ At close range (12 feet) the distortion is straight up unpleasant. To avoid this
 \begin{figure}[H]
 
  \input{imgs/drawings/fish_eye/d_vs_z.tex}
- \caption{blabla.} \label{fig:Raycasting2}
+\label{fig:Raycasting2}
  
 \end{figure}
 
@@ -1490,13 +1490,19 @@ TODO: Clipping drawing with sprite and walls.\\
 \subsubsection{Drawing}
 Rendition of sprites is also done with compiled scaler. However they cannot be used as they were generated. A compiler scaler draws its speed from its absence of parameters. It is essentially an unrolled loop, hardcoded with instructions reading from a fixed length of 64 pixels and writing an hardcoded length of minified/magnified pixels.\\
 \par
-But sprites are almost never 64 pixels tall. They are usually small and feature transparent parts. Some even have "holes" and are composed of sequences of pixels separated by transparent areas. It is the case of the lamp which for most columns has an upper segment (the lamp) and a lower segment (the shadow).\\
+Even though sprites are drawn in the same 64x64 space as wall textures, they almost never use all of it. They are usually smaller than 64 pixels and often feature transparent parts. Some even have "holes" and are composed of sequences of pixels separated by transparent areas. It is the case of the lamp which for most columns has an upper segment (the lamp) and a lower segment (the shadow).\\
+\par
+As a result sprites are stored in compressed format, discarding transparent data.
 \par
 How to get the best of both words? The speed of hardcoded instructions combined with variable height capability? At first it seems impossible. But there is a little trick that can be used: The engine patches the generated code with early return instruction \cw{ret}. In order to to that, the patch location are generated along when the scaler are compiled.\\
 \par
 \note{struct of a compiler scaler pointer}
 \par
 There are 64 patch location per scaler (one for each length of pixels besides 64 desired), allowing to write a \cw{ret} instruction causing an early return.\\
+\par
+\begin{minipage}{\textwidth}
+  \lstinputlisting[language={[x86masm]Assembler}]{code/self_modifying.asm}
+\end{minipage}
 \par
 Patching the scaler is not enough. It only allows to draw a segment smaller than 64 pixels. But in order to draw a "hole" properly, the engine also needs to know how many pixels skip vertically in screenspace before starting the scaler on the next segment. This is were the \cw{width} property is used. The scaler compiler also saved 64 entries to convert sprites transparent height into screen space height. This operation is only a cheap lookup.\\
 \par
