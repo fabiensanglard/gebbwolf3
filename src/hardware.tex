@@ -573,7 +573,7 @@ The problem with this design is that programmers did not have a linear framebuff
  
 
 \par
-To configure this mess of planes and circuitry, the four controllers had a set of 300 poorly documented registers to setup. Needless to say few programmers got to dive in the internal of this thing. My first drawing of the VGA was actually deceiving since the register system and architecture of the VGA was hell as confirm the diagram from IBM VGA Reference:\\
+To configure this mess of planes and circuitry, the four controllers had a set of 300 poorly documented registers to setup. Needless to say few programmers got to dive in the internal of this thing. My first drawing of the VGA was actually deceiving. The register system and architecture of the VGA were a mess as confirm the official IBM VGA Reference:\\
  \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/ibm_vga.pdf}
@@ -667,7 +667,7 @@ Pretty much everything else is bad:\\
 
  
   \subsection{VGA Programming: Mode 13h}
-  Mode 13h is far more appealing since it offers a lower resolution of 320x200 with 256 colors at 70Hz. It also has the advantage of faking linear buffer: A special chip called Chain-4 uses the lower 2 bit of the RAM address to automatically program the mask and roo the operation to the appropriate VGA RAM bank. This convenience mechanism was added because Mode 13h was meant to display static images and a linear address space would make it easy for developer to copy from RAM to VRAM.\\
+  Mode 13h is far more appealing since it offers a lower resolution of 320x200 with 256 colors at 70Hz. It also has the advantage of faking linear buffer. A special chip called Chain-4 uses the lower 2 bit of the RAM address to automatically program the mask and roo the operation to the appropriate VGA RAM bank. This convenience mechanism was added because Mode 13h was meant to display static images and a linear address space would make it easy for developer to copy from RAM to VRAM.\\
   \par
  \begin{figure}[H]
 \centering
@@ -695,7 +695,7 @@ The side effect is that 75\% of the RAM is wasted (since only 14 bits were usabl
   \lstinputlisting[ language={[x86masm]Assembler}]{code/vga_mode13.asm}
   
   \par
-  The \codeword{int 10} is a software interrupt call to the BIOS routine in charge of Graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA register with the corresponding mode. After the VGA is initialized one can write to the mapped 0xA000 e.g: Clear the screen to black:\\
+  The \codeword{int 10} is a software interrupt call to the BIOS routine in charge of Graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA register with the corresponding mode. After the VGA is initialized one can write to the mapped 0xA000. It is simpler to follow with a code sample, here is some code to clear the screen to black:\\
   
   \begin{minipage}{\textwidth}
   \lstinputlisting[language=C]{code/clear_vga.c}
@@ -739,7 +739,7 @@ In this example the CPU has finished writing the framebuffer (on the left) and t
 \includegraphics[width=\textwidth]{imgs/drawings/doublebuffer_after.eps}
 \end{figure}
 \par
-But if the CPU is fast enough (faster than 70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here: The next frame was drawn with the circle moved to the right. The electron bean did not know what and just kept on scanning the framebuffer. The result on screen is now a composite of two frames: It looks like two frames were torn and tapped together. Hence the name "tearing".\\
+But if the CPU is fast enough (faster than 70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here. The next frame was drawn with the circle moved to the right. The electron bean did not know what and just kept on scanning the framebuffer. The result on screen is now a composite of two frames. It looks like two frames were torn and tapped together. Hence the name "tearing".\\
 \par
 With two buffers (a.k.a double buffering) the CPU can start writing in the second framebuffer without messing with the framebuffer being scanned to the screen\footnote{Now the CPU speed is capped by the CRT refresh rate. Triple buffering can solve this at the price of frame latency.}. No more tearing!
 
@@ -810,7 +810,7 @@ Even though adoption was improving, a fast majority of PCs had no sound cards wh
 
 
   \subsection{Sound Blaster}
-  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative labs. It was a smart product which clearly was going after Adlib dominant position. Not only they were equipped with the same OPL2 chip providing 100\% compatibility with Adlib musics playback, they were technologically superior with a DSP\footnote{An Intel MCS-51 market as a "Digital Sound Processor", not "Digital Signal Processor"}  allowing PCM playback (digitized sounds) at 8 bits per sample and 23Hz. The card also came with a DA-15 port allowing connection of a joystick!. That is right: The only way to connect a joystick to a PC was to buy a sound card\footnote{In the late 90s the only way to have a CD-ROM reader was also to buy a soundcard}.\\ 
+  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative labs. It was a smart product which clearly was going after Adlib dominant position. Not only they were equipped with the same OPL2 chip providing 100\% compatibility with Adlib musics playback, they were technologically superior with a DSP\footnote{An Intel MCS-51 market as a "Digital Sound Processor", not "Digital Signal Processor"}  allowing PCM playback (digitized sounds) at 8 bits per sample and 23Hz. The card also came with a DA-15 port allowing connection of a joystick!. That is right, the only way to connect a joystick to a PC was to buy a sound card\footnote{In the late 90s the only way to have a CD-ROM reader was also to buy a soundcard}.\\ 
 \par
 
 \begin{figure}[H] 
