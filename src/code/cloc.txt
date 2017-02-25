@@ -1,8 +1,8 @@
-wolfsrc\$ cloc-1.64.pl .
+$ cloc-1.64.pl .
 
-      96 text files.
-      94 unique files.                              
-      27 files ignored.
+96 text files.
+94 unique files.                              
+27 files ignored.
 
 ---------------------------------------------------------
 Language        files       blank     comment        code

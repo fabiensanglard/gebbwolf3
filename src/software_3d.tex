@@ -768,15 +768,15 @@ The variant of DDA is implemented in a fully handcrafted 740 lines of assembly r
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/flipflop.c}
 \end{minipage}
-This algorithm results in \cw{jmp} heavy instructions but on a an architecture devoid of pipeline and code cache such as the 386 it is not a problem at am.\\
+This algorithm results in \cw{jmp} heavy instructions but on a an architecture devoid of pipeline and code cache such as the 386 it is not a problem at all.\\
 \par
-To accelerate \cw{cos}, \cw{sin} and \cw{tan} calculation, the engine uses lookup table: One entry for each 360 degres. \cw{tan} is expecially useful for DDA algorithm: When advancing 1 on the X axis, the ray moves up $tan(\alpha)$ on the Y axis. The reciprocal is calculate as follow: Move 1 on Y axis, move $tan(90-\alpha)$ on X axis
-
-\par
+This part of the code relies heavily on the trigonometric circle principles:
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/unit_circle.tex}
 \end{figure}
+\par
+\cw{tan} is expecially useful for DDA algorithm: When advancing 1 on the X axis, the ray moves up $tan(\alpha)$ on the Y axis. The reciprocal is calculate as follow: Move 1 on Y axis, move $tan(90-\alpha)$ on X axis. To accelerate \cw{cos}, \cw{sin} and \cw{tan} calculation, the engine uses lookup table: One entry for each 360 degres (read it in details in the "Tricks" section.
 
 
 
@@ -796,9 +796,10 @@ To accelerate \cw{cos}, \cw{sin} and \cw{tan} calculation, the engine uses looku
 
 
 
-\subsubsection{Calculate column height}
-Before proceeding to the next session about fish eye projection correction, here is a reminder of something we all learned in highschool: SOH-CAH-TOA.
 
+\subsubsection{High school math 101}
+Before proceeding to the next session about fish eye projection correction, a short reminder of something we all learn in highschool: SOH-CAH-TOA which is the fundation of most calculations in the engine.\\
+\par
  \begin{fancyquotes}
   I'm no super mathematician-- I learned high school math well enough to solve real world problems with it.\\
  \par
@@ -814,10 +815,15 @@ Before proceeding to the next session about fish eye projection correction, here
 
 
 
-This property is used everywhere in Wolfesnteind and this drawing above is all you need to understand fish eye correction and coordinate projection (used to place player, and calculate sounds).
+These properties are used everywhere in Wolfesntein 3D. This is all you need to understand fish eye correction and coordinate projections which is used to place player, enemies, items and calculate sounds locations.\\
 
-\par
-Once a ray intersection with a wall (from coordinate (\cw{viewx},\cw{viewy} to (\cw{xintercept},\cw{yintercept})) as been found, it is time to calculate how tall the column of pixel for this ray should be. This happens in function \cw{CalcHeight}:\\
+
+
+
+
+
+\subsubsection{Calculate column height}
+Once the intersection between a ray and a wall is found (from coordinate (\cw{viewx},\cw{viewy} to (\cw{xintercept},\cw{yintercept})), it is time to calculate how tall the column of pixel for this ray should be. It happens in function \cw{CalcHeight}:\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/CalcHeight.c}
@@ -1091,8 +1097,11 @@ That cost was deemed too high, so past size 76 only every other size are generat
 $78*19*7+9*230*7=24,8642$ bytes\\
 \par
 A small price to pay for a huge boost in performances.
-
-
+Note: "Thinking" screenshot here to show scaler have to be regenerated.\\
+\begin{figure}[H]
+ \centering
+ \fullimage{thinking.png}
+\end{figure}
 
 
 
@@ -1513,8 +1522,19 @@ But wait, there is more, It has to do with RAM consumption. The commercial versi
 \par
 Sprites are stored as array of 64 columns (remmeber that because of the VGA, everything is drawn vertically). Each column entry uses RLE to code what is visible. Transparent sections are completely discarded.\\
 \par
+The same "draw" multiple column at once is used. Is it especially powerful when enemy are magnified.\\
 
+\par
+\begin{figure}[H]
+ \centering
+ \fullimage{magnified_enemy_before.png}
+\end{figure}
 
+\par
+\begin{figure}[H]
+ \centering
+ \fullimage{magnified_enemy_after.png}
+\end{figure}
 
 
 

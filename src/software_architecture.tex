@@ -13,21 +13,22 @@ Once downloaded and decompressed, it turns out the archive \codeword{woldsrc.zip
 \lstinputlisting{code/unzip.txt}
 \end{minipage}
 \par
-A few quick stats can be gathered with \cw{cloc.py} utility:\\
+A few quick stats can be gathered with \cw{cloc.py} utility. Lines of code is not a meaningful metric against a single codebase but it is an excellent tool to extract proportions.\\
 
 \par
 \begin{minipage}{\textwidth}
+\lstinputlisting[]{code/cloc.txt}
 \end{minipage}
 
 \par
-Twenty seven thousands lines of code which by 2016 standard it is very little. As the stats show the game is written 90\% in C\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code are deceiving. For a game so inherently tied to the hardward it is much more difficult to understand what is going on compared to Doom or Quake.\\
+Twenty seven thousands lines of code is very little compared to a game from 2016 usually made of millions of lines of code. The game is written 90\% in C\footnote{id Software would not switch to C++ until Doom 3 around 2000.} with assembly optimization for bottlenecks such as video or audio processing. For a game so inherently tied to the hardware it is much more difficult to understand what is going on compared to Doom or Quake.\\
 \par
 \begin{figure}[H]
 \centering
   \begin{tikzpicture}[font=\small]
     \begin{axis}[
       width=\textwidth,
-      height=0.6\textwidth,
+      height=0.55\textwidth,
       ybar=0.6\textwidth,
       bar width=20pt,
       ylabel={Lines of Code},
@@ -65,7 +66,7 @@ It's "COLUMN", you dumb FUCK!\\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
  
-The archive contains more than just \codeword{.H} (headers) and \codeword{.C} (code) files. Also present are:
+The archive contains more than just \codeword{.H} (headers) and \codeword{.C} (code) files.
 \begin{itemize}
 \item \codeword{GOODSTUF.TXT:} Two emails from fans demonstrating the success of the game: An ex-POW and a Microsoft employee.
 \item \codeword{.ASM:} Assembly routines to optimize 3D renderer. Also contains low level routines for I/O.
@@ -107,7 +108,7 @@ Note the three systems communicate via shared memory. The renderer issue music a
 
 
 \subsection{Unrolled loop}
-With the big picture in mind, we can dive into the code and unroll the main loop (\cw{int main()}) to reveals two renderers (the sound system is interrupt driven and therefore is out of \cw{main}). An important precision about data types: Because the game is using Real Mode, C types don't mean what people would expect from a 32 bits architecture.\\
+With the big picture in mind, we can dive into the code and unroll the main loop (\cw{int main()}) to reveals two renderers (the sound system is interrupt driven and therefore is out of \cw{main}). Because the game is using Real Mode, C types don't mean what people would expect from a 32 bits architecture.\\
 \begin{itemize}
 \item \cw{int} and \cw{word} are 16 bits long.
 \item \cw{long} and \cw{dword} are 32 bits long.
@@ -163,7 +164,10 @@ The sound system is started via the Sound Manager. It driven by Interrupt servic
 
 \section{Architecture}
 
-The engine is contained in WL\_* files which rely on ID\_* sub-systems called Managers. There are seven of them in total:\\
+The source code is structured in two layers. WL\_* files are high-level layers relying on low-level of ID\_* sub-systems called Managers interacting with the hardware.\\
+\note{Add drawing of layers here}.\\
+\par
+There are seven managers in total:\\
 \begin{itemize}
 	\item Memory
 	\item Page
