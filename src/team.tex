@@ -3,13 +3,21 @@
 \begin{document}
 In 1990 a small company based in Shreveport, Louisiana was at the top of the shareware world. As a video game subscription service, Softdisk produced and mailed new games every month to its members. Business was good but some of its employees had other ambitions. They thought they had the skills to make it big and they wanted to prove it.\\
 \par
-<<<<<<< HEAD
-They had created a new way to program side scrolling. They called the technology "Adaptive tile refresh" and it enabled hardware scrolling on a PC capable of rivaling with a NES. In early 1990 they worked a week on evenings and the weekend in secrecy using borrowed Softdisk computers. The group's goal was to demonstrate their skills to Nintendo by replicating a level of Mario 3 on a PC. Unfortunately, "Ideas from the Deep" as they called themselves failed to convince Nintendo to give them a contract. As impressed as they were, the Japanese firm wanted the Mario series to remain exclusive to Nintendo consoles \\
-=======
-For their first attempt to break free, in early 1990, they worked a week during evening and the weekend in secrecy using borrowed Softdisk computers. They came up with a technical prowess known as "Adaptive tile refresh" which enable hardware scrolling on a PC capable of rivaling with a NES. The small group's hope was to demonstrate their skills to Nintendo by replicating a level of Mario 3. Unfortunately, "Ideas from the Deep" as they called themselves failed to convince Nintendo to give them a contract. As impressed as it was, the Japanese firm wanted the Mario series to remain exclusive to Nintendo consoles \\
->>>>>>> 79bef15259e833ae589ad67904cf20408c045b87
+They had created a new way to program side scrolling. They called the technology "Adaptive tile refresh" and it enabled hardware scrolling on a PC capable of rivaling with a NES. In early 1990 they worked a week on evenings and the weekend in secrecy using borrowed Softdisk computers. The group's goal was to demonstrate their skills to Nintendo by replicating a level of Mario 3 on a PC. The were succesful in building a clone of Mario  but unfortunately, "Ideas from the Deep" as they called themselves failed to convince Nintendo to give them a contract. As impressed as they were, the Japanese firm wanted the Mario series to remain exclusive to Nintendo consoles.\\
 \par
-But this episode was enough to convince them that not only they had the talent to feed their ambitions, they also had the teamwork and work ethic to potentially go all the way. In February 1991 four of Softdisk employees took the leap of faith and founded their own company. They named it "id Software"\footnote{For ample details and fascinating read get a copy of "Masters of Doom".}. 
+\begin{fancyquotes}
+We sent this demo to Nintendo of America, they in turn sent it to Kyoto to the mothership office, and the execs there saw the demo and were really impressed. However, they didn't want their intellectual property on anything but their own hardware, so they told us Good Job and You Can't Do This.\footnote{Super Mario Bros. 3 Demo (1990) by John Romero: https://vimeo.com/148909578}
+ \bigskip \\
+\textbf{John Romero - Programmer}
+ \end{fancyquotes}
+
+ \begin{figure}[H]
+   \fullimage{mario_ifd.png}
+\caption{Mario 3 on PC. Notice "IFD" for "Ideas From the Deep".}
+\end{figure}
+
+\par
+This episode was enough to convince them that not only they had the talent to feed their ambitions, they also had the teamwork and work ethic to potentially go all the way. In February 1991 four of Softdisk employees took the leap of faith and founded their own company. They named it "id Software"\footnote{For ample details and fascinating read get a copy of "Masters of Doom".}. 
 
  \begin{figure}[H]
 \centering  
@@ -25,17 +33,13 @@ But this episode was enough to convince them that not only they had the talent t
 \end{tabularx}
 \caption{id Software founding members.}\label{fig:Id Software team}
 \end{figure}
-They immediately used the technology developed for "Mario 3 PC" to release their own titles and build their own Intellectual Property. They did not waste time, shipping no less than four title.
+They immediately used the technology developed for "Mario 3 PC" to release their own titles and build their own Intellectual Property. They did not waste time, shipping no less than three titles in a year.
 \begin{itemize}
-  \item Dangerous Dave (1988)\footnote{Dangerous Dave is a solo project of John Romero predating Id's formation, but Id Software produced its first sequel and it is sometimes regarded as an early Id Software title. Later Dangerous Dave sequels were not made by Id, nor were later Catacomb titles.}
-  \item Commander Keen
-  \begin{itemize}
-    \item Episode 1,2 and 3: Invasion of the Vorticons (December 14th, 1990)
-    \item Episode 4, 5 and 6: Good Bye Galaxy (December 15th, 1991)
-    \item Standalone game: Aliens Ate My Baby Sitter (December 1991)
-  \end{itemize}
+    \item Commander Keen Episode 1,2 and 3: Invasion of the Vorticons (December 14th, 1990)
+    \item Commander Keen Episode 4, 5 and 6: Good Bye Galaxy (December 15th, 1991)
+    \item Commander Keen Standalone game: Aliens Ate My Baby Sitter (December 1991)
 \end{itemize}
-The games were instant success and sold very well. To avoid a lawsuit with their previous employer they also wrote not less than seven games for Softdisk to publish. All of them used Adaptive tile refresh.
+The games were instant success and sold very well. To avoid a lawsuit with their previous employer they also wrote not less than seven games for Softdisk to publish. Most used Adaptive tile refresh.
 \begin{itemize}
   \item Dangerous Dave Episode 3.5: Keen Dreams (1991)
   \item Dangerous Dave in the Haunted Mansion (1991)
@@ -45,7 +49,7 @@ The games were instant success and sold very well. To avoid a lawsuit with their
   \item Hovertank 3D (April, 1991).
   \item Catacomb 3D: A New Dimension (November, 1991)
 \end{itemize}
-Toward the end of winter 1991 the next generation of if Software technology started to appear. The first one allowed the player to be inside a tank (Hovertank 3D). The second one took the immersion one step further placing it in control of a magician in First Person mode (Catacomb 3D). But now they were free from SoftDisk. And the next title was going to be called Wolfenstein 3D.\\
+During Winter 1991 the next generation of if Software technology started to appear. The first one allowed the player to be inside a tank (Hovertank 3D). The second one took the immersion one step further placing it in control of a magician in First Person mode (Catacomb 3D). And now they were free from SoftDisk. And the next title was going to be called Wolfenstein 3D.\\
 \par 
 
 Considering the magnitude and ambitions of the title, four more people were added to the team for a total of eight.\\
@@ -206,12 +210,8 @@ You may have noticed in the listing of VGA modes: 13h and 4h (figure~\ref{fig:vg
 
 
 \section{Graphics assets}
-The graphic assets are divided as follow:
-\begin{itemize}
-\item 2D Menus items (images).
-\item 3D Action phase items (walls and sprites).
-\end{itemize}
-Those were the work of Adrian Carmack\footnote{Kevin Cloud did a few textures and also worked on the design and layout of the Wolfenstein 3D Hint book published eventually.}. All of the work was done with Deluxe Paint (from Electronic Arts) and saved in LBM files (Deluxe Paint format). 
+
+Everything was done by Adrian Carmack\footnote{Kevin Cloud did a few textures and also worked on the design and layout of the Wolfenstein 3D Hint book published eventually.}. All of the work was done with Deluxe Paint (from Electronic Arts) and saved in LBM files (Deluxe Paint format). 
 
 \begin{figure}[H]
   \centering
@@ -238,7 +238,11 @@ We didn't have any scanning tools at the time.\\
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-
+The graphic assets are divided as follow:
+\begin{itemize}
+\item 2D Menus items (images).
+\item 3D Action phase items (walls and sprites).
+\end{itemize}
 
 
 
@@ -255,7 +259,7 @@ We didn't have any scanning tools at the time.\\
 
 
 \section{Asset workflow}
-As the graphic assets were generated by artists, a tool (IGRAB-ED) packed all the ILBMs files together in an archive and generated a C header file with asset IDs:. The engine references an asset directly by using these IDs.\\
+After the graphic assets were generated, a tool (IGRAB-ED) packed all the ILBMs files together in an archive and generated a C header file with asset IDs:. The engine references an asset directly by using these IDs.\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/drawing_plain.eps}
@@ -356,7 +360,18 @@ The hint manual also contains several photos of the team back in the days. Go ch
 
 
 \section{Maps}
-Maps were created using the in-house editor called TED5 which is short for Tile EDitor. TED was not create specially for wolf: It was actually created way back during Commander Keen series (yes: a platform scroller) and improved over the years. TED does not stand-alone. In order to start it needs an asset archive and the header associated (as described in the graphic asset workflow). This way texture ids are directly encoded in the map.\\
+Maps were created using the in-house editor called TED5 which is short for Tile EDitor. TED was not create specially for Wolf3D: It was actually created during Commander Keen series and improved over the years. It is a versatile tool since it allows to create maps for side scroller such as Commander Keen but also top-down map for Wolf3D. TED does not stand-alone, in order to start it needs an asset archive and the header associated (as described in the graphic asset workflow). This way texture ids are directly encoded in the map.\\
+
+ \begin{figure}[H]
+\centering
+ \fullimage{TedSplashscreen.png}
+ \end{figure}
+
+  \begin{figure}[H]
+\centering
+ \fullimage{Fill_2.png}
+ \end{figure}
+
 
  \begin{figure}[H]
 \centering
@@ -364,11 +379,11 @@ Maps were created using the in-house editor called TED5 which is short for Tile 
  \caption{TED used for Commander Keen - side scroller} 
  \end{figure}
 
-
+TED allows to place tile on layers called "planes". This design choice proved powerful since it allows to create rich side scrollers (background tiles, geometry tiles and items tiles) and top down view as well like for Rescue Rover which was a puzzle game with triggers on top of background tiles.\\
 \begin{figure}[H]
 \centering
  \fullimage{TED.png}
- \caption{TED used for top view level design} 
+ \caption{TED used for top view level design in game Rescue Rover.} 
  \end{figure}
 
 Reusing TED was a double win: It saved tool development time and since all team members had been using it for years, they were all proficient with it: No need to learn it. TED5 allowed id to make many levels within a small amount of time:\\
