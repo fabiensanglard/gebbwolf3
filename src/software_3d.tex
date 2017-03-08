@@ -24,7 +24,7 @@ Even for a complex scene involving multiple door and rooms, this method can deli
 
 
 \subsection{Life of a frame}
-As we saw when we unrolled the loop, the action scene is made of frames in a loop which is pseudo code looks as follow:\\
+As we saw when we unrolled the loop, the action scene is made of frames in a loop which is pseudo code looks as follows:\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/flawded_game_loop.c}
@@ -770,7 +770,7 @@ The variant of DDA is implemented in a fully handcrafted 740 lines of assembly r
 \end{minipage}
 This algorithm results in \cw{jmp} heavy instructions but on a an architecture devoid of pipeline and code cache such as the 386 it is not a problem at all.\\
 \par
-This part of the code relies heavily on the trigonometric circle principles:
+This part of the code relies heavily on trigonometric circle principles.
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/unit_circle.tex}
@@ -1096,8 +1096,9 @@ That cost was deemed too high, so past size 76 only every other size are generat
 \par
 $78*19*7+9*230*7=24,8642$ bytes\\
 \par
-A small price to pay for a huge boost in performances.
-Note: "Thinking" screenshot here to show scaler have to be regenerated.\\
+A small price to pay for a huge boost in performances.\\
+\par
+The scalers are generated at startup. If the 3D window dimensions is changed they have to be re-generated. This is what happens after a resize while the "thinking" screen is showing.
 \begin{figure}[H]
  \centering
  \fullimage{thinking.png}
@@ -1475,21 +1476,23 @@ TODO: How much RAM is saved?\\
 
 
 \subsubsection{Clipping}
-There is a second benefit to have wall and sprite in the same 64x64 coordinate system: It is easy to clip. Once the actor's position is transformed in player space, the distance Y allows to generate a height. These height are the same type calculated for the walls. As a result, for each column to find out if a column if behind a wall, the engine just compare the height from the occlusion array to the height of the actor:\\
+There is a second benefit to have wall and sprite in the same 64x64 coordinate system: It is easy to clip. Once the actor's position is transformed in player space, the distance Y allows to generate a height. These height are the same type calculated for the walls. As a result, for each column to find out if a column if behind a wall, the engine just compare the height from the occlusion array to the height of the actor.\\
 \par
-Drawing things far to near is good for transparency but does not guaranty correctness. When a sprite is partially behind a wall or a door, it has to be clipped. This is done thanks to an occlusion array. While drawing the walls and doors, the engine also maintains an array in which it records the height of the column:\\
+That occlusion array is generated as each ray is cast. When the height of a column is generated for a ray, the height is also saved.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_declaration.c}
 \end{minipage}
+\par
+While casting, the occlusion array is written.\\
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_population.c}
 \end{minipage}
+While drawing sprites, the occlusion array is read. If the height of a wall is higher than a sprite, it means the wall is is front of the sprite. The full sprite column rendition is skilled with a continue in the sprite rendition loop.\\
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_usage.c}
 \end{minipage}
 \par
-TODO: Clipping drawing with sprite and walls.\\
 
 
 
@@ -1522,21 +1525,25 @@ But wait, there is more, It has to do with RAM consumption. The commercial versi
 \par
 Sprites are stored as array of 64 columns (remmeber that because of the VGA, everything is drawn vertically). Each column entry uses RLE to code what is visible. Transparent sections are completely discarded.\\
 \par
-The same "draw" multiple column at once is used. Is it especially powerful when enemy are magnified.\\
+The same deferred drawing technique is used for sprites. It is especially powerful when a sprite is magnified.\\
 
 \par
 \begin{figure}[H]
  \centering
  \fullimage{magnified_enemy_before.png}
 \end{figure}
-
+In this scene, the 64x64 sprites is magnified 2.2 times. By zooming in, we can see that each column is repeated at least twice. Sometimes three times. It is a perfect optimization case for the VGA planes.
 \par
 \begin{figure}[H]
  \centering
- \fullimage{magnified_enemy_after.png}
+ \fullimage{magnified_zoom.png}
 \end{figure}
-
-
+A modified version of the engine draw in pink columns which were drawn "for free" thanks to the VGA mask. In this case most column were drawn only once. Magnification was a totally free operation despite more than twice the number of texel written to the screen.
+\par
+\begin{figure}[H]
+ \centering
+ \fullimage{maginfized_zoom_modified.png}
+\end{figure}
 
 
 
@@ -1544,9 +1551,10 @@ The same "draw" multiple column at once is used. Is it especially powerful when 
 
 
 \subsection{Drawing weapon}
-Drawing the weapon at the bottom is straight forward. It uses the same type of rendition for sprite but with specific code where clipping is disabled.\\ \cw{ScaleShape}
+Drawing the weapon at the bottom is straight forward. It uses the same type of rendition for sprite but with specific code where clipping is disabled in function \cw{ScaleShape}. The same compiled scaler and deferred rendition trick are used.
 \par
-\cw{SimpleScaleShape} is a version of \cw{ScaleShape} with no clipping. Shapes are called compiled shapes.\\
+How much is saved? Screenshot of saved
+\par
 \note{Show 4 weapon sprites}
 
 
