@@ -1,4 +1,4 @@
-$ cloc-1.64.pl .
+$ cloc-1.64.pl WOLF3D
 
 96 text files.
 94 unique files.                              

@@ -1663,7 +1663,13 @@ Knowing if an enemy can hear the main character gunfire is a simple lookup in a 
  \includegraphics[width=.5\textwidth]{imgs/drawings/soud_propagation/areabyplayer.pdf}
 \end{figure}
 \par
-37 long. Empirical value?\\
+The area array is declared like this:\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/num_areas.c}
+\end{minipage}
+\par
+37 seems like a random value. I think they probably bumped it up everytime they designed a map with more area than they could handle.\\
 \par
 
 
@@ -1675,43 +1681,51 @@ Knowing if an enemy can hear the main character gunfire is a simple lookup in a 
 
 However this is a simple model. When a gun is fired, all enemies which could hear it will shout "Achtung!" (Attention!") and converge toward the origin of the sound. That would get old pretty fast. So the designers introduced a little hack that goes a long way to simulate ambushes.
 
+
 \par
+\begin{minipage}{1\textwidth}
 \begin{figure}[H]
  \centering
  \fullimage{ambush/map_unknown.png}
 \end{figure}
 \par
 
-\begin{minipage}{0.6\textwidth}
-Some tiles in the map can be marked as "AMBUSH" tile. If a guard is standing on it, he will NOT react to sounds. He is deaf. Or smart if you prefer. This is introduced early on in E1M1, the character just neutralized an enemy in a corridor. At this point it has never encountered an ambush so the player assumes the area is clear:\\
-\end{minipage}
-\begin{minipage}{0.4\textwidth}
-\begin{flushright}
-\includegraphics[width=0.98\textwidth]{imgs/drawings/ambush/map_unknown_drawing.pdf}
-\end{flushright}  
+
+  \begin{minipage}{0.6\textwidth}
+  Some tiles in the map can be marked as "AMBUSH" tile. If a guard is standing on it, he will NOT react to sounds. He is deaf. Or smart if you prefer. This is introduced early on in E1M1, the character just neutralized an enemy in a corridor. At this point it has never encountered an ambush so the player assumes the area is clear:\\
+  \end{minipage}
+  \begin{minipage}{0.4\textwidth}
+  \begin{flushright}
+  \includegraphics[width=0.98\textwidth]{imgs/drawings/ambush/map_unknown_drawing.pdf}
+  \end{flushright}  
+  \end{minipage}
 \end{minipage}
 \noindent
 \\
 
 
 \par
-\begin{figure}[H]
- \centering
- \fullimage{ambush/map_ambushed.png}
-\end{figure}
-\par
-\begin{minipage}{0.6\textwidth}
-So the player will relax and either go straight to the door or maybe go left (or worse: right) to see what is in these corners. And bam: AMBUSH.
-\end{minipage}
-\begin{minipage}{0.4\textwidth}
-\begin{flushright}
-\includegraphics[width=0.98\textwidth]{imgs/drawings/ambush/map_ambushed_drawing.pdf}
-\end{flushright}
+\begin{minipage}{1\textwidth}
+  \begin{figure}[H]
+   \centering
+   \fullimage{ambush/map_ambushed.png}
+  \end{figure}
+  \par
+  \begin{minipage}{0.6\textwidth}
+  So the player will relax and either go straight to the door or maybe go left (or worse: right) to see what is in these corners. And bam: AMBUSH.\\
+  \par
+   This is probably one of the cheapest feature in the engine which yet resulted in what most would agree is the soul of the game: Immersion.
+  \end{minipage}
+  \begin{minipage}{0.4\textwidth}
+  \begin{flushright}
+  \includegraphics[width=0.98\textwidth]{imgs/drawings/ambush/map_ambushed_drawing.pdf}
+  \end{flushright}
+  \end{minipage}
 \end{minipage}
 \noindent
 \\
 
-This is probably one of the cheapest feature in the engine which yet resulted in what most would agree is the soul of the game: Immersion.\\
+
 \par
 
 \bu{Trivia :} The ambush behavior is explained in the Hint Book as follow:\\

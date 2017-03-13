@@ -1,10 +1,12 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-\section{Source Code}
-The game engine source code was released on July 21st, 1995. Twenty years later it is still there on id software's ftp\footnote{File Transfer Protocol.}:\\ 
-\\\codeword{ftp://ftp.idsoftware.com/idstuff/source/wolfsrc.zip}.\\
-\\
-\bu{Trivia :} Before the times of nmap, WireShark and other ARP poisoning monstrosities, FTP was commonly used to transfer files: It was simple and naively transmitted username and password in clear. Needless to say it did not age well...\\
+\section{Getting the Source Code}
+The game engine source code was released on July 21st, 1995. It was uploaded on id software's ftp\footnote{File Transfer Protocol.} server.\\ 
+\begin{minipage}{\textwidth}
+\lstinputlisting[]{code/ftp_url.txt}
+\end{minipage}
+\par
+Twenty two years later it still there, at the exact same URL. A remarkable fact given the fluidity of the web.\\
 
 \section{First Contact}
 Once downloaded and decompressed, it turns out the archive \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical now. It is easy to deflate it with:\\
@@ -12,16 +14,17 @@ Once downloaded and decompressed, it turns out the archive \codeword{woldsrc.zip
 \begin{minipage}{\textwidth}
 \lstinputlisting{code/unzip.txt}
 \end{minipage}
-\par
-A few quick stats can be gathered with \cw{cloc.py} utility. Lines of code is not a meaningful metric against a single codebase but it is an excellent tool to extract proportions.\\
 
 \par
+\cw{cloc.py} is a tool which will look at every files in a folder and gather statistics about source code. It helps to get an idea of what to expect in the source.\\
+\par
+
 \begin{minipage}{\textwidth}
 \lstinputlisting[]{code/cloc.txt}
 \end{minipage}
 
 \par
-Twenty seven thousands lines of code is very little compared to a game from 2016 usually made of millions of lines of code. The game is written 90\% in C\footnote{id Software would not switch to C++ until Doom 3 around 2000.} with assembly optimization for bottlenecks such as video or audio processing. For a game so inherently tied to the hardware it is much more difficult to understand what is going on compared to Doom or Quake.\\
+ The code is 90\% in C with assembly optimization for bottlenecks such as video or audio processing\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code is not a meaningful metric against a single codebase but it excels when it comes to proportions. Twenty seven thousands lines of code is very little compared to a game from 2016 usually made of millions of lines of code.\\
 \par
 \begin{figure}[H]
 \centering
@@ -69,10 +72,10 @@ It's "COLUMN", you dumb FUCK!\\
 The archive contains more than just \codeword{.H} (headers) and \codeword{.C} (code) files.
 \begin{itemize}
 \item \codeword{GOODSTUF.TXT:} Two emails from fans demonstrating the success of the game: An ex-POW and a Microsoft employee.
-\item \codeword{.ASM:} Assembly routines to optimize 3D renderer. Also contains low level routines for I/O.
-\item \codeword{SIGNON.OBJ:} The startup screen showing the system characteristic (RAM, EMS, XMS, Joystick, SoundCards) was linked in the binary. The reason why is given later.
+\item \codeword{.ASM:} Assembly routines to optimize 3D renderer and low level I/O routines.
+\item \codeword{SIGNON.OBJ:} The startup screen showing the system characteristic (RAM, EMS, XMS, Joystick, SoundCards) was linked in the binary. This weird design choice is explained later.
 \item \codeword{GAMEPAL.OBJ:} Game palette. Hardcoded and linked in the executable for the same reason described previously.
-\item \codeword{README:} How to build. You can also find a complete tutorial in the Annexe of this book.
+\item \codeword{README:} How to build. You can also find a complete tutorial on the author's article "Let's compile like its 1993".
 \item Many files resulting from a previous compilation attempt.
 \end{itemize}
 
@@ -85,11 +88,11 @@ The archive contains more than just \codeword{.H} (headers) and \codeword{.C} (c
 \section{Big picture}
 The engine can be divided in three blocks:
 \begin{itemize}
-\item The 2D renderer let the user setup the game.
-\item The 3D renderer where most of the time is spent in the game.
-\item The sound system which always run concurrently with either 2D or 3D renderer. 
+\item The 2D menu engine which lets the user configure the game.
+\item The 3D game renderer where the player spent more of her time.
+\item The sound system which always run concurrently with either the 2D or 3D renderer. 
 \end{itemize}
-Note the three systems communicate via shared memory. The renderer issue music and sound request to the RAM (also making sure the assets are ready). The sound system also communicates with the renderers since it is in charge of the heartbeat of the whole engine. The renderer can update the world according to the wall-time tracked by \cw{TimeCount} variable.
+The three systems communicate via shared memory. The renderer writes music and sound request to the RAM (also making sure the assets are ready). There requests are read by the sound "loop". The sound system also write to the RAM for the renderers since it is in charge of the heartbeat of the whole engine. The renderers update the world according to the wall-time tracked by \cw{TimeCount} variable.
 \par
 \begin{figure}[H]
 \centering
@@ -108,12 +111,13 @@ Note the three systems communicate via shared memory. The renderer issue music a
 
 
 \subsection{Unrolled loop}
-With the big picture in mind, we can dive into the code and unroll the main loop (\cw{int main()}) to reveals two renderers (the sound system is interrupt driven and therefore is out of \cw{main}). Because the game is using Real Mode, C types don't mean what people would expect from a 32 bits architecture.\\
+With the big picture in mind, we can dive into the code and unroll the main loop \cw{int main()}. The two renderers are regular loops but due to limitation explained later, the sound system is interrupt driven and therefore is out of \cw{main}. Because of the 386 Real Mode, C types don't mean what people would expect from a 32 bits architecture.\\
 \begin{itemize}
 \item \cw{int} and \cw{word} are 16 bits long.
 \item \cw{long} and \cw{dword} are 32 bits long.
 \end{itemize}
-
+\par
+Here is where the program starts.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_main.c}
@@ -139,7 +143,11 @@ Then come the core loop where 2D renderer and 3D renderer are called forever:\\
 \lstinputlisting[language=C]{code/unrolled_loop_playloop.c}
 \end{minipage}
 \par
-The sound system is started via the Sound Manager. It driven by Interrupt service routine 8. Notice how the ISR is tied to the PC timer and can run at at various frequencies of 140, 700 or even 7000Hz depending on the needs of the sound system being driven.\\
+The sound system is started via the Sound Manager via method \cw{SDL\_SetTimerSpeed}. There is a famous game development library called Simple DirectMedia Layer (SDL) but the prefix \cw{SDL\_} has nothing to do with it. It stands for SounD Low level. SDL did not even exist in 1991.\\
+\par
+The reason for interrupts is extensively explained in the Chapter "Audio and Heartbeat" but in short: With an OS supporting neither process nor thread, it was the only way to have something execute concurrently with the rest of the engine.\\
+\par
+Notice how the ISR is tied to the PC timer and can run at at various frequencies of 140, 700 or even 7000Hz depending on the needs of the sound system being driven.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/soundsystem_interrupt.c}
@@ -161,11 +169,16 @@ The sound system is started via the Sound Manager. It driven by Interrupt servic
 
 
 
-
 \section{Architecture}
 
 The source code is structured in two layers. WL\_* files are high-level layers relying on low-level of ID\_* sub-systems called Managers interacting with the hardware.\\
-\note{Add drawing of layers here}.\\
+\par
+ \par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/layers.png}
+ \end{figure}
+ \par
 \par
 There are seven managers in total:\\
 \begin{itemize}
@@ -177,7 +190,7 @@ There are seven managers in total:\\
 	\item User
 	\item Input
 \end{itemize}
-The WL stuff was written specifically for Wolf3D while the ID\_ managers were reused from previous games (likely Catacomb 3D) and improved for the needs of the new engine.
+The WL\_ stuff was written specifically for Wolf3D while the ID\_ managers were reused from previous games (likely Catacomb 3D) and improved for the needs of the new engine.
 
 \begin{figure}[H]
 \centering
@@ -208,21 +221,21 @@ A block can be marked with attributes:
 \item \cw{PURGEBITS} : 0-3 level, 0= unpurgable, 3= purge first.
 \end{itemize}
 
-The memory manager starts by allocating all available RAM via \cw{malloc}/\cw{farmalloc} and creates a \cw{LOCKED} block of size 1KB at the end. The linked list uses two pointers: \cw{HEAD} and \cw{ROVER} (for the tail).
+The memory manager starts by allocating all available RAM via \cw{malloc}/\cw{farmalloc} and creates a \cw{LOCKED} block of size 1KB at the end. The linked list uses two pointers: \cw{HEAD} and \cw{ROVER}.
  \par
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/mm_start.pdf}
  \end{figure}
  \par
- The engine interacts with the Memory Manager by requesting RAM (\cw{MM\_GetPtr}) and freeing RAM (\cw{MM\_FreePtr}). To allocate ram , the manager searches for "holes" in the layout. It take up to three passes of increasing complexity:
+ The engine interacts with the Memory Manager by requesting RAM (\cw{MM\_GetPtr}) and freeing RAM (\cw{MM\_FreePtr}). To allocate memory, the manager searches for "holes" in the layout. It take up to three passes of increasing complexity:
 \begin{enumerate}
 \item After rover
 \item After head
 \item Compacting and then after rover
 \end{enumerate}
 \par
-  The easier case is when there is enough space after the rover. A new node is added to the linked list and rover moves forward:\\
+  The easier case is when there is enough space after the rover. A new node is simply added to the linked list and the rover moves forward:\\
   \par
 \begin{figure}[H]
 \centering
@@ -236,13 +249,13 @@ Eventually the free RAM will be exhausted and the first pass will fail:
  \includegraphics[width=\textwidth]{imgs/drawings/mm_before_rover.pdf}
  \end{figure}
  \par
- If the first pass fails, the second pass looks for a "hole" between the head and the rover. If for example block B was marked as \cw{PURGEABLE}, it will be deleted and replaced with the new block E and fragmentation starts to appear (like if \cw{malloc} was used):\\
+ If the first pass fails, the second pass looks for a "hole" between the head and the rover. If for example block B was marked as \cw{PURGEABLE}, it will be deleted and replaced with the new block E. At this point fragmentation starts to appear (like if \cw{malloc} was used).\\
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/mm_after_head.pdf}
  \end{figure}
  \par
- If the RAM reaches a point where the first and second pass failed, it means there is nowhere a continuous block of memory big enough to satisfy the request. The manager is going to iterate through the entire linked list and do two things: Delete blocks marked as purgeable and compact the RAM.
+ If the RAM reaches a point where the first and second pass failed, it means there is nowhere a continuous block of memory big enough to satisfy the request. The manager is going to iterate through the entire linked list and do two things: Delete blocks marked as purgeable and compact the RAM by moving blocks.
   \par
 \begin{figure}[H]
 \centering
@@ -257,7 +270,7 @@ But if memory is moved around, how do previous allocation still point to what th
  \includegraphics[width=\textwidth]{imgs/drawings/mm_bad_compact.pdf}
  \end{figure}
  \par
- Note that since some block can be marked as \cw{LOCKED}, the compacting will be disturbed: Upon encountering a locked lock, compacting start after it, even is there was space available between the last block and the locked block.
+ Because some blocks can be marked as \cw{LOCKED}, compacting can be disturbed. Upon encountering a locked lock, compacting stop and the next block will be moved immediately after the locked block, even is there was space available between the last block and the locked block. In the above drawing, C was moved after E, even though it could have been moved before. But avoiding this waste would have made the memory manager more complicated, that was an acceptable waste. Often in designing a component you have to be practical and establish a certain trade off between accuracy and complexity.
 
 
 
@@ -271,7 +284,9 @@ But if memory is moved around, how do previous allocation still point to what th
 
 
 \subsection{Page Manager (PM)}
-The Page Manager is dedicated to the 3D engine. Its task is to make sure assets such a wall texture, sprites and sound effect stored on HDD at available in RAM for the CPU to use. Jason Blochowiak seems to be the main author and his previous experience with Unix system clearly influenced the design of this component. It is built around the Unix concept of page and swap. Except insteaf of a memory address identifying a page, an asset ID is used. Each asset consums a full "page". When the engine needs a resource, its requests a page with the resource Id to the Page Manager. To fulfill the request as fast as possible, all types of RAM: Conventional, EMS and XMS and used as cace. If a page is located in conventional memory or EMS, the request is considered a cache "hit" and page is returned to caller. Otherwise the request is a cache "miss". The PM looks for the page in XMS RAM and ultimately if all failed in \cw{VSWAP.WL1} file on the HDD which contains all 3D assets.\\
+The Page Manager is dedicated to the 3D engine. Its task is to make sure assets such a wall texture, sprites and sound effect stored on HDD at available in RAM for the CPU to use. Jason Blochowiak seems to be the main author and his previous experience with Unix system clearly influenced the design of this component. It is built around the Unix concept of paging and swapping. \\
+\par
+But instead of a memory address identifying a page, an asset ID is used. These ID are generated by iGrab -ed. Each asset consumes a full "page". Also contrary to Unix, all pages do not have the same size. When the engine needs a resource, its requests a page with the resource ID from the Page Manager. To fulfill the request as fast as possible, all types of RAM: Conventional, EMS and XMS. If a page is located in conventional memory or EMS, the request is considered a cache "hit" and page is returned to caller. Otherwise the request is a cache "miss". The PM looks for the page in XMS RAM and ultimately if all failed it goes to the filesystem in file \cw{VSWAP.WL1} which contains all 3D assets.\\
  \par
 \begin{figure}[H]
 \centering
@@ -285,11 +300,11 @@ In order to minimize the cost of page miss, the engine preload the page cache be
  \fullimage{get_psyched.png}
  \end{figure}
  \par
-The precaching mechanism is not particularly clever: It loads as many page from the swap file as possible. It doesn't try to look at what is actually used in the level but instead load assets in the order they are stored in \cw{VSWAP} file on the HDD. The eviction policy (LRU) ultimately stabilize the cache and even a machine with only 1MB of RAM is able to play a level with no HDD access after a few minutes. This design had a small annoying flow: On a low memory machine a cache miss would occur at the worse possible moment when the player opens the last door of a level and is about to find himself confronted to the heavy powered final boss, the cache manager would not have the sprites available. This would incur a HDD access, a lag and an undeserved and humiliating death.\\
+The precaching mechanism is not particularly clever: It loads as many page from the swap file as possible. It doesn't try to look at what is actually used in the level but instead load assets in the order they are stored in \cw{VSWAP} file on the HDD. The eviction policy (LRU) ultimately stabilize the cache and even a machine with only 1MB of RAM is able to play a level with no HDD access after a few minutes.\\
+\par
+This design has a small annoying flow. On a low memory machine a cache miss occurs at the worse possible moment when the player opens the last door of a level and is about to find himself confronted to the heavy powered final boss. An enemy that has never been seen before and therefore not in the cache of the Page Manager. This incurs the worse case of cache miss. One that will requires a long access to the hard-drive, a lag often resulting in an undeserved and humiliating death.\\
 \par
 The size of the swap file varies depending on the version of the game you play: \cw{VSWAP.WL1} (shareware) is 742KB while \cw{VSWAP.WL6} (full version) is 1,500KB. In both case a machine with 2MB of RAM on top of the factory issued 1MB is enough to have all assets loaded during pre-caching.\\
-\par
-TODO: Insert code sample to show what an ID is.
 \par
 \bu{Trivia:} In the code, the progress bar was called a "thermometer".\\
 \par
@@ -321,15 +336,15 @@ The video manager features two parts:
 
 
 \subsection{Cache Manager (CA)}
-A small manager performing a lot: Loading and decompressing map, graphic and music contained on the HDD are avaialble in RAM for CPU to yse. Assets are stored in two files: For each three types of ressources, two files are present. One header file performing the translation from resource ID to  offset in the data file and the data file containing the actual payload.\\
+A small manager performing a lot. Load and decompress map, graphic and music contained in the filesystem and make them avaialble in RAM for CPU to use. Assets of each kind are stored in two files. One header file contains only offset to perform translation from resource ID to offset in the data file.\\
  \par
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/cache_manager_architecture.pdf}
  \end{figure}
  \par
-\bu{Note:} All resources are compressed. The CM handle decompression transparently.
-\bu{Trivia :} Is it a typo with filename \cw{AUDIOHEA.WLX} ? Correct spelling would be \cw{AUDIOHEAD.WL}. Where is the \cw{D}? This is in fact a limition of the operating system. DOS 5 only allows 8.3 filename (at most eight characters followed by at dot and at most three character for the extension).
+\bu{Note:} All resources are compressed. In the case of maps and audio the compression is hard-coded in the engine. However for pictures, a third file (\cw{DICT}) contains the compression dictionary to decompress each asset. The CM handles decompression transparently.\\
+\bu{Trivia :} Is it a typo with filename \cw{AUDIOHEA.WL} ? Correct spelling would be \cw{AUDIOHEAD.WL}. Where is the \cw{D}? This is in fact a limition of the operating system. DOS 5 only allows 8.3 filename (at most eight characters followed by at dot and at most three character for the extension).
 
 
 
@@ -364,7 +379,7 @@ and then passes these information to the Video Manager (\cw{VW\_DrawPropString})
 
 
 \subsection{Sound Manager (SD)}
-The Sound Manager abstracts interaction with all four sound systems supported: PC Speaker, ADLib (Music only), Sound Blaster and SoundSource. It is a beast of his own since it doesn't run inside the engine. Instead it called via IRQ at a much higher frequency than the engine (the engine runs at maximum 70Hz, the sound manager ranges from 150Hz to 7000Hz). Being IRQ driven, it must run very fast. Therefore not only it is written in assembly, its assets are also privileged when it comes to memory allocation: All of them are done in Conventional Memory to avoid a miss the cache in the Page Manager which would result in a slow XMS or HDD fetch.\\
+The Sound Manager abstracts interaction with all four sound systems supported: PC Speaker, ADLib, Sound Blaster and SoundSource. It is a beast of his own since it doesn't run inside the engine. Instead it called via IRQ at a much higher frequency than the engine (the engine runs at maximum 70Hz, the sound manager ranges from 150Hz to 7000Hz). Being IRQ driven, it must run very fast. Therefore not only it is written in assembly, its assets are also privileged when it comes to memory allocation: All of them are done in Conventional Memory to avoid a miss the cache in the Page Manager.\\
  \par
 \begin{figure}[H]
 \centering
@@ -390,7 +405,7 @@ The sound manager is described extensively in the "Sound and Music" section.
 
 
 \subsection{Input Manager (IN)}
-Abstract interaction with joystick keyboard and mouse. Features a lot of boring boilerplate code to deal with PS/2, Serial and DA-15 ports. Each using their own I/O addresses for programming.
+Abstract interactions with joystick, keyboard and mouse. Features a lot of boring boilerplate code to deal with PS/2, Serial and DA-15 ports. Each using their own I/O addresses for programming.
 
 
 
@@ -413,24 +428,28 @@ As the game engine starts, it deals with difficulties showed in the hardware sec
 \subsection{Signon}
 The first (mild) issue to deal with is the heterogeneous ecosystem of PCs on the market. With different drivers loaded and different sound cards, the engine has to figure out how much RAM is installed and if it will be able to run. If not it has to let the user know what is the problem. That was important since id Software was a small team and they did not have CSR around to pickup the phone and help unhappy customer to troubleshot their issue.\\
 \par
-That is what the "signon" screen is for: Self diagnostic. Note how the screen and palette are just variable, already load in RAM by the operating system. After usage \cw{signon} is unloaded from RAM to make space for the actual game.\\
+That is what the "signon" screen is for: Self diagnostic. 
 \par
 \begin{figure}[H]
 \centering
 \fullimage{signon.png}
-\caption{Architecture and sub-systems.}
 \end{figure}
 \par
-
-
+The most important metric here is labeled "MAIN". Due to the architecture described in the first chapter, a DOS program has only 640KB of RAM available. Each driver loaded by the user takes away from these 640KB. If too much is used to the point where DOS cannot load the executable in RAM, user will show the following error message.\\
 \par 
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/OutOfMemory.txt}
+\end{minipage}
+\par
+The signon screen shows that Wolf3D needs at least 320KB of Conventional RAM. John Romero wrote a note a release note to help people understand what was going on and avoid angry calls. You can read it in the annex under "The 640KB Barrier".
+\par 
+At the time signon is displayed, the only manager loader is the Memory Manager. There is not even a filesystem for the engine to access yet. That is why the palette and the signon screen are compiled in wolf3D executable. They are loaded to RAM by the operating system (DOS). All the engine does is load the palette into the VGA, copy the signon bitmap from RAM to VRAM and fill the blocks with green or yellow based on what was detected.
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/signonscreen.c}
 \end{minipage}
-Since this screen is showed almost before anything else is initialized (video system, cache manager interfacing with HDD) the full 64K images (along with the palette) is linked against the executable. The engine only has copies from RAM to the VGA banks.\\
+After usage \cw{signon} variable (using 320x200 bytes = 64KB) is unloaded from RAM to make space for the actual game.\\
 \par
-\note{Why only show the RAM only up to 320KB? Did the game ran on 320?}
-%Notice the main RAM (conventional memory) which goes only up to 320K: Between the executable and other residence routines it is all what was remaining of the original 640K. The game is able to run on 320KB but you needs to swap with the HDD at runtime to load textures and sprites.
+Notice the main RAM (conventional memory) which goes only up to 320K. The game is able to run on as little as 320KB (gameplay will suffer cache misses but the game will run).
 
 
 
