@@ -443,11 +443,12 @@ The most important metric here is labeled "MAIN". Due to the architecture descri
 \par
 The signon screen shows that Wolf3D needs at least 320KB of Conventional RAM. John Romero wrote a note a release note to help people understand what was going on and avoid angry calls. You can read it in the annex under "The 640KB Barrier".
 \par 
-At the time signon is displayed, the only manager loader is the Memory Manager. There is not even a filesystem for the engine to access yet. That is why the palette and the signon screen are compiled in wolf3D executable. They are loaded to RAM by the operating system (DOS). All the engine does is load the palette into the VGA, copy the signon bitmap from RAM to VRAM and fill the blocks with green or yellow based on what was detected.
+At the time signon is displayed, the only manager loader is the Memory Manager. There is not even a filesystem for the engine to access yet. That is why the palette and the signon screen are compiled in wolf3D executable. They are loaded to RAM by the operating system (DOS). All the engine does is load the palette into the VGA, copy the signon bitmap from RAM to VRAM and fill the blocks with green or yellow based on what was detected.\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/signonscreen.c}
 \end{minipage}
-After usage \cw{signon} variable (using 320x200 bytes = 64KB) is unloaded from RAM to make space for the actual game.\\
+After that screen, the \cw{signon} variable (using 320x200 bytes = 64KB) is unloaded from RAM to make more room the runtime.\\
 \par
 Notice the main RAM (conventional memory) which goes only up to 320K. The game is able to run on as little as 320KB (gameplay will suffer cache misses but the game will run).
 
@@ -480,7 +481,7 @@ The Hardware chapter describing the video system left us with an unsolved proble
       \includegraphics[width=\textwidth]{imgs/drawings/mode_13h.pdf}
 \end{figure}
 
-It mapping is also called "chaining" and because 2 bits out of the address are used to route a write/read operation to a bank, only 14 bits are used for the actuall offset in the bank. Since 14 bits can only address 16384 values this system results in a waste of 75\% of the RAM to offers.\\
+This mapping system is also called "chaining". Because 2 bits out of the address are used to route a write/read operation to a bank, only 14 bits are used for the actuall offset in the bank. Since 14 bits can only address 16384 values this system results in a waste of 75\% of the RAM to offers.\\
 
 \begin{figure}[H]
 \centering
@@ -488,17 +489,21 @@ It mapping is also called "chaining" and because 2 bits out of the address are u
  \end{figure}
 
  \par
- So the problem really is the Chain-4 chip. Nobody knows who discovered it first but the process to disable it was popularized by Michael Abrash\footnote{in Dr. Dobb's Journal} in July 1991. In his article he described was he coined the Mode-X. An undocumented sequence of operations disabling Chain-4 allowing a resolution of 320x240 and full access to the 256K of RAM.\\
+ The waste is really the fault of the Chain-4 chip. What would be great is to disable it.\\
  \par
- Wolfenstein 3D does things slightly differently. It disables chain-4 but keeps the resolution in 320x200. This mode is known as Mode-Y:\\
-\note{Ask John Carmack and John Romero why they went for Mode-Y instead of Mode-X which offered square pixels.}
+Nobody knows who discovered it first but the process to disable it was popularized by Michael Abrash in Dr. Dobb's Journal of July 1991. In his article he described was he coined the Mode-X. An undocumented sequence of operations disabling Chain-4 allowing a resolution of 320x240, square pixels (since the ration is 4:3) and full access to the 256K of RAM.\\
+ \par
+ Wolfenstein 3D does things slightly differently. It disables chain-4 but keeps the resolution in 320x200. This mode is known as Mode-Y. \\
+ \bu{Note :} Why not use Mode-X since it gives square pixels ? Despite its advantage for artists, a screen using Mode-Y is 320x200 = 64000 pixels which represent 17\% less pixels compared to Mode-X with 320x240 = 76800 pixels. The engine already struggled to reach an acceptable framerate, Mode-X was simply too many pixels to draw each frames.\\
+ \par
+\note{Ask John Carmack and John Romero why they went for Mode-Y instead of Mode-X.}
  \par
   \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/init_vga.c}
 \end{minipage}
  \par
 
-The real magic is in function \cw{VL\_DePlaneVGA}:\\
+The real magic is in function \cw{VL\_DePlaneVGA} where VGA registers are manipulated directely. \\
 
  \par
  \begin{minipage}{\textwidth}
@@ -506,7 +511,7 @@ The real magic is in function \cw{VL\_DePlaneVGA}:\\
 \end{minipage}
 \note{What is long mode? What is byte mode?}
  \par
- By writing directely to the VGA registers SC (Sequence Controller) and CRTC (CRT Controller)the VGA VRAM is divided in four parts.:
+ The VGA registers for SC (Sequence Controller) and CRTC (CRT Controller) are setup to divive the VRAM four parts.
  \begin{itemize}\label{SetupPages}
  \item 64K for Framebuffer 0
  \item 64K for Framebuffer 1
@@ -520,7 +525,7 @@ The real magic is in function \cw{VL\_DePlaneVGA}:\\
  \caption{3D View as is appears on screen} \label{fig:vga_layout_in_3D}
  \end{figure}
 \par
-But the engine is not done yet. Tweaking Mode 13h into Mode-Y solves one big problem but introduced two new ones. One is about speed and the other is about correctness.\\
+But the engine is not done yet. Tweaking Mode 13h into Mode-Y solves one big problem but introduced two new smaller ones. One is about speed and the other is about correctness.\\
 \par
 Let's look at speed first. With chain-4 out of the picture a developer is now in charge of selecting the bank to write to. This can easily be done with a simple function:\\
 \par
@@ -548,7 +553,7 @@ The solution is to change how we draw onto the screen. Instead of going top to b
 \par
 This code can run without issues at 70 frames per second: Only 200 slow out instruction are used.\\
 \par
-This speed consideration has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. So everything in the engine is drawn this way: Walls, Sprites, Menu. Everything, absolutely everything is drawn vertically. The ramification of this hardware constraint are felt everywhere all the way to how assets are stored in RAM (rotated 90 degres). In Wolfenstein 3D: Everything has to be vertical!\\
+This speed consideration has a fundamental impact on the engine: To draw anything fast, it has to be drawn \underline{vertically}. So everything in the engine is drawn this way: Walls, Sprites, Menu. Everything, absolutely \underline{everything is drawn vertically}. The ramification of this hardware constraint are felt everywhere all the way to how assets are stored in RAM (rotated 90 degres).\\
 
 \par
 The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3 and then goes back to page 1 (notice there are three buffers but this is not triple-buffering). This solves tearing and it never stops drawing. It just instructs the CRT Controller that it should scan a framebuffer in VRAM at a different offset after the next vsync.\\

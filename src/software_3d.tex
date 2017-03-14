@@ -1,5 +1,5 @@
 \section{Action Phase: 3D Renderer}
-After the player is done setting up the game via the 2D renderer, comes time for the 3D engine to shine. It is based on raycasting technology which is simple yet powerful where the core idea is to cast a ray for each column of pixel visible on the screen. Based on the distance \cw{d} from the point of view to where the ray hits a wall, a height \cw{h} can be calculated:\\
+After the player is done setting up the game via the 2D renderer, comes time for the 3D engine to shine. It is based on a simple yet powerful technology called raycasting. The core idea is to cast a ray for each column of pixel visible on the screen. Based on the distance \cw{d} from the point of view to where the ray hits a wall, a height \cw{h} can be calculated:\\
 \par
 \begin{figure}[H]
   \centering
@@ -90,9 +90,9 @@ As a visual aid here is what the framebuffer looks like after each stage:\\
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
-  \begin{flushright}
+  \centering
  \includegraphics[width=.9\textwidth]{imgs/drawings/ray_caster_explained/beginning10.pdf}
-   \end{flushright}
+   
 \end{figure}
 \end{minipage}
 
@@ -109,9 +109,9 @@ As a visual aid here is what the framebuffer looks like after each stage:\\
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
-  \begin{flushright}
+  \centering
  \includegraphics[width=.9\textwidth]{imgs/drawings/ray_caster_explained/beginning50.pdf}
-   \end{flushright}
+   
 \end{figure}
 \end{minipage}
 
@@ -127,9 +127,9 @@ As a visual aid here is what the framebuffer looks like after each stage:\\
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
-  \begin{flushright}
+  \centering
  \includegraphics[width=.9\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
-   \end{flushright}
+   
 \end{figure}
 \end{minipage}
 
@@ -143,7 +143,7 @@ As a visual aid here is what the framebuffer looks like after each stage:\\
  \fullimage{wolf3d_6_scaled}
  \caption{Phase 3: Drawing Things (a.k.a: Scaled, a.k.a: Sprites)} 
  \end{figure}
-Note that during this step, clipping is performed.
+During this step, clipping is performed.
 
 
 
@@ -168,7 +168,7 @@ Note that during this step, clipping is performed.
 
 
 \subsection{3D setup}
-Before starting to draw frames, the 3D renderer needs to setup the VRAM with static elements. The 3D view is not fullscreen but it is contained in a HUD\footnote{Head-up display}:
+Before starting to draw frames, the 3D renderer needs to setup the VRAM with static elements. The 3D view is not fullscreen but contained in a HUD\footnote{Head-up display}:
 \begin{figure}[H]
   \centering
  \fullimage{hud_empty.png}
@@ -176,17 +176,15 @@ Before starting to draw frames, the 3D renderer needs to setup the VRAM with sta
 This HUD is drawn only once at the beginning of the 3D phase and it has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the allocated region. The stats contained in the blue part at the bottom of the screen (Level, Score, Lives, Status, Health, Ammo, Current weapon) get a special treatment via an other VGA trick.\\
 \par
 
-The hardware chapter described the Mode 12h which despite being unfit for games still had something interesting. Mode 12h is a 16 colors mode where each four bits are spread across the VGA banks. Since all write operation are one byte, you can see how it would have been difficult to plot a single pixel without changing the other stored in the same bytes. One would have to do four read, four xor and four writes. Since the designer of the VGA were not complete sadist they added some circuitry to simplify this operation. For each bank, they added one latch in from of a configurable ALU:\\
+The hardware chapter described the Mode 12h which despite being unfit for games still had something interesting. Mode 12h is a 16 colors mode where each pixel color index is contained ina a nibble. The four bits are spread across the four VGA banks. Since all write operation are one byte wide, it is not hard to imagine the difficulty to plot a single pixel without changing the other stored in the same bytes. One would have to do four read, four xor and four writes. Since the designer of the VGA were not complete sadist they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
 \par
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/latches.pdf}
  \end{figure}
-In this architecture, each time VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written, it can be composited by the ALU using the latched value and the latched value. This design allowed mode 12h programmer to plot a point easily:\\
+In this architecture, each time VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmer to plot a point easily\\
 \par
-\note{TODO: Insert code sample.}
-\par
-Mode Y does not need latches to operate since values are stored in byte and banks can be updated individually thanks to the mask. However hackers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. And by getting a little bit creative and repurposing them, one could copy four pixels from one area of the VRAM to an other with just one read and write to the RAM!\\
+Mode Y does not need latches to operate since values are stored in byte and banks can be updated individually thanks to the mask. However tinkerers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. And by getting a little bit creative and repurposing them, one could copy four pixels from one area of the VRAM to an other with just one read and write to the RAM!\\
 \par
 To take full advantage of this optimization, the 3D renderer upload images to the VRAM above the third page. Sprites 91 to 134 are latched in VRAM.\\
 
@@ -356,17 +354,17 @@ To take full advantage of this optimization, the 3D renderer upload images to th
      \fullimage{latched/134.png}
   \end{minipage}\
 
-\note{Images are stored woven. So each bank can be loaded in one \cw{memcpy}.}
-
-All these assets account for $48*24*4+14*8*16+23*24*32+224*48=34,816$ bytes. There is therefore $2^18-320*208*3 - 34,816=27,648$ bytes unused VRAM in the VGA.\\
+\bu{Tick :} Images are stored woven. All bytes for bank 0 first, then all bytes for bank 1 and so on. This clever way to store data allow a bank to be loaded with one single \cw{memcpy} (four per image).\\
 \par
-Of course, for this trick to work images source and destination have to be aligned on four byte. If you take a look at the location of each elements on screen you can see that elements are aligned on four horizontally. Vertically there is no such issue.
+All these assets account for $48*24*4+14*8*16+23*24*32+224*48=34,816$ bytes. There is therefore $2^18-320*208*3 - 34,816=27,648$ bytes unused VRAM in the fourth VGA page.\\
+\par
+Of course, for this trick to work images source and destination have to be aligned on four byte in screen space. If you take a look at the location of each elements on screen you can see that elements are aligned on four horizontally. Vertically there is no such issue.
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
 \end{figure}
 
-While it is faster to write four pixel in two operations, the trick does not provide a full 300\% speed increase since all writes have to be done in all three buffers:\\
+While it is faster to write four pixel in two operations, the trick does not provide a full 300\% speed increase since all writes have to be done in all three buffers. It is vivid when looking at the routine updating the statuc (hero's face).\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/StatusDrawPic.c}
@@ -375,7 +373,7 @@ While it is faster to write four pixel in two operations, the trick does not pro
 
 
 \subsection{Clearing the screen}
-At the beginning of a frame, the engine switch to the next buffer and clears the 3D area with ceiling and floor colors. To this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all bank simulatenously. However since values are written 16 bits at a time, that allows to write 8 pixels at a time:\\ 
+At the beginning of a frame, the engine switch to the next buffer and clears the 3D area with ceiling and floor colors. To this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all bank simulatenously. However since values are written 16 bits at a time it can write 8 pixels at a time.\\ 
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
@@ -383,7 +381,7 @@ At the beginning of a frame, the engine switch to the next buffer and clears the
 \par
 As a result, clearing the screen made of 64000 pixels requires only 64000/8 = 8000 write operations. An impressive way to turn an awkward four bank based architecture into a tremendous source of optimizations!\\
 \par
-Note that the colors are not coming from the maps data files. They are hardcoded in the engine:\\
+Note that the colors are not coming from the maps data files. The ground is always the same color (\cw{0x19}) and the ceiling colors are hardcoded in the engine on a per level basis.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=byte]{code/vgaCeiling.c}
@@ -501,9 +499,8 @@ The beauty of fixed point is that addition and subtraction work exactly like int
    \caption{1.5 >> 2 = 0.75} 
 \end{figure}
 
-The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PAR:BITS\_FOR\_FRACTIONNAL\_PART}. In the game, player position is \cw{16:16}. The grid location is one shift operation away \cw{player->x >> 16}.
-
-
+The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONNAL\_PART}. In the game, player position is \cw{16:16}. The grid location is one shift operation away \cw{player->x >> 16}.\\
+\par
  The special case is when performing multiplication. There are two ways to do it: Either multiply two 32 bits into a 64 bits or drop the precision of both fixed point and multiply then into a 32 bits. Since the 286 and 386 do not have 64 bits registers, wolf does the later (illustrated here with 8:8 for readability):
 
 
@@ -560,7 +557,7 @@ Notice that you have to be careful: In the previous example some precision was l
 With the CPU/\cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. A quick reminder on the coordinate system used:
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{imgs/drawings/coordinate_system.png}
+ \includegraphics[width=.5\textwidth]{imgs/drawings/coordinate_system.png}
 \end{figure}
 \par
 A map is 64 by 64. Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place: column height are 29:3. Position is 24:8. Angle however is an int representing 10th of degrees with range [0, 3600].

@@ -1,5 +1,5 @@
 extern byte far gamepal; // content of GAMEPAL.OBJ
-extern char	far signon;  // content of SIGNON.OBJ
+extern char	far introscn;  // content of SIGNON.OBJ
 
 void SignonScreen (void) // VGA version
 {
