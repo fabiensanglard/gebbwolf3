@@ -1,0 +1,10 @@
+p16 : cette capture parait un peu perdu - probleme de mise en page, y rapprocher le trivia ? Rajouter une legende a celle-ci. Gars croix gammée peut être pas trop bien que ce soit en lien avec le theme du jeu !
+p18 : if a PC had a Intel 80386 microprocessor, it was ..... a "i386" on parlait toujours de "i" 386 non ?
+presentation alternative floating point : nice :)
+p38 : calcul de 54ns ? 1/(640*480*60) = 56ns. pas sur d'avoir compris tout le reste sur les 4 banks. un petit voice over serait intéressant.
+p46 : roo the operation -> route ?
+p50 : phenomene de tearing bien expliqué mais un doute, le double buffering etait dispo ? reponse dans le summarry 2.7 en fait.
+p62 : note 2 pas en lien - j'ai l'impression. a positioner sur Jason Blochowiak ?
+p65 : were played
+p98 : EMS and XMS and used as cace ???
+p107 : was he coined ??
