@@ -1,4 +1,5 @@
-void scaleTextureToHeight(int height, void* src, void* dst){
+void scaleTextureToHeight(int height, void* src, void* dst)
+{
   // Variables here ...
   for (int cursor=0 ; cursor<height ; cursor++) {
   	// Calculations

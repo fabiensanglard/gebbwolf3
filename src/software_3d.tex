@@ -554,13 +554,13 @@ Notice that you have to be careful: In the previous example some precision was l
 
 
 \subsubsection{Coordinate System}
-With the CPU/\cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. A quick reminder on the coordinate system used:
+With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. The coordinate system find its origin in the upper left.
 \begin{figure}[H]
   \centering
  \includegraphics[width=.5\textwidth]{imgs/drawings/coordinate_system.png}
 \end{figure}
 \par
-A map is 64 by 64. Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place: column height are 29:3. Position is 24:8. Angle however is an int representing 10th of degrees with range [0, 3600].
+A map is a grid of 64 by 64 blocks. Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column height are 29:3. Position is 24:8. Angle however is an \cw{int} representing 10th of degrees with a range [0, 3600].
 
 
 
@@ -582,7 +582,7 @@ A map is 64 by 64. Since one block is 8 feet, maps can be 512 feet wide and tall
 Drawing the walls is all about determining what is visible, what is not and what is in front of what. Michael Abrash's view on the topic tells it all:\\
 \par
 \begin{fancyquotes}
-I want to talk about what is, in my book, the toughest 3-D problem of all, visible surface determination (drawing the proper surface at each pixel), and its close relative, culling (discarding non-visible polygons as quickly as possible, a way of accelerating visible surface determination). In the interests of brevity, I’ll use the abbreviation VSD to mean both visible surface determination and culling from now on.
+I want to talk about what is, in my book, the toughest 3-D problem of all, visible surface determination (drawing the proper surface at each pixel), and its close relative, culling (discarding non-visible polygons as quickly as possible, a way of accelerating visible surface determination). In the interests of brevity, I'll use the abbreviation VSD to mean both visible surface determination and culling from now on.
  \bigskip \\
 Why do I think VSD is the toughest 3-D challenge? Although rasterization issues such as texture mapping are fascinating and important, they are tasks of relatively finite scope, and are being moved into hardware as 3-D accelerators appear; also, they only scale with increases in screen resolution, which are relatively modest.
  \bigskip \\
@@ -591,7 +591,7 @@ In contrast, VSD is an open-ended problem, and there are dozens of approaches cu
 \textbf{Michael Abrash - Programmer}
  \end{fancyquotes}
  \par
-VSD is not only complicated to get right, it is also hard to get it done fast. It is easy to understand with a small example where objects are of free form with no alignment.
+VSD is not only complicated to get done, it is also hard to get done fast. It is easy to understand with a small example where objects are of free form with no alignment like in the following drawing.
 
 \par
 \begin{figure}[H]
@@ -600,8 +600,8 @@ VSD is not only complicated to get right, it is also hard to get it done fast. I
  %\input{imgs/drawings/casting_a_ray/situation.tex}
 \end{figure}
 
-
-A possible approach to find wall intersection would be to do ray marching which consist in checking at regular interval. But that would be very CPU intensive and even with fixed point that would not be fast enough.
+With a configuration like above, how would you render these two objects on a screen 320 pixels wide?\\
+A valid approach would be to find the distance of each column of pixel and draw a height proportional to the distance. To find wall intersection can be done with ray marching which consist in checking a ray intersection with objects at regular interval. That is very CPU intensive and even with fixed point that would not be fast enough.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/unaligned.pdf}
@@ -609,7 +609,7 @@ A possible approach to find wall intersection would be to do ray marching which 
 \end{figure}
 
 
-However by adding some contraint to the world the problem can becomes much simpler. If the world is made of square block alixed with axis and evenly distributed on a grid, the solution giving 100\% accuracy and low runtime is to check for 'hit` only where a ray crosses the grid. This is the choice Wolfenstein 3D made and that explains why it can only draw perpendicular walls, all of them being 8 feet by 8 feet by 8 feet cubes.
+However if you add some contraints to the world, then the problem become much simpler. If the world is made of square block alixed with axis and evenly distributed on a grid, the solution giving 100\% accuracy and low runtime is to check for 'hit` only where a ray crosses the grid. This is the choice Wolfenstein 3D made and that explains why it can only draw perpendicular walls, all of them being 8 feet by 8 feet by 8 feet cubes.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/fixed.pdf}
@@ -678,7 +678,7 @@ $D = (E.x + ystep, E.y + 1)$\\
 }
 \end{equation*}
 
-This CPU power limitation and associated grid solution bubbled up all the way to the game designer. It explains why all Wolfenstein 3D maps are made of square elements all aligned on axis:\\
+This CPU power limitation and associated grid solution bubbled up all the way to the game designer. It explains why all Wolfenstein 3D maps are made of square elements all aligned on axis.\\
 \par
 \begin{figure}[H]
   \centering
@@ -757,7 +757,7 @@ or load a saved game from before you went into that maze.\\
  
  
 \subsubsection{Raycasting: DDA Algorithm}
-The variant of DDA is implemented in a fully handcrafted 740 lines of assembly routine \cw{PROC AsmRefresh}. Represented here in pseudo-C for readability it consists of two while looks (one checking vertical intersection and one checking the horizontal) ping-ponging with each other via goto. It is highly unorthodox and super efficient:\\
+The DDA intersection algorithm is implemented in a fully handcrafted 740 lines of assembly routine: \cw{AsmRefresh}. It is represented here in pseudo-C for readability. It consists of two while looks (one checking vertical intersection and one checking the horizontal) ping-ponging with each other via goto. It is highly unorthodox and super efficient.\\
 \par
 
 
@@ -765,15 +765,15 @@ The variant of DDA is implemented in a fully handcrafted 740 lines of assembly r
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/flipflop.c}
 \end{minipage}
-This algorithm results in \cw{jmp} heavy instructions but on a an architecture devoid of pipeline and code cache such as the 386 it is not a problem at all.\\
+This implementation results in many heavy \cw{jmp} instructions. These would kill the C-cache and empty the pipeline on a modern CPU. But on a an architecture devoid of pipeline and code cache such as the 386 it is not a problem at all.\\
 \par
-This part of the code relies heavily on trigonometric circle principles.
+This part of the code relies heavily on unit circle principles. Because we need to know by how much we go up when advancing on X axis and how much we go left when advancing on the Y axis, the \cw{tan} is expecially useful. It is easier to understand with the unit circle drawn (remember that the circle radius R is equal to 1).
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/unit_circle.tex}
 \end{figure}
 \par
-\cw{tan} is expecially useful for DDA algorithm: When advancing 1 on the X axis, the ray moves up $tan(\alpha)$ on the Y axis. The reciprocal is calculate as follow: Move 1 on Y axis, move $tan(90-\alpha)$ on X axis. To accelerate \cw{cos}, \cw{sin} and \cw{tan} calculation, the engine uses lookup table: One entry for each 360 degres (read it in details in the "Tricks" section.
+When advancing 1 on the X axis, the ray moves up $tan(\alpha)$ on the Y axis. The reciprocal is calculated as follow: Move 1 on Y axis, move $tan(90-\alpha)$ on X axis. To accelerate \cw{cos}, \cw{sin} and \cw{tan} calculations, the engine uses lookup table. One entry for each 360 degres (read about lookup table trick in details in the "Tricks" section).
 
 
 
@@ -795,7 +795,7 @@ This part of the code relies heavily on trigonometric circle principles.
 
 
 \subsubsection{High school math 101}
-Before proceeding to the next session about fish eye projection correction, a short reminder of something we all learn in highschool: SOH-CAH-TOA which is the fundation of most calculations in the engine.\\
+Before proceeding to the next session about what is done with the distance player <-> wall, a short reminder of something taught in highschool and is the fundation of most calculations in the engine: SOH-CAH-TOA.\\
 \par
  \begin{fancyquotes}
   I'm no super mathematician-- I learned high school math well enough to solve real world problems with it.\\
@@ -812,7 +812,7 @@ Before proceeding to the next session about fish eye projection correction, a sh
 
 
 
-These properties are used everywhere in Wolfesntein 3D. This is all you need to understand fish eye correction and coordinate projections which is used to place player, enemies, items and calculate sounds locations.\\
+This drawing is all the math you need to understand fish eye correction and coordinate projections which is used to place player, enemies, items and calculate sounds locations.\\
 
 
 
@@ -820,13 +820,13 @@ These properties are used everywhere in Wolfesntein 3D. This is all you need to 
 
 
 \subsubsection{Calculate column height}
-Once the intersection between a ray and a wall is found (from coordinate (\cw{viewx},\cw{viewy} to (\cw{xintercept},\cw{yintercept})), it is time to calculate how tall the column of pixel for this ray should be. It happens in function \cw{CalcHeight}:\\
+Once the intersection between a ray and a wall is found (from coordinate (\cw{viewx},\cw{viewy} to (\cw{xintercept},\cw{yintercept})), it is time to calculate how tall the column of pixel for this ray should be. It happens in the function \cw{CalcHeight}.\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/CalcHeight.c}
 \end{minipage}
 
-The code is not what one would expect: The raycasting algorithm is supposed to cast a ray for each pixel column and use the distance \codeword{d} to infer the column's height on screen. So one would have expected to see a formula like:
+The code is not what one would expect: The raycasting algorithm is supposed to cast a ray for each pixel column and use the distance \codeword{d} to infer the column's height on screen. So it would have made sense to see a formula like:
 \begin{figure}[H]
   \centering
   \begin{equation*}
@@ -844,7 +844,7 @@ $d = dx * \cos(\alpha) - dy * \sin(\alpha) $
  }
   \end{equation*}
 \end{figure}
-Something is fishy here. Let's explain with an example:\\
+Something is fishy here. Let's explain with an example.\\
 \par
 \begin{figure}[H]
 \centering
@@ -868,7 +868,11 @@ In this drawing the player is located at viewpoint with a view angle \begin{math
 
 
 \begin{minipage}{.5\textwidth}
-To demonstrate the fish eye distortion we will show three screenshots of a modified version of the engine. it was altered to use distance \cw{d} instead of "something else" to calculate column heights. In the next three screenshots the player get progressively closer to a wall. At first the distorsion is barely noticeable.
+This visual artifact happens because the straight distance from the player to the wall is not constant. Walls are further away on the side of the screen and therefore represented smaller.\\
+\par
+To demonstrate the fish eye distortion we will show three screenshots from a modified version of the engine. it was altered to use distance \cw{d} instead of "something else" to calculate column heights. At first from a distance of 32 feet, the distorsion is barely noticeable.\\
+\par
+But as the player get closer to the wall...
  \end{minipage}
 \begin{minipage}{.5\textwidth}
 \begin{figure}[H]
@@ -893,7 +897,9 @@ To demonstrate the fish eye distortion we will show three screenshots of a modif
 
 
 \begin{minipage}{.5\textwidth}
-At a distance of 24 feet, the distortion cannot be ignored any more and it clearly noticeable. Note that even though the player is getting closer to the wall, the ratio of A and B remain the same. The absolute difference however becomes significant.
+From a distance of 24 feet, the distortion cannot be ignored any more and it clearly noticeable.\\
+\par
+Note that even though the player is getting closer to the wall, the ratio of A to B remain the same. Only the absolute difference is increasing.
  \end{minipage}
 \begin{minipage}{.5\textwidth}
 \begin{figure}[H]
@@ -916,7 +922,9 @@ At a distance of 24 feet, the distortion cannot be ignored any more and it clear
  
 
 \begin{minipage}{.5\textwidth}
-At close range (12 feet) the distortion is straight up unpleasant. To avoid this distortion and get a more pleasant rendition, what must be used is not the direct distance \cw{d} but \cw{d} projected on the perpendicular of the view direction (\cw{z}):
+At a closer range (12 feet) the distortion is straight up unpleasant.\\
+\par
+To avoid this distortion and get a more pleasant rendition, what must be used is not the direct distance \cw{d} but \cw{d} projected on the perpendicular of the view direction (\cw{z}).
  \end{minipage}
 \begin{minipage}{.5\textwidth}
  \begin{figure}[H]
@@ -945,28 +953,27 @@ This projection (z) is mathematically hard to calculate in one go (especially wi
  \input{imgs/drawings/fish_eye/correct_way.tex}
  
 \end{figure}
-Using CAH gives $A = dx * \cos(\alpha)$ and SOH gives $B = dy * \sin(\alpha) $. So:
+Using CAH gives $A = dx * \cos(\alpha)$ and SOH gives $B = dy * \sin(\alpha) $.\\
+\par
 
-
-
-The overall operation can be seen as a rotation of y intercept around the viewpoint.
+Adding them together becomes:
 \par
 \begin{figure}[H]
   \centering
   \begin{equation*}
     \scalebox{1.3}{
-$d = A + B = dx * \cos(\alpha) + dy * \sin(\alpha) $. 
+$z = A + B = dx * \cos(\alpha) + dy * \sin(\alpha) $. 
  }
   \end{equation*}
 \end{figure}
-But since dx and dy are not distances but vectors (with a sign) the equation becomes 
+Since dx and dy are not distances but vectors (with a sign) the equation becomes: 
 
 
 \begin{figure}[H]
   \centering
   \begin{equation*}
     \scalebox{1.3}{
-$d = A + B = dx * \cos(-\alpha) + dy * \sin(-\alpha) $ 
+$z = A + B = dx * \cos(-\alpha) + dy * \sin(-\alpha) $ 
  }
   \end{equation*}
 \end{figure}
@@ -976,12 +983,12 @@ which simplified becomes:
   \centering
   \begin{equation*}
     \scalebox{1.3}{
-$d = A + B = dx * \cos(\alpha) - dy * \sin(\alpha) $
+$z = A + B = dx * \cos(\alpha) - dy * \sin(\alpha) $
  }
   \end{equation*}
 \end{figure}
 \par
-For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy), which transforms coordinate from map space (origin in upper left corner with axis aligned with the map) to player space (origin at player position with axis aligned with player orientation).
+For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy). It would transforms coordinate from map space (origin in upper left corner with axis aligned with the map) to player space (origin at player position with axis aligned with player orientation).
 \begin{figure}[H]
   \centering
   \begin{equation*}
@@ -1012,10 +1019,9 @@ For people who like equations, the overall operation can be seen as the multipli
  \end{figure}
 
 
-I personally find the graphic explanation with SOH-CAH-TOA much more clear!
+I personally find the graphic explanation with SOH-CAH-TOA much more clear!\\
 \par
-
- Which is enough to give pleasant straight lines. Following a wall uncorrected and the same location with projected distance:\\
+The correction is enough to give pleasant straight lines. To make the difference vivid, here are a few pictures showing the same scene, first uncorrected (with fisheyes) and the same scene with projected distance instead of direct distance.\\
 
  \begin{minipage}{\textwidth}
  
@@ -1052,7 +1058,8 @@ I personally find the graphic explanation with SOH-CAH-TOA much more clear!
 
 
 \subsection{Drawing walls}
-Drawing the columns for each rays may sound easy but it is in fact difficult. It is not hard in terms of mathematics but hard in terms of instructions clock consumption. To scale a line a 64 pixels tall texture on the screen centered vertically is expensive. It turns out if you want to do it fast you need a few optimization. This is where Wolfenstein 3D took off and left other 3D engine in the dust. This is the part where lies the two secrets of the engine speed:
+With a heigh calculated for a pixel, all remaining to do it "just" drawing a column of pixels.\\
+That may sound easy but it is in fact very difficult on a CPU with as little power as a 386. It is not hard in terms of mathematics but hard in terms of instructions clock consumption. To scale a line of a 64 pixels texture on the screen centered vertically is expensive. It turns out if you want to do it fast you need a few optimization. This is where Wolfenstein 3D takes off and leave other 3D engine in the dust. This is the part where lies the two secrets of its  speed thanks to two techniques:
 \begin{itemize}
 \item Compiled scalers
 \item deferred column rendering
@@ -1067,7 +1074,7 @@ With a distance available for a column, the engine is able to calculate a corres
  \fullimage{scaler_valign.png}
  \end{figure}
 \par
-As the manually added pink line shows, every column of pixels are centered vertically. There is no horizontal offset. In order to do that, a naive approach would be to use a generic routine looking something like:\\
+As the photoshoped pink line shows, every column of pixels for a wall are centered vertically. There is no horizontal offset. In order to do that, a naive approach would be to use a generic routine looking something like this:\\
 
 
 \par
@@ -1076,24 +1083,30 @@ As the manually added pink line shows, every column of pixels are centered verti
 \end{minipage}
 
 \par
-Which would involves a loop, a fixed point accumulator and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function since it can accept any height from \cw{0} to \cw{INT\_MAX}. But there is a faster way and it involves the usual RAM vs CPU tradeoff. By using a bit of RAM one can consume less CPU. The way the engine does it is by removing the genericity of the scaler and generate x86 code specialized to drawing specific height of wall ranging from 1 pixels to 200 (the height of the screen). This is all done in \cw{BuildCompScale}:\\
+It would involves having a loop, a fixed point accumulator and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible approach can accept as input any height from \cw{0} to \cw{INT\_MAX}.\\
+\par
+ But there is a faster way to do it which involves the eternal RAM vs CPU tradeoff. In this case we can give away a bit of RAM to gain a lot of CPU.\\
+ \par 
+ The way the engine does it is by removing the genericity of the scaler and generate at runtime x86 instructions specialized in drawing specific height of wall ranging from 1 pixels to 200 (the height of the screen). This is all done in \cw{BuildCompScale}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/compscale.c}
 \end{minipage}
 \par
-With this optimization, minifying a 64 textures to a 2 pixel height takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 120 pixels takes 841 instructions. The precompiled scaler have a fixed cost of 7 instructions per pixel: It doesn't get any faster than that!\\
-\note{Drawing showing compiler scaler scaling 64 pixels vertically to 16,32 and 120.}
+Given a height, \cw{BuildCompScale} will generate instructions in the out variable \cw{code}. In essence instead of having one generic function accepting any height,  Wolfenstein decides to have 38 functions with hard-coded height which allows to unroll the loop inside each of them.\\
 \par
-What is the cost of the precompiling these scalers? How much RAM does it use? It takes 1 + 7 instructions per pixel to scale a column. So if all size were generated from 2,4,6...152 (38 pairs of size), we can use Gauss method to calculate the size:\\
+With this optimization, minifying a 64 textures to a 2 pixel height takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 120 pixels takes 841 instructions. A precompiled scaler have a fixed cost of 7 instructions per pixel: It doesn't get any faster than that!\\
+
+\par
+What is the cost of the precompiling these scalers? How much RAM does it use? It takes 1 + 7 instructions per pixel written to scale a column. So if all size were generated from 2,4,6...152 (38 pairs of size), we can use Gauss method to calculate the size:\\
 \par
 $154*38*7=40,964$ bytes\\
 \par
-That cost was deemed too high, so past size 76 only every other size are generated (2,4,6,,..,72,74,76) and (78,82,86,...,144,148,152). RAM consumption becomes:\\
+That cost was deemed too high, so past size 76 only every other size are generated (2,4,6,,..,72,74,76) and (78,82,86,...,144,148,152). RAM consumption becomes (still with Gauss method):\\
 \par
 $78*19*7+9*230*7=24,8642$ bytes\\
 \par
-A small price to pay for a huge boost in performances.\\
+A small price to pay for a huge boost in performances!\\
 \par
 The scalers are generated at startup. If the 3D window dimensions is changed they have to be re-generated. This is what happens after a resize while the "thinking" screen is showing.
 \begin{figure}[H]
@@ -1122,9 +1135,9 @@ But the engine is not done this way. Instead it buffers what to draw like this:\
 \end{minipage}
 
 \par
-This buffering is done because the renderer allows itself to cheat a little when two rays a deemed similar enough. If rays are similar, they are all drawn to the same height, regardless of their distance from the player point of view. This process introduces a little distortion but unlock a formidable speed up: now the engine can write multiple column on the screen (up to eight) very fast.\\
+This buffering is done because the renderer allows itself to cheat a little when two rays a deemed similar enough. If a group of consecutive rays are similar, they are all drawn at the same height, regardless of their distance from the player point of view. This process introduces a little distortion but unlock a formidable speed up. Now the engine can write multiple column on the screen (up to eight) very fast.\\
 \par
-What makes rays similar? The answer is: Two rays hitting the same wall and resulting in the same \cw{v} texture coordinate. In short this optimization leverages wall magnification.\\
+What makes rays similar? The answer is two rays hitting the same wall and resulting in the same \cw{v} horizontal texture coordinate. In short this optimization leverages wall magnification.\\
 
 \par
 The best case for this trick is shown in the following screenshot. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiples pixesl. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
@@ -1133,9 +1146,9 @@ The best case for this trick is shown in the following screenshot. The player is
  \fullimage{post_optimization_1_show.png}
 \end{figure}
 % If we take a close look at how a framebuffer is stored in VRAM across banks we notice that consecutive column of walls are stored at the same memory location.
-It we take a closer look at how a frame is stored accross all four banks in the VGA, we notice that four consecutive column of pixels are stored at the same location in all four banks.\\
+It we take a closer look at how a frame is stored across all four banks in the VGA, we notice that four consecutive column of pixels are stored at the same location in all four banks.\\
 \par
-With this property in mind, the engine buy cheating a little allows itself to write up to 8 columns in two passes (and three passes when column are not aligned on four bytes).
+With this property in mind, the engine cheats a little and allows itself to write up to 8 columns in two passes (and three passes when column are not aligned on four bytes). It simply write several times the same column thanks to the VGA mask and its banks.
  \par
   \begin{minipage}{\textwidth}
  
@@ -1150,19 +1163,22 @@ With this property in mind, the engine buy cheating a little allows itself to wr
 
 \par
 
-In practice, to achieve this trick, the engine must be very careful and factor in the four bank bytes alignment. The details of this are in the method \codeword{ScalePost} in \codeword{WL\_DRAW.C}.\\
+In practice, to achieve this trick, the engine must be very careful and factor in the four bank bytes alignment with the position of the columns. The details of this are in the method \codeword{ScalePost} in \codeword{WL\_DRAW.C}.\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/ScalePost.c}
 \end{minipage}
-Because there can be many combinations of VGA bank alignment and number of pixels to draw:
-The VGA banks writing configuration is set via the 8 bits VGA mask as follow:\\
+Because there can be many combinations of VGA bank alignment and number of pixels to draw,
+the VGA banks writing configuration is set via the 8 bits VGA mask.\\
 \par
  \par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/hardcoded_masks.c}
 \end{minipage}
-mapmasks[x\%4][numpixels]
+\cw{mapmasks} is used like:\\
+ VGA_mask = \cw{mapmasks[x\%4][numpixels]}\\
+ \par
+ The engine does an early return when VGA_mask is equal to 0 (when no more pixels are to be drawn).\\
 How these hard-coded mask values are used is easier to understand with a drawing of the VGA mask. 
 \begin{itemize}
 \item Bank 0 is selected when 1<<1 (1) is set to 1.
@@ -1179,7 +1195,7 @@ How these hard-coded mask values are used is easier to understand with a drawing
  \end{figure}
 
 
-With these in mind, we can take a few example using the following layout where the engine wants to draw column of pixels:
+With these in mind, we can take a few example using the following layout where the engine wants to draw column of pixels.
 \begin{figure}[H]
 \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation1.pdf}
@@ -1196,7 +1212,7 @@ With these in mind, we can take a few example using the following layout where t
 
 
 
-If the two column are not properly aligned (like columns under pixels 3 and 4), the maks is of no help. Two passes with mask set to 8 and then 1 will be needed.
+If the two column are not properly aligned (like columns under pixels 3 and 4), the mask is of no help. Two passes with mask set to 8 and then 1 will be needed.
   \begin{figure}[H]
  \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation3.pdf}
@@ -1207,24 +1223,24 @@ In the worse case scenario, the engine needs to draw eight column of pixels, und
   \begin{figure}[H]
  \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation4.pdf}
- \caption{Thee Passes with mask set to: 8,15,14}
+ \caption{Three Passes with mask set to: 8,15,14}
  \end{figure}
 
 
-A better case where two passes allow to draw 6 columns of pixels:
+A better case where two passes allow to draw 6 columns of pixels in two passes:
    \begin{figure}[H]
  \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation5.pdf}
-  \caption{wo Passes with mask set to: 15 and then 3}
+  \caption{Two Passes with mask set to: 15 and then 3}
  \end{figure}
 
 
-The instruction \codeword{or al , al} can be surprising. It means test if al is equal to zero and set the flag. Back in the day it was more populate than \codeword{test al, al}
+The instruction \codeword{or al , al} found in \cw{ScalePost} can be surprising. It means test if al is equal to zero and set the flag. Back in the day it was more populate than \codeword{test al, al}
  the VGA bank masks are harcoded in an array: One for each pass:\\
 
 
 
-In the following example, the engine has been modified to draw in pink column of pixels which were written "for free" thanks to the VGA mask manipulation. We can see that performances improvement is very significant with 50\% of wall pixels saved.
+To take a real life example, the engine has been modified to draw in pink column of pixels which were written "for free" thanks to the VGA mask manipulation. We can see that performances improvement is very significant with 50\% of wall pixels saved.
 
 \begin{minipage}{\textwidth}
 
@@ -1245,7 +1261,7 @@ In the following example, the engine has been modified to draw in pink column of
  \vspace*{0.5cm}
  \scaledimage{0.9}{post_optimization_2_pink_show.png}
 \end{minipage}
-The defered renderer is less helpful when less magnification happens on the screen:\\
+This technique helps to solve the worse case scenario were a lot of pixels have to be written due to the size of the wall. It only really shines when a lot of magnification occurs. For walls far away (minified) this technique doesn't help at all but it doesn't matter since small walls are cheap to render.\\
 
 
 
@@ -1280,7 +1296,7 @@ A subtle but extremely efficient trick used to improve quality of the wall rendi
  \fullimage{baked_lights_stone.png}
  \end{figure}
 \par
-At runtime, upon casting each ray: if the ray hit a vertical wall the engine uses a light texture. If the ray hits an horizontal wall, it uses the dark version of the same texture. it is not obvious but when the same scene is rendered with and without and both screenshots are next to each others, the difference is vivid:\\
+At runtime, upon casting each ray, if the ray hit a vertical wall (looking at the map from above) on the Y axis, the engine uses a light texture. If the ray hits an horizontal wall (on the X axis), it uses the dark version of the same texture. It is not obvious but when the same scene is rendered with and without and both screenshots are next to each others, the difference is striking.\\
 \begin{minipage}{\textwidth}
 \begin{figure}[H]
 \centering
@@ -1296,9 +1312,8 @@ At runtime, upon casting each ray: if the ray hit a vertical wall the engine use
  \end{minipage}
 
 
-\bu{Trivia :} Textures are stored on HDD and RAM rotated 90 degres. This is because they are rendered as columns. It is easier to read them this way.\\
+\bu{Trivia :} Textures are stored on HDD and RAM rotated 90 degres. This is because they are rendered as columns. It is easier to calculate offsets this way.\\
 \par
-\note{TODO: Insert image here.}
 
  
 
@@ -1315,7 +1330,7 @@ Doors have no tickness. That would have been too complicated to do.\\
 \end{figure}
 
 \par
-This has to do with how the raycaster is detecting how far along a door is opened:\\
+It is because the doors are rendered via the raycaster. It detects how far along a door is opened and either stop at the door or traverse its blocks:\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/door.c}
@@ -1362,10 +1377,10 @@ TODO.\\
 
 
 \subsection{Drawing things}
-Once the walls are drawn, it is time to render sprites such as enemies, items (ammos, weapons) and decoration (lamps, table, etc) with two goals in mind:
+Once the walls are drawn, it is time to render sprites such as enemies, items (ammos, weapons) and decoration (lamps, table, etc). It is a two steps operation:
  \begin{enumerate}
   \item Find which sprites are visible.
-  \item Draw them correctly (parts hidden behind a wall should not be drawn)
+  \item Draw them correctly (parts hidden behind a wall should not be drawn).
  \end{enumerate}
 
 

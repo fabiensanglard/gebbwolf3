@@ -8,14 +8,15 @@ unsigned BuildCompScale (int height, byte far *code)
   [...]
   for (src=0;src<=64;src++) {
 
-    [...]
+    if (not_result_in_written_pixel)
+      continue;
     
     // mov al,[si+src]   (Read src into register al)
     *code++ = 0x8a;
     *code++ = 0x44;
     *code++ = src;  
 
-    for (;startpix<endpix;startpix++) {
+    for (magnification_size) {
       // mov [es:di+heightofs],al  (Write al to dest)
       *code++ = 0x26;
       *code++ = 0x88;
