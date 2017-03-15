@@ -1176,9 +1176,9 @@ the VGA banks writing configuration is set via the 8 bits VGA mask.\\
 \lstinputlisting[language=C]{code/hardcoded_masks.c}
 \end{minipage}
 \cw{mapmasks} is used like:\\
- VGA_mask = \cw{mapmasks[x\%4][numpixels]}\\
+ VGA\_mask = \cw{mapmasks[x\%4][numpixels]}\\
  \par
- The engine does an early return when VGA_mask is equal to 0 (when no more pixels are to be drawn).\\
+ The engine does an early return when VGA\_mask is equal to 0 (when no more pixels are to be drawn).\\
 How these hard-coded mask values are used is easier to understand with a drawing of the VGA mask. 
 \begin{itemize}
 \item Bank 0 is selected when 1<<1 (1) is set to 1.
@@ -1386,26 +1386,26 @@ Once the walls are drawn, it is time to render sprites such as enemies, items (a
 
 
 \subsubsection{Visible Sprite Determination}
-Building a list of visible sprite is done indirectly by leveraging information gathered by the raycaster. The visible sprites are on visible tiles. So the raycaster mark all tiles visited when looking for a wall hit.\\
+Building a list of visible sprite is done indirectly by leveraging information gathered by the raycaster. The visible sprites are on visible tiles. The raycaster mark all tiles visited by a ray when looking for a wall.\\
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/marked_out_room.pdf}
  \caption{Ray cast and visible spots.} 
 \end{figure}
-This is done in the simplest way with a 64x64 boolean array indicating if a tile was visited. At the beginning of each frame, the engine clears the array:
+It is done in the simplest way with a 64x64 boolean array indicating if a tile was visited. At the beginning of each frame, the engine clears the array:
  \lstinputlisting[language=C]{code/clear_vis_wold3d.c}
  \par
  Note that because register are 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations. Nowadays it is more efficient to use the C library.
  \lstinputlisting[language=C]{code/clear_vis_modern.c}
  \par
-The ray caster (\codeword{AsmRefresh}) write \cw{true} in the visible tile array.
-
+The ray caster (\codeword{AsmRefresh}) write \cw{true} in the visible tile array.\\
+\par
 \begin{minipage}{\textwidth}
   \lstinputlisting[language={[x86masm]Assembler}]{code/mark_vis_wold3d.asm}
 \end{minipage}
 \par 
 
-The array allow to build a list of visible sprites. It is not the most subtle part of the engine since all sprites on the map are tested but it works:\\
+The array allow to build a list of visible sprites. It is not the most subtle part of the engine since all sprites on the map are tested and sorted far to near but it works:\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/build_vis_list.c}
