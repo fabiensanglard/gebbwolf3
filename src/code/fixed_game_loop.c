@@ -1,4 +1,4 @@
-int  gameOn = 1
+int gameOn = 1
 int simulationTime = 0;
 
 while (1){

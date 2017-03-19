@@ -24,26 +24,26 @@ Even for a complex scene involving multiple door and rooms, this method can deli
 
 
 \subsection{Life of a frame}
-As we saw when we unrolled the loop, the action scene is made of frames in a loop which is pseudo code looks as follows:\\
+As we saw when we unrolled the loop, the action scene is made of frames in a loop which in pseudo code look as follows:\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/flawded_game_loop.c}
  \end{minipage}
 \par
-This is a pretty standard loop for an engine from the 90s however this architecture has a major flaw. Each slice of the game has a different duration which makes the game nondeterministic from one machine to an other. Or even between two runs on the same machine. In the next drawing, all three timeslice representing three frames have different durations:\\
+This is a pretty standard design for an engine from the early 90. However it has a major flaw. Each slice of the game has a different duration which makes the game nondeterministic from one machine to an other. Or even between two runs on the same machine as a matter of fact. In the next drawing, all three timeslice representing three frames have different durations:\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.pdf}
  
  \end{figure}
-  Which explains why it is not possible to record and replay a session. Upon replaying a recorded game the engine would reach point where it is supposed to update the world at a point in time where no inputs are available, resulting in a different world outcome.\\
+  Even if inputs were perfectly recorded, the same game could not be replayed. Upon replaying a recorded game the engine would invariably reach point where it was not during the previous session. A simple disk access taking longer would alter the frame duration, resulting in a different world outcome.\\
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/replay.pdf}
  
  \end{figure}
 \par
-To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulate things at fixed timesteps. This hack result in a slower playback on 286 CPUs and faster playback on 486 CPUs\\
+To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulate things at fixed timesteps. This hack result in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
 \par
 \bu{Trivia :} In 1993, Doom engine would solve this issue by simulating the world at fixed intervals:\\
 \par
@@ -168,7 +168,7 @@ During this step, clipping is performed.
 
 
 \subsection{3D setup}
-Before starting to draw frames, the 3D renderer needs to setup the VRAM with static elements. The 3D view is not fullscreen but contained in a HUD\footnote{Head-up display}:
+Before starting to draw frames, the 3D renderer needs to setup the VRAM with static elements. The 3D view is not fullscreen but contained in a HUD\footnote{Head-up display}.
 \begin{figure}[H]
   \centering
  \fullimage{hud_empty.png}
@@ -176,7 +176,7 @@ Before starting to draw frames, the 3D renderer needs to setup the VRAM with sta
 This HUD is drawn only once at the beginning of the 3D phase and it has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the allocated region. The stats contained in the blue part at the bottom of the screen (Level, Score, Lives, Status, Health, Ammo, Current weapon) get a special treatment via an other VGA trick.\\
 \par
 
-The hardware chapter described the Mode 12h which despite being unfit for games still had something interesting. Mode 12h is a 16 colors mode where each pixel color index is contained ina a nibble. The four bits are spread across the four VGA banks. Since all write operation are one byte wide, it is not hard to imagine the difficulty to plot a single pixel without changing the other stored in the same bytes. One would have to do four read, four xor and four writes. Since the designer of the VGA were not complete sadist they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
+The hardware chapter described the Mode 12h which despite being unfit for games still had something interesting. Mode 12h is a 16 colors mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operation are one byte wide, it is not hard to imagine the difficulty to plot a single pixel without changing the other stored in the same bytes. One would have to do four read, four xor and four writes. Since the designer of the VGA were not complete sadist they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
 \par
  \begin{figure}[H]
 \centering
@@ -354,17 +354,17 @@ To take full advantage of this optimization, the 3D renderer upload images to th
      \fullimage{latched/134.png}
   \end{minipage}\
 
-\bu{Tick :} Images are stored woven. All bytes for bank 0 first, then all bytes for bank 1 and so on. This clever way to store data allow a bank to be loaded with one single \cw{memcpy} (four per image).\\
+\bu{Tick :} Images are stored woven. All bytes for bank 0 first, then all bytes for bank 1 and so on. This clever way to store data allow a bank to be loaded with one single \cw{memcpy} (four \cw{memcpy} per image).\\
 \par
 All these assets account for $48*24*4+14*8*16+23*24*32+224*48=34,816$ bytes. There is therefore $2^18-320*208*3 - 34,816=27,648$ bytes unused VRAM in the fourth VGA page.\\
 \par
-Of course, for this trick to work images source and destination have to be aligned on four byte in screen space. If you take a look at the location of each elements on screen you can see that elements are aligned on four horizontally. Vertically there is no such issue.
+Of course, for this trick to work images source and destination have to be aligned on four byte horizontally in screen space. If you take a look at the location of each elements on screen you can see that elements are aligned on four horizontally. Vertically there is no such issue.
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
 \end{figure}
 
-While it is faster to write four pixel in two operations, the trick does not provide a full 300\% speed increase since all writes have to be done in all three buffers. It is vivid when looking at the routine updating the statuc (hero's face).\\
+While it is faster to write four pixel in two operations, the trick does not provide a full 300\% speed increase since all writes have to be done in all three buffers. It is vivid when looking at the routine updating the status (hero's face).\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/StatusDrawPic.c}
@@ -373,7 +373,7 @@ While it is faster to write four pixel in two operations, the trick does not pro
 
 
 \subsection{Clearing the screen}
-At the beginning of a frame, the engine switch to the next buffer and clears the 3D area with ceiling and floor colors. To this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all bank simulatenously. However since values are written 16 bits at a time it can write 8 pixels at a time.\\ 
+At the beginning of a frame, the engine switch to the next buffer and clears the 3D area with ceiling and floor colors. To this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all bank simultaneously. However since values are written 16 bits at a time it can write 8 pixels at a time.\\ 
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
@@ -554,13 +554,13 @@ Notice that you have to be careful: In the previous example some precision was l
 
 
 \subsubsection{Coordinate System}
-With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. The coordinate system find its origin in the upper left.
+With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. The coordinate system find its origin in the upper left. A map is a grid of 64 by 64 blocks. 
 \begin{figure}[H]
   \centering
  \includegraphics[width=.5\textwidth]{imgs/drawings/coordinate_system.png}
 \end{figure}
 \par
-A map is a grid of 64 by 64 blocks. Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column height are 29:3. Position is 24:8. Angle however is an \cw{int} representing 10th of degrees with a range [0, 3600].
+Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column height are 29:3. Position is 24:8. Angle however is an \cw{int} representing 10th of degrees with a range [0, 3600].
 
 
 
@@ -767,7 +767,7 @@ The DDA intersection algorithm is implemented in a fully handcrafted 740 lines o
 \end{minipage}
 This implementation results in many heavy \cw{jmp} instructions. These would kill the C-cache and empty the pipeline on a modern CPU. But on a an architecture devoid of pipeline and code cache such as the 386 it is not a problem at all.\\
 \par
-This part of the code relies heavily on unit circle principles. Because we need to know by how much we go up when advancing on X axis and how much we go left when advancing on the Y axis, the \cw{tan} is expecially useful. It is easier to understand with the unit circle drawn (remember that the circle radius R is equal to 1).
+This part of the code relies heavily on unit circle principles. Because we need to know by how much we go up/down when advancing on X axis and how much we go left/right when advancing on the Y axis, the \cw{tan} is expecially useful. It is easier to understand with the unit circle drawn (remember that the circle radius R is equal to 1).
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/unit_circle.tex}
@@ -795,7 +795,7 @@ When advancing 1 on the X axis, the ray moves up $tan(\alpha)$ on the Y axis. Th
 
 
 \subsubsection{High school math 101}
-Before proceeding to the next session about what is done with the distance player <-> wall, a short reminder of something taught in highschool and is the fundation of most calculations in the engine: SOH-CAH-TOA.\\
+Before proceeding to the next session describing what is done with the distance player <-> wall, a short reminder of something taught in highschool. The fundation of most calculations in the engine: SOH-CAH-TOA.\\
 \par
  \begin{fancyquotes}
   I'm no super mathematician-- I learned high school math well enough to solve real world problems with it.\\
@@ -1055,10 +1055,8 @@ The correction is enough to give pleasant straight lines. To make the difference
 
 
 
-
-
 \subsection{Drawing walls}
-With a heigh calculated for a pixel, all remaining to do it "just" drawing a column of pixels.\\
+With a height calculated for a pixel, all what remains to do is drawing a column of pixels.\\
 That may sound easy but it is in fact very difficult on a CPU with as little power as a 386. It is not hard in terms of mathematics but hard in terms of instructions clock consumption. To scale a line of a 64 pixels texture on the screen centered vertically is expensive. It turns out if you want to do it fast you need a few optimization. This is where Wolfenstein 3D takes off and leave other 3D engine in the dust. This is the part where lies the two secrets of its  speed thanks to two techniques:
 \begin{itemize}
 \item Compiled scalers
@@ -1087,22 +1085,22 @@ It would involves having a loop, a fixed point accumulator and intermediate vari
 \par
  But there is a faster way to do it which involves the eternal RAM vs CPU tradeoff. In this case we can give away a bit of RAM to gain a lot of CPU.\\
  \par 
- The way the engine does it is by removing the genericity of the scaler and generate at runtime x86 instructions specialized in drawing specific height of wall ranging from 1 pixels to 200 (the height of the screen). This is all done in \cw{BuildCompScale}.\\
+ The way the engine does it is by removing the genericity of the scaler in order to instead generates several functions specialized in drawing specific height of wall ranging from 1 pixels to 200 (the height of the screen). This is all done in \cw{BuildCompScale}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/compscale.c}
 \end{minipage}
 \par
-Given a height, \cw{BuildCompScale} will generate instructions in the out variable \cw{code}. In essence instead of having one generic function accepting any height,  Wolfenstein decides to have 38 functions with hard-coded height which allows to unroll the loop inside each of them.\\
+Given a height, \cw{BuildCompScale} generates x86 instructions in the out variable \cw{code}. As a result, instead of having one generic function accepting any height,  Wolfenstein has 38 functions with hard-coded height. To hard-code the height allows to unroll the loop and reduce the overhead.\\
 \par
 With this optimization, minifying a 64 textures to a 2 pixel height takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 120 pixels takes 841 instructions. A precompiled scaler have a fixed cost of 7 instructions per pixel: It doesn't get any faster than that!\\
 
 \par
-What is the cost of the precompiling these scalers? How much RAM does it use? It takes 1 + 7 instructions per pixel written to scale a column. So if all size were generated from 2,4,6...152 (38 pairs of size), we can use Gauss method to calculate the size:\\
+What is the RAM cost incured by precompiling these scalers? How much RAM does it use? It takes 1 + 7 instructions per pixel written to scale a column. If all size were generated from 2,4,6...152 (76 values for 38 pairs), we can use Gauss method to calculate the size:\\
 \par
 $154*38*7=40,964$ bytes\\
 \par
-That cost was deemed too high, so past size 76 only every other size are generated (2,4,6,,..,72,74,76) and (78,82,86,...,144,148,152). RAM consumption becomes (still with Gauss method):\\
+That cost was deemed too high. To save RAm, past size 76, only every other size are generated (2,4,6,,..,72,74,76) and (78,82,86,...,144,148,152). RAM consumption becomes (still with Gauss method):\\
 \par
 $78*19*7+9*230*7=24,8642$ bytes\\
 \par
@@ -1405,18 +1403,19 @@ The ray caster (\codeword{AsmRefresh}) write \cw{true} in the visible tile array
 \end{minipage}
 \par 
 
-The array allow to build a list of visible sprites. It is not the most subtle part of the engine since all sprites on the map are tested and sorted far to near but it works:\\
+The tile array allows to build a list of visible sprites. The way the visible tile array is used is not the most subtle part of the engine (it runs in $\mathcal{O}(n^2)$ time). All sprites on the map are tested (for belonging to a visible tile) and their height is calculated. They are all added to an array unsorted. A final double loop draw all sprites far to near by comparing height.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/build_vis_list.c}
  \end{minipage}
  \par
+ 
 
 
 
 
 \subsubsection{Rendition}
-With a list of visible entities, the engine needs to draw them on screen correctly. Each sprites is transformed from map space to player space using the same SOH-CAH-TOA math seen in the "Drawing Walls" section.
+Each sprites is rendered individually in function \cw{ScaleShape (int xcenter, int shapenum, unsigned height)}. The sprite is transformed from map space to player space using the same SOH-CAH-TOA math seen in the "Drawing Walls" section.
 
 \par
 \begin{figure}[H]
@@ -1501,6 +1500,7 @@ While casting, the occlusion array is written.\\
 \lstinputlisting[language=C]{code/wallheight_population.c}
 \end{minipage}
 While drawing sprites, the occlusion array is read. If the height of a wall is higher than a sprite, it means the wall is is front of the sprite. The full sprite column rendition is skilled with a continue in the sprite rendition loop.\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_usage.c}
 \end{minipage}
@@ -1514,21 +1514,22 @@ While drawing sprites, the occlusion array is read. If the height of a wall is h
 \subsubsection{Drawing}
 Rendition of sprites is also done with compiled scaler. However they cannot be used as they were generated. A compiler scaler draws its speed from its absence of parameters. It is essentially an unrolled loop, hardcoded with instructions reading from a fixed length of 64 pixels and writing an hardcoded length of minified/magnified pixels.\\
 \par
-Even though sprites are drawn in the same 64x64 space as wall textures, they almost never use all of it. They are usually smaller than 64 pixels and often feature transparent parts. Some even have "holes" and are composed of sequences of pixels separated by transparent areas. It is the case of the lamp which for most columns has an upper segment (the lamp) and a lower segment (the shadow).\\
+Even though sprites are drawn in the same 64x64 space as wall textures, they almost never use all of it. They are usually smaller than 64 pixels and often feature transparent parts. Some even have "holes" and are composed of sequences of pixels separated by transparent areas. It is the case of the lamp which for most columns has an upper segment (the lamp) and a lower segment (the shadow).As a result sprites are stored in compressed format, discarding transparent data.\\
+
 \par
-As a result sprites are stored in compressed format, discarding transparent data.
-\par
-How to get the best of both words? The speed of hardcoded instructions combined with variable height capability? At first it seems impossible. But there is a little trick that can be used: The engine patches the generated code with early return instruction \cw{ret}. In order to to that, the patch location are generated along when the scaler are compiled.\\
+How to get the best of both words? The speed of hardcoded instructions combined with variable height capability? At first it seems impossible. But there is a little trick that can be used. The engine patches the generated code with early return instruction \cw{ret}. In order to to that, the patch location are generated along when the scaler are compiled.\\
 \par
 \note{struct of a compiler scaler pointer}
 \par
-There are 64 patch location per scaler (one for each length of pixels besides 64 desired), allowing to write a \cw{RETF} instruction causing an early return.\\
+There are 64 patch location per scaler (one for each length of pixels besides 64 desired), allowing to write a \cw{RETF} instruction causing an early return. The instruction to be overwritten by \cw{RETF} is saved, the scaler is unpatched once the portion of sprite column has been rendered.\\
+\par
+Note of the engine knows where to patch the code thanks to a cw{table location}] which is generated when the compiled shaders are.
 \par
 \begin{minipage}{\textwidth}
   \lstinputlisting[language={[x86masm]Assembler}]{code/self_modifying.asm}
 \end{minipage}
 \par
-Patching the scaler is not enough. It only allows to draw a segment smaller than 64 pixels. But in order to draw a "hole" properly, the engine also needs to know how many pixels skip vertically in screenspace before starting the scaler on the next segment. This is were the \cw{width} property is used. The scaler compiler also saved 64 entries to convert sprites transparent height into screen space height. This operation is only a cheap lookup.\\
+Patching the scaler is not enough. It only allows to draw a segment smaller than 64 pixels. In order to draw a "hole" properly, the engine also needs to know how many pixels skip vertically in screenspace before starting the scaler on the next segment. This is were the \cw{width} property is used. The scaler compiler also saved 64 entries to convert sprites transparent height into screen space height. This operation is only a cheap lookup.\\
 \par
 But wait, there is more, It has to do with RAM consumption. The commercial version ships with XXX wall textures. They are opaque and uncompressed consuming 64x64xXXX=YYY bytes on HDD and RAM. But since sprites have transparency they are stored compressed.XXX sprites at 64x64 resolution and one byte per pixel that would use XXX of RAM. But with the special format id used it only accounts for XXX . That is XXX byte less and XX\% of the uncompressed format.\\
 \par
