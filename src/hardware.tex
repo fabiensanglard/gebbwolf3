@@ -69,7 +69,7 @@ Overall, the pipeline offers a lot of resistance since hardware manufacturers ha
    \caption{The 386-SX and 386-DX were identical processor. Yet the DX version is twice as powerful as the SX thanks to a data bus between the CPU and the RAM twice as wide (32 bits vs 16 bits). The SX still sold well because it was cheaper to manufacture. Also a lot of people had no idea what that 16 bits/32 bits but lingo meant, they just wanted "a 386".} \label{fig:mips}
  \end{figure}
  \par
- \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 Mips. That's five orders of magnitude faster!\\
+ \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 Mips. That's five orders of magnitude faster than the 386-DX!\\
 \par
 
 A 386 can be summarized by the following elements:
@@ -331,7 +331,7 @@ Out of the original 1024KB, only 640KB (called Conventional Memory) were usable.
 
 \bigskip
 
-\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KB of Conventional Memory. Needless to say French people learned pretty fast that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a querty keyboard but IDDAD on an azery keyboard without the French driver loaded.}.\\
+\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KB of Conventional Memory. Needless to say French people learned pretty fast that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a qwerty keyboard but IDDAD on an azery keyboard without the French driver loaded.}.\\
 \\
 
 \subsection{The infamous Real Mode: 16 bits Segmented addressing}
@@ -732,14 +732,14 @@ Double buffering is paramount for smooth animation. With only one buffer the sof
 \includegraphics[width=\textwidth]{imgs/drawings/doublebuffer_before.eps}
 \end{figure}
 \par
-In this example the CPU has finished writing the framebuffer (on the left) and the CRT (on the right) electron bean has started to scan it onto the screen. At this point in time the electron beam has scanned half the framebuffer and therefore the circle has been partially drawn on the screen.
+In this example the CPU has finished writing the framebuffer (on the left) and the CRT (on the right) electron beam has started to scan it onto the screen. At this point in time the electron beam has scanned half the framebuffer and therefore the circle has been partially drawn on the screen.
 \par
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/doublebuffer_after.eps}
 \end{figure}
 \par
-But if the CPU is fast enough (faster than 70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here. The next frame was drawn with the circle moved to the right. The electron bean did not know what and just kept on scanning the framebuffer. The result on screen is now a composite of two frames. It looks like two frames were torn and tapped together. Hence the name "tearing".\\
+But if the CPU is fast enough (faster than 70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here. The next frame was drawn with the circle moved to the right. The electron beam did not know what and just kept on scanning the framebuffer. The result on screen is now a composite of two frames. It looks like two frames were torn and tapped together. Hence the name "tearing".\\
 \par
 With two buffers (a.k.a double buffering) the CPU can start writing in the second framebuffer without messing with the framebuffer being scanned to the screen\footnote{Now the CPU speed is capped by the CRT refresh rate. Triple buffering can solve this at the price of frame latency.}. No more tearing!
 
