@@ -1354,8 +1354,8 @@ It is because the doors are rendered via the raycaster. It detects how far along
 
 
 \subsubsection{Push walls} 
-TODO.\\
-\note{Ask John Carmack and John Romero how it is done. And how much Tom had to push to get his pushwalls. This is especially surprising since Catacomb-3D had secret walls.}
+\note{Ask John Carmack and John Romero how it is done, the assembly is super hairy.}
+\note{And how much Tom had to push to get his pushwalls. This is especially surprising since Catacomb-3D had secret walls.}
 
 
 
@@ -1378,7 +1378,7 @@ TODO.\\
 Once the walls are drawn, it is time to render sprites such as enemies, items (ammos, weapons) and decoration (lamps, table, etc). It is a two steps operation:
  \begin{enumerate}
   \item Find which sprites are visible.
-  \item Draw them correctly (parts hidden behind a wall should not be drawn).
+  \item Draw them correctly with clipping enabled (parts hidden behind a wall should not be drawn).
  \end{enumerate}
 
 
@@ -1396,14 +1396,16 @@ It is done in the simplest way with a 64x64 boolean array indicating if a tile w
  Note that because register are 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations. Nowadays it is more efficient to use the C library.
  \lstinputlisting[language=C]{code/clear_vis_modern.c}
  \par
-The ray caster (\codeword{AsmRefresh}) write \cw{true} in the visible tile array.\\
+The ray caster (\codeword{AsmRefresh}) write \cw{true} in the visible tile array as the ray progresses towars a wall.\\
 \par
 \begin{minipage}{\textwidth}
   \lstinputlisting[language={[x86masm]Assembler}]{code/mark_vis_wold3d.asm}
 \end{minipage}
 \par 
 
-The tile array allows to build a list of visible sprites. The way the visible tile array is used is not the most subtle part of the engine (it runs in $\mathcal{O}(n^2)$ time). All sprites on the map are tested (for belonging to a visible tile) and their height is calculated. They are all added to an array unsorted. A final double loop draw all sprites far to near by comparing height.\\
+The tile array allows to build a list of visible sprites. The way the visible tile array is used is not the most subtle part of the engine (it runs in $\mathcal{O}(n^2)$ time) but it works well due to the low number of sprites.\\
+\par
+ All sprites on the map are tested for visibility with \cw{spotvis} and their height is calculated. They are all added to an array unsorted. A final double loop draw all sprites far to near (using sprite height to extra the father each iteration).\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/build_vis_list.c}
@@ -1423,7 +1425,7 @@ Each sprites is rendered individually in function \cw{ScaleShape (int xcenter, i
  \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
  \end{figure}
 \par
-The X coordinate is used to place a sprite horizontally on the screen (the Y coordinate is used for clipping). Sprites don't need to be place vertically for the good reason that all sprites and texture are drown in the same 64x64 space representing 8 feet by 8 feet.\\
+The X coordinate is used to place a sprite horizontally on the screen (the Y coordinate is used for clipping). Sprites don't need to be place vertically for the good reason that all sprites and wall textures are using the same 64x64 space representing 8 feet by 8 feet.\\
 \par
   \begin{minipage}{.5\textwidth}
      \fullimage{guard_sprite.png}
@@ -1436,14 +1438,14 @@ The X coordinate is used to place a sprite horizontally on the screen (the Y coo
 
 
 
- As shown in the following screenshot, scaling vertically a sprite is enough to give the illusion of perspective:\\
+ As shown in the following screenshot, scaling a vertically centered sprite is enough to give the illusion of perspective.\\
 \par
 \begin{figure}[H]
  \centering
  \fullimage{drawing_things.png}
 \end{figure}
 
-Even objects with only a part on the ground (meat) of with wide empty in between (lamp with shadow) are actually just one sprite centered and scaled vertically:\\
+Even objects with only a part on the ground (meat) of with transparency in between (lamp with shadow) are also one sprite centered and scaled vertically.\\
 
 
 
@@ -1456,8 +1458,8 @@ Even objects with only a part on the ground (meat) of with wide empty in between
 
 \par
 
-Trivia: The sprites with a lot of transparency (such as the food and the lamp shown previously) would later turn out a major fillrate issue with hardware accelerated renderer for the iOS port:
-
+\bu{Trivia :} Sprites with a lot of transparency (such as the food and the lamp shown previously) would later turn out a major fillrate issue with hardware accelerated renderer for the iOS port:\\
+\par
 \begin{fancyquotes}
 Wolfenstein (and Doom) originally drew the characters as sparse stretched columns of solid pixels (vertical instead of horizontal for efficiency in interleaved planar mode-X VGA), but OpenGL versions need to generate a square texture with transparent pixels.  Typically this is then drawn by either alpha blending or alpha testing a big quad that is mostly empty space.  You could play through several early levels of Wolf without this being a problem, but in later levels there are often large fields of dozens of items that stack up to enough overdraw to max out the GPU and drop the framerate to 20 fps.  The solution is to bound the solid pixels in the texture and only draw that restricted area, which solves the problem with most items, but Wolf has a few different heavily used ceiling lamp textures that have a small lamp at the top and a thin but full width shadow at the bottom.  A single bounds doesn't exclude many texels, so I wound up including two bounds, which made them render many times faster. 
 \bigskip \\
@@ -1466,12 +1468,9 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 
 \par
 
-The transparency of the sprite is exploited to reduce the storage and RAM consumption. They are stored in a special format skipping transparent section. The routine in charge of drawing decompress a column of sprite while it draws which mean the precomiled scaler cannot be used to draw sprite since they don't handle transparency. Instead a custom assembly crafter routine takes care of decompressing sprite and scaling them on screen.
+The transparency of the sprite is exploited to reduce the storage and RAM consumption. On the filesystem they use a special format skipping transparent section.
 \par
-sprites are stored as segments in segment lists described by commands.\\
-TODO: C code sample?\\
-TODO: How much RAM is saved?\\
-
+\note{Explain and draw how sprites are stored as segments in segment lists described by commands}.\\
 
 
 
@@ -1487,15 +1486,18 @@ TODO: How much RAM is saved?\\
 
 
 \subsubsection{Clipping}
-There is a second benefit to have wall and sprite in the same 64x64 coordinate system: It is easy to clip. Once the actor's position is transformed in player space, the distance Y allows to generate a height. These height are the same type calculated for the walls. As a result, for each column to find out if a column if behind a wall, the engine just compare the height from the occlusion array to the height of the actor.\\
+There is a second benefit to have wall and sprite in the same 64x64 coordinate system: It is easy to clip. Once the actor's position is transformed in player space, the distance Y allows to generate a height. These height are the same calculated for the walls. Hence, to find out if a sprite column if behind a wall, the engine just compare the height from the occlusion array and the height of the actor.\\
 \par
-That occlusion array is generated as each ray is cast. When the height of a column is generated for a ray, the height is also saved.\\
+That occlusion array is generated by the raycaster. When the height of a column is generated for a ray, the height is also saved.\\
+\par
+The occlusion array in the code is called \cw{wallheight}:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_declaration.c}
 \end{minipage}
 \par
-While casting, the occlusion array is written.\\
+While casting, the occlusion array is populated.\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_population.c}
 \end{minipage}
@@ -1505,54 +1507,76 @@ While drawing sprites, the occlusion array is read. If the height of a wall is h
 \lstinputlisting[language=C]{code/wallheight_usage.c}
 \end{minipage}
 \par
+Since the entire screen is refreshed on the next frame, the occlusion array does not need to be cleared at the beginning of a frame.
 
 
 
 
 
-
-\subsubsection{Drawing}
-Rendition of sprites is also done with compiled scaler. However they cannot be used as they were generated. A compiler scaler draws its speed from its absence of parameters. It is essentially an unrolled loop, hardcoded with instructions reading from a fixed length of 64 pixels and writing an hardcoded length of minified/magnified pixels.\\
+\subsubsection{Drawing things}
+Rendition of sprites is also done with compiled scaler. However they cannot be used as they were generated. A compiler scaler draws its speed from its absence of parameters. It is  an unrolled loop hardcoded with x86 instructions to read from a fixed length of 64 pixels and writing an hardcoded length of pixels. Compiled scaler 112 always read 64 pixels of texture and magnify it to 134 pixels on the screen.\\
 \par
-Even though sprites are drawn in the same 64x64 space as wall textures, they almost never use all of it. They are usually smaller than 64 pixels and often feature transparent parts. Some even have "holes" and are composed of sequences of pixels separated by transparent areas. It is the case of the lamp which for most columns has an upper segment (the lamp) and a lower segment (the shadow).As a result sprites are stored in compressed format, discarding transparent data.\\
+\par
+Even though sprites are drawn in the same 64x64 space as wall textures, they almost never use all of it. They are usually smaller than 64 pixels and often feature transparent parts. Some even have "holes" and are composed of sequences of pixels separated by transparent areas. It is the case of the lamp most columns has an upper segment (the lamp) and a lower segment (the shadow). Sprites are stored in compressed format, discarding transparent data.\\
+\par
 
+\begin{minipage}{.5\textwidth}
+For example, column \#25 in lamp texture is made of five transparent pixels, one sequence of five pixels for the lamp:\\
 \par
-How to get the best of both words? The speed of hardcoded instructions combined with variable height capability? At first it seems impossible. But there is a little trick that can be used. The engine patches the generated code with early return instruction \cw{ret}. In order to to that, the patch location are generated along when the scaler are compiled.\\
+\scaledimage{0.8}{light_sprite_column_head.png}
 \par
-\note{struct of a compiler scaler pointer}
+Then 49 transparent pixels. And finally one sequence of five pixels for the light halo.\\
 \par
-There are 64 patch location per scaler (one for each length of pixels besides 64 desired), allowing to write a \cw{RETF} instruction causing an early return. The instruction to be overwritten by \cw{RETF} is saved, the scaler is unpatched once the portion of sprite column has been rendered.\\
+\scaledimage{0.8}{light_sprite_column_bottom.png}
 \par
-Note of the engine knows where to patch the code thanks to a cw{table location}] which is generated when the compiled shaders are.
+Totaling 64 texels. This column is encoded with 1 command + 5 bytes of payload + 1 command bytes + 5 bytes of payload + 0x00 end marker. Total size 17 bytes. 75\% compression!\\
+ \end{minipage}
+\begin{minipage}{.5\textwidth}
+\begin{figure}[H]
+  \begin{flushright}
+     \scaledimage{0.9}{light_sprite_column.png}
+   \end{flushright}
+\end{figure}
+\end{minipage}
+
+
+
+ 
+\par
+But how to get the best of both words? The speed of compiled scaler with hardcoded instructions combined with variable height capability? At first it seems impossible. But there is a little trick that can be used. The engine patches the generated code with early return instruction \cw{ret}. In order to to that, the patch location are generated along when the scaler are compiled.\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/t_compscale.c}
+\end{minipage}
+\par
+There are 64 patch location per scaler (one for each length of pixels besides 64 desired, stored in \cw{codeofs[]}), allowing to write a \cw{RETF} instruction causing an early return. The instruction to be overwritten by \cw{RETF} is saved, the scaler is unpatched once the portion of sprite column has been rendered.\\
+\par
+Note how the engine knows where to patch the code thanks to a cw{table location}] which is generated when the compiled shaders are.
 \par
 \begin{minipage}{\textwidth}
   \lstinputlisting[language={[x86masm]Assembler}]{code/self_modifying.asm}
 \end{minipage}
 \par
-Patching the scaler is not enough. It only allows to draw a segment smaller than 64 pixels. In order to draw a "hole" properly, the engine also needs to know how many pixels skip vertically in screenspace before starting the scaler on the next segment. This is were the \cw{width} property is used. The scaler compiler also saved 64 entries to convert sprites transparent height into screen space height. This operation is only a cheap lookup.\\
+Patching the scaler is not enough. It only allows to consume less than 64 texels. In order to draw a "hole" properly, the engine also needs to know how many pixels skip vertically in screenspace before starting the scaler on the next segment. This is were the \cw{width[]} property is used. The scaler compiler also saved 64 entries to convert sprites transparent height into screen space height. This operation is only a cheap lookup.\\
 \par
-But wait, there is more, It has to do with RAM consumption. The commercial version ships with XXX wall textures. They are opaque and uncompressed consuming 64x64xXXX=YYY bytes on HDD and RAM. But since sprites have transparency they are stored compressed.XXX sprites at 64x64 resolution and one byte per pixel that would use XXX of RAM. But with the special format id used it only accounts for XXX . That is XXX byte less and XX\% of the uncompressed format.\\
+\bu{Total RAM saving with transparency: } \note{TODO} The commercial version ships with XXX wall textures. They are opaque and uncompressed consuming 64x64xXXX=YYY bytes on HDD and RAM. But since sprites have transparency they are stored compressed.XXX sprites at 64x64 resolution and one byte per pixel that would use XXX of RAM. But with the special format id used it only accounts for XXX . That is XXX byte less and XX\% of the uncompressed format.\\
 \par
-\note{Sprite format inserted here}
+
 \par
-\par
-Sprites are stored as array of 64 columns (because of the VGA, everything is drawn vertically). Each column entry uses RLE to code what is visible. Transparent sections are completely discarded.\\
-\par
-The same deferred drawing technique is used for sprites. It is especially powerful when a sprite is magnified.\\
+The same deferred drawing technique we saw for walls is also used for sprites. It is especially powerful when a sprite is magnified.\\
 
 \par
 \begin{figure}[H]
  \centering
  \fullimage{magnified_enemy_before.png}
 \end{figure}
-In this scene, the 64x64 sprites is magnified 2.2 times. By zooming in, we can see that each column is repeated at least twice. Sometimes three times. It is a perfect optimization case for the VGA planes.
+In this scene, the 64x64 sprites is magnified 2.2 times. By zooming in, we can see that each column is repeated at least twice. Sometimes three times. It is a perfect optimization case for the VGA planes deferred renderer.
 \par
 \begin{figure}[H]
  \centering
  \fullimage{magnified_zoom.png}
 \end{figure}
-A modified version of the engine draw in pink columns which were drawn "for free" thanks to the VGA mask. In this case most column were drawn only once. Magnification was a totally free operation despite more than twice the number of texel written to the screen.
-\par
+A modified version of the engine draw in pink columns which were drawn "for free" thanks to the VGA mask. In this case most column were drawn only once. Magnification was a totally free operation despite more than twice the number of texel written to the screen.\\
 \begin{figure}[H]
  \centering
  \fullimage{maginfized_zoom_modified.png}
@@ -1565,11 +1589,6 @@ A modified version of the engine draw in pink columns which were drawn "for free
 
 \subsection{Drawing weapon}
 Drawing the weapon at the bottom is straight forward. It uses the same type of rendition for sprite but with specific code where clipping is disabled in function \cw{ScaleShape}. The same compiled scaler and deferred rendition trick are used.
-\par
-How much is saved? Screenshot of saved
-\par
-\note{Show 4 weapon sprites}
-
 
 
 
@@ -1585,7 +1604,7 @@ How much is saved? Screenshot of saved
 
 
 \subsection{A.I}
-The 3D engine not only draw things, it also allows all objects to "think" and take actions. Those thinking objects are called "actors" and help to keep the game exciting and improve immersion. If enemies are too predictable and easy to defeat the game becomes boring. The designer and programmers worked in tandem on this one: The engine maintains a state machine for each thinker but it also relies heavily on hints and clues on the map provided by the designers to make enemies appear smarter than they are.\\
+The 3D engine not only draw things, it also allows all objects to "think" and take actions like firing, walking or emit sounds. Those thinking objects are called "actors". But the engine is not capable of all the things performed by the actors. the designers help the A.I state machine with "clues" so they appear smarter than they are.\\
 \par
 
 
@@ -1593,8 +1612,7 @@ The 3D engine not only draw things, it also allows all objects to "think" and ta
 
 
 
-
-"Actors" can be aggressive, they can be sneaky or they can be dumb (like when they are a rockets). To mode the behavior, all enemies have an associated state:
+"Actors" can be aggressive, they can be sneaky or they can be dumb (like when they are a rocket). To model their behavior, all enemies have an associated state:
 \begin{itemize}
 \item Standing
 \item Attack
@@ -1606,7 +1624,7 @@ The 3D engine not only draw things, it also allows all objects to "think" and ta
 \item Special Boss state
 \end{itemize}
 
-With each state are associated think and action method pointer. There is also a \cw{next} to indicate which state the actor should transition to once it is finished with the current state/action:\\
+With each state are associated \cw{think} and \cw{action} method pointer. There is also a \cw{next} to indicate which state the actor should transition to once it is finished with the current state/action:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/statetype.c}
@@ -1628,10 +1646,10 @@ Some state chain are more complex like for example chasing:\\
 \lstinputlisting[language=C,style=mystyle,basicstyle=\small]{code/s_grdchase.c}
 \end{minipage}
 \par
-This example was just for guards. All different types of enemies including bosses have their own state machine. They often share action (e.g: \cw{T\_Stand} and \cw{T\_Path} but they also occasionally have their own).\\
+This example was just for guards. All different types of enemies including bosses have their own state machine. They often share action (e.g: \cw{T\_Stand} and \cw{T\_Path}) but they also occasionally have their own.\\
 
 \par
-What makes enemies interesting to interact with is how the go from standing to being aggressive via \cw{T\_Stand}. They have three ways to detect the player:\\
+What makes enemies interesting is how the go from standing to being aggressive via \cw{T\_Stand}. They have three ways to detect the player:\\
 \begin{itemize}
 \item Proximity
 \item Sight
@@ -1643,8 +1661,8 @@ By far the sound is the most important and what makes the player feel like the A
 
 
 
-\subsubsection{Sound propagation reaction}
-Early one the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience. The engine takes care of it in a simple and resource efficient way: Maps are preprocessed, with each room defining an area. At runtime, the engine keeps track of what door opens and what door closes and maintains a matrix of portal connecting areas.
+\subsubsection{Sound propagation}
+Early on the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience. The engine takes care of it in a simple and resource efficient way: Maps are preprocessed, with each room defining an area. At runtime, the engine keeps track of what door opens and what door closes and maintains a matrix of portal connecting areas.
 Knowing if an enemy can hear the main character gunfire is a simple lookup in a table.
 
 \par
