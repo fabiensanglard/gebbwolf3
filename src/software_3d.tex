@@ -601,6 +601,7 @@ VSD is not only complicated to get done, it is also hard to get done fast. It is
 \end{figure}
 
 With a configuration like above, how would you render these two objects on a screen 320 pixels wide?\\
+\par
 A valid approach would be to find the distance of each column of pixel and draw a height proportional to the distance. To find wall intersection can be done with ray marching which consist in checking a ray intersection with objects at regular interval. That is very CPU intensive and even with fixed point that would not be fast enough.
 \begin{figure}[H]
 \centering
@@ -794,7 +795,7 @@ When advancing 1 on the X axis, the ray moves up $tan(\alpha)$ on the Y axis. Th
 
 
 
-\subsubsection{High school math 101}
+\subsubsection{High school math}
 Before proceeding to the next session describing what is done with the distance player <-> wall, a short reminder of something taught in highschool. The fundation of most calculations in the engine: SOH-CAH-TOA.\\
 \par
  \begin{fancyquotes}
@@ -867,14 +868,13 @@ In this drawing the player is located at viewpoint with a view angle \begin{math
 
 
 
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.4\textwidth}
 This visual artifact happens because the straight distance from the player to the wall is not constant. Walls are further away on the side of the screen and therefore represented smaller.\\
 \par
 To demonstrate the fish eye distortion we will show three screenshots from a modified version of the engine. it was altered to use distance \cw{d} instead of "something else" to calculate column heights. At first from a distance of 32 feet, the distorsion is barely noticeable.\\
-\par
 But as the player get closer to the wall...
  \end{minipage}
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.6\textwidth}
 \begin{figure}[H]
   \begin{flushright}
  \includegraphics[width=.9\textwidth]{imgs/drawings/fish_eye/top_view_far.pdf}
@@ -896,12 +896,12 @@ But as the player get closer to the wall...
 
 
 
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.4\textwidth}
 From a distance of 24 feet, the distortion cannot be ignored any more and it clearly noticeable.\\
 \par
 Note that even though the player is getting closer to the wall, the ratio of A to B remain the same. Only the absolute difference is increasing.
  \end{minipage}
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.6\textwidth}
 \begin{figure}[H]
   \begin{flushright}
  \includegraphics[width=.9\textwidth]{imgs/drawings/fish_eye/top_view_middle.pdf}
@@ -921,12 +921,12 @@ Note that even though the player is getting closer to the wall, the ratio of A t
  \end{figure}
  
 
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.4\textwidth}
 At a closer range (12 feet) the distortion is straight up unpleasant.\\
 \par
 To avoid this distortion and get a more pleasant rendition, what must be used is not the direct distance \cw{d} but \cw{d} projected on the perpendicular of the view direction (\cw{z}).
  \end{minipage}
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.6\textwidth}
  \begin{figure}[H]
   \begin{flushright}
   \includegraphics[width=.9\textwidth]{imgs/drawings/fish_eye/top_view_close.pdf}
@@ -1083,7 +1083,7 @@ As the photoshoped pink line shows, every column of pixels for a wall are center
 \par
 It would involves having a loop, a fixed point accumulator and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible approach can accept as input any height from \cw{0} to \cw{INT\_MAX}.\\
 \par
- But there is a faster way to do it which involves the eternal RAM vs CPU tradeoff. In this case we can give away a bit of RAM to gain a lot of CPU.\\
+ But there is a faster way to do it which involves the usual RAM vs CPU tradeoff. In this case we can give away a bit of RAM to gain a lot of CPU.\\
  \par 
  The way the engine does it is by removing the genericity of the scaler in order to instead generates several functions specialized in drawing specific height of wall ranging from 1 pixels to 200 (the height of the screen). This is all done in \cw{BuildCompScale}.\\
 \par
@@ -1096,7 +1096,7 @@ Given a height, \cw{BuildCompScale} generates x86 instructions in the out variab
 With this optimization, minifying a 64 textures to a 2 pixel height takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 120 pixels takes 841 instructions. A precompiled scaler have a fixed cost of 7 instructions per pixel: It doesn't get any faster than that!\\
 
 \par
-What is the RAM cost incured by precompiling these scalers? How much RAM does it use? It takes 1 + 7 instructions per pixel written to scale a column. If all size were generated from 2,4,6...152 (76 values for 38 pairs), we can use Gauss method to calculate the size:\\
+What is the RAM cost incurred by precompiling these scalers? How much RAM does it use? It takes 1 + 7 instructions per pixel written to scale a column. If all size were generated from 2,4,6...152 (76 values for 38 pairs), we can use Gauss method to calculate the size:\\
 \par
 $154*38*7=40,964$ bytes\\
 \par
@@ -1138,7 +1138,7 @@ This buffering is done because the renderer allows itself to cheat a little when
 What makes rays similar? The answer is two rays hitting the same wall and resulting in the same \cw{v} horizontal texture coordinate. In short this optimization leverages wall magnification.\\
 
 \par
-The best case for this trick is shown in the following screenshot. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiples pixesl. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
+The best case for this trick is shown in the following screenshot. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiples pixels. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
 \begin{figure}[H]
  \centering
  \fullimage{post_optimization_1_show.png}
@@ -1217,7 +1217,7 @@ If the two column are not properly aligned (like columns under pixels 3 and 4), 
  \end{figure}
 
 
-In the worse case scenario, the engine needs to draw eight column of pixels, under pixels 3,4,5,6,7,8,9 and A. Because of the poor alignemnt, three passes are needed.
+In the worse case scenario, the engine needs to draw eight column of pixels, under pixels 3,4,5,6,7,8,9 and A. Because of the poor alignment, three passes are needed.
   \begin{figure}[H]
  \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation4.pdf}
@@ -1310,7 +1310,7 @@ At runtime, upon casting each ray, if the ray hit a vertical wall (looking at th
  \end{minipage}
 
 
-\bu{Trivia :} Textures are stored on HDD and RAM rotated 90 degres. This is because they are rendered as columns. It is easier to calculate offsets this way.\\
+\bu{Trivia :} Textures are stored on HDD and RAM rotated 90 degrees. This is because they are rendered as columns. It is easier to calculate offsets this way.\\
 \par
 
  
@@ -1320,7 +1320,7 @@ At runtime, upon casting each ray, if the ray hit a vertical wall (looking at th
 
 
 \subsubsection{Door}
-Doors have no tickness. That would have been too complicated to do.\\
+Doors have no thickness. That would have been too complicated to do.\\
 \par
 \begin{figure}[H]
  \centering
@@ -1355,7 +1355,7 @@ It is because the doors are rendered via the raycaster. It detects how far along
 
 \subsubsection{Push walls} 
 TODO.\\
-\note{Ask John Carmack and John Romero how it is done. And how much Tom had to push to get his pushwalls. This is especially suprising since Catacomb-3D had secret walls.}
+\note{Ask John Carmack and John Romero how it is done. And how much Tom had to push to get his pushwalls. This is especially surprising since Catacomb-3D had secret walls.}
 
 
 
@@ -1536,7 +1536,7 @@ But wait, there is more, It has to do with RAM consumption. The commercial versi
 \note{Sprite format inserted here}
 \par
 \par
-Sprites are stored as array of 64 columns (remmeber that because of the VGA, everything is drawn vertically). Each column entry uses RLE to code what is visible. Transparent sections are completely discarded.\\
+Sprites are stored as array of 64 columns (because of the VGA, everything is drawn vertically). Each column entry uses RLE to code what is visible. Transparent sections are completely discarded.\\
 \par
 The same deferred drawing technique is used for sprites. It is especially powerful when a sprite is magnified.\\
 
@@ -1628,7 +1628,7 @@ Some state chain are more complex like for example chasing:\\
 \lstinputlisting[language=C,style=mystyle,basicstyle=\small]{code/s_grdchase.c}
 \end{minipage}
 \par
-This example was just for guards. All different types of enemies including bosses have their own state machine. They often share action (e.g: \cw{T\_Stand} and \cw{T\_Path} but they also occassionally have their own).\\
+This example was just for guards. All different types of enemies including bosses have their own state machine. They often share action (e.g: \cw{T\_Stand} and \cw{T\_Path} but they also occasionally have their own).\\
 
 \par
 What makes enemies interesting to interact with is how the go from standing to being aggressive via \cw{T\_Stand}. They have three ways to detect the player:\\
@@ -1682,7 +1682,7 @@ The area array is declared like this:\\
 \lstinputlisting[language=C]{code/num_areas.c}
 \end{minipage}
 \par
-37 seems like a random value. I think they probably bumped it up everytime they designed a map with more area than they could handle.\\
+37 seems like a random value. I think they probably bumped it up every time they designed a map with more area than they could handle.\\
 \par
 
 

@@ -621,7 +621,7 @@ The BIOS could be called to have the VGA configured with preset registers.
 
 
  \subsection{VGA Programming: Memory mapping}
-To write to the VRAM the 1MB address space maps 64KB starting as indicated in table \ref{fig:vga_modes}. So a dev had from 0xA0000 to 0xAFFFF available. The first question that should pop up your minde is "How does one write to 256KB of RAM with only 64KB of address space?". The answer is: bank switching. Write and Read operation are routed based on a mask register indicating which bank should be read or written.\\
+To write to the VRAM the 1MB address space maps 64KB starting as indicated in table \ref{fig:vga_modes}. A developer had from 0xA0000 to 0xAFFFF available. The first question that may pop in your mind is "How does one write to 256KB of RAM with only 64KB of address space?". The answer is: bank switching. Write and Read operation are routed based on a mask register indicating which bank should be read or written.\\
 \par
  \begin{figure}[H]
 \centering
@@ -784,7 +784,7 @@ Continuous Hi-Lo Beeps           & CPU Overheating \\ \hline
 \end{tabularx}\\
 \bigskip
 \par
-Needless to say square wave are not usable for anything nice to hear. But some peoples had started to see a market and they were companies manufacturing what were known as "sound cards". You could buy them separately and insert them into one of the ISA slot of the machine. These cards could be connected to real audio speakers via 3.5mm jack and tremendously improve the sound capabilities. In 1991, three companies competed to become the dominant sound card: Adlib, Creative and Disney drawing a small ecosytem of four cards:\\
+Needless to say square wave are not usable for anything nice to hear. But some peoples had started to see a market and they were companies manufacturing what were known as "sound cards". You could buy them separately and insert them into one of the ISA slot of the machine. These cards could be connected to real audio speakers via 3.5mm jack and tremendously improve the sound capabilities. In 1991, three companies competed to become the dominant sound card: Adlib, Creative and Disney drawing a small ecosystem of four cards:\\
 \par
 \begin{itemize}
 \item Adlib music card.
