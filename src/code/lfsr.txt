@@ -1,4 +1,4 @@
- * *     |  
+ * *     |   value 
 ====================== 
 0001     |    1     
 1000     |    8
@@ -8,4 +8,4 @@
 0010     |    2
 0001     |    1 
 
-Sequence of 6 numbers.
+Sequence of 7 numbers.

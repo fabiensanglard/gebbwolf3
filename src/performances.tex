@@ -1,7 +1,5 @@
 \section{Performances}
-So, how well did the game run on most people desk?
-
-Note: Because of the engine undeterminism the timedemo recorded played at a fixed tickrate (18fps). It cannot reliably be used to benchmark.
+With all the tricks and optimization described, how well did the game run on most people desk? DOSBox allows to emulate old CPU and gives the following figures.
 
 \begin{figure}[H]
 \centering
@@ -17,40 +15,32 @@ Note: Because of the engine undeterminism the timedemo recorded played at a fixe
 \caption{Component quality for a game engine.}
 \end{figure}
 
-To compensate for the differences of power, the engine allows to reduce the 3D view which reduces the number of rays to cast and the number of pixels to render on screen.
-
-Max: 304 rays and 46208 pixels (304*152).\\
-Min:  64 rays and  2432 pixels (64*38).\\
-TODO: Percentage of full framebuffer actually rendered each frames. Rest is amortized
-
-
-
+To compensate for the differences of raw power, the engine allows to reduce the 3D view which reduces the number of rays to cast and the number of pixels to render on screen.
+\par
+Maximum: 304 rays and 46208 pixels (304*152).\\
+Minimum:  64 rays and  2432 pixels (64*38).\\
 
   \begin{figure}[H]
 \centering
  \fullimage{adjust_view/100.png}
-  \caption{Fish eye: Uncorrected} 
  \end{figure}
  \par
 
    \begin{figure}[H]
 \centering
  \fullimage{adjust_view/50.png}
-  \caption{Fish eye: Uncorrected} 
  \end{figure}
  \par
 
    \begin{figure}[H]
 \centering
  \fullimage{adjust_view/small.png}
-  \caption{Fish eye: Uncorrected} 
  \end{figure}
  \par
 
-
+Raise Of the Trial (a.k.a ROTT) was directed by Tom Hall for 3D Reams. It used Wolfenstein 3D engine and also features the window adjustment system. In the line of the humor of the early PC games, it features an easter egg when the player chose the lowest setting. It teased the player to buy a PC with a 486 CPU!
     \begin{figure}[H]
 \centering
  \fullimage{adjust_view/rott.png}
-  \caption{Fish eye: Uncorrected} 
  \end{figure}
  \par

@@ -40,28 +40,26 @@ The PIC's IRQ0-IRQ8 is mapped to the Interrupt Vector Offset 8 (resulting in map
 15 & ATA channel 2  \\
 \bottomrule
 \end{tabularx}
-\caption{Component quality for a game engine.}
+\caption{IRQs and what routine they are associated with. Nothing IRQ8 which is associated with time and usually updates the operating system clock.}
 \end{figure}
-Using these two chips and writing on of its function address into the Interrupt Vector Table, the engine can have one of its method called at a regular time interval, effectively implementing a subsystem running concurrently with everything else.\\
+Using these two chips and placing its own function at Interrupt Vector Table \#8, the engine can stop its runtime at a regular time interval, effectively implementing a subsystem running concurrently with everything else.\\
 
 
 
 \subsection{PIT and PIC}
 The PIT chips runs at 1.193182 MHz. That sounds like an odd arbitrary number which has an uncanny origin. Back in the 1980 when the first IBM PC 5150 was designed, the common oscillator used in television circuitry was running at 14.31818 MHz. In order to reduce part cost, engineers built the PC timer around it, dividing the frequency by 3 for the CPU (that is why the Intel ran at 4.7Mhz), dividing by 4 to 3.57Mhz for the CGA video card. By logically ANDing these signals together a frequency equivalent to the base frequency divided by 12 was created. This frequency is 1.1931816666 MHz. By 1991 the oscillator were much cheaper and it could have been anything but backward compatibility once again dictated otherwise.\\
-\par
-CODE HERE TO SHOW ISR installation and diff frequencies.
 
 
 
 \subsection{Hearbeats}
 
-The only output of the heartbeat system is a 64 bits variable call \cw{TimeCount}:\\
+The only output of the heartbeat system is a 64 bits variable: \cw{TimeCount}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/timecount.c}
 \end{minipage}
 \par
-It is updated at a rate of 70 units per seconds (to match VGA which runs at 70Hz). Thse units are called "ticks". Depending on how fast the audio system runs (from 150Hz to 7000Hz) it adjust how much it should increase \cw{TimeCount}.\\
+It is updated at a rate of 70 units per seconds (to match VGA update rate of 70Hz). These units are called "ticks". Depending on how fast the audio system runs (from 150Hz to 7000Hz) it adjust how much it should increase \cw{TimeCount}.\\
 \par
 Every system in the engine uses this variable to pace itself. The renderer will not start rendering a frame until at least one tick has passed. The A.I system express action duration in tick units. And so on.\\
 
@@ -69,7 +67,7 @@ Every system in the engine uses this variable to pace itself. The renderer will 
 \subsection{Music}
 Only PC equipped with a FM synthetizer can play music (a.k.a: With an Adlib or a Soundblaster inside). The music system streams data to the sound cards.  Musics in the 90s are not in digitalized format like CD or MP3 nowadays (that would have taken too much storage space and bandwidth). Instead musics are stored on channels (simulating instruments) to which are streamed notes. The format used is close to the notorious MIDI but IMF\footnote{Id Music Format} is proprietary to id software and designed with OPL2 in mind (the raw format is exactly what is sent to the Adlib/Soundblaster synthetiser with no transformations). IMF has hardcoded playback rate and Wolfenstein 3D music run at 700 Hz.\\
 \par
-Hardware limitations dictated certain aspect of the design of the musics. The FM synthetiser (OPL2) has 9 channels (a.k.a instruments). Yet the composer, Bobby Prince, was asked to use only channel 1 to 8. This little trick wastes a channel on SoundBlaster cards but allows AdLib cards to use channel 0 to play sound simulatenously with the music (the SoundBlaster plays sound differently.).\\
+Hardware limitations dictated certain aspect of the design of the musics. The FM synthetiser (OPL2) has 9 channels (a.k.a instruments). Yet the composer, Bobby Prince, was asked to use only channel 1 to 8 for the musics. This little trick wastes a channel on SoundBlaster cards but allows AdLib cards to use channel 0 to play sound simulatenously with the music (the SoundBlaster plays sound differently.).\\
 
 
 
@@ -81,14 +79,14 @@ Hardware limitations dictated certain aspect of the design of the musics. The FM
 
 \subsubsection{AdLib/Soundblaster music programming}
 \par
-Programming the OPL2 ouput was esoteric to say the least. Adlib and Creative did publish SDK but they were very expensive. Documentation was sparse and often cryptic. Two ports, one to select the card register and the other one to read/write data are used:\\
+Programming the OPL2 output was esoteric to say the least. Adlib and Creative did publish SDK but they were very expensive. Documentation was sparse and often cryptic. Two ports, one to select the card register and the other one to read/write data are used.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/audio_ports.c}
 \end{minipage}
 \par
-When the AdLib first got released in 1986, developers were instructed to send music  to these ports "as fast as possible". At 4.77Mhz a PC was no able to outpace the Adlib. But as CPU got faster issues started to arise. User manual were amended: 
-
+When the AdLib first got released in 1986, developers were instructed to send music  to these ports "as fast as possible". At 4.77Mhz a PC was no able to outpace the Adlib. But as CPU got faster issues started to arise. User manual were amended.\\ 
+\par
 
 \begin{fancyquotes}
 After writing to the register port, you must wait twelve cycles before sending the data; after writing the data, eighty-four cycles must elapse before any other sound card operation may be performed\footnote{http://www.oldskool.org/guides/oldonnew/sound}.
@@ -98,7 +96,12 @@ After writing to the register port, you must wait twelve cycles before sending t
  \end{fancyquotes}
 \\
 \par
-Later, reliable specs were published: "Wait three point three (3.3) microseconds for the address, and twenty-three (23) microseconds for the data."\\
+Later, reliable specs were published.\\
+\par
+\begin{fancyquotes}
+Wait three point three (3.3) microseconds for the address, and twenty-three (23) microseconds for the data.\\
+ \end{fancyquotes}
+ 
 \par
 
 
@@ -111,43 +114,37 @@ Later, reliable specs were published: "Wait three point three (3.3) microseconds
 
 
 \subsection{Sound effects and Digitized audio}
-The engine differenciates between Sound Effects and Digitized Sounds. That is where things become complex:
+The audio configurations are many. The sound settings screen illustrate well how complicated it is.
 \par
 \begin{figure}[H]
 \centering
  \fullimage{audio/audio_settings.png}
  \end{figure}
 \par
-The audio configuration screen is confusing. Sound effects and Digitized sounds are the same thing: Play sound for a short amount of time but because of the diversity of hardware, sound effects are stored in three formats: Once for PC Speaker, once for Adlib and once for SoundBlaster/Disney Sound Source. The sounds were stored in the same order and separated by format by Muse. The header generated by Muse is seft explanatory.\\
+Sound effects and Digitized sounds are actually the same thing. Sound effects are stored in three formats. Once for PC Speaker, once for Adlib and once for SoundBlaster/Disney Sound Source. The sounds were stored in the same order and separated by format by Muse. The audio archive is using id software proprietary format, AudioT. The header generated by Muse is self explanatory.\\
 
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/muse_header.c}
 \end{minipage}
 \par
-To transparently store all these sound effects, they are packed in AudioT format, once again an id Software proprietary format. An oditiy: The format can store PC speaker sound, Adlib sound and digitized sounds...but the later is never used. Only PC speaker and Adlib sounds are stored in the \cw{AUDIO.*} files, the digitized sound are in thecw{VMSWAP.*} archive.\\
-\note{Question to Johns : Why such a design?} 
+Strangely, only PC speaker and Adlib sounds are stored in the \cw{AUDIO.*} files, the digitized sound are in the\cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used.\\
+\note{Question for the developers: Why not include the sb sounds in AudioT?} 
 \par
-
-
-
 
 
 \subsubsection{PCM}
-Towards the end of the 90s, digitized sounds became standard but they were high end in the early 90s. They gave SoundBlaster an edge over Adlib which made them the defactor standard. Sounds are stored in PCM\footnote{Pulse-Code modulation} format where sound is sample at a certain rate, over two channels (left and right) at a certain precision (usually 16 bits values).\\
-That encoding it is enough to reconstruct something of high fidelity (as a reference point audio CD uses 44Hz, 16 bits stereo sampling).\\
+Digitized sounds were the new rage in the early 90s. They gave SoundBlaster an edge over Adlib which made them the defactor standard. These sounds are stored in PCM\footnote{Pulse-Code modulation} format where sound is sampled at a certain rate, over channels (left and right) at a certain precision (usually 16 bits values).\\
+\par
+That encoding it is enough to reconstruct a sound on a loud speaker (as a reference point audio CD uses 44Hz, 16 bits stereo sampling).\\
 \par
 
-Wolfenstein 3D sounds are stored in XXX format at XXX rate.
+Wolfenstein 3D sounds are stored in 8 bits precision on a single channel at 7000 Hz.\\
 
 
-
-haha: // if the game was paused a LONG time
-VGA: 70Hz
-audio: Depends on quality, three levels of fidelity.
 
 \par
-Stereo system:\\
+\bu{Stereo system :}\\
 \par
 
 On a "high-end" stereo SoundBlaster Pro with left and right channel, the sound is more elaborated: The sound source is rotated with the same formula as the raycaster. Using SOH-CAH-TOA. Intensity is hardcoded 0-15:\\
@@ -163,47 +160,60 @@ On a "high-end" stereo SoundBlaster Pro with left and right channel, the sound i
  \end{figure}
 \par
 In sound part, trivia with a bunch of translations: https://www.gamefaqs.com/pc/564603-wolfenstein-3d/faqs/1824\\
-Talk about morse code in episode 3 and 6, echo with romero head in doom2\\
-"BLASTER" oldschool parsing.
-
-
-
-\subsubsection{Sounds on Adlib}
-\subsubsection{Sounds on Disney Sound Source}
-
-
-
-\subsubsection{Sound on PC Speaker}
-Solving the PC Speaker problem: PWM\\
+Talk about morse code in episode 3 and 6.\\
 \par
-\begin{verbatim}
-"http://www.shikadi.net/moddingwiki/Inverse_Frequency_Sound_format"
-\end{verbatim}
-The hardware chapter described a problem for sound effects: The default PC speaker can only generate square waves. Pulse Width Modulation, or PWM, is a technique for getting analog results with digital means.
+\bu{Trivia :} Plugging a sound blaster card was not enough to hear sound. This was before "plug \& play" was introduced by Windows 95. The use had to write a special line in the startup command of the PC (\cw{autoexec.bat}).\\
+\par 
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/soundblasterconf.c}
+\end{minipage}
+\par
+This line defines a variable \cw{BLASTER} which the engine retrieve at runtime with \cw{getenv}. \cw{A} tells what port the card is using. \cw{I} gives away the interrupt vector it is associated with. Finally \cw{D} gives the DMA channel to use for data transfer. Of course for all this to work the sound card had to be configured accordingly with jumpers connectors.
 
-
-
+ 
+\subsubsection{Sound on PC Speaker}
+The hardware chapter described a problem for sound effects. The default PC speaker can only generate square waves resulting in long beep. But of course hackers found a way to make more than it was meant to.
 
 \par
  \begin{fancyquotes}
   The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc.), the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC,[5] thereby enabling approximate playback of PCM audio. This technique is called pulse-width modulation (PWM).
  \end{fancyquotes}
 \par
-  It gave surprisingly good results such as in Monkey Island music.\footnote{https://www.youtube.com/watch?v=a324ykKV-7Y}
+  It gave surprisingly good results such as in Monkey Island music.\footnote{https://www.youtube.com/watch?v=a324ykKV-7Y}\\
+  \par
+
+\begin{verbatim}
+"http://www.shikadi.net/moddingwiki/Inverse_Frequency_Sound_format"
+\end{verbatim}
+
+
+
 
   \par
-The programming trick in the PC was to set the timer that drive PC speaker to one-shot mode, and set PC interrupt rate to needed output sample rate. So at every input one sound sample value was read, converted to timer control value, programmed to timer (starting the pulse). This trick allowed around 6 bits sample resolution / dynamics (or even slightly more with some tricks). When the sample rate was high enough, you can’t hear the high frequency noise on the signal.\\
+The programming trick is to use an other part of the PIT chipset. Counter 0 i used to trigger the audio system. Counter 1 cannot be used (it is used to refresh the RAM periodically). Counter 2 however is directly connected to the PC Speaker. The trick is to set this timer to one-shot mode (Mode 1) and program how long to play a square wave. \\
+\par At every input one sound sample value was read, converted to timer control value, programmed to timer (starting the pulse). This trick allowed around 6 bits sample resolution / dynamics (or even slightly more with some tricks). When the sample rate was high enough, you can’t hear the high frequency noise on the signal.\\
 TODO: Drawing of PWM
 \par
-Mode 1 - Hardware Re-triggerable One-shot\\
-Mode 2 - Rate Generator\\
-Mode 3 - Square Wave Generator\\
-Mode 4 - Software Triggered Strobe\\
-Mode 5 - Hardware Triggered Strobe\\
+\begin{figure}[H]
+\centering
+\begin{tabularx}{\textwidth}{ X X  }
+  \toprule
+  \textbf{Mode} & \textbf{Type} \\ \bottomrule
+1 & Hardware Re-triggerable One-shot\\
+2 & Rate Generator\\
+3 & Square Wave Generator\\
+4 & Software Triggered Strobe\\
+5 & Hardware Triggered Strobe\\
+\bottomrule
+\end{tabularx}
+\caption{Available mode of a PIT counter.}
+\end{figure}
+Programming the PIT allow to approximate a sinusoid with square waves.
 \par
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/pwm/sinuois.png}
+ \caption{The original sound.}
  \end{figure}
 \par
 
@@ -211,45 +221,15 @@ Mode 5 - Hardware Triggered Strobe\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/pwm/pwm_approximation.png}
+ \caption{The same sound approximated with PWM.}
  \end{figure}
 \par
 
 
-The audio and heatbeat system are started. This is done by reprogramming 8254-PIT and 8259-PIC timers to install an ISR\footnote{DOS Interrupt Service Routine}:\\
-
-frequency = 1193181 / (value * 60)\\
-Inverse Frequency Sound format\\
+\bu{Hidden feature :} The source code features an audio code path that was never allowed to ship. It can play digitized sound via the PC Speaker.
+\footnote{You can hear the difference here: https://www.youtube.com/watch?v=1BtlsjJRnFU}.\\
 \par
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/three_blocks.png}
- \end{figure}
-
-Different things could happen depending on the hardware available:
-\begin{itemize}
-\item With the default PC speaker or with , the isr is set on slow: 140Hz
-\item With an adlib or Disney Sound source, the isr is set on fast: 700Hz
-\item With Sound Blaster, the isr is set on extreme: 7000Hz
-\end{itemize}
-Every time the ISR triggers, it takes care of feeding music and audio to the sound chip and also updates TimeCount variable, the heat of the whole system, at 70Hz (like VGA refresh rate).\\
-\par
-Because the engine uses triple buffering, it is completely decoupled from the VGA refresg rate (70Hz). Yet it needs something not only to pace itself (not render too fast) and to keep track of wall time (so the player is presented with a linear game time progression). This is where the sound system performs two tasks. Not only the XXX chips triggers at a regular interval, it also updates a global variable (\cw{TimeCount}) at 70Hz. This variable is used in the renderer to make sure at least 1/70th of a second has passed before rendering something again but also to pace actor thinking (so player movement is proportionnal to frame rate and actor also think proportionnaly).\\
-\cw{CalcTics} maintains \cw{ticks} variable: The amount of walltime since last frame. An action takes a certain number of ticks.\\
-\par
-It works but there is a major flaw with this technique: The engine is non-deterministic. Recording and replaying a demo, even on the same machine cannot work.\\\par
-haha joke about LONG time.\\
-\bu{Trivia :} When playing a recording, the engine bypasses the timer and hardcoded tics: (tics = DEMOTICS;). The demo was likely recorded at 15fps which is consistent with what a 386DX33 would have produced
-
-\subsubsection{TODO}
-Talk about DMA requests from Sound Blaster.\\
-\par
-TAlk about soud blaster parsing of options.\\
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/soundblasterconf.c}
-\end{minipage}
-
-
-PC Speaker to play Digitized sounds ? How  ?\footnote{You can hear the difference here: https://www.youtube.com/watch?v=1BtlsjJRnFU}\\
+\note{Why was this never shipped?}
 
 
 

@@ -1558,9 +1558,7 @@ Note how the engine knows where to patch the code thanks to a cw{table location}
 \end{minipage}
 \par
 Patching the scaler is not enough. It only allows to consume less than 64 texels. In order to draw a "hole" properly, the engine also needs to know how many pixels skip vertically in screenspace before starting the scaler on the next segment. This is were the \cw{width[]} property is used. The scaler compiler also saved 64 entries to convert sprites transparent height into screen space height. This operation is only a cheap lookup.\\
-\par
-\bu{Total RAM saving with transparency: } \note{TODO} The commercial version ships with XXX wall textures. They are opaque and uncompressed consuming 64x64xXXX=YYY bytes on HDD and RAM. But since sprites have transparency they are stored compressed.XXX sprites at 64x64 resolution and one byte per pixel that would use XXX of RAM. But with the special format id used it only accounts for XXX . That is XXX byte less and XX\% of the uncompressed format.\\
-\par
+
 
 \par
 The same deferred drawing technique we saw for walls is also used for sprites. It is especially powerful when a sprite is magnified.\\
@@ -1570,7 +1568,7 @@ The same deferred drawing technique we saw for walls is also used for sprites. I
  \centering
  \fullimage{magnified_enemy_before.png}
 \end{figure}
-In this scene, the 64x64 sprites is magnified 2.2 times. By zooming in, we can see that each column is repeated at least twice. Sometimes three times. It is a perfect optimization case for the VGA planes deferred renderer.
+In this scene, the 64x64 sprites is magnified 2.2 times. By zooming in, we see that each column is repeated at least twice. Sometimes three times. It is a perfect optimization case for the VGA planes deferred renderer.
 \par
 \begin{figure}[H]
  \centering
@@ -1662,13 +1660,13 @@ By far the sound is the most important and what makes the player feel like the A
 
 
 \subsubsection{Sound propagation}
-Early on the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience. The engine takes care of it in a simple and resource efficient way: Maps are preprocessed, with each room defining an area. At runtime, the engine keeps track of what door opens and what door closes and maintains a matrix of portal connecting areas.
-Knowing if an enemy can hear the main character gunfire is a simple lookup in a table.
+Early on the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience. To speed things up, maps are preprocessed. Each room delimites an area. At runtime the engine maintains a matrix of portal connecting areas and updates it when a door opens or closes. Knowing if an enemy can hear the main character gunfire is a simple lookup in a table.
 
 \par
 \begin{figure}[H]
  \centering
  \includegraphics[width=.75\textwidth]{imgs/drawings/sound_area/map.pdf}
+ \caption{The map as it is generated with TED5.}
 \end{figure}
 \par
 
@@ -1676,15 +1674,16 @@ Knowing if an enemy can hear the main character gunfire is a simple lookup in a 
 \begin{figure}[H]
  \centering
  \includegraphics[width=.75\textwidth]{imgs/drawings/sound_area/area.pdf}
+ \caption{The same map after is has been pre-processed for audio propagration. Each block belongs to an area.}
 \end{figure}
 \par
-% $
-% \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{bmatrix}
-% $
-\par
+
+
+
 \begin{figure}[H]
  \centering
  \includegraphics[width=.5\textwidth]{imgs/drawings/soud_propagation/areaconnect.pdf}
+ \caption{At runtime, the engine maitains a matrix of portal: \cw{areaconnect}.}
 \end{figure}
 \par
 
@@ -1692,15 +1691,16 @@ Knowing if an enemy can hear the main character gunfire is a simple lookup in a 
 \begin{figure}[H]
  \centering
  \includegraphics[width=.5\textwidth]{imgs/drawings/soud_propagation/areabyplayer.pdf}
+ \caption{Determining is an area can hear the player is a simple lookup in \cw{areabyplayer}.}
 \end{figure}
 \par
-The area array is declared like this:\\
+In the source code:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/num_areas.c}
 \end{minipage}
 \par
-37 seems like a random value. I think they probably bumped it up every time they designed a map with more area than they could handle.\\
+\cw{NUMAREAS = 37} seems like a random value. I think it was determined empirically. The developers bumped it up every time they designed a map which crashed the engine.\\
 \par
 
 
@@ -1710,7 +1710,7 @@ The area array is declared like this:\\
 
 
 
-However this is a simple model. When a gun is fired, all enemies which could hear it will shout "Achtung!" (Attention!") and converge toward the origin of the sound. That would get old pretty fast. So the designers introduced a little hack that goes a long way to simulate ambushes.
+However this perfect sound progation is a simple model. When a gun is fired, all enemies which could hear it will shout "Achtung!" (Attention!) and converge toward the origin of the sound. That would get old pretty fast. So the designers introduced a little hack that goes a long way to simulate ambushes.
 
 
 \par
@@ -1723,7 +1723,7 @@ However this is a simple model. When a gun is fired, all enemies which could hea
 
 
   \begin{minipage}{0.6\textwidth}
-  Some tiles in the map can be marked as "AMBUSH" tile. If a guard is standing on it, he will NOT react to sounds. He is deaf. Or smart if you prefer. This is introduced early on in E1M1, the character just neutralized an enemy in a corridor. At this point it has never encountered an ambush so the player assumes the area is clear:\\
+  Some tiles in the map can be marked as "AMBUSH" tile. If a guard is standing on it, the engine will NOT allow it to react to sounds. The actor is deaf (or sneaky). This is introduced early on in E1M1 where the character just neutralized an enemy in a corridor. At this point the player has never encountered an ambush so she will assumes the area is clear.\\
   \end{minipage}
   \begin{minipage}{0.4\textwidth}
   \begin{flushright}
@@ -1743,9 +1743,9 @@ However this is a simple model. When a gun is fired, all enemies which could hea
   \end{figure}
   \par
   \begin{minipage}{0.6\textwidth}
-  So the player will relax and either go straight to the door or maybe go left (or worse: right) to see what is in these corners. And bam: AMBUSH.\\
+  Feeling safe, she will likely run straight to the door or maybe go left (or worse: right) to see what is in these corners. And then surprise: AMBUSH!\\
   \par
-   This is probably one of the cheapest feature in the engine which yet resulted in what most would agree is the soul of the game: Immersion.
+   This is probably one of the cheapest feature in the engine yet it results in what most would agree is the soul of the game: Immersion.
   \end{minipage}
   \begin{minipage}{0.4\textwidth}
   \begin{flushright}
@@ -1767,13 +1767,14 @@ Each enemy is given specific orders which dictate his actions once he knows of y
 \bigskip \\
 \textbf{Kevin Cloud. The Official Hint Manual for Wolfenstein 3D}
  \end{fancyquotes}
-
+\par
 \bu{Trivia :} Bug or dedication, a guard on an \cw{AMBUSH} tile will react ONLY to the player sight. Seeing an other actor die in front of him will not activate him.\\
 
 
 \subsubsection{Patrolling}
-I/A also faked with map waypoint for patrolling.\\
+I/A is also augmented with map waypoint for patrolling.\\
 \par
+\note{Elaborate on how it is done}
 \par
 \begin{figure}[H]
  \centering
