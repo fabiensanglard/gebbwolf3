@@ -1,2 +1,2 @@
-0388 (hex) - Address/Status port (R/W)
-0389 (hex) - Data port (W/O)
+0x388 - Address/Status port (R/W)
+0x389 - Data port (W/O)
