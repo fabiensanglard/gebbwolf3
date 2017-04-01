@@ -59,6 +59,18 @@ The PIT chips runs at 1.193182 MHz. That sounds like an odd choice from the hard
 \par
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 \subsection{Hearbeats}
 Each time the interrupt system triggers, before taking care of the audio requests, it run an other small (yet paramound) system. The sole goal of the heartbeat system is to maintain a 64 bits variable: \cw{TimeCount}.\\
 \par
@@ -70,16 +82,26 @@ It is updated at a rate of 70 units per seconds (to match VGA update rate of 70H
 \par
 Every system in the engine uses this variable to pace itself. The renderer will not start rendering a frame until at least one tick has passed. The A.I system express action duration in tick units. The input sampler checks for how long a key was pressed, the list goes on. Everything interacting with humans uses \cw{TimeCount}.\\
 
+
+
+
+
+
+
+
+
+
+
+
+
 \subsection{Audio system}
-The audio system is complex because of the fragmentation of the audio devices it can deal with. This was a time before Windows 95 harnessed all audio cards under DirectSound common API. Each development studio had to write their own abstraction layer and id Software was not exception. At high level, the Sound Manager offers a few simple method.\\
+The audio system is complex because of the fragmentation of the audio devices it can deal with. The early 90s was a time before Windows 95 harnessed all audio cards under DirectSound common API. Each development studio had to write their own abstraction layer and id Software was not exception. At high level, the Sound Manager offers a lean API divided in two categories, one for sounds and an other for music..\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/sound.h}
 \end{minipage}
 \par
-But under this clean interface lays a maze of functions directly accessing the I/O port of four sound ouputs: Adlib, SoundBlaster, Buzzer and Disney Sound source.
-
-
+But the in the implementation lays a maze of functions directly accessing the I/O port of four sound outputs: Adlib, SoundBlaster, Buzzer and Disney Sound source. These ouput all belong to one of the three supported family of sound generator: FM Synthesizer (Frequency Modulation), PCM (Pulse Code Modulation) or PWM (Pulse Width Modulation).\\
 
 
 \subsection{Music}
@@ -91,24 +113,27 @@ Hardware limitations dictated certain aspects of the design of the musics. The F
 
 
 
-\subsubsection{Disney Sound sound system: PCM}
-The Disney Source has a simple design.After setting the bitrate, its 6 bits DAC will consume PCM bytes from an internal 16 bytes deepFIFO and turn them into sound via its integrated loud speaker.\\ 
+
+\subsubsection{OPL2/YM3812 Programming}
 \par
-Hence every times it awakes, the audio system simply read the parallel port to check if the FIFO has a free spot. It if does it write as many bits as possible until full and returns. When the FIFO gets empty, the Disney Sound source stops making noise.\\
-\note{This part should be improved. Read "Disney Sound Source programming manual.""}
-
-
-
-
-\subsubsection{AdLib/Soundblaster music programming}
+Programming the OPL2 output is esoteric to say the least. Adlib and Creative did publish SDK but they were expensive.  Documentation was sparse and often cryptic. Today it is almost impossible to find.\\
 \par
-Programming the OPL2 output is esoteric to say the least. Adlib and Creative did publish SDK but they were very expensive. Documentation was sparse and often cryptic. Today it is almost impossible to find. Luckily only two ports are used, one to select the card register and the other one to read/write data.\\
+The OPL2 is made of 9 channels able to emulate an instrument. Each channel is made of two oscillator, a Modulator which output are fed into a Carrier's input.
+\par
+\note{Drawing of a channel}
+\par
+Each channel has individual settings including Frequency, Envelope (Attack rate, Decay rate, Sustain level, Release rate, Vibrato). Each oscillator can also pick a waveform (these uncanny form are what gave the YM3812 is recognizable sound).
+\par
+\note{Drawing of four waveforms}
+\par
+
+These 9 channels are controlled by 244 internal registers. They are accessed via two ports mapped in the PC RAM. One is to read/write the card's register and the other one to read data.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/audio_ports.c}
 \end{minipage}
 \par
-When the AdLib first got released in 1986, developers were instructed to send music  to these ports "as fast as possible". At 4.77Mhz a PC was not able to outpace the Adlib. But as CPU got faster issues started to arise. User manual were amended.\\
+When the AdLib first got released in 1986, developers were instructed to send data "as fast as possible". At 4.77Mhz, a PC was not able to out-pace the Adlib. But as CPU got faster issues started to arise and the card was not able to keep up and the Programming Guide was amended.\\
 \par
 
 \begin{fancyquotes}
@@ -125,20 +150,22 @@ Later, reliable specs were published.\\
 Wait three point three (3.3) microseconds for the address, and twenty-three (23) microseconds for the data.\\
  \end{fancyquotes}
  
+
 \par
+The data for the music is stored in IMF format. There is no abstraction layer or transformation here. The format is exactly what the sound card expect. An IMF song is made of a serie of messages. Each message is four bytes.\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C,morekeywords={longword}]{code/adlib_message.c}
+\end{minipage}
+\par
+The \cw{reg} byte is sent to port \cw{0x388}, the \cw{data} byte is sent to \cw{0x389} and the d\cw{delay} 16 bits value is used to tell how much time to wait before sending the next register/data to the card. The stream is hard-coded at 700Hz and the delay is expressed in this unit: A value of 700 means to wait 1000ms before sending. Whenever there is a music playing the engine runs at no less than 700Hz (it can run at 7000Hz if it is also playing digitized sound but that results in noops for music playback.). A value of zero means the next message should be sent immediately.\\
+\par
+Everytime the audio system wakes up, it checks if some data should be sent to the YM3812.
 
 
-
-
-
-\subsubsection{Adlib sound system}
-Adlib only has a FM synthesize and it is used to play sound on its Channel 0. This is done the same way music as previously described so it is not discussed further here.
-
-
-
-
-\subsection{SoundBlaster sound system}
-The audio configurations are many. The sound settings screen illustrate well how complicated it is.
+\section{Sound effects}
+Sound effects are were things become complicated. None of the card use the same format and
+the audio configurations are many. The sound settings screen illustrate well how complex it is.
 \par
 \begin{figure}[H]
 \centering
@@ -158,18 +185,50 @@ Strangely, only PC speaker and Adlib sounds are stored in the \cw{AUDIO.*} files
 
 
 
-\subsubsection{Beeper sound system: PCM}
-Digitized sounds were the new rage in the early 90s. They gave SoundBlaster an edge over Adlib which made them the de-facto standard. These sounds are stored in PCM\footnote{Pulse-Code modulation} format where sound is sampled at a certain rate, over channels (left and right) at a certain precision (usually 16 bits values).\\
+\subsubsection{Sound effects: Adlib}
+Adlib only has a FM synthesize and it is used to play sound on its Channel 1. This is done the same way music as previously described (via IMF) so it is not discussed further here.
+
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Disney Sound sound system: PCM}
+The Disney Source is simple to program\footnote{The Programmer's Guide to the Disney Sound Source is a wooping 2 pages!} because it can do only one thing. It plays PCM audio in format 8 bits at 7000Hz on a single channel. And that's it, nothing more, nothing less. As soon as it is plugged in the parallel port, its 8 bits DAC will read from an internal 16 bytes deep FIFO and turn them into sound via its integrated loud speaker.\\ 
 \par
-That encoding it is enough to reconstruct a sound on a loud speaker (as a reference point audio CD uses 44Hz, 16 bits stereo sampling).\\
+Hence every times it awakes, the audio system simply read the parallel port to check if the FIFO is not full. If it is not, the engine pushes as many bits as possible until the FIFO is full and returns. When the FIFO gets empty, the Disney Sound source stops making noise.\\
+
+
+
+
+
+
+
+
+
+
+
+
+\par
+\subsubsection{SoundBlaster system: PCM}
+The SoundBlaster is also capable of PCM playback (mono, 8 bits, 7000Hz). However it features a DSP which is DMA capable. As a result, the CPU does not have to waste cycle transferring data. The audio system only have to make sure it is running at 7000Hz and point the DMA to the right memory address every times it crosses the end of a 16K segment.
 \par
 
-Wolfenstein 3D sounds are stored in 8 bits precision on a single channel at 7000 Hz.\\
+
+
+
+
 
 
 
 \par
-\bu{Stereo system :}\\
+\subsubsection{SoundBlaster Pro system}
 \par
 
 On a "high-end" stereo SoundBlaster Pro with left and right channel, the sound is more elaborated: The sound source is rotated with the same formula as the raycaster. Using SOH-CAH-TOA. Intensity is hardcoded 0-15:\\
@@ -187,17 +246,21 @@ On a "high-end" stereo SoundBlaster Pro with left and right channel, the sound i
 In sound part, trivia with a bunch of translations: https://www.gamefaqs.com/pc/564603-wolfenstein-3d/faqs/1824\\
 Talk about morse code in episode 3 and 6.\\
 \par
-\bu{Trivia :} Plugging a sound blaster card was not enough to hear sound. This was before "plug \& play" was introduced by Windows 95. The use had to write a special line in the startup command of the PC (\cw{autoexec.bat}).\\
+\bu{Trivia :} Plugging a sound blaster card was not enough to hear sound. This was before "plug \& play" was introduced by Windows 95. The user had to write a special line in the startup command of the PC (\cw{autoexec.bat}).\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/soundblasterconf.c}
 \end{minipage}
 \par
-This line defines a variable \cw{BLASTER} which the engine retrieve at runtime with \cw{getenv}. \cw{A} tells what port the card is using. \cw{I} gives away the interrupt vector it is associated with. Finally \cw{D} gives the DMA channel to use for data transfer. Of course for all this to work the sound card had to be configured accordingly with jumpers connectors.
+This line defines a variable \cw{BLASTER} which the engine retrieve and parse at runtime with \cw{getenv}. \cw{A} tells what port the card is using. \cw{I} gives away the interrupt vector it is associated with. Finally \cw{D} gives the DMA channel to use for data transfer. Of course for all this to work the sound card had to be configured accordingly via its jumpers connectors.
+See \cw{SDL\_SBPlaySeg} and the ISR \cw{SDL\_SBService} 
+
+
+
 
  
 \subsubsection{Sound on PC Speaker}
-The hardware chapter described a problem for sound effects. The default PC speaker can only generate square waves resulting in long beep. But of course hackers found a way to make more than it was meant to.
+The hardware chapter described a problem for sound effects. The default PC speaker can only generate square waves resulting in long beep. But of course hackers found a way to make more than it was meant to.\\
 
 \par
  \begin{fancyquotes}
@@ -270,88 +333,6 @@ Notice the \cw{SDL\_PCPlaySample} path allowing PCM to be played on the buzzer. 
 
 
 
-\section{User inputs}
-In an era before Microsoft harnessed all input under DirectInput API with Windows 95, all inputs had to be gathered manually. It involves talking directly to the hardware, in the vendor's protocol on a physical port. The keyboard is plugged on physical port PS/2, the mouse uses physical Serial Port and the joystick is plugged on a game port on the SoundBlater (this was almost the only way to get a Joystick port).
-
-
-
-
-
-\subsection{Keyboard}
-
-
-
-
-
-
-
-
-
-\subsection{Mouse}
-A driver has to be lowed at startup for the mouse to operate. DOS has a default one.\\
-\par 
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/mouse.sys.c}
-\end{minipage}
-The driver takes almost 5KB of RAM. With the driver loaded all interactions happen with software interrupt 0x33. The interface works with request issued in register AX and response issued in registers CX, BX and DX. With Borland compiler syntactic sugar it is easy to write with almost no boilerplate (notice direct access to registers thanks to \_AX and co special keywords.\\
-\par
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/mouse_request.c}
-\end{minipage}
-\par
-\begin{figure}[H]
-\centering
-\begin{tabularx}{\textwidth}{ >{\hsize=.5\hsize}X  >{\hsize=.5\hsize}X  X }
-  \toprule
-  \textbf{Request} & \textbf{Type} & \textbf{Response} \\ \bottomrule
-AX=0 & Get Status & AX = FFFFh : available. AX Value = 0 : not available\\
-AX=1 & Show Pointer & \\
-AX=2 & Hide Pointer & \\
-AX=3 & Mouse Position & CX = X Coordinate, DX = Y Coordinate\\
-AX=3 & Mouse Buttons & BX = 1 Left Pressed, BX = 2 Right Pressed, BX = 3 Centre Button Pressed\\
-AX=7 & Set Horizontal Limit & CX=MaxX1 DX=MaxX2\\
-AX=8 & Set Vertical Limit & CX=MaxY1 DX=MaxY2\\
-\bottomrule
-\end{tabularx}
-\caption{Mouse request/response.}
-\end{figure}
-\par
-
-
-
-
-
-
-
-
-
-\subsection{Joystick}
-\par
-\begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/joystick.c}
-\end{minipage}
-\par
-
-
-
-\begin{figure}[H]
-\centering
-\begin{tabularx}{\textwidth}{ >{\hsize=.5\hsize}X X  }
-  \toprule
-  \textbf{Bit Number} & \textbf{Meaning} \\ \bottomrule
-0 & Joystick A, X Axis \\
-1 & Joystick A, Y Axis \\
-2 & Joystick B, X Axis \\ 
-3 & Joystick A, Y Axis \\
-4 & Joystick A, Button 1 \\
-5 & Joystick A, Button 2 \\
-6 & Joystick A, Button 1 \\
-7 & Joystick B, Button 2 \\
-\bottomrule
-\end{tabularx}
-\caption{Joystick sampling bit meaning.}
-\end{figure}
-\par
 
 
 
