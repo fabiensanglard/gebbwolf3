@@ -31,9 +31,9 @@ Overall, the pipeline offers a lot of resistance since hardware manufacturers ha
   \subsection{Overview}
   PC performances in the 90s were so overwhelmingly dominated by their CPU that a machine was simply referred to not by its brand or GPU\footnote{There were no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had a 80386 or equivalent inside, it was simply called a "386". If it had an Intel 80286, it was a "286".\\
 \par
-  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors. The machines based on the 16 bits 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor. The 80386 released in June 1986. Given the adoption curve, Wolfenstein was target at a 386 with degraded performances (yet still playable) on a 286.\\
+  The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors. The machines based on the 16 bits 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor, the 80386 released in June 1986. Given the adoption curve, Wolfenstein was targeted at a PC running with a 386 with degraded performances (yet still playable) on a 286.\\
 \par
-  \bu{Trivia }Moore's law was in full swing as seen on the mips\footnote{Million Instructions Per Second.} histogram:
+  \bu{Trivia }Moore's law was in full swing as seen on the mips\footnote{Million Instructions Per Second.} histogram.
 
 
 \definecolor{skyblue1}{rgb}{0.1,0.624,0.812}
@@ -72,7 +72,7 @@ Overall, the pipeline offers a lot of resistance since hardware manufacturers ha
  \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 Mips. That's five orders of magnitude faster than the 386-DX!\\
 \par
 
-A 386 can be summarized by the following elements:
+A 386 can be summarized to the following elements:
 \begin{itemize}
 \item An ALU\footnote{Arithmetic Logic Unit}.
 \item 15 registers:
@@ -534,7 +534,7 @@ The most surprising part of the architecture is obviously the framebuffer. Why f
 \\
 The first part of the explanation comes from backward compatibility. The version before VGA, the EGA had only 64KB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
 \\
-But the real reason was physical limitations and the need for a minimum bandwidth. A CRT running at 60Hz and displaying 640x480 needed a pixel every 1/(640*480*60)th of a second. Since the VGA is palette based, one pixel is one byte [0-255] translated to a 888 RGB color. So that divides bandwidth by three. But you still need one byte each 54ns...and unfortunately RAM access time was 200ns. Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 60hz. If latency could not be reduced, the throughput could still be improved by accessing four banks at the time. The memory banks read in parallel had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
+But the real reason was physical limitations and the need for a minimum bandwidth. A CRT running at 70Hz and displaying 320x240 needed a pixel every 1/(320*240*70)th of a second. Since the VGA is palette based, one pixel is one byte [0-255] translated to a 888 RGB color. So that divides bandwidth by three. But you still need one byte each 186ns...but unfortunately RAM access time was 200ns. Not fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz. If latency could not be reduced, the throughput could still be improved by accessing four banks at the time. The memory banks read in parallel had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
 
 
 \begin{figure}[H]
@@ -797,28 +797,31 @@ Even though adoption was improving, a fast majority of PCs had no sound cards wh
 
 
   \subsection{AdLib}
-  Started in 1988 by Martin Prevel, a former professor of music from Quebec. After an initial struggle to get game developers to use their card, Adlib had convinced Sierra On-Line to support their hardware for their late title: King's Quest IV (over 3 million copies sold). Soon, all game developers embraced the Adlib. Equipped with a Yamaha YM3812 also known as the OPL2 the card can produce 9 channels of sound, each made of two oscillators or 6 channels with 5 percussion instruments available. The FM synthesizer was limited but allowed to play pleasant musics.\\
+  Started in 1988 by Martin Prevel, a former professor of music from Quebec. After an initial struggle to get game developers to use their card, Adlib convinced Sierra On-Line to support their hardware for their last title: King's Quest IV\footnote{King's Quest IV would go on selling 3 million copies.}. Soon, all game developers embraced the Adlib.\\
+  \par
+   Equipped with a Yamaha YM3812 also known as the OPL2 the card can produce 9 channels of sound, each made of two oscillators or 6 channels with 5 percussion instruments available. The FM synthesizer was limited but allowed to play pleasant musics.\\
   \begin{figure}[H] 
     \centering 
     \fullimage{hardware/adlib.png} 
+    \label{Notice the Yamaha YM3812 a.k.a the OPL2 chip and the 8 bits ISA bus connector at the bottom.}
   \end{figure}
-   \bu{Trivia :} Notice the Yamaha YM3812 a.k.a the OPL2 chip.\\
-   \bu{Trivia :} Notice the 8 bits ISA bus connector at the bottom.
+   
 \par
-\bu{Trivia :} Canadian company and especially Quebec were very innovative in the early 90s. Ad Lib manufactured Sound Card, Matrox made a killing with Millenium Graphic Card, Watcom programmed the best DOS C compiler\footnote{So good id would use it to compile Doom}. ATI\footnote{History would repeat itself in the late 90s in the field of Graphic Cards: Nvidia Vs ATI} would later emerge as AAA GPU manufacturer in the years 2000.\\
+\bu{Trivia :} Canadian company and especially Quebec were preponderant on the PC market in the early 90s due to their technological prowesses. Ad Lib manufactured Sound Card, Matrox made a killing with its Millenium Graphic Card, Watcom sold the best DOS C compiler\footnote{Watcom compiler was so good id would use it to compile Doom.}. ATI\footnote{History would repeat itself in the late 90s in the field of Graphic Cards: Nvidia Vs ATI} would later emerge as AAA GPU manufacturer in the years 2000.\\
   
   
 
 
   \subsection{Sound Blaster}
-  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative labs. It was a smart product which clearly was going after Adlib dominant position. Not only they were equipped with the same OPL2 chip providing 100\% compatibility with Adlib musics playback, they were technologically superior with a DSP\footnote{An Intel MCS-51 market as a "Digital Sound Processor", not "Digital Signal Processor"}  allowing PCM playback (digitized sounds) at 8 bits per sample and 23Hz. The card also came with a DA-15 port allowing connection of a joystick!. That is right, the only way to connect a joystick to a PC was to buy a sound card\footnote{In the late 90s the only way to have a CD-ROM reader was also to buy a soundcard}.\\ 
+  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative labs. It was a smart product which clearly was going after Adlib dominant position. Not only they were equipped with the same OPL2 chip providing 100\% compatibility with Adlib musics playback, they were technologically superior with a DSP\footnote{An Intel MCS-51 market as a "Digital Sound Processor", not "Digital Signal Processor"}  allowing PCM playback (digitized sounds) at 8 bits per sample and 23Hz. The card also came with a DA-15 port allowing connection of a joystick!. That is right, the only way to connect a joystick to a PC was to buy a sound card\footnote{In the late 90s the only way to have a CD-ROM reader was also to buy a soundcard}. And to top it all, the SoundBlaster was \$90 cheaper than the Adlib.\\ 
 \par
 
 \begin{figure}[H] 
   \centering 
   \fullimage{hardware/sb.png} 
+  \label{Notice the 8 bits ISA bus connector at the bottom.}
 \end{figure}
-\bu{Trivia :} Notice the 8 bits ISA bus connector at the bottom.\\
+\par
   \bu{Trivia :} The quality of the card would lead the Sound Blaster to become the de-facto standard in the 90s and bring Adlib to bankruptcy\footnote{The reign of the Sound Blaster came to an end with Windows 95 which standardized the programming interface at application level (eliminating the importance of backward compatibility with Sound Blaster)}.
 
 

@@ -1,0 +1,94 @@
+\section{User inputs}
+In an era before Microsoft harnessed all inputs source under DirectInput API with Windows 95, developers had to write drivers for each input type they wanted to support. It involves talking directly to the hardware, in the vendor's protocol on a physical port. The keyboard is plugged on a PS/2, the mouse uses the Serial Port (DE9) and the joystick is plugged on a Game port (DA-15) on the SoundBlater.
+
+
+
+
+
+\subsection{Keyboard}
+
+Because the keyboard is standard and the oldest input medium, it is fairly easy to access. When a key is pressed, the interrupt is routed to an ISR in the Vector Interrupt Table. The engine installs its own ISR there.
+
+
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/keyboard.c}
+\end{minipage}
+
+The state of the keyboard is maintained in a global array \cw{Keyboard}, available for the entire engine to lookup.\\
+\par
+
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/keyboard_array.c}
+\end{minipage}
+
+
+
+\subsection{Mouse}
+A driver has to be lowed at startup for the mouse to be accessible. The operating system starting with DOS 5 had a default one. It had to be added to \cw{config.sys} so it would reside in RAM.\\
+\par 
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/mouse.sys.c}
+\end{minipage}
+The driver takes almost 5KB of RAM. With the driver loaded all interactions happen with software interrupt \cw{0x33}. The interface works with request issued in register AX and response issued in registers CX, BX and DX. With Borland compiler syntactic sugar it is easy to write with almost no boilerplate (notice direct access to registers thanks to \_AX and co special keywords.\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/mouse_request.c}
+\end{minipage}
+\par
+\begin{minipage}{\textwidth}
+\begin{figure}[H]
+\centering
+\begin{tabularx}{\textwidth}{ >{\hsize=.5\hsize}X  >{\hsize=.5\hsize}X  X }
+  \toprule
+  \textbf{Request} & \textbf{Type} & \textbf{Response} \\ \bottomrule
+AX=0 & Get Status & AX = FFFFh : available. AX Value = 0 : not available\\
+AX=1 & Show Pointer & \\
+AX=2 & Hide Pointer & \\
+AX=3 & Mouse Position & CX = X Coordinate, DX = Y Coordinate\\
+AX=3 & Mouse Buttons & BX = 1 Left Pressed, BX = 2 Right Pressed, BX = 3 Center Button Pressed\\
+AX=7 & Set Horizontal Limit & CX=MaxX1 DX=MaxX2\\
+AX=8 & Set Vertical Limit & CX=MaxY1 DX=MaxY2\\
+\bottomrule
+\end{tabularx}
+\caption{Mouse request/response.}
+\end{figure}
+\end{minipage}
+\par
+
+
+
+
+
+
+
+
+
+\subsection{Joystick}
+All interaction with joystick happen over I/O port \cw{0x201}. Two joysticks can be chained together and the state of both of them fits in a byte.\\ 
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/joystick.c}
+\end{minipage}
+\par
+
+
+
+\begin{figure}[H]
+\centering
+\begin{tabularx}{\textwidth}{ >{\hsize=.5\hsize}X X  }
+  \toprule
+  \textbf{Bit Number} & \textbf{Meaning} \\ \bottomrule
+0 & Joystick A, X Axis \\
+1 & Joystick A, Y Axis \\
+2 & Joystick B, X Axis \\ 
+3 & Joystick A, Y Axis \\
+4 & Joystick A, Button 1 \\
+5 & Joystick A, Button 2 \\
+6 & Joystick A, Button 1 \\
+7 & Joystick B, Button 2 \\
+\bottomrule
+\end{tabularx}
+\caption{Joystick sampling bit and their meaning.}
+\end{figure}
+\par
