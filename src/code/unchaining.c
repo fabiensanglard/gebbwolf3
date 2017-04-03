@@ -14,8 +14,8 @@ void VL_DePlaneVGA() {
   outp(SC_INDEX, MEMORY_MODE);
   outp(SC_DATA, inp(SC_DATA)&~8)); 
 
-  // Clear all four banks since the bios
-  // only cleared bank 0 when setup in 13h
+  // Clear all four banks since the bios only cleared 
+  // the first 16K of each banks when setiing up mode 13h.
   VL_ClearVideo (0);
 
   // turn off long mode

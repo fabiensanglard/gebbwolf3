@@ -445,7 +445,7 @@ As mentioned in the hardware section, the audio hardware was highly fragmented. 
 
 
 \subsection{Music}
-All composition was done by Robert Prince:\\
+All music composition work was performed by Robert Prince.\\
 \par
  \begin{fancyquotes}
 In the early days of the OPL soundcards, the "gold standard" sequencing software was Sequencer Plus Gold ("SPG") by Voyetra. The reason for this was it had an OPL instrument/instrument bank editor.\\
@@ -468,14 +468,13 @@ To rough out compositions, I used Cakewalk ("CW"). I had been using it for sever
  \includegraphics[width=\textwidth]{imgs/drawings/music_pipeline.png}
  \caption{Music pipeline as described by Bobby Prince.}
 \end{figure}
-
-Since id decided to support only the YM3812 for music, they were able to save the tracks in IMF format, a proprietary format by id Software. It is tailored for the Yamaha chip since it is a stream in machine language. The stream pilots the nine channels in the OPL2. A channel is able to simulate an instruent and play notes thanks to two oscillators, one playing the role of a modulator and the other the role of a carrier. The way a channel is programmed is described in details in the "Software" chapter.
+The OPL format is also called IMF\footnote{Id software Music File}. Because it supports only the YM3812, it is tailored for the chip with zero abstraction layer. It consists of a stream of machine language commands with associated delays. The stream pilots the nine channels in the OPL2. A channel is able to simulate an instrument and play notes thanks to two oscillators, one playing the role of a modulator and the other the role of a carrier. The way a channel is programmed is described in details in the "Software" chapter.
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/channel.png}
 \end{figure}
 \par
-\bu{Trivia :}  A YM3812 has an unmistakable sound. Anybody who played a game from this era will be able to regognize it. This is due to the four pecular waveforms available.
+\bu{Trivia :}  The YM3812 unmistakable sonority is due to its pecular set of waveform transformer (they right at the output of each oscillator in the drawing). Four waveforms are available on the OPL2.
 \par
 \begin{figure}[H]
 \centering

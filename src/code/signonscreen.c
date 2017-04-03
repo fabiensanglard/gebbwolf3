@@ -1,7 +1,7 @@
-extern byte far gamepal; // content of GAMEPAL.OBJ
+extern byte far gamepal;   // content of GAMEPAL.OBJ
 extern char	far introscn;  // content of SIGNON.OBJ
 
-void SignonScreen (void) // VGA version
+void SignonScreen (void)
 {
   unsigned  segstart,seglength;
 
@@ -14,7 +14,7 @@ void SignonScreen (void) // VGA version
   VL_MemToScreen (&introscn,320,200,0,0);
   VW_SetScreen(0,0);
 
-  // reclaim the memory from the linked in signon screen
+  // reclaim the memory from the linked signon screen
   segstart = FP_SEG(&introscn);
   seglength = 64000/16;
   if (FP_OFF(&introscn)){

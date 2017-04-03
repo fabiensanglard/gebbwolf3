@@ -30,7 +30,7 @@ As we saw when we unrolled the loop, the action scene is made of frames in a loo
  \lstinputlisting[language=C]{code/flawded_game_loop.c}
  \end{minipage}
 \par
-This is a pretty standard design for an engine from the early 90. However it has a major flaw. Each slice of the game has a different duration which makes the game nondeterministic from one machine to an other. Or even between two runs on the same machine as a matter of fact. In the next drawing, all three timeslice representing three frames have different durations:\\
+This is a pretty standard design for an engine from the early 90. However it has a major flaw. Each slice of the game has a different duration which makes the game nondeterministic from one machine to an other. Or even between two runs on the same machine as a matter of fact. In the next drawing, all three timeslice representing three frames have different durations.\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.pdf}
@@ -40,16 +40,18 @@ This is a pretty standard design for an engine from the early 90. However it has
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/replay.pdf}
- 
+ \caption{The second frame rendered faster. No inputs are available for the player. Replay is now out of sync.}
  \end{figure}
 \par
 To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulate things at fixed timesteps. This hack result in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
 \par
-\bu{Trivia :} In 1993, Doom engine would solve this issue by simulating the world at fixed intervals:\\
+\bu{Trivia :} In 1993, Doom engine would solve this issue by simulating the world at fixed intervals.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed_game_loop.c}
  \end{minipage}
+\par
+This design decouple the renderer from the world updates. Timeslices are always the same duration. User inputs can be recorded and Replay without getting out of sync.
 \par
  \begin{figure}[H]
 \centering
@@ -61,17 +63,12 @@ To solve this problem during the demo playback (shipped with the game), the engi
 Before diving into details, here is an overview of the five stages involved in drawing a 3D scene.\\
 \begin{enumerate}
  \item Clear the framebuffer by drawing the floor and the ceiling (both solid color).
- \item For each column of pixel on screen. Cast a ray from the player to the nearest wall. Draw a textured column of pixels inversely proportional to the distance.
+ \item For each column of pixel on screen, cast a ray from the player to the nearest wall. Draw a textured column of pixels with height inversely proportional to the distance.
  \item Draw the sprites (enemies, lamps, barrels).
  \item Draw the weapon.	
  \item Flip buffers: Instruct CRT Controller to use the framebuffer just composed on next vsync.
 \end{enumerate}
-During the entire process, all assets come from one file VMSWAP via the Page Manager.\\
-\begin{enumerate}
-	\item Textures for the wall are stored uncompressed.
-	\item Sprites are stored in RAM compressed (via RLE encoding skipping transparent parts). They are decompressed on the fly upon drawing each column of pixels.
-\end{enumerate}
-As a visual aid here is what the framebuffer looks like after each stage:\\
+In the next six screenshots, the engine has been modified to slow down in order to see each stages.\\
 \begin{figure}[H]
 \centering
  \fullimage{wolf3d_1_background.png}
@@ -84,9 +81,10 @@ As a visual aid here is what the framebuffer looks like after each stage:\\
 \begin{figure}[H]
  \centering
   \fullimage{wolf3d_4_partial_wall_32rays.png}
-  \caption{Phase 2: Drawing Walls: 40 rays} 
+  \caption{Phase 2: Drawing Walls: 15 rays} 
 \end{figure}
 \begin{minipage}{.4\textwidth}
+Notice how the length of each ray correspond the height of a column in order to achieve perspective. The bigger the distance the ray traveled, the smaller the column appear on screen.
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
@@ -106,6 +104,7 @@ As a visual aid here is what the framebuffer looks like after each stage:\\
  \caption{Phase 2: Drawing Walls: 160 rays}  
 \end{figure}
  \begin{minipage}{.4\textwidth}
+ Doors are not sprites, they are part of the solid word. Rays cannot cross it yet the door appear farther than the blue wall. The raycaster recognize door tiles and inject a delta to the distance a ray traveled. If the door is partially open, the raycaster is also able to detect if the ray should continue or not.
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
@@ -143,7 +142,7 @@ As a visual aid here is what the framebuffer looks like after each stage:\\
  \fullimage{wolf3d_6_scaled}
  \caption{Phase 3: Drawing Things (a.k.a: Scaled, a.k.a: Sprites)} 
  \end{figure}
-During this step, clipping is performed.
+ After the raycaster is done, "things" are rendered. During this step, clipping is performed against the wall and doors.
 
 
 
@@ -168,12 +167,12 @@ During this step, clipping is performed.
 
 
 \subsection{3D setup}
-Before starting to draw frames, the 3D renderer needs to setup the VRAM with static elements. The 3D view is not fullscreen but contained in a HUD\footnote{Head-up display}.
+Before starting to draw frames, the 3D renderer sets up the VRAM with static elements. The 3D view is not fullscreen but contained in a HUD\footnote{Head-up display}.
 \begin{figure}[H]
   \centering
  \fullimage{hud_empty.png}
 \end{figure}
-This HUD is drawn only once at the beginning of the 3D phase and it has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the allocated region. The stats contained in the blue part at the bottom of the screen (Level, Score, Lives, Status, Health, Ammo, Current weapon) get a special treatment via an other VGA trick.\\
+This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the white reserved canvas in the center. Small portion of the bottom of the HUD are updated. Level, Score, Lives, Status, Health, Ammo, and Current weapon get a special treatment via an other VGA trick in order to speed up rendition.\\
 \par
 
 The hardware chapter described the Mode 12h which despite being unfit for games still had something interesting. Mode 12h is a 16 colors mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operation are one byte wide, it is not hard to imagine the difficulty to plot a single pixel without changing the other stored in the same bytes. One would have to do four read, four xor and four writes. Since the designer of the VGA were not complete sadist they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
@@ -182,9 +181,9 @@ The hardware chapter described the Mode 12h which despite being unfit for games 
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/latches.pdf}
  \end{figure}
-In this architecture, each time VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmer to plot a point easily\\
+With this architecture, each time VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmer to plot a pixel easily\\
 \par
-Mode Y does not need latches to operate since values are stored in byte and banks can be updated individually thanks to the mask. However tinkerers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. And by getting a little bit creative and repurposing them, one could copy four pixels from one area of the VRAM to an other with just one read and write to the RAM!\\
+Mode Y does not need latches to operate since values are stored in byte and banks can be updated individually thanks to the mask. However tinkerers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. And by getting a little bit creative and repurposing them, four pixels from one area of the VRAM can be copied to an other VRAM area with just one read and one write to the RAM.\\
 \par
 To take full advantage of this optimization, the 3D renderer upload images to the VRAM above the third page. Sprites 91 to 134 are latched in VRAM.\\
 
@@ -354,17 +353,17 @@ To take full advantage of this optimization, the 3D renderer upload images to th
      \fullimage{latched/134.png}
   \end{minipage}\
 
-\bu{Tick :} Images are stored woven. All bytes for bank 0 first, then all bytes for bank 1 and so on. This clever way to store data allow a bank to be loaded with one single \cw{memcpy} (four \cw{memcpy} per image).\\
+\bu{Tick :} Images are stored woven. All bytes for bank 0 first, then all bytes for bank 1 and so on. This clever way to store data allow a bank to be loaded very fast with one single \cw{memcpy} (four \cw{memcpy} per image).\\
 \par
-All these assets account for $48*24*4+14*8*16+23*24*32+224*48=34,816$ bytes. There is therefore $2^18-320*208*3 - 34,816=27,648$ bytes unused VRAM in the fourth VGA page.\\
+All these assets account for 48*24*4 (weapons sprites) + 14*8*16 (numerals and keys sprites) + 24*24*32 (faces sprites) + 224 * 48 (paused + psyched) = 34,816 bytes. There is therefore $2^{18}-320*208*3 - 34,816=27,648$ bytes unused VRAM in the fourth VGA page.\\
 \par
-Of course, for this trick to work images source and destination have to be aligned on four byte horizontally in screen space. If you take a look at the location of each elements on screen you can see that elements are aligned on four horizontally. Vertically there is no such issue.
+For this trick to work images source and destination have to be aligned on four byte horizontally in screen space. If you take a look at the location of each elements on screen you can see that elements are aligned on four horizontally but vertically there is no such constraint.
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
 \end{figure}
 
-While it is faster to write four pixel in two operations, the trick does not provide a full 300\% speed increase since all writes have to be done in all three buffers. It is vivid when looking at the routine updating the status (hero's face).\\
+While it is faster to write four pixel in one operations, the trick does not provide a full 400\% speed increase since all writes have to be done in all three screen pages. It is vivid when looking at the routine updating the status (hero's face).\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/StatusDrawPic.c}
@@ -373,15 +372,15 @@ While it is faster to write four pixel in two operations, the trick does not pro
 
 
 \subsection{Clearing the screen}
-At the beginning of a frame, the engine switch to the next buffer and clears the 3D area with ceiling and floor colors. To this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all bank simultaneously. However since values are written 16 bits at a time it can write 8 pixels at a time.\\ 
+At the beginning of a frame, the engine switch to the next buffer and clears the 3D area with ceiling and floor colors. To this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all bank simultaneously. Again, since values are written 16 bits at a time it can write 8 pixels at a time.\\ 
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
  \end{minipage}
 \par
-As a result, clearing the screen made of 64000 pixels requires only 64000/8 = 8000 write operations. An impressive way to turn an awkward four bank based architecture into a tremendous source of optimizations!\\
+Clearing a screen made of 64,000 pixels requires only 64000/8 = 8000 write operations.\\
 \par
-Note that the colors are not coming from the maps data files. The ground is always the same color (\cw{0x19}) and the ceiling colors are hardcoded in the engine on a per level basis.\\
+The colors for the floor and the ceiling are not coming from the maps data files. The ground is always the same color (\cw{0x19}) and the ceiling colors are hardcoded in the engine on a per level basis.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=byte]{code/vgaCeiling.c}
@@ -412,7 +411,7 @@ The hardware chapter describing the CPU capabilities had left the reader with a 
 
 
 \subsubsection{Fixed point}
-The normal layout of an \cw{int} is as follow:
+The normal layout of an \cw{int} is as follow.
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/int.tex}
@@ -422,7 +421,6 @@ The value of the sequence of bits \emph{0010010010010010}:
 \begin{figure}[H]
 \centering
 \input{imgs/drawings/int_example.tex}
- \caption{Integer example.} \label{fig:mips}
  \end{figure}
 
 Represents $ 2^{13} + 2^9 + 2^5 + 2^1 =  8738 $.\\
@@ -436,11 +434,11 @@ Fixed Point allows to keep track of fractions while still using the integer oper
  \caption{Fixed point layout 8:8 (8-bits for integer part and 8 bits for fractional part).} \label{fig:mips}
 \end{figure}
 
-So the same sequence of bits \emph{0010010010010010}:
+The same sequence of bits \emph{0010010010010010}...
 \begin{figure}[H]
  \centering
    \input{imgs/drawings/fp_example.tex}
-  \caption{Fixed point representation: 8738 is now 34.1328125.} \label{fig:mips}
+  \caption{Fixed point representation: 8738 is now 34.1328125.}
 \end{figure} 
 
 Now represents:\\
@@ -451,7 +449,7 @@ $ = 34.1328125$\\
 
 \bigskip
 
-The beauty of fixed point is that addition and subtraction work exactly like integers from the CPU instruction side:\\
+The beauty of fixed point is that addition and subtraction work exactly like integers from the CPU instruction side.\\
 
 
 
@@ -476,7 +474,7 @@ The beauty of fixed point is that addition and subtraction work exactly like int
   {\caption{= 36.25}}
 \end{figure} 
 \par
- Even right shit and left shift trick work:\\
+ Even right shit and left shift trick work...\\
  
  \par
 \begin{figure}[H]
@@ -499,9 +497,9 @@ The beauty of fixed point is that addition and subtraction work exactly like int
    \caption{1.5 >> 2 = 0.75} 
 \end{figure}
 
-The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONNAL\_PART}. In the game, player position is \cw{16:16}. The grid location is one shift operation away \cw{player->x >> 16}.\\
+The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONNAL\_PART}. In the game, player position is \cw{16:16}. The grid location is one shift operation away \cw{player->x $\gg$ 16}.\\
 \par
- The special case is when performing multiplication. There are two ways to do it: Either multiply two 32 bits into a 64 bits or drop the precision of both fixed point and multiply then into a 32 bits. Since the 286 and 386 do not have 64 bits registers, wolf does the later (illustrated here with 8:8 for readability):
+ The special case is when performing multiplication. There are two ways to do it: Either multiply two 32 bits into a 64 bits or drop the precision of both fixed point and multiply then into a 32 bits. Since the 286 and 386 do not have 64 bits registers, Wolf does the later (illustrated here with 8:8 for readability):
 
 
 \par
@@ -540,7 +538,7 @@ Finally multiply them together:
 $128 + 16 + 4 + 0.125 = 148.125 $
 
 
-Notice that you have to be careful: In the previous example some precision was lost ($ 2^{-8}$) bit disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 would have gone past the precision of 8:8). But with this system, fractions are possible and fast enough!\\
+Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bit disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8). With this system fractions are possible and fast enough.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed_mul.c}
@@ -560,7 +558,7 @@ With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to st
  \includegraphics[width=.5\textwidth]{imgs/drawings/coordinate_system.png}
 \end{figure}
 \par
-Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column height are 29:3. Position is 24:8. Angle however is an \cw{int} representing 10th of degrees with a range [0, 3600].
+Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column height are 29:3. Position is 16:16. Angle however is an \cw{int} representing 10th of degrees with a range [0, 3600].
 
 
 
@@ -600,25 +598,24 @@ VSD is not only complicated to get done, it is also hard to get done fast. It is
  %\input{imgs/drawings/casting_a_ray/situation.tex}
 \end{figure}
 
-With a configuration like above, how would you render these two objects on a screen 320 pixels wide?\\
+In a world with no constraint, it is difficult to find the intersection of a ray with an object.\\
 \par
-A valid approach would be to find the distance of each column of pixel and draw a height proportional to the distance. To find wall intersection can be done with ray marching which consist in checking a ray intersection with objects at regular interval. That is very CPU intensive and even with fixed point that would not be fast enough.
+A valid approach would be to iterate over all objects in the world and perform ray marching which consist in checking a ray intersection with objects at a regular interval. But that is very CPU intensive and even with fixed point that would not be fast enough.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/unaligned.pdf}
- %\input{imgs/drawings/casting_a_ray/unaligned.tex}
+ \caption{Ray Marching in action.}
 \end{figure}
 
 
-However if you add some contraints to the world, then the problem become much simpler. If the world is made of square block alixed with axis and evenly distributed on a grid, the solution giving 100\% accuracy and low runtime is to check for 'hit` only where a ray crosses the grid. This is the choice Wolfenstein 3D made and that explains why it can only draw perpendicular walls, all of them being 8 feet by 8 feet by 8 feet cubes.
+In a world with some contraints the problem become much simpler. If a map is made of square block alixed with axis and evenly distributed on a grid, the solution giving 100\% accuracy and low runtime is to check for 'hit` only where a ray crosses the grid. This is the choice Wolfenstein 3D made and that explains why it can only draw perpendicular walls, all of them being 8 feet by 8 feet by 8 feet cubes.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/fixed.pdf}
- %\input{imgs/drawings/casting_a_ray/fixed.tex}
- 
+ \caption{Blocks aligned with a grid.}
 \end{figure}
 \par
-These constraints enable a variant of the DDA algorithm\footnote{Digital differential analyzer}: A fast and accurate way to detect where a ray hits a wall on the map.
+These constraints enable a variant of the DDA algorithm\footnote{Digital differential analyzer}, a fast and accurate way to detect where a ray hits a wall on the map.
 \par
 \begin{fancyquotes}
 \par

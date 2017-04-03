@@ -9,8 +9,8 @@
   asm  out  dx,al      ; set the high byte
 
   
-  ;*********** CRTC SCAN START HERE  !!!!!!!!! *******
-  ;*********** AND SHOW 2 PARTIAL FRAMEBUFFERS *******
+  ;*********** CRTC SCAN START HERE  !!!!!!!!!  *******
+  ;*********** AND SHOWS 2 PARTIAL FRAMEBUFFERS *******
   
 
   asm  mov  al,0xd     ; Tell the CRTC we want to update 
