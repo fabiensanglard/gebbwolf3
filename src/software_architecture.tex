@@ -2,21 +2,22 @@
 \begin{document}
 \section{Getting the Source Code}
 The game engine source code was released on July 21st, 1995. It was uploaded on id software's ftp\footnote{File Transfer Protocol.} server.\\ 
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[]{code/ftp_url.txt}
 \end{minipage}
 \par
-Twenty two years later it still there, at the exact same URL. A remarkable fact given the fluidity of the web.\\
+More than twenty two years later the archive is still there, at the exact same URL. A remarkable fact given the fluidity of the web.\\
 
 \section{First Contact}
-Once downloaded and decompressed, it turns out the archive \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical now. It is easy to deflate it with:\\
+Once downloaded and decompressed, it turns out the archive \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical now. It is easy to deflate.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting{code/unzip.txt}
 \end{minipage}
 
 \par
-\cw{cloc.py} is a tool which will look at every files in a folder and gather statistics about source code. It helps to get an idea of what to expect in the source.\\
+\cw{cloc.py} is a tool which will look at every files in a folder and gather statistics about source code. It helps to get an idea of what to expect.\\
 \par
 
 \begin{minipage}{\textwidth}
@@ -24,7 +25,7 @@ Once downloaded and decompressed, it turns out the archive \codeword{woldsrc.zip
 \end{minipage}
 
 \par
- The code is 90\% in C with assembly optimization for bottlenecks such as video or audio processing\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code is not a meaningful metric against a single codebase but it excels when it comes to proportions. Twenty seven thousands lines of code is very little compared to a game from 2016 usually made of millions of lines of code.\\
+ The code is 90\% in C with assembly optimization for bottlenecks such as video or audio processing\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code are not a meaningful metric against a single codebase but it excels when it comes to proportions. Twenty seven thousands lines of code is very little compared to a game from 2016 usually made of millions of lines of code.\\
 \par
 \begin{figure}[H]
 \centering
@@ -69,13 +70,13 @@ It's "COLUMN", you dumb FUCK!\\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
  
-The archive contains more than just \codeword{.H} (headers) and \codeword{.C} (code) files.
+The archive contains more than \codeword{.H} (headers) and \codeword{.C} (code) files.
 \begin{itemize}
 \item \codeword{GOODSTUF.TXT:} Two emails from fans demonstrating the success of the game: An ex-POW and a Microsoft employee.
 \item \codeword{.ASM:} Assembly routines to optimize 3D renderer and low level I/O routines.
 \item \codeword{SIGNON.OBJ:} The startup screen showing the system characteristic (RAM, EMS, XMS, Joystick, SoundCards) was linked in the binary. This weird design choice is explained later.
-\item \codeword{GAMEPAL.OBJ:} Game palette. Hardcoded and linked in the executable for the same reason described previously.
-\item \codeword{README:} How to build. You can also find a complete tutorial on the author's article "Let's compile like its 1993".
+\item \codeword{GAMEPAL.OBJ:} Game palette. Hardcoded and linked in the executable for the same reason as \cw{SIGNON.OBJ}.
+\item \codeword{README:} How to build. You can also find a complete tutorial on the author's article "Let's compile like its 1993" on \cw{fabiensanglard.net}.
 \item Many files resulting from a previous compilation attempt.
 \end{itemize}
 
@@ -90,9 +91,9 @@ The engine can be divided in three blocks:
 \begin{itemize}
 \item The 2D menu engine which lets the user configure the game.
 \item The 3D game renderer where the player spent more of her time.
-\item The sound system which always run concurrently with either the 2D or 3D renderer. 
+\item The sound system which runs concurrently with either the 2D or 3D renderer. 
 \end{itemize}
-The three systems communicate via shared memory. The renderer writes music and sound request to the RAM (also making sure the assets are ready). There requests are read by the sound "loop". The sound system also write to the RAM for the renderers since it is in charge of the heartbeat of the whole engine. The renderers update the world according to the wall-time tracked by \cw{TimeCount} variable.
+The three systems communicate via shared memory. The renderer writes music and sound request to the RAM (also making sure the assets are ready). These requests are read by the sound "loop". The sound system also write to the RAM for the renderers since it is in charge of the heartbeat of the whole engine. The renderers update the world according to the wall-time tracked by \cw{TimeCount} variable.
 \par
 \begin{figure}[H]
 \centering

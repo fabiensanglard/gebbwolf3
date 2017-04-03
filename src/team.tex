@@ -333,23 +333,9 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
 
      \begin{figure}[H]
 \centering
-     \fullimage{sprites/tom_hall_sketch_fettgesic.png}
+     \scaledimage{0.9}{sprites/tom_hall_sketch_fettgesic.png}
    \end{figure}
 
-
-  %     \begin{minipage}{.48\textwidth}
-  %    \fullimage{sprites/tom_hall_sketch_officer.png}
-  % \end{minipage}
-  %     \begin{minipage}{.48\textwidth}
-  %    \fullimage{sprites/fettgesic.png}
-  % \end{minipage}
-
-  %      \begin{minipage}{.48\textwidth}
-  %    \fullimage{sprites/tom_hall_sketch_officer2.png}
-  % \end{minipage}
-  %     \begin{minipage}{.48\textwidth}
-  %    \fullimage{sprites/giftmacher.png}
-  % \end{minipage}\\
 
 \par 
 The hint manual also contains several photos of the team back in the days, it is worth a read to get more context.
@@ -454,6 +440,10 @@ As mentioned in the hardware section, the audio hardware was highly fragmented. 
 \note{Sound production pipeline. How were voice recorded ? Who made the german voices: Mein Leben (My life) and Achtung(Attention) coming from?}
 
 
+
+
+
+
 \subsection{Music}
 All composition was done by Robert Prince:\\
 \par
@@ -473,6 +463,24 @@ To rough out compositions, I used Cakewalk ("CW"). I had been using it for sever
 \caption{Sequencer Plus Gold ("SPG") by Voyetra.}
 \end{figure}
 
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/music_pipeline.png}
+ \caption{Music pipeline as described by Bobby Prince.}
+\end{figure}
+
+Since id decided to support only the YM3812 for music, they were able to save the tracks in IMF format, a proprietary format by id Software. It is tailored for the Yamaha chip since it is a stream in machine language. The stream pilots the nine channels in the OPL2. A channel is able to simulate an instruent and play notes thanks to two oscillators, one playing the role of a modulator and the other the role of a carrier. The way a channel is programmed is described in details in the "Software" chapter.
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/channel.png}
+\end{figure}
+\par
+\bu{Trivia :}  A YM3812 has an unmistakable sound. Anybody who played a game from this era will be able to regognize it. This is due to the four pecular waveforms available.
+\par
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{imgs/drawings/wave.png}
+\end{figure}
 
 
 \bu{Trivia :} In Episode 3 the music playing features a hidden Morse coded message. "To Big Bad Wolf. De Little Red Riding Hood. Eliminate Hitler. Imperative. Complete mission within 24 hours. Out.". The end boss of this episode indeed is Hitler in a Mech suit (see hint drawing).
@@ -505,7 +513,7 @@ To rough out compositions, I used Cakewalk ("CW"). I had been using it for sever
 
 
 \section{Distribution}
-The game distribution model was shareware: The game engine along with the first episode of the game were given for free and encouraged to be copied and distributed to a maximum number of peoples. To get the five other episodes, player had to mail \$50 by mail.\\
+The game was distributed via shareware. Only the game engine along with the first episode of the game were given for free and encouraged to be copied and distributed to a maximum number of peoples. To receive the five other episodes, player had to send \$50 to if Software.\\
 \par
 \begin{figure}[H]
 \centering
@@ -515,13 +523,13 @@ The game distribution model was shareware: The game engine along with the first 
 
 \end{document}
 \par
-It was therefore paramount to make the game easy to copy. In 1991, Internet was still in its infancy and the best medium was the  3\nicefrac{1}{2}-inch floppy. A particular attention to the size of the package was given. All assets combined accounted for 1,204KB but everything was compressed to 645KB (a 3\nicefrac{1}{2}-inch floppy can store 720KB). The full six episodes fit on two disks. Spears of Destiny would fit on three disks.
+In order to maximize income, it was therefore paramount to make the game easy to copy and redistribute. In 1991, Internet was still in its infancy and the best medium was the 3\nicefrac{1}{2}-inch floppy. A particular attention to the size of the package was given. All assets combined accounted for 1,204KB but everything was compressed to 645KB (a 3\nicefrac{1}{2}-inch floppy can store 720KB). The full six episodes fit on two disks. Spears of Destiny would fit on three disks.
 The game shipped as follow:\\
 \par
  \begin{figure}[H]
 \centering
  \fullimage{result.png}
- \caption{Tile EDitor screen} 
+ \caption{All files distributed as shareware as they appear in DOS command prompt.}
   \end{figure}
   \par
  The files can be divided in five parts:
@@ -557,4 +565,4 @@ The game shipped as follow:\\
 \item SOD: Spear of Destiny.
 \end{itemize}
  
-\textbf{\underline{Trivia :}}The engine is very tiny and only occupy 94KB. But with 64KB dedicated to the Signon screen and 768B for the palette, the engine is in fact only 29KB of instructions.\\
+\textbf{\underline{Trivia :}}The engine is very tiny and only uses 94KB. But with 64KB dedicated to the Signon screen (and 768B for the palette), the engine is in fact only 29KB.\\
