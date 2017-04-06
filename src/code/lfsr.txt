@@ -8,4 +8,4 @@
 0010     |    2
 0001     |    1 
 
-Sequence of 7 numbers.
+Sequence of 6 numbers before cycling.

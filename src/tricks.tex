@@ -1,12 +1,12 @@
 \section{Tricks}
 
-In this section are described random tricks used to speed up rendition. They range from simple precomputed cos/sin tables to what I consider one of the most beautiful hack in the engine: Linear Feedback Shit Register.
+In this section are described random tricks used to speed up rendition. They range from simple precomputed cos/sin tables to what I consider one of the most beautiful hack in the engine, Linear Feedback Shit Register.
 
 
 
 
 \subsection{Cos/Sin table lookup}
-\cw{cos} and \cw{sin} are expensive methods involving floating point calculation. They are extensively used at runtime. To speed things up, at startup, the engine generates and cache them in a lookup array (one value per angle). So save RAM, it exploits a math property ($cos(X) = sin(X + 90)$) to avoid 360 \cw{cos} method calls and 240 bytes of RAM by reusing the cos table as follow:\\
+\cw{cos} and \cw{sin} are expensive methods involving floating point calculations. They are extensively used at runtime. To speed things up, at startup, the engine generates and cache them in a lookup array (one value per angle). So save RAM, it exploits a math property ($cos(X) = sin(X + 90)$) to avoid 360 \cw{cos} method calls and 240 bytes of RAM by reusing the cos table as follow:\\
 \par
 
 \begin{minipage}{\textwidth}
@@ -28,13 +28,12 @@ In this section are described random tricks used to speed up rendition. They ran
 
 
 \subsection{FizzleFade}
-While most screen transition are done with a black fade effect (by shifting the palette), there are two instances
-when the screen transition via fizzling:
+While most screen transitions are done with a fade to black (by shifting the palette), there are two instances when the screen transitions via fizzling:
 \begin{itemize}
 	\item When dying
 	\item When killing a boss
 \end{itemize}
-
+If you don't know what fizzling is, here are a serie of screenshots to illustrate it. During the transition, each pixels on the screen is turned to red (when dying) or blue (when dispatching a boss). Each pixel on the screen is written only once and seemingly at random. 
 
 
 
@@ -67,7 +66,7 @@ when the screen transition via fizzling:
   \scaledimage{.9}{fizzlefade/boss/screenshot_130.png}\\
 \end{minipage}
 
-A naive approach would have been to reuse the pseudo random generator \cw{US\_RndT} and keep track of which pixels had been fizzled. But that would make the fade non-deterministic with regard to duration and that would also be a waste of CPU cycles since a same pixel coordinate (X,Y) could come up several times. There is a much faster and elegant way to do it. The code responsible for this effect can be found in id\_vh.cpp, function FizzleFade. At first it is not obvious to understand how it works.\\
+To implement such an effect, a naive approach would have been to use the pseudo random generator \cw{US\_RndT} and keep track of which pixels had been fizzled. But that would make the fade non-deterministic with regard to duration and that would also be a waste of CPU cycles since a same pixel coordinate (X,Y) could come up several times. There is a much faster and elegant way to do it. The code responsible for this effect can be found in \cw{id\_vh.cpp}, function \cw{FizzleFade}. At first it is not obvious to understand how it works.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/fizzlefade.c}
@@ -80,7 +79,7 @@ Which can be read as:\\
 \item Subject \cw{rndval} to a soup of XORing.
 \item When \cw{rndval} value is somehow back to 1: Stop.
 \end{itemize}        
-It looks like magic at first. How is \cw{rndval} supposed to return to value 1?! That technique is called Linear Feedback Shit Register. To make it work, one needs a register which will be right shifted each iteration. Since it is right shifted, the right bit disappears and a new one to the left is needed. To generate this new bit, the register use "taps" which are bit offset used to XOR together values and generate the new bit value. A Fibonnaci representation shows a simple LFSR with one tap.\\
+It feels like dark magic. How is \cw{rndval} supposed to return to value 1?! That technique is called Linear Feedback Shit Register. The idea is to use one register to read a value. To get the next value, you do a right shift. Since the rightmost bit disappears, new one to the left is needed. To generate this new bit, the register use "taps" which are bit offset used to XOR together values and generate the new bit value. A Fibonnaci representation shows a simple LFSR with one tap.\\
 \par
 
 \begin{figure}[H]
@@ -88,13 +87,20 @@ It looks like magic at first. How is \cw{rndval} supposed to return to value 1?!
   \includegraphics[width=.4\textwidth]{imgs/drawings/4bits_lfsr.pdf}
  \caption{Finalez frame} 
 \end{figure}
-This register is able to generate 7 values before it cycle back to it original state. The following listing shows all of them.
+This register is able to generate 6 values before it cycle back to it original state. The following listing shows all of them.\\
 \par
 \begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/lfsr.txt}
+\lstinputlisting{code/lfsr.txt}
 \end{minipage}
 \par
-Since the VGA framebuffer needs at least 320x200 values, it uses a 17 bits LFSR with two taps.\\
+Various arrangement of taps will produce different serie. In the case of this four bits register, the maximum number of value in a serie is 16-1 =15 (zero cannot be reached). This can be achieved with taps on byte 0 and 1. This is called a "Maximum-Length" LFSR.\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting{code/maximum_lfsr.txt}
+\end{minipage}
+\par
+\par
+Wolf uses a 17 bits Maximum-Length LFSR with two taps to generate a serie of pseudo-random value. Of these 17 bits, on each iteration, 9 are used to generate a Y coordinate and 8 for a X coordinate. The corresponding pixels is turned red/blue.\\
 \par
 \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/fibonacci.pdf} \end{figure}
 \par
@@ -102,9 +108,9 @@ The above diagram is slow to implement in software. There is an alternative way 
 \par
 \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/galois.pdf} \end{figure}
       
-\bu{Note :} Because the effect works by plotting pixels individually, this effect was very hard to replicate when developers tried to port the game to hardware accelerated GPU. As far as I know none of the port managed to replicate the fizzlefade.\\
+\bu{Note :} Because the effect works by plotting pixels individually, it was hard to replicate when developers tried to port the game to hardware accelerated GPU. None of the port managed to replicate the fizzlefade except Wolf4SDL, they found LFSR taps configuration to reach resolution higher than 320x200.\\
 \par
-\bu{Note :} If you are curious about maximum-length taps, xilinx provides them from 3 to 168\footnote{Xilinx table can be found \href{http://www.xilinx.com/support/documentation/application\_notes/xapp052.pdf}{here}.}.
+\bu{Note :} The tap configuration on 17 bits regerates 131,072 values before cycling. Since 320x200=64000, it could have been implemented with a 16 bits Maximum-length register with taps on 16,15,13 and 4 (in "Galois" notation).
 
 
 
@@ -136,20 +142,25 @@ A fast path is provided (which ironically only works if the CPU is as slow at th
 
 
 \section{Pseudo random generator}
-\note{Elaborate}
+Random number are necessary for many things during runtime. One example is to calculate is an enemy was able to hit the player based on its accuracy. This is achieved with a precalculated pseudo-random serie of 256 elements. The last random value is also the index of the next value.
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}, style=mystyle,basicstyle=\small]{code/rndtable.asm}
 \end{minipage}
-
+\par
+The pseudo-random serie is initialized using the current time modulo 256 as seed.
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}]{code/US_InitRndT.asm}
 \end{minipage}
-
-
+\par
+The random number generator saves the last index in \cw{rndindex}. Upon request for a new number, it just look up the new value and updates \cw{rndindex}.
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[ language={[x86masm]Assembler}]{code/US_RndT.asm}
 \end{minipage}
 
+This pseudo random serie of 256 values could have been generated with an 8 bits Maximun lenght LFSR (8,6,5,4). My assumption is that LFSR literrature was hard to find at the time and finding the correct tap for a maximum length register of 16 bits was not worth the effort.\\
+\note{Johns, did I guess right?}
 
 
 

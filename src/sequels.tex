@@ -1,6 +1,6 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-The game ended up a collosal financial success. Sales were so good that six episodes of 10 maps (60 maps!) were not enough to satisfy players:\\
+Wolfenstein 3D ended up a collosal financial success. Despite its many episodes:\\
 \par
 \begin{itemize}
 \item Episode 1: Escape from Wolfenstein
@@ -10,22 +10,22 @@ The game ended up a collosal financial success. Sales were so good that six epis
 \item Episode 5: Trail of the Madman
 \item Episode 6: Confrontation
 \end{itemize}
-id Software ended up developing sequels but also contracted companies to make even more maps.
+Each made of 10 levels each,  the game was not long enough to satisfy players id Software contracted other companies to make more maps. They also worked on a sequel of their own.
 
 \section{Spears of Destiny}
-Released on September 18, 1992 and entirely done by id Software, Spears Of Destiny used the same game engine but with new graphics, music and levels. It is a prequel to the adventures of wolf hero: B.J. Blazkowicz and consist in one additional episode made of 21 levels.\\
+Released on September 18, 1992 and entirely done by id Software, Spears Of Destiny used the same game engine but with new graphics, music and levels. It is a prequel to the adventures of wolf hero: B.J. Blazkowicz and consist of one additional episode made of 21 levels.\\
    \par
 \begin{figure}[H]
 \centering
  \fullimage{spears_of_destiny_intro.png}
  \end{figure}
  \par
- To work on a sequel made sense for two reasons:
+ To work on a sequel made a lot of sense for the game studio:
  \begin{enumerate}
- \item Sales were so good it would have been silly not to provide something for which there was so much demand.
+ \item Sales were so good it would have been silly not to provide to customers something for which there was so much demand.
  \item It gave time to the engineering team to build the next generation of engine and tools while keeping the design and graphic team busy.
  \end{enumerate}
-Despite using the same engine, SOD is nonetheless innovative since it introduces huge transparent sprites to simulate vegetation and also tries to break away from the orthogonal world contraint with clever map design:
+Despite using the same engine, Spear Of Destiny is still innovative since it introduces huge transparent sprites to simulate vegetation and also tries to break away from the orthogonal world contraint with clever map design leveraging all the map real estate.
     \par
 \begin{figure}[H]
 \centering
@@ -41,39 +41,32 @@ Despite using the same engine, SOD is nonetheless innovative since it introduces
  \end{figure}
  \par
 
-
- I look like piracy was a problem with Wolf3D so SOD shipped with a copy protection mechanism: A set of random question which could only be answered with the game manual:\\
+To fight piracy, SOD shipped with a copy protection typical of the early 90s. Since copying a disk was easy but photocopies were much harder to do, the game would refuse to start unless the player managed to answer a question about something in the game manual.\\
     \par
 \begin{figure}[H]
 \centering
  \fullimage{spears_of_destiny_copy_protection.png}
  \end{figure}
  \par
- Of course, as usual an easter egg is hidden. Some words are always a valid answer. Among them "Joshua": a reference to 1983 movie WarGames:\\
+ The copy protection mechanism features backdoors which are probably private jokes.
+\note{What does "spoon" means, what about eveyrthing else ?!}
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/backdoor_words.c}
+\end{minipage}
+\par
+And the associated answers:\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/backdoor_answers.c}
+\end{minipage}
+\par
+Notice the reference to the 1984 movie, Wargames.
     \par
 \begin{figure}[H]
 \centering
  \fullimage{spears_of_destiny_easter_egg.png}
  \end{figure}
  \par
-
-
-
-Trivia: Angel of Death looked like a demon and was a good insight into what would come next: Doom.
-
-
-
-
-It was essentially a mod of Wolfenstein 3D. SOD helps to put things into perspective when it comes to being open source and allow people to figure out the file formats. SOD may not have sold as well had the game been open.\\
-No a shareware version  but  2-level playable demo was distributed\\
-Lost Episodes, Each of these, consists of 21 levels. New level textures, new enemies, and new appearances for old enemies. Published by FormGen Corporation in May 1994.''
-\\
-\section{Mission Pack}
-Mission Packs(released by FormGen Corporation in May 1994, resemble many fan-made mods a.k.a: Lost Episodes):\\
-Mission 2: Return to Danger\\
-Mission 3: Ultimate Challenge\\
-
-
-
 
 \end{document}
