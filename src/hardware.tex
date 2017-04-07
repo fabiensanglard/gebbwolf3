@@ -1,6 +1,6 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-To study the machine, I found it is easier to break it down in small parts. I isolated five sub-systems: Input, CPU, RAM, Video, Audio. Together forming a pipeline.\\
+To study the machine, it is easier to break it down in small parts. Five sub-systems stand out: Input, CPU, RAM, Video, Audio, all together forming a pipeline.\\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/fun_pipeline.pdf}
@@ -22,7 +22,7 @@ Overall, the pipeline offers a lot of resistance since hardware manufacturers ha
   Inputs & Ok \\ 
   CPU & Impossible \\ \bottomrule
 \end{tabularx}
-\caption{Component quality for a game engine.}
+\caption{Component quality for a 3D game engine.}
 \end{figure}
 
 
@@ -33,8 +33,6 @@ Overall, the pipeline offers a lot of resistance since hardware manufacturers ha
 \par
   The ubiquitous CPU manufacturer was Intel with its x86 line of microprocessors. The machines based on the 16 bits 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor, the 80386 released in June 1986. Given the adoption curve, Wolfenstein was targeted at a PC running with a 386 with degraded performances (yet still playable) on a 286.\\
 \par
-  \bu{Trivia }Moore's law was in full swing as seen on the mips\footnote{Million Instructions Per Second.} histogram.
-
 
 \definecolor{skyblue1}{rgb}{0.1,0.624,0.812}
 \begin{figure}[H]
@@ -64,17 +62,20 @@ Overall, the pipeline offers a lot of resistance since hardware manufacturers ha
         (386DX,9.9)
       };
     \end{axis}
-    
+   
    \end{tikzpicture}
-   \caption{The 386-SX and 386-DX were identical processor. Yet the DX version is twice as powerful as the SX thanks to a data bus between the CPU and the RAM twice as wide (32 bits vs 16 bits). The SX still sold well because it was cheaper to manufacture. Also a lot of people had no idea what that 16 bits/32 bits lingo meant, they just wanted "a 386".}
  \end{figure}
  \par
- \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 MIPS. That's five orders of magnitude faster than the 386-DX!\\
+ \bu{Above :}Comparaison of CPU processing capability in Mips\footnote{Million Instructions Per Second.}\footnote{ Moore's law is clearly visible.}.\\
+ \par
+ Intel built two version of the 386: The 386-SX and 386-DX. They are identical processor, yet the DX version is twice as powerful as the SX thanks to a data bus between the CPU and the RAM twice as wide (32 bits vs 16 bits). Despite its inferiority, the SX sold well because it was cheaper and also because a lot of people had no idea what that 16 bits/32 bits lingo meant, they just wanted "a 386".\\
+ \par
+ \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 MIPS.\\
 \par
 
-A 386 can be summarized to the following elements:
+A 386 CPU can be summarized to the following elements:
 \begin{itemize}
-\item An ALU\footnote{Arithmetic Logic Unit}.
+\item An ALU\footnote{Arithmetic Logic Unit} performing \cw{add}, \cw{sub} and \cw{mul}.
 \item 15 registers:
 \begin{itemize}
   \item 32-bits General purpose registers: EAX, EBX, ECX, EDX.
@@ -101,7 +102,7 @@ Despite its power (at least compared to the 286), the architecture of a 386 is v
 \centering
   
       \includegraphics[width=\textwidth]{imgs/drawings/80386DX_arch.png}
-\caption{Architecture of Intel i386 DX (courtesy \cw{http://www.walkerb.net/}).}
+\caption{Architecture of an i386 DX (courtesy \cw{http://www.walkerb.net/}).}
 \end{figure}
 
 
@@ -115,7 +116,7 @@ Despite its power (at least compared to the 286), the architecture of a 386 is v
   
    All that CPU power was not necessarily useful. In order to perform the trigonometric calculations for its 3D effects, the engine has to keep track of the fractional part of each operations. It may not look like an issue since the C programming language offers the types \codeword{float} and \codeword{double} precisely for that purpose\footnote{This is how modern 3D engines do all their calculations by the way.} which use Floating Point arithmetics.\\
 \\
-As David Goldbert put it, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{What every Computer Scientist should know about Floating-Point}. But it is very important to understand it to fully grasp how useful it is for 3D engine programming. In the C language, \codeword{float} are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
+A lot of programmers, even really good ones, don't understand floating points. As David Goldbert put it, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{What every Computer Scientist should know about Floating-Point}. Yet it is  important to get it in order to fully grasp how useful it is for 3D engine programming. In the C language, \codeword{float} are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
   \item One bit S for the sign.
   \item Seven bits E for the exponent.
@@ -139,8 +140,8 @@ As David Goldbert put it, \emph{"Floating-point arithmetic is considered an esot
   \bigskip  
 
 
-How numbers are stored and interpreted is usually explained with the formula in Figure \ref{eq:fp}).\
-
+How numbers are stored and interpreted is usually explained with the formula:\\
+\par
 \begin{figure}[H]
 \begin{equation}\label{eq:fp}
 \large
@@ -165,7 +166,7 @@ The window tells within which two consecutive power of two the number will be [0
 \par \bu{Trivia :} How much precision is lost when the window covers a wider range? Let's take an example with window [0,1] where the 8388608 offsets cover a range of 1 which gives a precision of $(1-0)/8388608=0.00000011920929$. In the window [2048,4096] the 8388608 offsets cover a range of $(4096-2048) = 2048$ which gives a precision $ (4096-2048)/8388608=0.0002$. For 3D gaming purpose the lose of precision is negligible.\\
 \par
 
-Figure \ref{fig:fp_internals_window6_1} illustrates how the number 6.1 would be encoded: The window must start at 4 (and therefore spanning up to next power of two: 8). The offset about half way down the window.
+The next figure illustrates how the number 6.1 would be encoded. The window must start at 4 (and therefore spanning up to next power of two: 8). The offset about half way down the window.
 
 \begin{figure}[H]
 \centering
@@ -194,7 +195,7 @@ Which in binary translate to:
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/floating_point_layout_pi.pdf}
-\caption{Floating Point internals}
+\caption{3.14 floating point binary representation.}
 \label{fig:fp_internals}
 \end{figure}
   \bigskip
@@ -220,7 +221,7 @@ And finally the graphic representation with window and offset:\\
 \end{figure}
   \bigskip
 
-For a 3D engine floating point arithmetic is a precious tool. It can represent very small values and huge ones while keeping track of fractional part of a number and also protect from overflow by floating the window when necessary.\\
+For a 3D engine, floating point arithmetic is a precious tool. It can represent very small values and huge ones while keeping track of fractional part of a number and also protect from overflow by floating the window when necessary.\\
 \par
 Floating point is handy and the drawback is that it is also computationally intensive. The reason is very simple. In order to add, subtract, multiply or divide two numbers, they have to be expressed with the same window. Which mean converting one number to the representation used by the other. Usually with higher precision than 32 bits (typically 80 bits on Intel FPUs)\footnote{To fully grasp how much processing a FPU does, it help to read a software implementation. I found Berkeley SoftFloat helpful}.\\
 \\
@@ -232,7 +233,7 @@ This is not a problem when everything is hardwired within an hardware floating p
 \par
 
 
-\textbf{\underline{Trivia :}} People who really wanted an hardware floating point unit could buy one. In the 90s the only people who would want one could only be scientists (as per Intel understanding of the market). Intel marketed them as "Math CoProcessor". Performances were average and price outrageous\footnote{\$200 in 1993 equivalent to \$350 in 2016}. As a result, sales were mediocre.\\
+\textbf{\underline{Trivia :}} People who really wanted an hardware floating point unit could buy one. In the 90s the only people who could possibly want one would have been scientists (as per Intel understanding of the market). Intel marketed them as "Math CoProcessor". Performances were average and price outrageous\footnote{\$200 in 1993 equivalent to \$350 in 2016}. As a result, sales were mediocre.\\
 \begin{figure}[H]
 \centering
   \shadowbox{
@@ -245,7 +246,7 @@ This is not a problem when everything is hardwired within an hardware floating p
 
 
 \par
-A possible solution to the lack of hardware floating point unit would have been to simply multiply an integer by 100 or 1000 to perform fractional operation and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes a minimum of 6-9 cycles and a divide (\cw{div}) is even worse with 22/25 cycles depending if operands are RAM or register.\\ 
+A possible solution to the lack of hardware floating point unit would have been to multiply an integer by 100 or 1000 to perform fractional operation and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes a minimum of 6-9 cycles and a divide (\cw{div}) is even worse with 22/25 cycles depending if operands are RAM or register.\\ 
 \par
 A game engine designer was stuck in an awkward situation with two half solutions to his problem. Integers which were fast but not accurate enough and Floats which were accurate but not fast enough.\\
 \par
@@ -270,9 +271,9 @@ A 386 can operate in two modes:\\
 \par
 \begin{itemize}
   \item The new\footnote{Well, in 1991 it was new!} Protected Mode with  32 bits registers and 24 bits address bus wide offering up to 16 MB of flat RAM protectable with a MMU\footnote{Memory management Unit}.
-  \item The backward compatible Real Mode. Available only to allow old software to run. This memory model replicated how the Intel 8086 CPU from the 1976 operated: 16 bits registers, 20 bits address bus giving 1MB addressable RAM with an awful segmented addressing system. 
+  \item The backward compatible Real Mode. Available only to allow old software to run. This memory model replicated how the Intel 8086 CPU from 1976 operated: 16 bits registers, 20 bits address bus giving 1MB addressable RAM with an awful segmented addressing system. 
 \end{itemize}
-For compatibility reasons all PCs starts in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20 years old Real Mode. Unfortunately, there was a major obstacle. The infamous operating system MS-DOS 5.0 by Microsoft Corporation.
+For compatibility reasons all PCs starts in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20 years old Real Mode. Unfortunately, there was a major obstacle. The infamous operating system MS-DOS by Microsoft Corporation.
   
 
 
@@ -336,7 +337,7 @@ Out of the original 1024KB, only 640KB (called Conventional Memory) were usable.
 
 
 \subsection{The infamous Real Mode: 16 bits Segmented addressing}
-A 386 has 32 bits registers but Real Mode cannot use them for addressing (or even operating as a matter of facts). Everything has to be done by combining two 16 bits registers as seen in Figure \ref{fig:register_comb_to_20_bits}. There are two kinds of pointers: \cw{near} and \cw{far}. A \cw{near} pointer is 16 bits and considered \emph{fast} because it can be used as is (but it only allows the IP to \cw{jmp} 16K in the code section). A \cw{far} pointer allows a \cw{jmp} anywhere but it is slower since a 16 bits segment register has to be shifted left 4 bits and combined with an other 16 bits offset register to form a 20 bits address:\\
+A 386 has 32 bits registers but Real Mode cannot use them for addressing (or even operating as a matter of facts). Everything has to be done by combining two 16 bits registers as seen in the next figure. There are two kinds of pointers: \cw{near} and \cw{far}. A \cw{near} pointer is 16 bits and considered \emph{fast} because it can be used as is (but it only allows the IP to \cw{jmp} 16K in the code section). A \cw{far} pointer allows a \cw{jmp} anywhere but it is slower since a 16 bits segment register has to be shifted left 4 bits and combined with an other 16 bits offset register to form a 20 bits address:\\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/register_combination_20_bits_address.pdf}
@@ -424,7 +425,7 @@ At this point, if you are puzzled by the CPU and its design you are not alone. O
 \textbf{David Patterson \& John Hennessy - Computer Organization and Design.}
  \end{fancyquotes}\\
 \par
-And:
+And:\\
 \par
  \begin{fancyquotes}
     That sounds odd, but Intel built it, Microsoft wrote it, and DOS grew up around it.\\
@@ -471,7 +472,7 @@ The main issue in this system is that CRT are analogic system while computers ar
   \subsection{History of Video Adapters}
 
 The first adapter of the family was released in 1981. The Monochrome Display
-   Adapter (\codeword{MDA}) offers two colors allowing text only with 80 columns by 25 lines.  Not great, but it had the merit to be standard on every PC. Many other systems followed over the years. Each of them preserving backward compatibility.
+   Adapter (\codeword{MDA}) offers two colors allowing text only with 80 columns by 25 lines.  Not great, but it had the merit to be standard on every PC. Many other systems followed over the years, each of them preserving backward compatibility.
 \bigskip
   
  \begin{figure}[H]
@@ -522,7 +523,7 @@ Each iteration added new features and in 1991 the ubiquitous graphic system was 
 
 \subsection{VGA Architecture}
 
-The VGA can be summarized as three major systems :
+The VGA can be summarized as three major systems with an input, a storage and output system:\\
 
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlling how the VGA RAM is accessed (interface CPU-VRAM).
@@ -534,7 +535,7 @@ The most surprising part of the architecture is obviously the framebuffer. Why f
 \\
 The first part of the explanation comes from backward compatibility. The version before VGA, the EGA had only 64KB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
 \\
-But the real reason was physical limitations and the need for a minimum bandwidth. A CRT running at 70Hz and displaying 320x240 needed a pixel every 1/(320*240*70)th of a second. Since the VGA is palette based, one pixel is one byte [0-255] translated to a 888 RGB color. So that divides bandwidth by three. But you still need one byte each 186ns but unfortunately RAM access time was 200ns. Not fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz. If latency could not be reduced, the throughput could still be improved by accessing four banks at the time. The memory banks read in parallel had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
+But the real reason was physical limitations and the need for a minimum bandwidth. A CRT running at 70Hz and displaying 640x480 needed a pixel every 1/(640*480*70)th of a second. Since the VGA is palette based, one pixel is 4 bits translated to a 888 RGB color. That divides bandwidth by six, but you still need one byte each 91ns. Unfortunately reading from the RAM took 200ns. Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz. If latency could not be reduced, the throughput could still be improved by accessing four banks at the time. The memory banks read in parallel had an amortized latency of 200/4 = 50ns/pixel which was fast enough.
 
 
 \begin{figure}[H]
@@ -560,7 +561,7 @@ Four memory banks grant enough throughput to reach high resolutions. The price i
 \par
 The first problem with this design is that it is unintuitive. There is no linear framebuffer and figuring out which byte corresponded to what pixel on screen is difficult.\\
 \par
- The way it works is: To write four pixels next to each others on a line, you have to write one pixel in each bank. Each of these banks are mapped at the same HMA memory address. The layout is better explained with a drawing.\\
+ The way it works is called "planar". To write four pixels next to each others on a line, you have to write one pixel in each bank. Each of these banks are mapped at the same HMA memory address. The layout is better explained with a drawing.\\
 \par
 \begin{figure}[H]
 \centering
@@ -571,7 +572,7 @@ The first problem with this design is that it is unintuitive. There is no linear
  
 
 \par
-To configure this mess of planes and circuitry, the four controllers are set via 300 poorly documented internal registers. Needless to say few programmers got to dive in the internal of this thing. The first drawing of the VGA was actually deceiving. The IBM VGA Reference attempted to clarify the architecture with a drawing but it only illustrated the complexity of the interactions between each controller.\\
+To configure this mess of planes and circuitry, the four controllers read their state from 300 poorly documented internal registers. Needless to say few programmers got to dive in the internal of this thing. The first drawing of the VGA was actually deceiving. The IBM VGA Reference attempted to clarify the architecture with a drawing but it only illustrated the complexity of the interactions between each component.\\
  \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/ibm_vga.pdf}
@@ -619,7 +620,7 @@ The BIOS can be called to configure the VGA as follow.
 
 
  \subsection{VGA Programming: Memory mapping}
-To write to the VRAM the 1MB address space maps 64KB starting as indicated in Mode table. e.g: In Mode 13h, a developer have from 0xA0000 to 0xAFFFF available to access the Video RAM (VRAM). The first question that may pop in your mind is "How does one write to 256KB of RAM with only 64KB of address space?". The answer is: bank switching. Write and Read operations are routed based on a mask register indicating which bank should be read or written.\\
+To write to the VRAM the 1MB address space maps 64KB starting as indicated in the Mode table. e.g: in Mode 13h, a developer have from 0xA0000 to 0xAFFFF available to access the Video RAM (VRAM). The first question that may pop in your mind is "How does one write to 256KB of RAM with only 64KB of address space?". The answer is: bank switching. Write and Read operations are routed based on a mask register indicating which bank should be read or written.\\
 \par
  \begin{figure}[H]
 \centering
@@ -662,7 +663,7 @@ The only good thing about this mode is that it has square pixels: The aspect rat
 
  
   \subsection{VGA Programming: Mode 13h}
-  Mode 13h is far more appealing since it offers a lower resolution of 320x200 with 256 colors at 70Hz. It also has the advantage of faking linear buffer. A special chip called Chain-4 uses the lower 2 bit of the RAM address to automatically program the mask and root the operation to the appropriate VRAM bank. This convenience mechanism was originally added because Mode 13h was meant to display static images and a linear address space made it easy for developer to copy from RAM to VRAM.\\
+  Mode 13h is far more appealing since it offers a lower resolution of 320x200 with 256 colors at 70Hz. It also has the advantage of faking linear buffer. A special chip called Chain-4 uses the lower 2 bit of the RAM address to automatically program the mask and route the operation to the appropriate VRAM bank. This convenience mechanism was originally added because Mode 13h was meant to display static images and a linear address space made it easy for developer to copy from RAM to VRAM.\\
   \par
  \begin{figure}[H]
 \centering
@@ -690,7 +691,7 @@ The side effect of this convenience mechanism is that 75\% of the RAM is wasted 
   \lstinputlisting[ language={[x86masm]Assembler}]{code/vga_mode13.asm}
   
   \par
-  The \codeword{int 10} is a software interrupt caught by the BIOS routine in charge of Graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA register with the corresponding mode. After the VGA is initialized one can write to the mapped 0xA000. It is simpler to follow with a code sample, here is some code to clear the screen to black.\\
+  The \codeword{int 10} is a software interrupt caught by the BIOS routine in charge of Graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA register with the corresponding mode. After the VGA is initialized one can write to the mapped \cw{0xA0000}. It is simpler to follow with a code sample, here is some code to clear the screen to black.\\
   
   \begin{minipage}{\textwidth}
   \lstinputlisting[language=C]{code/clear_vga.c}
@@ -711,7 +712,7 @@ The side effect of this convenience mechanism is that 75\% of the RAM is wasted 
 \begin{figure}[H]
   \centering
   \fullimage{circlescreen.png}
-  \caption{How the framebuffer looked once stretched on the CRT monitor :( !}
+  \caption{How the framebuffer looked once stretched on the CRT monitor.}
 \end{figure}
 \par
 
@@ -779,7 +780,7 @@ Continuous Hi-Lo Beeps           & CPU Overheating \\ \hline
 \end{tabularx}\\
 \bigskip
 \par
-Needless to say square wave are not usable for anything nice to hear. But some peoples had started to see a market and they were companies manufacturing what were known as "sound cards". You could buy them separately and insert them into one of the ISA slot of the machine. These cards could be connected to real audio speakers via 3.5mm jack and tremendously improve the sound capabilities. In 1991, three companies competed to become the dominant sound card: Adlib, Creative and Disney competed with four cards:\\
+Needless to say square wave are not usable for anything nice to hear. But some peoples had started to see a market and they were companies manufacturing what were known as "sound cards". You could buy them separately and insert them into one of the ISA slot of the machine. These cards could be connected to real audio speakers via 3.5mm jack and tremendously improve the sound capabilities. In 1991, three companies competed to become the dominant sound card: Adlib, Creative and Disney competed with four cards.\\
 \par
 \begin{itemize}
 \item Adlib music card.
@@ -788,7 +789,7 @@ Needless to say square wave are not usable for anything nice to hear. But some p
 \item Disney Sound Source.
 \end{itemize}
 \par
-Even though adoption was increasing (Creative would go on selling 1M SoundBlaster in 1991), a fast majority of PCs had no sound cards which once again was a huge problem for game developers.
+Even though adoption was increasing (Creative would go on selling one million SoundBlaster in 1991), a fast majority of PCs had no sound cards which once again was a huge problem for game developers.
 
 
   \subsection{AdLib}
@@ -833,7 +834,7 @@ The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but also s
 
 
   \subsection{Disney Sound Source}
-  Staring in 1990, Disney was selling an interesting piece of hardware. It was a beautiful hack. Plugged into the printer port (parallel port) of the PC, a 8 bits DAC based on the "Covox Speech Thing" was connected to a nice speaker box. It was incredibly easy to setup, simple to program and very cheap compared to the other audio solution (\$14). It would have made programmers and customers happy if it was not for a serious issue was due to the bandwidth of the port (150 kbit/s), which only allowed a 7000Hz sampling rate to be played.
+  Starting in 1990, Disney was selling an interesting piece of hardware. It was a beautiful hack. Plugged into the printer port (parallel port) of the PC, a 8 bits DAC based on the "Covox Speech Thing" was connected to a nice speaker box. It was incredibly easy to setup, simple to program and very cheap compared to the other audio solution (\$14). It would have made programmers and customers happy if it was not for a serious issue due to the bandwidth of the port (150 kbit/s), which only allowed a 7000Hz sampling rate playback.
   \par
   \begin{figure}[H] 
     \centering 
@@ -851,7 +852,7 @@ The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but also s
 \section{Inputs}
 A time before the ubiquitous USB, inputs were a mess with no less than four ports, all programed with different I/O addresses.\\
 
-The parallel port (DB-25) was on every computer and usually used to connect matrix printers (loud thing that printed with needles). The parallel port was multipurpose and The Disney Sound Source could be plugged into it.\\
+The parallel port (DB-25) was on every computer and usually used to connect matrix printers (loud thing that printed with needles). The parallel port was multipurpose and the Disney Sound Source could be plugged into it.\\
 \par
  \begin{figure}[H]
 \centering
@@ -895,9 +896,9 @@ Although developers have no control over it, it is still worth mentioning how th
       \includegraphics[width=\textwidth]{imgs/drawings/bus.pdf}
 \end{figure}
 \par
-The Northbridge connecting the CPU to the RAM is 16 bits wide on 286 and 386SX but 32 bits wide on 386DX machines. It runs at the same speed as the CPU.\\
+The Northbridge connecting the CPU to the RAM is 16 bits wide on 286 and 386SX but 32 bits wide on 386DX machines. It runs at the same frequency as the CPU.\\
 \par
-The Southbridge run on ISA\footnote{Industry Standard Architecture}. Invented in 1981, it can be either:
+The Southbridge run on an ISA\footnote{Industry Standard Architecture} bus. Invented in 1981, it can be either:
 \begin{itemize}
 \item 8-bit data bus at 4.77 MHz  for 19.1 Mbit/s
 \item 16-bit data bus at 8.33MHz for 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates} bandwidth.
