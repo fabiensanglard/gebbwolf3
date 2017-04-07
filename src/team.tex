@@ -49,10 +49,10 @@ The games were instant success and sold very well. To avoid a lawsuit with their
   \item Hovertank 3D (April, 1991).
   \item Catacomb 3D: A New Dimension (November, 1991)
 \end{itemize}
-During Winter 1991 the next generation of id Software technology started to appear\footnote{You can see screenshots in the Annex section.}. Hovertank 3D allowed the player to be inside a tank. There was not texture mapping yet. Catacomb 3D added textures and took the immersion one step further placing it in control of a magician in First Person mode. \\
+During Spring 1991 the next generation of id Software technology started to appear\footnote{You can see screenshots in the Annex section.}. Hovertank 3D allowed the player to be inside a tank. There was not texture mapping yet and the pace was quite slow. Catacomb 3D added textures and took the immersion one step further placing the player in control of a magician in First Person view. \\
 \par
 
-In November 1991, they were free from any obligations to SoftDisk. The next game was going to use the 3D technology they were building. It would be called Wolfenstein 3D. Considering the magnitude and ambitions of the title, four more people were added to the team for a total of eight.\\
+In November 1991, they were free from any obligations to SoftDisk. The next game was going to use the 3D technology they were building and it would be called Wolfenstein 3D. Considering the magnitude and ambitions of the title, four more people were added to the team for a total of eight.\\
 \note{TODO Ask team members if they know how old were Jay, Bobby, Robert and Jason}
  \begin{figure}[H]
 \centering  
@@ -225,7 +225,7 @@ Since the VGA is palette based (colors a not specified via 24-bits RBG but by in
 \fullimage{palette.png}
  \caption{Wolfentein 3D palette: Everything in the game is drawn using one of these 256 colors.}
 \end{figure}
-The palette cordinnate, horizontally from \cw{0x00} to \cw{0x0F} and vertically from \cw{0x00} to \cw{0xF0}. The blue gradient at the bottom starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is transparent color and always skipped during rendition.\\
+The palette coordinates are horizontally from \cw{0x00} to \cw{0x0F} and vertically from \cw{0x00} to \cw{0xF0}. The blue gradient at the bottom starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is transparent color and always skipped during rendition.\\
 \par
 
 All assets were hand drawn with a mouse. Since the VGA stretches the framebuffer when displaying it on the screen (from 320x200 to 320x240), Adrian had to be careful to draw at the same resolution as the game would run.\\
@@ -256,7 +256,7 @@ The graphic assets are divided in two categories:
 
 
 
-\section{Asset workflow}
+\section{Assets workflow}
 After the graphic assets were generated, a tool (IGRAB-ED) packed all the ILBMs files together in an archive and generated a C header file with asset IDs:. The engine references an asset directly by using these IDs.\\
 \begin{figure}[H]
 \centering
@@ -397,7 +397,8 @@ Everybody worked a little bit on the map but those were mostly the work of John 
  \includegraphics[width=\textwidth]{imgs/drawings/_tom.pdf}
  \caption{Not so politically correct caricature.} 
  \end{figure}
-The explanation was provided later by John Romero in 2002.\\
+The explanation was provided later by John Romero in 2002:\\
+\par
  \begin{fancyquotes}
    "Hahahaha! Wow, I forgot all about that picture. I can't believe it's 
 in the TED5 source files! It's basically a pic that Adrian drew of Tom 

@@ -79,7 +79,7 @@ Which can be read as:\\
 \item Subject \cw{rndval} to a soup of XORing.
 \item When \cw{rndval} value is somehow back to 1: Stop.
 \end{itemize}        
-It feels like dark magic. How is \cw{rndval} supposed to return to value 1?! That technique is called Linear Feedback Shit Register. The idea is to use one register to read a value. To get the next value, you do a right shift. Since the rightmost bit disappears, new one to the left is needed. To generate this new bit, the register use "taps" which are bit offset used to XOR together values and generate the new bit value. A Fibonnaci representation shows a simple LFSR with one tap.\\
+It feels like dark magic. How is \cw{rndval} supposed to return to value 1?! That technique is called Linear Feedback Shit Register. The idea is to use one register to read a value. To get the next value, you do a right shift. Since the rightmost bit disappears, new one to the left is needed. To generate this new bit, the register use "taps" which are bit offset used to XOR together values and generate the new bit value. A Fibonnaci representation shows a simple LFSR with two taps.\\
 \par
 
 \begin{figure}[H]
@@ -93,7 +93,7 @@ This register is able to generate 6 values before it cycle back to it original s
 \lstinputlisting{code/lfsr.txt}
 \end{minipage}
 \par
-Various arrangement of taps will produce different serie. In the case of this four bits register, the maximum number of value in a serie is 16-1 =15 (zero cannot be reached). This can be achieved with taps on byte 0 and 1. This is called a "Maximum-Length" LFSR.\\
+Various arrangement of taps will produce different series. In the case of this four bits register, the maximum number of value in a serie is 16-1 =15 (zero cannot be reached). This can be achieved with taps on bit 0 and 1. This is called a "Maximum-Length" LFSR.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting{code/maximum_lfsr.txt}
@@ -142,7 +142,8 @@ A fast path is provided (which ironically only works if the CPU is as slow at th
 
 
 \section{Pseudo random generator}
-Random number are necessary for many things during runtime. One example is to calculate is an enemy was able to hit the player based on its accuracy. This is achieved with a precalculated pseudo-random serie of 256 elements. The last random value is also the index of the next value.
+Random number are necessary for many things during runtime. One example is to calculate is an enemy was able to hit the player based on its accuracy. This is achieved with a precalculated pseudo-random serie of 256 elements. The last random value is also the index of the next value.\\
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}, style=mystyle,basicstyle=\small]{code/rndtable.asm}
 \end{minipage}

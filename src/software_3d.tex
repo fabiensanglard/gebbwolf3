@@ -84,7 +84,7 @@ In the next six screenshots, the engine has been modified to slow down in order 
   \caption{Phase 2: Drawing Walls: 15 rays} 
 \end{figure}
 \begin{minipage}{.4\textwidth}
-Notice how the length of each ray correspond the height of a column in order to achieve perspective. The bigger the distance the ray traveled, the smaller the column appear on screen.
+Notice how the length of each ray corresponds to the height of a column in order to achieve perspective. The bigger the distance the ray traveled, the smaller the column appear on screen.
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
@@ -104,7 +104,7 @@ Notice how the length of each ray correspond the height of a column in order to 
  \caption{Phase 2: Drawing Walls: 160 rays}  
 \end{figure}
  \begin{minipage}{.4\textwidth}
- Doors are not sprites, they are part of the solid word. Rays cannot cross it yet the door appear farther than the blue wall. The raycaster recognize door tiles and inject a delta to the distance a ray traveled. If the door is partially open, the raycaster is also able to detect if the ray should continue or not.
+ Doors are not sprites, they are part of the solid world. Rays cannot cross it yet the door appear farther than the blue wall. The raycaster recognize door tiles and inject a delta to the distance a ray traveled. If the door is partially open, the raycaster is also able to detect if the ray should continue or not.
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
