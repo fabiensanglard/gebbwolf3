@@ -179,7 +179,7 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA modes, where \cw{13h} and \cw{4h} (figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting RAM address. This allows a trick where two graphic cards are plugged in the PC. One in monochrome text picking up data at 0xB8000 and the other one VGA picking up data at 0xA0000. This setup allows a developer to debug the game engine in real-time.\\
+You may have noticed in the listing of VGA modes, where \cw{Mode 13h} and \cw{Mode 4h} (figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting RAM address. This allows a trick where two graphic cards are plugged in the same PC. One card, a MCA setup as monochrome text mode picking up data at 0xB8000 and the other one, a VGA picking up data at 0xA0000. This setup allows a developer to debug the game engine in real-time.\\
 \begin{figure}[H]
 \centering
   \shadowbox{
@@ -209,7 +209,7 @@ You may have noticed in the listing of VGA modes, where \cw{13h} and \cw{4h} (fi
 
 \section{Graphics assets}
 
-Everything was done by Adrian Carmack\footnote{Kevin Cloud did a few textures and also worked on the design and layout of the Wolfenstein 3D Hint book published eventually.}. All of the work was done with Deluxe Paint (from Electronic Arts) and saved in LBM files (Deluxe Paint format). 
+All graphic assets were produced by Adrian Carmack\footnote{Kevin Cloud did a few textures and also worked on the design and layout of the Wolfenstein 3D Hint book published eventually.}. All of the work was done with Deluxe Paint (from Electronic Arts) and saved in LBM files (Deluxe Paint format). 
 
 \begin{figure}[H]
   \centering
