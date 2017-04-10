@@ -7,7 +7,7 @@ The game engine source code was released on July 21st, 1995. It was uploaded on 
 \lstinputlisting[]{code/ftp_url.txt}
 \end{minipage}
 \par
-More than twenty two years later the archive is still there, at the exact same URL. A remarkable fact given the fluidity of the web.\\
+More than twenty two years later the archive is still there, at the exact same URL. A remarkable fact given the ever changing nature of the web.\\
 
 \section{First Contact}
 Once downloaded and decompressed, it turns out the archive \codeword{woldsrc.zip} contains an other self-extracting PKZIP archive. It was a convenience back in the day but it is not practical now. It is easy to deflate.\\
@@ -25,7 +25,7 @@ Once downloaded and decompressed, it turns out the archive \codeword{woldsrc.zip
 \end{minipage}
 
 \par
- The code is 90\% in C with assembly optimization for bottlenecks such as video or audio processing\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code are not a meaningful metric against a single codebase but it excels when it comes to proportions. Twenty seven thousands lines of code is very little compared to a game from 2016 usually made of millions of lines of code.\\
+ The code is 90\% in C with assembly for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code are not a meaningful metric against a single codebase but it excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Chrome (Google's web browser) is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
 \par
 \begin{figure}[H]
 \centering
@@ -70,10 +70,9 @@ It's "COLUMN", you dumb FUCK!\\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
  
-The archive contains more than \codeword{.H} (headers) and \codeword{.C} (code) files.
+The archive contains more than just source code, it also features:
 \begin{itemize}
 \item \codeword{GOODSTUF.TXT:} Two emails from fans demonstrating the success of the game: An ex-POW and a Microsoft employee.
-\item \codeword{.ASM:} Assembly routines to optimize 3D renderer and low level I/O routines.
 \item \codeword{SIGNON.OBJ:} The startup screen showing the system characteristic (RAM, EMS, XMS, Joystick, SoundCards) was linked in the binary. This weird design choice is explained later.
 \item \codeword{GAMEPAL.OBJ:} Game palette. Hardcoded and linked in the executable for the same reason as \cw{SIGNON.OBJ}.
 \item \codeword{README:} How to build. You can also find a complete tutorial on the author's article "Let's compile like its 1993" on \cw{fabiensanglard.net}.
@@ -112,7 +111,7 @@ The three systems communicate via shared memory. The renderer writes music and s
 
 
 \subsection{Unrolled loop}
-With the big picture in mind, we can dive into the code and unroll the main loop starting in \cw{int main()}. The two renderers are regular loops but due to limitation explained later, the sound system is interrupt driven and therefore out of \cw{main}. Because of the Real Mode, C types don't mean what people would expect from a 32 bits architecture.\\
+With the big picture in mind, we can dive into the code and unroll the main loop starting in \cw{int main()}. The two renderers are regular loops but due to limitation explained later, the sound system is interrupt driven and therefore out of \cw{main}. Because of the Real Mode, C types don't mean what people would expect from a 32 bits architecture.
 \begin{itemize}
 \item \cw{int} and \cw{word} are 16 bits.
 \item \cw{long} and \cw{dword} are 32 bits.
@@ -146,7 +145,7 @@ Then come the core loop where 2D renderer and 3D renderer are called forever.\\
 \par
 The sound system is started via the Sound Manager in \cw{SDL\_SetTimerSpeed}. There is a famous game development library called Simple DirectMedia Layer (SDL) but the prefix \cw{SDL\_} has nothing to do with it. It stands for SounD Low level. SDL did not even exist in 1991.\\
 \par
-The reason for interrupts is extensively explained in the Chapter "Audio and Heartbeat" but in short: With an OS supporting neither process nor thread, it was the only way to have something execute concurrently with the rest of the engine.\\
+The reason for interrupts is extensively explained in the Chapter "Audio and Heartbeat". In short, with an OS supporting neither process nor thread, it was the only way to have something execute concurrently with the rest of the engine.\\
 \par
 Notice how the ISR is tied to the PC timer and can run at at frequencies of 140Hz, 700Hz or even 7000Hz depending on the needs of the sound system being driven.\\
 \par
@@ -211,28 +210,28 @@ Next to the hard drives (HDD) you can see the assets packed as described in the 
 
 
 \subsection{Memory Manager (MM)}
-The engine does not rely on \cw{malloc} to manage memory because it can lead to fragmented memory and no way to compact free space. A linked list keep track of the RAM, dividing it in blocks. A block points to a starting point in RAM and has a size.\\
+The engine does not rely on \cw{malloc} to manage conventionnal memory because it can lead to fragmented memory and no way to compact free space. It has its own memory manager made of a linked list of "block" keeping track of the RAM. A block points to a starting point in RAM and has a size.\\
  \par
 \lstinputlisting[language=C]{code/mm_block.c}
  \par
 A block can be marked with attributes:
 \begin{itemize}
 \item \cw{LOCKBIT} : This block of RAM cannot be moved during garbage collection.
-\item \cw{PURGEBITS} : 0-3 level, 0= unpurgable, 3= purge first.
+\item \cw{PURGEBITS} : 0-3 level, 0= unpurgable, 1= purgable, 2= ???, 3= purge first.
 \end{itemize}
 
-The memory manager starts by allocating all available RAM via \cw{malloc}/\cw{farmalloc} and creates a \cw{LOCKED} block of size 1KB at the end. The linked list uses two pointers: \cw{HEAD} and \cw{ROVER} which point on the last block.
+The memory manager starts by allocating all available RAM via \cw{malloc}/\cw{farmalloc} and creates a \cw{LOCKED} block of size 1KB at the end. The linked list uses two pointers: \cw{HEAD} and \cw{ROVER} which point on the second to last block.
  \par
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/mm_start.pdf}
  \end{figure}
  \par
- The engine interacts with the Memory Manager by requesting RAM (\cw{MM\_GetPtr}) and freeing RAM (\cw{MM\_FreePtr}). To allocate memory, the manager searches for "holes". It take up to three passes of increasing complexity:
+ The engine interacts with the Memory Manager by requesting RAM (\cw{MM\_GetPtr}) and freeing RAM (\cw{MM\_FreePtr}). To allocate memory, the manager searches for "holes" between blocks. It can take up to three passes of increasing complexity:
 \begin{enumerate}
-\item After rover
-\item After head
-\item Compacting and then after rover
+\item After rover.
+\item After head.
+\item Compacting and then after rover.
 \end{enumerate}
 \par
   The easier case is when there is enough space after the rover. A new node is simply added to the linked list and the rover moves forward. In the next drawing, three allocation requests succeeded: \cw{A}, \cw{B} and \cw{C}.\\
@@ -240,7 +239,7 @@ The memory manager starts by allocating all available RAM via \cw{malloc}/\cw{fa
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/mm_after_rover.pdf}
- \caption{MM internal state after three pass 0 allocations.}
+ \caption{MM internal state after three pass 1 allocations.}
  \end{figure}
  \par
 Eventually the free RAM will be exhausted and the first pass will fail.
@@ -248,7 +247,7 @@ Eventually the free RAM will be exhausted and the first pass will fail.
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/mm_before_rover.pdf}
- \caption{MM pass 0 failure: Not enough RAM after the ROVER.}
+ \caption{Pass 1 failure: Not enough RAM after the ROVER.}
  \end{figure}
  \par
  If the first pass fails, the second pass looks for a "hole" between the head and the rover. This pass is also allowed to purge unused block. If for example block B was marked as \cw{PURGEABLE}, it will be deleted and replaced with the new block E. At this point fragmentation starts to appear (like if \cw{malloc} was used).\\
@@ -263,7 +262,7 @@ Eventually the free RAM will be exhausted and the first pass will fail.
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/mm_compact.pdf}
-  \caption{\cw{A} and \cw{E} were purged. \cw{C} and \cw{F} compacted. \cw{F} allocatd in pass3.}
+  \caption{\cw{A} and \cw{E} were purged. \cw{C} and \cw{F} compacted. \cw{F} allocated in pass3.}
  \end{figure}
  \par
 But if memory is moved around, how do previous allocation still point to what they had before the garbage collection phase? Notice that a \cw{mmblockstruct} has a \cw{useptr} pointer which point to the owner of a block: If it moves memory, it also updates the ower of the block.
@@ -291,7 +290,7 @@ But if memory is moved around, how do previous allocation still point to what th
 \subsection{Page Manager (PM)}
 The Page Manager is dedicated to the 3D engine. Its task is to make sure assets such a wall texture, sprites and sound effect stored on HDD are available in RAM for the CPU to use. Jason Blochowiak seems to have been the main author and his previous experience with Unix system clearly influenced the design of this component. It is built around the Unix concept of paging and swapping. \\
 \par
-But instead of a memory address identifying a page, an asset ID is used. These ID are generated by IGRAB-ed. Each asset consumes a full "page". Also contrary to Unix, all pages do not have the same size. When the engine needs a resource, its requests a page with the resource ID from the Page Manager. To fulfill the request as fast as possible, all types of RAM: Conventional, EMS and XMS are leveraged. If a page is located in conventional memory or EMS, the request is considered a cache "hit" and page is returned to caller. Otherwise the request is a cache "miss". The PM looks for the page in XMS RAM and ultimately if all failed it goes to the filesystem in file \cw{VSWAP.WL1} which contains all assets for 3D sequences.\\
+Instead of using a memory address to identify a page like Unix, in Wolf3D an asset ID is used. These ID are generated by IGRAB-ed. Each asset consumes a full "page". Also contrary to Unix, all pages do not have the same size. When the engine needs a resource, its requests a page with the resource ID from the Page Manager. To fulfill the request as fast as possible, all types of RAM: Conventional, EMS and XMS are leveraged. If a page is located in conventional memory or EMS, the request is considered a cache "hit" and the page is returned to caller. Otherwise the request is a cache "miss". The PM looks for the page in XMS RAM and ultimately if all failed it goes to the filesystem in file \cw{VSWAP.WL1} which contains all assets for 3D sequences.\\
  \par
 \begin{figure}[H]
 \centering
@@ -385,7 +384,7 @@ and then passes these information to the Video Manager (\cw{VW\_DrawPropString})
 
 
 \subsection{Sound Manager (SD)}
-The Sound Manager abstracts interaction with all four sound systems supported: PC Speaker, ADLib, Sound Blaster and SoundSource. It is a beast of his own since it doesn't run inside the engine. Instead it called via IRQ at a much higher frequency than the engine (the engine runs at maximum 70Hz, the sound manager ranges from 150Hz to 7000Hz). Being IRQ driven, it must run very fast. Therefore not only it is written in assembly, its assets are also privileged when it comes to memory allocation. All of them are loaded in Conventional Memory to avoid a cache miss in the Page Manager.\\
+The Sound Manager abstracts interaction with all four sound systems supported: PC Speaker, AdLib, Sound Blaster and SoundSource. It is a beast of his own since it doesn't run inside the engine. Instead it called via IRQ at a much higher frequency than the engine (the engine runs at a maximum 70Hz, the sound manager ranges from 150Hz to 7000Hz). Being IRQ driven, it must run very fast. Therefore not only it is written in assembly, its assets are also privileged when it comes to memory allocation. All of them are loaded in Conventional Memory to avoid a cache miss in the Page Manager.\\
  \par
 \begin{figure}[H]
 \centering
@@ -445,7 +444,7 @@ That is what the "signon" screen is for: Self diagnostic.
 \fullimage{signon.png}
 \end{figure}
 \par
-Besides signaling recognized devices (such as mouse, joystick and sound cards), the most important metric here is labeled "MAIN". Due to the architecture described in the first chapter, a DOS program has only 640KB of RAM available. Each driver loaded by the user takes away from these 640KB. If too much is used to the point where DOS cannot load the executable in RAM, user will show the following error message.\\
+Besides showing recognized devices such as mouse, joystick and sound cards, the most important metric here is labeled "MAIN". Due to the architecture described in the first chapter, a DOS program has only 640KB of RAM available. Each driver loaded by the user takes away from these 640KB. If too much is used to the point where DOS cannot load the executable in RAM, user will see the following error message.\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/OutOfMemory.txt}
@@ -458,9 +457,8 @@ At the time signon is displayed, the only manager loader is the Memory Manager. 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/signonscreen.c}
 \end{minipage}
-After that screen, the \cw{signon} variable (using 320x200 bytes = 64KB) is unloaded from RAM to make more room runtime.\\
+After that screen, the \cw{introscn} variable (using 320x200 bytes = 64KB) is unloaded from RAM to make more room runtime.\\
 \par
-In the signon screenshot, notice the main RAM (conventional memory) barometer which goes only up to 320K. The indeed game is able to run on as little as 320KB (gameplay will suffer cache misses but the game will run).
 
 
 
@@ -484,14 +482,14 @@ In the signon screenshot, notice the main RAM (conventional memory) barometer wh
 \subsection{Solving the VGA problem}
 The Hardware chapter describing the video system left us with an unsolved problem: All of the VGA modes lack double buffering capability.\\
 \par
- The most appealing mode (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. The Chain-4 chipset in the VGA circuitry automatically maps the RAM starting at \cw{A000:0000} to the four VRAM banks. 
+ The most appealing mode (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. The Chain-4 chipset in the VGA circuitry automatically maps the RAM starting at \cw{A0000h} to the four VRAM banks. 
  \par
  \begin{figure}[H]
 \centering
       \includegraphics[width=\textwidth]{imgs/drawings/mode_13h.pdf}
 \end{figure}
 
-This mapping system is also called "chaining". Because 2 bits out of the address are used to route a write/read operation to a bank, only 14 bits are used for the actual offset in the bank. Since 14 bits can only address 16384 values this system results in a waste of 75\% of the RAM to offers.\\
+This mapping system is also called "chaining". Because 2 bits out of the address are used to route a write/read operation to a bank, only 14 bits are used for the actual offset in the bank. Since 14 bits can only address 16384 values this system results in 75\% of the VRAM unusable.\\
 
 \begin{figure}[H]
 \centering
@@ -591,7 +589,7 @@ This glitch shows part of one page and a part of an other page. It also shows a 
  \includegraphics[width=\textwidth]{imgs/drawings/triple_pages_trick.pdf}
 \end{figure}
 \par
-Page 0 is at 0x0000, page 1 at 0x3E80 and page 2 at 0x7000. Moving from page 0 to 1 requires updating the high byte 0x00 to 0x3E and the low byte 0x00 to 0x80. Since updates are not atomic, given a poor timing the CRTC could pickup a value of 0x3E00 instead of 0x3E80:\\
+In VRAM, Page 0 is at 0x0000, page 1 at 0x3E80 and page 2 at 0x7000. Instructing the CRTC to use page 1 instead of page 0 requires updating the high byte 0x00 to 0x3E and the low byte 0x00 to 0x80. Since updates are not atomic, given a poor timing the CRTC could pickup a value of 0x3E00 instead of 0x3E80:\\
 \par
 \par
 \begin{minipage}{\textwidth}
@@ -619,7 +617,7 @@ Notice how it uses a value of 208 for the height of a framebuffer? That doesn't 
 
 
 \par
-Now page 0 is at 0x0000, page 1 at 0x4100 and page 2 at 0x8200. Moving from any page to an other only requires updating only the high 8 bits. Making flipping buffer an atomic operation.\\
+Now page 0 is at 0x0000, page 1 at 0x4100 and page 2 at 0x8200. Moving from any page to an other only requires updating only the high 8 bits, which makes flipping buffer an atomic operation.\\
 
 
 
@@ -633,7 +631,7 @@ Now page 0 is at 0x0000, page 1 at 0x4100 and page 2 at 0x8200. Moving from any 
 
 
 \subsection{Profound Carnage}
-After the signon screen comes a second one, the "rating" screen. There were no official rating for video games in 1991 since the ESRB would not be established until 1994 in response to criticism of controversial video games featuring excessively violent (a.k.a Doom) or sexual content. But the team came up with their own self-proclaimed PC-13: The now legendary "Profound Carnage-13".\\
+After the signon screen comes a second one, the "rating" screen. There were no official rating for video games in 1991 since the ESRB\footnote{Entertainment Software Rating Board, the organization in charge of assigning age and content ratings.} would not be established until 1994 in response to criticism of controversial video games featuring excessively violent (a.k.a Doom) or sexual content. But the team came up with their own self-proclaimed PC-13: The now legendary "Profound Carnage-13".\\
 \begin{figure}[H]
 \centering
 \fullimage{pg13.png}
