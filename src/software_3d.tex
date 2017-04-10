@@ -36,22 +36,22 @@ This is a pretty standard design for an engine from the early 90. However it has
  \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.pdf}
  
  \end{figure}
-  At the beginning of each frame, the engine retrives user inputs and combine its to the duration of the previous frame to update the world. Even if inputs are recorded for each frame, the same game could not be replayed. Because upon replaying a recorded game the engine would invariably reach a point where no inputs are available because a frame took longer or shorter to render. A simple disk access taking longer could have altered the duration of a frame, resulting in a different world outcome.\\
+  At the beginning of each frame, the engine retrives user inputs and combine them to the duration of the previous frame to update the world. Even if inputs are recorded for each frame, the same game could not be replayed. Because upon replaying a recorded game the engine would invariably reach a point where no inputs are available because a frame took longer or shorter to render. A simple disk access taking longer could have altered the duration of a frame, resulting in a different world outcome.\\
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/replay.pdf}
- \caption{The second frame rendered faster. No inputs are available for the player. Replay is now out of sync.}
+ \caption{The second frame rendered faster than during recording. No inputs are available for the player. Replay is now out of sync.}
  \end{figure}
 \par
 To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulate things at fixed timesteps. This hack result in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
 \par
-\bu{Trivia :} In 1993, Doom engine would solve this issue by simulating the world at fixed intervals.\\
+In 1993, Doom engine would solve this issue by simulating the world at fixed intervals.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed_game_loop.c}
  \end{minipage}
 \par
-This design decouple the renderer from the world updates. Timeslices are always the same duration. User inputs can be recorded and Replay without getting out of sync.
+This design decouple the renderer from the world updates. Timeslices are always the same duration. User inputs can be recorded and replayed without getting out of sync.
 \par
  \begin{figure}[H]
 \centering
@@ -68,7 +68,7 @@ Before diving into details, here is an overview of the five stages involved in d
  \item Draw the weapon.	
  \item Flip buffers: Instruct CRT Controller to use the framebuffer just composed on next vsync.
 \end{enumerate}
-In the next six screenshots, the engine has been modified to slow down in order to see each stages.\\
+In the next six screenshots, the engine has been modified to slow down in order to see the content of the framebuffer at the end of each stage.\\
 \begin{figure}[H]
 \centering
  \fullimage{wolf3d_1_background.png}
@@ -84,7 +84,9 @@ In the next six screenshots, the engine has been modified to slow down in order 
   \caption{Phase 2: Drawing Walls: 15 rays} 
 \end{figure}
 \begin{minipage}{.4\textwidth}
-Notice how the length of each ray corresponds to the height of a column in order to achieve perspective. The bigger the distance the ray traveled, the smaller the column appear on screen.
+Notice how the length of each ray corresponds to the height of a column in order to achieve perspective.\\
+\par
+The longer the distance the ray traveled, the smaller the column is drawn on screen.
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
@@ -104,7 +106,9 @@ Notice how the length of each ray corresponds to the height of a column in order
  \caption{Phase 2: Drawing Walls: 160 rays}  
 \end{figure}
  \begin{minipage}{.4\textwidth}
- Doors are not sprites, they are part of the solid world. Rays cannot cross it yet the door appear farther than the blue wall. The raycaster recognize door tiles and inject a delta to the distance a ray traveled. If the door is partially open, the raycaster is also able to detect if the ray should continue or not.
+ Doors are not sprites, they are part of the solid world. Notice how on the map a door is a block aligned with the wall yet it is rendered farther.\\
+ \par
+ The raycaster recognize door tiles and inject a delta to the distance a ray traveled. If the door is partially open, the raycaster is also able to detect if the ray should stop or allowed to traverse the tile.
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
@@ -120,12 +124,12 @@ Notice how the length of each ray corresponds to the height of a column in order
  \begin{figure}[H]
 \centering
  \fullimage{wolf3d_2_walls.png}
- \caption{Phase 2: Drawing Walls: completed} 
+ \caption{Phase 2: Drawing Walls has completed.} 
  \end{figure}
 \begin{minipage}{\textwidth}
 \begin{figure}[H]
   \centering
- \includegraphics[width=.9\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
+ \includegraphics[width=.6\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
    
 \end{figure}
 \end{minipage}
@@ -170,7 +174,7 @@ Before starting to draw frames, the 3D renderer sets up the VRAM with static ele
   \centering
  \fullimage{hud_empty.png}
 \end{figure}
-This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the white reserved canvas in the center. Small portion of the bottom of the HUD are updated. Level, Score, Lives, Status, Health, Ammo, and Current weapon get a special treatment via an other VGA trick in order to speed up rendition.\\
+This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the reserved white canvas in the center. Small portions at the bottom of the HUD are updated: Level, Score, Lives, Status, Health, Ammo, and Current weapon get a special treatment via an other VGA trick in order to speed up rendition.\\
 \par
 
 The hardware chapter described the Mode 12h which despite being unfit for games still had something interesting. Mode 12h is a 16 colors mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operation are one byte wide, it is not hard to imagine the difficulty to plot a single pixel without changing the other stored in the same bytes. One would have to do four read, four xor and four writes. Since the designer of the VGA were not complete sadist they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
@@ -179,9 +183,9 @@ The hardware chapter described the Mode 12h which despite being unfit for games 
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/latches.pdf}
  \end{figure}
-With this architecture, each time VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmer to plot a pixel easily\\
+With this architecture, each time the VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written to the VRAM, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmer to plot a bit in a byte easily with one read, one ALU setup and one write.\\
 \par
-Mode Y does not need latches to operate since values are stored in byte and banks can be updated individually thanks to the mask. However tinkerers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. And by getting a little bit creative and repurposing them, four pixels from one area of the VRAM can be copied to an other VRAM area with just one read and one write to the RAM.\\
+Mode Y does not need latches to operate since values are stored in byte and banks can be updated individually thanks to the mask. However tinkerers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. By getting a little bit creative, the circuitry can be repurposed. The ALU in from of each bank can be setup to use only the latch for writing. With such a setup, upon doing one read, four latches are populated at once. And four bytes in the bank are written with only on write to the RAM.\\
 \par
 To take full advantage of this optimization, the 3D renderer upload images to the VRAM above the third page. Sprites 91 to 134 are latched in VRAM.\\
 
@@ -370,13 +374,13 @@ While it is faster to write four pixel in one operations, the trick does not pro
 
 
 \subsection{Clearing the screen}
-At the beginning of a frame, the engine switch to the next buffer and clears the 3D area with ceiling and floor colors. To this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all bank simultaneously. Again, since values are written 16 bits at a time it can write 8 pixels at a time.\\ 
+At the beginning of a frame, the engine switch to the next page and clears the 3D area with ceiling and floor colors. To this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all bank simultaneously. Again, since values are written 16 bits at a time it can write 8 pixels at a time.\\ 
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
  \end{minipage}
 \par
-Clearing a screen made of 64,000 pixels requires only 64000/8 = 8000 write operations.\\
+Clearing the 3D canvas made of 304*152=46,208 pixels requires only 46,208/8 = 5776 write operations.\\
 \par
 The colors for the floor and the ceiling are not coming from the maps data files. The ground is always the same color (\cw{0x19}) and the ceiling colors are hardcoded in the engine on a per level basis.\\
 \par
@@ -497,7 +501,7 @@ The beauty of fixed point is that addition and subtraction work exactly like int
 
 The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONNAL\_PART}. In the game, player position is \cw{16:16}. The grid location is one shift operation away \cw{player->x $\gg$ 16}.\\
 \par
- The special case is when performing multiplication. There are two ways to do it: Either multiply two 32 bits into a 64 bits or drop the precision of both fixed point and multiply then into a 32 bits. Since the 286 and 386 do not have 64 bits registers, Wolf does the later (illustrated here with 8:8 for readability):
+ The special case is when performing multiplication. There are two ways to do it: Either multiply two 32 bits into a 64 bits (and drop the upper and lower 16 bits) or drop the precision of both fixed point and then multiply then into a 32 bits. Both methods involve loosing data is an overflow occurs.
 
 
 \par
@@ -533,15 +537,30 @@ Finally multiply them together:
    \input{imgs/drawings/148_125.tex}
    \caption{148.125} 
 \end{figure} 
-$128 + 16 + 4 + 0.125 = 148.125 $
-
-
-Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bit disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8). With this system fractions are possible and fast enough.\\
+$128 + 16 + 4 + 0.125 = 148.125 $\\
+\par
+Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bit disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8).\\
+\par
+All fixed points variables are 32 bits wide. There is a special \cw{typedef} in the engine for them.\\
+\par
+\begin{minipage}{\textwidth}
+ \lstinputlisting[language=C]{code/fixed.c}
+ \end{minipage}
+\par
+But not all \cw{fixed} are the same. Some are \cw{16:16}, some are \cw{24:8}. As a result some operations can be implemented differently (e.g: multiplication).\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed_mul.c}
  \end{minipage}
 \par
+Some \cw{fixed} even have a tweaked structure like those used while raycasting, using the leftmost bit to store the sign.\\
+\par
+\begin{minipage}{\textwidth}
+ \lstinputlisting[language=C,morekeywords={asm,fixed}]{code/FixedByFrac.c}
+ \end{minipage}
+\par
+
+
  \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game console manufactured in the 90s and later featured no hardware floating point unit: Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples among many with a design choice that not only reduced the production cost but also maximized the CPU pipeline throughput.
  
 
@@ -556,7 +575,7 @@ With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to st
  \includegraphics[width=.5\textwidth]{imgs/drawings/coordinate_system.png}
 \end{figure}
 \par
-Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column height are 29:3. Position is 16:16. Angle however is an \cw{int} representing 10th of degrees with a range [0, 3600].
+Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column height are 29:3. Player position is 16:16. Angle however is an \cw{int} representing 10th of degrees with a range [0, 3600].
 
 
 
@@ -634,7 +653,7 @@ If you made extremely jagged block maps that would turn into many dozen independ
  \includegraphics[width=\textwidth]{imgs/drawings/dda.pdf}
 \end{figure}
 \par
-The reason DDA is so fast is because once the first intersection with an axis is known (A for Y axis and B for Y axis) all subsequent intersections coordinate are two cheap additions away.
+The reason DDA is so fast is because once the first intersection of a ray with an axis is known (A for Y axis and B for Y axis) all subsequent intersections coordinate are two cheap additions away.
 \par
 
 
@@ -697,7 +716,7 @@ With map being simple and fast to draw, a contest was to be held. Find a special
 \begin{minipage}{.5\textwidth}
 Behind a forest of push walls (white squares) and angry bosses (blue circles), a sign finally showed up (the red triangle). \\
 \par 
-However due to people reverse engineering the map format and cheat sites allowing players to find the maze, the sign was replaced with a skeleton with all game shipping during 1992.\\ In the map there are no push wall leading to the red triangle.
+However due to people reverse engineering the map format and cheat sites allowing players to find the maze, the sign was replaced with a skeleton with all game shipping during 1992.\\ In the map there are no push wall leading to the red triangle.\\
  \end{minipage}
 \begin{minipage}{.5\textwidth}
 \begin{figure}[H]
@@ -766,7 +785,7 @@ The DDA intersection algorithm is implemented in a fully handcrafted 740 lines o
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/flipflop.c}
 \end{minipage}
-This implementation results in many \cw{jmp} instructions. These would kill the iCache and empty the pipeline on a modern CPU. But on a an architecture devoid of pipeline and code cache such as the 386 it is not a problem at all.\\
+This implementation results in many \cw{jmp} instructions. These would kill the i-cache and empty the pipeline on a modern CPU. But on a an architecture devoid of pipeline and code cache such as the 386 it is not a problem at all.\\
 \par
 This part of the code relies heavily on unit circle principles. Because we need to know by how much we go up/down when advancing on X axis and how much we go left/right when advancing on the Y axis, the \cw{tan} function is expecially useful. It is easier to understand with the unit circle drawn (remember the circle radius R is equal to 1).
 \begin{figure}[H]
@@ -895,7 +914,7 @@ In this drawing the player is located at viewpoint with a view angle \begin{math
  \caption{Fish eye effect: Bad} \label{fig:mips}
  \end{figure}
 \begin{minipage}{.4\textwidth}
-From a distance of 24 feet, the distortion cannot be ignored any more and the distortion is clearly noticeable.\\
+From a distance of 24 feet, the distortion cannot be ignored any more and the problem is clearly noticeable.\\
 \par
 Note that even though the player is getting closer to the wall, the ratio of A to B remain the same. Only the absolute difference is increasing.
  \end{minipage}
@@ -943,7 +962,7 @@ To avoid this distortion and get a more pleasant rendition, what must be used is
  
 \end{figure}
 
-This projection (z) is mathematically hard to calculate in one go (especially with fixed point). The trick is to break it down in two components and use the high school mnemonic, SOH-CAH-TOA.\\
+This projection (z) is mathematically hard to calculate in one go (especially with fixed point). The trick is to break it down in two components and use the mnemonic SOH-CAH-TOA.\\
 
 
 \begin{figure}[H]
@@ -986,7 +1005,7 @@ $z = A + B = dx * \cos(\alpha) - dy * \sin(\alpha) $
   \end{equation*}
 \end{figure}
 \par
-For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy). It would transforms coordinate from map space (origin in upper left corner with axis aligned with the map) to player space (origin at player position with axis aligned with player orientation).
+For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy). It would rotate coordinates from map space to player space (where axis orientation is dictated by player view angle).
 \begin{figure}[H]
   \centering
   \begin{equation*}
@@ -1019,7 +1038,7 @@ For people who like equations, the overall operation can be seen as the multipli
 
 I personally find the graphic explanation with SOH-CAH-TOA much more clear.\\
 \par
-The correction is enough to give pleasant straight lines. To make the difference vivid, here are a few screenshots showing two version of the same scene next to each others. First uncorrected (with fisheyes) and then with projected distance instead of direct distance.\\
+The correction is enough to give pleasant straight lines for the walls. To make the difference vivid, here are a few screenshots showing two version of the same scene next to each others. First uncorrected (with fisheyes) and then with projected distance instead of direct distance.\\
 
  \begin{minipage}{\textwidth}
  
@@ -1054,11 +1073,11 @@ The correction is enough to give pleasant straight lines. To make the difference
 
 
 \subsection{Drawing walls}
-With a height calculated for a column, all what remains to do is drawing a column of pixels.\\
+With a height calculated for a column, all what remains to do is drawing a column of textured pixels.\\
 That may sound easy but it is in fact very difficult on a CPU with as little power as a 386. It is not hard in terms of mathematics but hard in terms of instructions clock consumption. To scale a column of 64 pixels texels on the screen centered vertically is expensive. It turns out if you want to do it fast enough you need a few optimizations. This is where Wolfenstein 3D takes off and leave other 3D engine or the era in the dust. This is the part where lies the two secrets of its  speed thanks to two techniques:
 \begin{itemize}
 \item Compiled scalers
-\item deferred column rendering
+\item Deferred column rendering
 \end{itemize}
 \par
 
@@ -1083,7 +1102,7 @@ It would involves having a loop, a fixed point accumulator and intermediate vari
 \par
  But there is a faster way to do it which involves the usual RAM vs CPU tradeoff. In this case we can invest a little bit of RAM storage to gain a lot of CPU time.\\
  \par 
- The idea is to remove the genericity of the scaler and instead generate hard-coded function.
+ The idea is to remove the genericity of the scaler and instead generate hard-coded functions.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/hardcoded_draw.c}
@@ -1097,7 +1116,7 @@ It would involves having a loop, a fixed point accumulator and intermediate vari
 \par
 Given a height, \cw{BuildCompScale} generates x86 instructions in the out variable \cw{code}. As a result, instead of having one generic function accepting any height,  Wolfenstein has 38 functions with hard-coded height. To hard-code the height allows to unroll the loop and reduce the overhead.\\
 \par
-With this optimization, minifying a 64 textures to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 120 pixels takes 841 instructions. A precompiled scaler have a fixed cost of 7 instructions per pixel: It doesn't get any faster than that!\\
+With this optimization, minifying a 64 textures to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 120 pixels takes 841 instructions. A precompiled scaler function has a fixed cost of 7 instructions per pixel: It doesn't get any faster than that!\\
 
 \par
 What is the RAM cost incurred by precompiling and caching these scalers? It takes 1 + 7 instructions per pixel written to scale a column. If all size were generated from 2,4,6...152 (76 values for 38 pairs), we can use Gauss method to calculate the size:\\
@@ -1108,7 +1127,7 @@ That cost was deemed too high. To save RAM, past size 76, only every other even 
 \par
 $78*19*7+9*230*7=24,8642$ bytes\\
 \par
-A small price to pay for a huge boost in performances!\\
+Skipping compiled scaler generation involves using the wrong scaler when one is not available and introduces small artifacts but they are barely noticeable.\\
 \par
 Notice that scalers are generated at startup but if the 3D canvas dimensions is changed they have to be re-generated. This is what happens after a resize while the "thinking" screen is showing.
 \begin{figure}[H]
@@ -1124,7 +1143,9 @@ Notice that scalers are generated at startup but if the 3D canvas dimensions is 
 
 
 \subsubsection{Deferred column drawing}
-There is a second level of trick to speed up rendering. The idea is to defer rendering a column of pixels when certain conditions are met and use the VGA bank to write several pixels at once. A naive raycaster/compiled scaler coupling would have looked like this.\\
+There is a second level of trick to speed up rendering. The idea is to defer rendering a column of pixels when certain conditions are met and use the VGA banks to duplicate entire column and save write operations.\\
+\par 
+A naive raycaster/compiled scaler coupling would have looked like this.\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/naive_raycaster_pseudocode.c}
@@ -1137,12 +1158,12 @@ But the engine is not done this way. Instead it buffers what to draw like as fol
 \end{minipage}
 
 \par
-This buffering is done because the renderer allows itself to cheat a little when two rays are deemed similar enough. If a consecutive set rays share characteristics, they are grouped together and drawn at the same height, regardless of their distance from the player point of view. This process introduces a little distortion but unlock a formidable speed up where the engine can write multiple column on the screen, up to eight pixels in 3 writes.\\
+This buffering is done because the renderer allows itself to cheat a little when two rays are deemed similar enough. If consecutive rays share characteristics, they are grouped together and drawn at the same height, regardless of their distance from the player point of view. This process introduces a little distortion but unlock a formidable speed up where the engine can write multiple column on the screen, up to eight pixels in 3 writes.\\
 \par
 Rays are similar if they hit the same wall and resulting in the same \cw{v} horizontal texture coordinate. In short this optimization leverages wall magnification.\\
 
 \par
-The best case for this trick is shown in the following screenshots. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiples pixels. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
+The best case for this trick is shown in the following screenshots. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiples pixels horizontally. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
 \begin{figure}[H]
  \centering
  \fullimage{post_optimization_1_show.png}
@@ -1163,21 +1184,20 @@ This trick is only possible because of an interesting property of the VGA bank l
 
 \par
 
-In practice however, to achieve this trick, the engine must be very careful and factor in the four bank bytes alignment with the position of the columns on screen. The details of this are in the method \codeword{ScalePost} in \codeword{WL\_DRAW.C}.\\
+As a result, to achieve this trick, the engine must be very careful to factor in the four bank bytes alignment and the position of the columns on screen. The details of this are in the method \codeword{ScalePost} in \codeword{WL\_DRAW.C}.\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/ScalePost.c}
 \end{minipage}
-The engine will group up to 8 columns together. Because of the VGA alignment it can take up to three passes to write them all. Because there can be many combinations of VGA bank alignment and number of pixels to draw, the VGA mask is precalculated and looked up at runtime. Each pass has its own settings. A pass runs only if the VGA mask is not zero.\\
-\par
-The instruction \codeword{or al , al} found in \cw{ScalePost} can be surprising. It means test if al is equal to zero and set the flag. Back in the day it was more populate than \codeword{test al, al}.\\
+The engine will group up to 8 columns together. Because of the VGA alignment it can take up to three passes to write them all. Since there can be many combinations of VGA bank alignment and number of pixels to draw, the VGA mask is precalculated and looked up at runtime. Each pass has its own settings. A pass runs only if the VGA mask is not zero.\\
+
  \par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/hardcoded_masks.c}
 \end{minipage}
-Each \cw{mapmasks} array is used as:\\
+Each \cw{mapmasks} array is used during each pass \cw{X} as:\\
 \par
- VGA\_MASK = \cw{mapmasks[first\_column\_x\_coordinate\%4][numcolumn - 1]}\\
+ VGA\_MASK = \cw{mapmasksX[first\_column\_x\_coordinate\%4][numcolumn - 1]}\\
  \par
  The engine does an early return when VGA\_mask is equal to 0 (which is equivalent to "no more pixels are to be drawn"). It is easier to understand with drawings. First a recap of how the VGA byte mask works.
 \begin{itemize}
@@ -1371,7 +1391,7 @@ Upon hitting a "DOOR" tile, the raycaster consult the \cw{doorposition} array. T
 
 
 \subsubsection{Push walls} 
-Push wall are also implemented via the raycaster. Like door these moving tiles are also treated as a special case. If the pushwall has been activated, the raycaster adds a small offset to the ray intercept coordinate.
+Push wall are also implemented via the raycaster. Like door, these moving walls are also treated as a special case. If the pushwall has been activated, the raycaster adds an offset to the ray intercept coordinates.
 
 
 
@@ -1449,7 +1469,7 @@ Each sprites is rendered individually in function \cw{ScaleShape (int xcenter, i
  \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
  \end{figure}
 \par
-The X coordinate is used to place a sprite horizontally on the screen (the Y coordinate is used for clipping). Sprites don't need to be place vertically for the good reason that all sprites and wall textures are using the same 64x64 space representing 8 feet by 8 feet.\\
+The X coordinate is used to place a sprite horizontally on the screen (the Y coordinate is used for clipping). Sprites don't need to be place vertically for the good reason that sprites and walls textures use the same 64x64 space representing 8 feet by 8 feet.\\
 \par
   \begin{minipage}{.5\textwidth}
      \fullimage{guard_sprite.png}
@@ -1504,7 +1524,7 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 
 
 \subsubsection{Clipping}
-Before drawing each column of each sprite, the engine determine if is it occluded by a wall. This is called clipping. This is where there is a second benefit to have wall and sprite in the same 64x64 coordinate system, it is easy to clip. Once the actor's position is transformed in player space, the distance Y allows to generate a height. These height are the same calculated for the walls. Hence, to find out if a sprite column if behind a wall, the engine just compare the height from the occlusion array and the height of the actor.\\
+Before drawing each column of a sprite, the engine determine if it is occluded by a wall. This is called clipping. This is where there is a second benefit to have wall and sprite in the same 64x64 coordinate system. Once the actor's position is transformed in player space, the distance Y allows to generate a height. These heights are the same calculated for the walls. Hence, to find out if a sprite column if behind a wall, the engine just compare the height from the occlusion array and the height of the actor.\\
 \par
 That occlusion array is generated by the raycaster. When the height of a column is generated for a ray, the height is also saved. The occlusion array in the code is called \cw{wallheight}:\\
 \par
