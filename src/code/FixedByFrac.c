@@ -1,5 +1,5 @@
 fixed FixedByFrac (fixed a, fixed b) {
-asm	mov	si,[WORD PTR b+2]	// sign of result = 
+asm	mov	si,[WORD PTR b+2]   // sign of result = 
                             // sign of fraction
 asm	mov	ax,[WORD PTR a]
 asm	mov	cx,[WORD PTR a+2]
