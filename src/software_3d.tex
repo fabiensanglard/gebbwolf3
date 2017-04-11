@@ -1524,7 +1524,7 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 
 
 \subsubsection{Clipping}
-Before drawing each column of a sprite, the engine determine if it is occluded by a wall. This is called clipping. This is an easy step than to wall and sprites being in the same 64x64 coordinate system. Once the actor's position is transformed in player space, the distance Y allows to generate a height. These heights are the same calculated for the walls. Hence, to find out if a sprite column if behind a wall, the engine just compare the height of the wall in that screen space column against the height of the actor.\\
+Before drawing each column of a sprite, the engine determines if it is occluded by a wall. This is called clipping and it is an easy step thanks to wall and sprites being in the same 64x64 coordinate system. Once the actor's position is transformed in player space, the distance Y allows to generate a height. That height is the same calculated for the walls. Therefore to find out if a sprite column if behind a wall, the engine just compare the heights of the wall against the height of the actor.\\
 \par
 In order to do that, the raycaster keeps tracks of each height calculated for each column in an occlusion array called \cw{wallheight}.\\
 \par
@@ -1532,12 +1532,12 @@ In order to do that, the raycaster keeps tracks of each height calculated for ea
 \lstinputlisting[language=C]{code/wallheight_declaration.c}
 \end{minipage}
 \par
-While casting, the occlusion array is written.\\
+While raycasting the occlusion array is written.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_population.c}
 \end{minipage}
-While drawing sprites, the occlusion array is read. If the height of a wall is greater than a sprite, it means the wall is is front of the sprite. The full sprite column rendition is skilled with a continue in the sprite rendition loop.\\
+While drawing sprites, the occlusion array is read. If the height of a wall is greater than a sprite, it means the wall is is front of the sprite. The full sprite column rendition is skilled.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_usage.c}
@@ -1550,34 +1550,34 @@ Since the entire screen is refreshed on the next frame, the occlusion array does
 
 
 \subsubsection{Drawing things}
-Things rendition benefit from the same optimization we saw in walls. But with a few tweaks.
+Sprites rendition benefits from the same optimization we saw in walls (a.k.a: Compiled scalers and deferred rendering). But since sprites can be transparent, both techniques are slightly different.
 
 \subsubsection{Compiled scalers}
-With clipping out of the way, the engine can now render column which are visible. The rendition of sprites is also done with the compiled scalers seen during wall rendition. But they cannot be used as they were generated. A compiler scaler draws its speed from its absence of parameters. It is  an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and writing a predetermined number of pixels. Compiled scaler 112 always read 64 pixels of texture and magnify it to 134 pixels on the screen.\\
+With clipping out of the way the engine can finally render columns. It  is also done with the compiled scalers seen during wall rendition. But the scalers cannot be used as they were generated. A compiler scaler draws its speed from its absence of parameters. It is  an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and writing a predetermined number of pixels. Compiled scaler 112 always read 64 pixels of texture and magnify it to 134 pixels on the screen.\\
 \par
 \par
-Sprites are different, even though they are drawn in the same 64x64 space as wall textures, they almost never use all of it. They are usually smaller than 64 texels and often feature transparent parts. Some even have "holes" and are composed of sequences of pixels separated by transparent areas. It is the case of the lamp sprite where most columns has an upper segment (the lamp) and a lower segment (the halo).\\
+But sprites are different from walls. Even though they are drawn in the same 64x64 texture spaces they almost never use all of it. They are usually smaller than 64 texels and often feature transparent parts. Some even have "holes" and are composed of sequences of pixels separated by transparent areas. It is the case of the lamp sprite where most columns has an upper segment (the lamp) and a lower segment (the halo).\\
 \par
-A sprite is stored as an array of 64 entries. Each entries is a serie of "commands". A command features:
+A sprite is stored as an array of 64 entries. Each entries is a serie of "commands" forming a column. A command features:
 \begin{enumerate}
  \item A vertical offset.
  \item A vertical length.
  \item A payload.
  \end{enumerate}
 \par
-This way, transparent are not even mentioned. The last command in a column has an offset of \cw{0x00}.\\
+Transparent texels are not even mentioned. The last command in a column is marked with an offset of \cw{0x00}.\\
 \par
 
 \begin{minipage}{.5\textwidth}
-\bu{Example :} Column \#25 in lamp sprite is made of five transparent pixels, one sequence of five pixels for the lamp:\\
+\bu{Example :} Column \#25 in lamp sprite is made of 5 transparent pixels then one sequence of 5 pixels for the lamp:\\
 \par
 \scaledimage{0.8}{light_sprite_column_head.png}
 \par
-Then 49 transparent pixels. And finally one sequence of five pixels for the light halo.\\
+Then 49 transparent pixels. And finally one sequence of 5 pixels for the light halo.\\
 \par
 \scaledimage{0.8}{light_sprite_column_bottom.png}
 \par
-Total: 64 texels. This column is encoded with 1 command + 5 bytes of payload + 1 command bytes + 5 bytes of payload + 0x00 end marker. Total size 17 bytes.
+Total: 64 texels. This column is encoded with 1 command + 5 bytes of payload + 1 command bytes + 5 bytes of payload + 0x00 end marker. Total size 17 bytes.\\
  \end{minipage}
 \begin{minipage}{.5\textwidth}
 \begin{figure}[H]
@@ -1591,7 +1591,9 @@ Total: 64 texels. This column is encoded with 1 command + 5 bytes of payload + 1
 
  
 \par
-The data differs from a wall texture which is always 64 tall. On top of that the command header are right in the middle of the texels. To still take advantage of the speed of compiled scalers, the engine patches the generated code with early return instruction \cw{ret} for each commands. In order to to that, the code generator also generates patch locations.\\
+Because of the format, scalers cannot be used as they are.  
+
+To still take advantage of their speed, the engine patches them with early return instruction \cw{ret} for each commands. In order to to that, the code generator also generates patch locations.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/t_compscale.c}
