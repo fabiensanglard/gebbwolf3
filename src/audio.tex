@@ -95,13 +95,13 @@ Every system in the engine uses this variable to pace itself. The renderer will 
 
 
 \subsection{Audio system}
-The audio system is complex because of the fragmentation of the audio devices it can deal with. The early 90s was a time before Windows 95 harnessed all audio cards under DirectSound common API. Each development studio had to write their own abstraction layer and id Software was not exception. At high level, the Sound Manager offers a lean API divided in two categories, one for sounds and an other for music..\\
+The audio system is complex because of the fragmentation of the audio devices it can deal with. The early 90s was a time before Windows 95 harnessed all audio cards under DirectSound common API. Each development studio had to write their own abstraction layer and id Software was not exception. At high level, the Sound Manager offers a lean API divided in two categories, one for sounds and an other for music.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/sound.h}
 \end{minipage}
 \par
-But the in the implementation lays a maze of functions directly accessing the I/O port of four sound outputs: Adlib, SoundBlaster, Buzzer and Disney Sound source. These ouput all belong to one of the three supported family of sound generator: FM Synthesizer (Frequency Modulation), PCM (Pulse Code Modulation) or PWM (Pulse Width Modulation).\\
+But in the implementation lays a maze of functions directly accessing the I/O port of four sound outputs: Adlib, SoundBlaster, Buzzer and Disney Sound source. These ouput all belong to one of the three supported family of sound generator: FM Synthesizer (Frequency Modulation), PCM (Pulse Code Modulation) or PWM (Pulse Width Modulation).\\
 
 
 \subsection{Music}
@@ -120,8 +120,7 @@ Programming the OPL2 output is esoteric to say the least. Adlib and Creative did
 \par
 The OPL2 is made of 9 channels able to emulate an instrument. Each channel is made of two oscillator, a Modulator which output are fed into a Carrier's input.
 \par
-\note{Drawing of a channel}
-\par
+
 Each channel has individual settings including Frequency, Envelope (Attack rate, Decay rate, Sustain level, Release rate, Vibrato). Each oscillator can also pick a waveform (these uncanny form are what gave the YM3812 is recognizable sound).
 \par
 \note{Drawing of four waveforms}
@@ -152,15 +151,23 @@ Wait three point three (3.3) microseconds for the address, and twenty-three (23)
  
 
 \par
-The data for the music is stored in IMF format. There is no abstraction layer or transformation here. The format is exactly what the sound card expect. An IMF song is made of a serie of messages. Each message is four bytes.\\
+The engine does not know about any of the details of the OPL2. There is zero abstraction layer or transformation here. An IMF song is made of a serie of messages containing exactly the message to send to the OPL2. Each message is four bytes:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/adlib_message.c}
 \end{minipage}
 \par
-The \cw{reg} byte is sent to port \cw{0x388}, the \cw{data} byte is sent to \cw{0x389} and the d\cw{delay} 16 bits value is used to tell how much time to wait before sending the next register/data to the card. The stream is hard-coded at 700Hz and the delay is expressed in this unit: A value of 700 means to wait 1000ms before sending. Whenever there is a music playing the engine runs at no less than 700Hz (it can run at 7000Hz if it is also playing digitized sound but that results in noops for music playback.). A value of zero means the next message should be sent immediately.\\
+The \cw{reg} byte is sent to port \cw{0x388}, the \cw{data} byte is sent to \cw{0x389} and the \cw{delay} 2 bytes is used to tell how much time to wait before sending the next register/data to the card. The stream is hard-coded at 700Hz and the delay is expressed in this unit: A value of 700 means to wait 1000ms before sending an other command. Whenever there is a music playing the engine runs at no less than 700Hz (it can run at 7000Hz if it is also playing digitized sound but that results in noops for music playback.). A value of zero means the next message should be sent immediately.\\
 \par
-Everytime the audio system wakes up, it checks if some data should be sent to the YM3812.
+Overall the music part is simple to execude because almost everything has been pre-processed via IMF. Everytime the audio system wakes up, it checks if music packet should be sent, sent them and move to the sound effects.
+
+
+
+
+
+
+
+
 
 
 \section{Sound effects}
@@ -172,20 +179,20 @@ the audio configurations are many. The sound settings screen illustrate well how
  \fullimage{audio/audio_settings.png}
  \end{figure}
 \par
-Sound effects and Digitized sounds are actually the same thing. Sound effects are stored in three formats. Once for PC Speaker, once for Adlib and once for SoundBlaster/Disney Sound Source. The sounds were stored in the same order and separated by format by Muse. The audio archive is using id software proprietary format, AudioT. The header generated by Muse is self explanatory.\\
+Sound effects and Digitized sounds are actually the same thing. Sound effects are stored in three formats. Once for PC Speaker, once for Adlib and once for SoundBlaster/Disney Sound Source. The sounds were stored in one \cw{AudioT} archive by Muse. Sounds are segregated by format but always stored in the same order. This way a sound can be accessed in three formats by using \cw{ADLIB\_BASE} + \cw{sound\_ID} or \cw{SOUNDBLASTER\_BASE} + \cw{sound\_ID}\\
 
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/muse_header.c}
 \end{minipage}
 \par
-Strangely, only PC speaker and Adlib sounds are stored in the \cw{AUDIO.*} files, the digitized sound are in the\cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used.\\
+Strangely, only PC speaker and Adlib sounds are stored in the \cw{AUDIO.*} files, the digitized sound are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used.\\
 \note{Question for the developers: Why not include the sb sounds in AudioT?} 
 \par
 
 
 
-\subsubsection{Sound effects: Adlib}
+\subsection{Sound effects: Adlib}
 Adlib only has a FM synthesize and it is used to play sound on its Channel 1. This is done the same way music as previously described (via IMF) so it is not discussed further here.
 
 
@@ -199,12 +206,11 @@ Adlib only has a FM synthesize and it is used to play sound on its Channel 1. Th
 
 
 
-\subsubsection{Disney Sound sound system: PCM}
+\subsection{Disney Sound sound system: PCM}
 The Disney Source is simple to program\footnote{The Programmer's Guide to the Disney Sound Source is a wooping 2 pages!} because it can do only one thing. It plays PCM audio in format 8 bits at 7000Hz on a single channel. And that's it, nothing more, nothing less. As soon as it is plugged in the parallel port, its 8 bits DAC will read from an internal 16 bytes deep FIFO and turn them into sound via its integrated loud speaker.\\ 
 \par
 Hence every times it awakes, the audio system simply read the parallel port to check if the FIFO is not full. If it is not, the engine pushes as many bits as possible until the FIFO is full and returns. When the FIFO gets empty, the Disney Sound source stops making noise.\\
-
-
+\par
 
 
 
@@ -216,8 +222,8 @@ Hence every times it awakes, the audio system simply read the parallel port to c
 
 
 \par
-\subsubsection{SoundBlaster system: PCM}
-The SoundBlaster is also capable of PCM playback (mono, 8 bits, 7000Hz). However it features a DSP which is DMA capable. As a result, the CPU does not have to waste cycle transferring data. The audio system only have to make sure it is running at 7000Hz and point the DMA to the right memory address every times it crosses the end of a 16K segment.
+\subsection{SoundBlaster system: PCM}
+Since the SoundBlaster also supports 7000Hz PCM, it uses the same sound effects files as the Disney Source. However it features a DSP which is DMA capable. As a result, the CPU does not have to waste cycle transferring data. The audio system only have to make sure it is running at 7000Hz and point the DMA to the right memory address every times it crosses the end of a 16K segment via a DMA routine callback.
 \par
 
 
@@ -228,10 +234,10 @@ The SoundBlaster is also capable of PCM playback (mono, 8 bits, 7000Hz). However
 
 
 \par
-\subsubsection{SoundBlaster Pro system}
+\subsection{SoundBlaster Pro system}
 \par
 
-On a "high-end" stereo SoundBlaster Pro with left and right channel, the sound is more elaborated: The sound source is rotated with the same formula as the raycaster. Using SOH-CAH-TOA. Intensity is hardcoded 0-15:\\
+On a "high-end" stereo SoundBlaster Pro with left and right channel, the sound is more elaborated: The sound source is rotated with the same formula as the raycaster. Using SOH-CAH-TOA.\\
 \par
 \begin{figure}[H]
 \centering
@@ -243,8 +249,7 @@ On a "high-end" stereo SoundBlaster Pro with left and right channel, the sound i
  \includegraphics[width=\textwidth]{imgs/drawings/audio_x_rotate.png}
  \end{figure}
 \par
-In sound part, trivia with a bunch of translations: https://www.gamefaqs.com/pc/564603-wolfenstein-3d/faqs/1824\\
-Talk about morse code in episode 3 and 6.\\
+Based on the distance, an intensity (hardcoded 0-15) is send to the left and right speaker.\\
 \par
 \bu{Trivia :} Plugging a sound blaster card was not enough to hear sound. This was before "plug \& play" was introduced by Windows 95. The user had to write a special line in the startup command of the PC (\cw{autoexec.bat}).\\
 \par 
@@ -259,44 +264,18 @@ See \cw{SDL\_SBPlaySeg} and the ISR \cw{SDL\_SBService}
 
 
  
-\subsubsection{Sound on PC Speaker}
-The hardware chapter described a problem for sound effects. The default PC speaker can only generate square waves resulting in long beep. But of course hackers found a way to make more than it was meant to.\\
+\subsubsection{Sound on PC Speaker: PWM}
+The hardware chapter described a problem for sound effects. The default PC speaker can only generate square waves resulting in long beep which are not acceptable for game.\\
 
 \par
  \begin{fancyquotes}
-  The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc.), the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC,[5] thereby enabling approximate playback of PCM audio. This technique is called pulse-width modulation (PWM).
+  The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc.), the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC, thereby enabling approximate playback of PCM audio.\\
+  \par
+  This technique is called pulse-width modulation (PWM).
  \end{fancyquotes}
 \par
-  It gave surprisingly good results such as in Monkey Island music.\footnote{https://www.youtube.com/watch?v=a324ykKV-7Y}\\
-  \par
-
-\begin{verbatim}
-"http://www.shikadi.net/moddingwiki/Inverse_Frequency_Sound_format"
-\end{verbatim}
-
-
-
-
-  \par
-The programming trick is to use another part of the PIT chipset. Counter 0 i used to trigger the audio system. Counter 1 cannot be used (it is used to refresh the RAM periodically). Counter 2 however is directly connected to the PC Speaker. The trick is to set this timer to one-shot mode (Mode 1) and program how long to play a square wave. \\
-\par At every input one sound sample value was read, converted to timer control value, programmed to timer (starting the pulse). This trick allowed around 6 bits sample resolution / dynamics (or even slightly more with some tricks). When the sample rate was high enough, you can’t hear the high frequency noise on the signal.\\
-TODO: Drawing of PWM
-\par
-\begin{figure}[H]
-\centering
-\begin{tabularx}{\textwidth}{ X X  }
-  \toprule
-  \textbf{Mode} & \textbf{Type} \\ \bottomrule
-1 & Hardware Re-triggerable One-shot\\
-2 & Rate Generator\\
-3 & Square Wave Generator\\
-4 & Software Triggered Strobe\\
-5 & Hardware Triggered Strobe\\
-\bottomrule
-\end{tabularx}
-\caption{Available mode of a PIT counter.}
-\end{figure}
-Programming the PIT allow to approximate a sinusoid with square waves.
+  
+The idea is to approximate a signal using square waves. It is simpler to understand when the signal is a simple sinusoide:
 \par
 \begin{figure}[H]
 \centering
@@ -313,6 +292,31 @@ Programming the PIT allow to approximate a sinusoid with square waves.
  \end{figure}
 \par
 
+To do this, the audio system once again relies on the PIT chipset. Counter 0 i used to trigger the audio system. Counter 1 cannot be used either since it is used to refresh the RAM periodically. Counter 2 however is directly connected to the PC Speaker. The trick is to set this timer to one-shot mode (Mode 1) and program the desired square wave frequency. \\
+\par
+\begin{figure}[H]
+\centering
+\begin{tabularx}{\textwidth}{ X X  }
+  \toprule
+  \textbf{Mode} & \textbf{Type} \\ \bottomrule
+1 & Hardware Re-triggerable One-shot\\
+2 & Rate Generator\\
+3 & Square Wave Generator\\
+4 & Software Triggered Strobe\\
+5 & Hardware Triggered Strobe\\
+\bottomrule
+\end{tabularx}
+\caption{Available mode of a PIT counter.}
+\end{figure}
+\par 
+When instructed to play a PWM sound effect, the audio system set itself to run at 140Hz. An audio effect in this format is simply a serie of bytes instructing what square wave to play for the next 1/140th of a second. The formula used is:
+\par 
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/pwm.c}
+\end{minipage}
+\par
+The sound was not great, but it was better than a beep\footnote{It gave surprisingly good results such as in Monkey Island music. See the video "LGR - Evolution of PC Audio - As Told by Secret of Monkey Island", https://www.youtube.com/watch?v=a324ykKV-7Y.}.\\
+\par
 
 \bu{Hidden feature :} The source code features an audio code path that was never allowed to ship. It can play digitized sound via the PC Speaker.\\
 
