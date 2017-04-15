@@ -39,7 +39,7 @@ Overall, the pipeline offers a lot of resistance since manufacturers had not emb
 \centering
   \begin{tikzpicture}[font=\small]
     \begin{axis}[
-      width=0.9\textwidth,
+      width=1.0\textwidth,
       height=0.6\textwidth,
       ybar,
       bar width=20pt,
@@ -50,31 +50,31 @@ Overall, the pipeline offers a lot of resistance since manufacturers had not emb
       axis x line=bottom,
       axis y line=left,
       enlarge x limits=0.11,
-      symbolic x coords={86,188,286,386SX,386DX},
+      symbolic x coords={286 6Mhz,286 8Mhz,386SX 16,386SX 33,386DX 33,386DX 40},
       xticklabel style={anchor=base,yshift=-\baselineskip},
       nodes near coords={\pgfmathprintnumber\pgfplotspointmeta}
     ]
       \addplot[fill=black!20,draw=black] coordinates {
-        (86,0.75)
-        (188,1)
-        (286,2.6)
-        (386SX,5.1)
-        (386DX,9.9)
+        (286 6Mhz,0.8)
+        (286 8Mhz,1.5)
+        (386SX 16,2.5)
+        (386SX 33,5.1)
+        (386DX 33,8)
+        (386DX 40,9.6)
       };
     \end{axis}
    
    \end{tikzpicture}
-   \caption{Comparison\protect\footnotemark  of CPUs with MIPS \protect\footnotemark.}
+   \caption{Comparison\protect\footnotemark of CPUs with MIPS \protect\footnotemark. Labels are Name/Mhz}
  \end{figure}
- \footnote{Moore's law is clearly visible.}
- \footnote{Million Instructions Per Second.}
- 
+ \footnotetext{Source: "Roy Longbottom's PC Benchmark Collection".}
+ \footnotetext{Million Instructions Per Second.}
  \par
   \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 MIPS.\\
   \par
- Intel built two version of the 386: The 386-SX and 386-DX. They are identical processor except the DX version is twice as powerful as the SX thanks to a data bus between the CPU and the RAM twice as wide (32 bits vs 16 bits). Despite its inferiority, the SX sold well because it was cheaper and also because a lot of people had no idea what that "bus" lingo meant, they just wanted "a 386".\\
+ Intel built two versions of the 386: The 386-SX and 386-DX. They are identical processor except the DX version is almost twice as powerful as the SX (on the chart the \cw{386 SX 33Mhz} and the \cw{386 DX 33Mhz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM twice as wide on the DX (32 bits vs 16 bits). Despite its inferiority, the SX sold well because it was cheaper and also because a lot of people had no idea what that "bus" lingo meant, they just wanted "a 386".\\
  \par
-Two other companies were producing Intel clones: AMD and Cyrix. The mediocre performances did not justify the lower cost and as a result they never gathered a significant market share. Almost all PCs featured an Intel CPU. Interestingly AMD evolved to become a serious challenger while Cyrix merged with National Semiconductor in 1997.\\
+Two other companies produced Intel clones: AMD and Cyrix. The mediocre performances did not justify the lower cost and as a result they never gathered a significant market share. Almost all PCs featured an Intel CPU. Interestingly AMD evolved to become a serious challenger\footnote{The history of litigations AMD vs Intel could be the subject of a book.} while Cyrix merged with National Semiconductor in 1997.\\
 \par
 
 A 386 CPU can be summarized to the following elements:
@@ -93,7 +93,7 @@ A 386 CPU can be summarized to the following elements:
 \end{itemize}
  
 \par
-Despite its power (compared to the 286), the architecture of a 386 is very simple. In particular notice the absence of pipelining, i-cache and d-cache. The CPU essentially revolves around its 32 bits ALU crunching 32-bits integers.
+Despite its power compared to the 286, the architecture of a 386 is very simple. In particular notice the absence of pipelining, i-cache and d-cache. The CPU essentially revolves around its 32 bits ALU crunching 32-bits integers.
 
 \begin{figure}[H]
 \centering
@@ -111,9 +111,9 @@ Despite its power (compared to the 286), the architecture of a 386 is very simpl
 
   \subsection{Floating Point}
   
-   All that CPU power was not necessarily useful. In order to perform the trigonometric calculations for its 3D effects, the engine has to keep track of the fractional part of each operations. It may not look like an issue since the C programming language has a type (\codeword{float}) precisely for that purpose. But in practice it is a problem and to understand it we need to understand how that type works.\\
+   All that CPU power was not necessarily useful to program a game. In order to perform the trigonometric calculations for its 3D effects, the engine has to keep track of the fractional part of each operations. It may not look like an issue since the C programming language has a type (\codeword{float}) precisely for that purpose. But in practice it is a problem and to understand it we need to understand how that \codeword{float} works.\\
 \\
- As David Goldbert put it, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{What every Computer Scientist should know about Floating-Point}. I could not agree more. Yet it is important to get it in order to fully grasp how useful it is to program a 3D engine. In the C language, \codeword{float}s are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
+ As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{What every Computer Scientist should know about Floating-Point}. I could not agree more. Yet it is important to get it in order to fully grasp how useful it is to program a 3D engine. In the C language, \codeword{float}s are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
   \item One bit S for the sign.
   \item Seven bits E for the exponent.
@@ -301,7 +301,7 @@ For compatibility reasons all PCs starts in Real Mode. You may assume that progr
 
 
   \subsection{The infamous Real Mode: 1MB RAM max}
-  With Protected mode unavailable developers programmed like it was 1976. With a 20 bits wide address bus offering only 1MB of addressable RAM. No matter how much memory was installed on the machine, only 1MB could be addressed. And to top it all, addressing had to be done not with the 32 bits registers available but by combining two 16 bits register together. One was the segment, the other an offset within that segment. Hence the name: '16 bits segmented programming'.
+  With Protected mode unavailable developers of 1991 programmed like it was 1976. With a 20 bits wide address bus offering only 1MB of addressable RAM. No matter how much memory was installed on the machine, only 1MB could be addressed. And to top it all, addressing had to be done not with the 32 bits registers available but by combining two 16 bits register together. One was the segment, the other an offset within that segment. Hence the name: '16 bits segmented programming'.
 
   \bigskip
 The memory layout is as follow:\\
