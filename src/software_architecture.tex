@@ -147,7 +147,7 @@ The sound system is started via the Sound Manager in \cw{SDL\_SetTimerSpeed}. Th
 \par
 The reason for interrupts is extensively explained in the Chapter "Audio and Heartbeat". In short, with an OS supporting neither process nor thread, it was the only way to have something execute concurrently with the rest of the engine.\\
 \par
-Notice how the ISR is tied to the PC timer and can run at at frequencies of 140Hz, 700Hz or even 7000Hz depending on the needs of the sound system being driven.\\
+An ISR\footnote{Interrupt Service Routine} is installed in the Interrupt Vector Table to reponse to the interrupt. Note how the ISR can be called at frequencies of 140Hz, 700Hz or even 7000Hz depending on the needs of the sound system being driven.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/soundsystem_interrupt.c}
@@ -171,7 +171,7 @@ Notice how the ISR is tied to the PC timer and can run at at frequencies of 140H
 
 \section{Architecture}
 
-The source code is structured in two layers. WL\_* files are high-level layers relying on low-level of ID\_* sub-systems called Managers interacting with the hardware.\\
+The source code is structured in two layers. WL\_* files are high-level layers relying on low-level ID\_* sub-systems called Managers interacting with the hardware.\\
 \par
  \par
 \begin{figure}[H]
