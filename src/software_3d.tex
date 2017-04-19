@@ -126,10 +126,10 @@ The longer the distance the ray traveled, the smaller the column is drawn on scr
  \fullimage{wolf3d_2_walls.png}
  \caption{Phase 2: Drawing Walls has completed.} 
  \end{figure}
-\begin{minipage}{.6\textwidth}
+\begin{minipage}{\textwidth}
 \begin{figure}[H]
   \centering
- \includegraphics[width=.9\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
+ \includegraphics[width=.5\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
    
 \end{figure}
 \end{minipage}
@@ -185,9 +185,9 @@ The hardware chapter described the Mode 12h which despite being unfit for games 
  \end{figure}
 With this architecture, each time the VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written to the VRAM, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmer to plot a bit in a byte easily with one read, one ALU setup and one write.\\
 \par
-Mode Y does not need latches to operate since values are stored in byte and banks can be updated individually thanks to the mask. However tinkerers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. By getting a little bit creative, the circuitry can be repurposed. The ALU in from of each bank can be setup to use only the latch for writing. With such a setup, upon doing one read, four latches are populated at once. And four bytes in the bank are written with only on write to the RAM.\\
+Mode Y does not need latches to operate since values are stored in byte and banks can be updated individually thanks to the mask. However tinkerers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. By getting a little bit creative, the circuitry can be repurposed. The ALU in from of each bank can be setup to use only the latch for writing. With such a setup, upon doing one read, four latches are populated at once. And four bytes in the bank are written with only on write to the RAM. This system allows transfer from VRAM to VRAM 4 bytes at a time.\\
 \par
-To take full advantage of this optimization, the 3D renderer upload images to the VRAM above the third page. Sprites 91 to 134 are latched in VRAM.\\
+To take full advantage of this optimization, the 3D renderer upload images to the VRAM above the fourth page. In total, the 43 sprites used to update the HUD are loaded in the asset page when the engine starts up.\\
 
 \begin{minipage}{.23\textwidth}
      \fullimage{latched/91.png}
@@ -436,11 +436,10 @@ Fixed Point allows to keep track of fractions while still using the integer oper
  \caption{Fixed point layout 8:8 (8-bits for integer part and 8 bits for fractional part).} \label{fig:mips}
 \end{figure}
 
-The same sequence of bits \emph{0010010010010010}...
+The same sequence of bits \emph{0010010010010010} with different powers of two...
 \begin{figure}[H]
  \centering
    \input{imgs/drawings/fp_example.tex}
-  \caption{Fixed point representation: 8738 is now 34.1328125.}
 \end{figure} 
 
 Now represents:\\
@@ -501,7 +500,7 @@ The beauty of fixed point is that addition and subtraction work exactly like int
 
 The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONNAL\_PART}. In the game, player position is \cw{16:16}. The grid location is one shift operation away \cw{player->x $\gg$ 16}.\\
 \par
- The special case is when performing multiplication. There are two ways to do it: Either multiply two 32 bits into a 64 bits (and drop the upper and lower 16 bits) or drop the precision of both fixed point and then multiply then into a 32 bits. Both methods involve loosing data is an overflow occurs.
+ The special case is when performing multiplication. There are two ways to do it: Either multiply two 32 bits into a 64 bits (and drop the upper and lower 16 bits) or drop the precision of both fixed point and then multiply then into a 32 bits. Both methods involve accepting a lose of data via overflow or underflow. Let's take the example of $98.7539 * 1.5$.
 
 
 \par
@@ -541,19 +540,19 @@ $128 + 16 + 4 + 0.125 = 148.125 $\\
 \par
 Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bit disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8).\\
 \par
-All fixed points variables are 32 bits wide. There is a special \cw{typedef} in the engine for them.\\
+In Wolf source code, all fixed points variables are 32 bits wide and use a special \cw{typedef}.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed.c}
  \end{minipage}
 \par
-But not all \cw{fixed} are the same. Some are \cw{16:16}, some are \cw{24:8}. As a result some operations can be implemented differently (e.g: multiplication).\\
+But not all \cw{fixed} are the same. Some are \cw{16:16}, some are \cw{24:8}. As a result some operations can be implemented differently. The multiplication for example can be either as follow.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed_mul.c}
  \end{minipage}
 \par
-Some \cw{fixed} even have a tweaked structure like those used while raycasting, using the leftmost bit to store the sign.\\
+Or it can be more complex due to a type of tweaked \cw{fixed} used for raycasting where the leftmost bit stores the sign via two's complement representation.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords={asm,fixed}]{code/FixedByFrac.c}
@@ -716,7 +715,7 @@ With map being simple and fast to draw, a contest was to be held. Find a special
 \begin{minipage}{.5\textwidth}
 Behind a forest of push walls (white squares) and angry bosses (blue circles), a sign finally showed up (the red triangle). \\
 \par 
-However due to people reverse engineering the map format and cheat sites allowing players to find the maze, the sign was replaced with a skeleton with all game shipping during 1992.\\ In the map there are no push wall leading to the red triangle.\\
+However due to people reverse engineering the map format and cheat sites allowing players to find the maze, the sign was replaced with a skeleton with all game shipping during 1992.\\ In the previous map notice there are no push wall leading to the red triangle, the room is hidden.\\
  \end{minipage}
 \begin{minipage}{.5\textwidth}
 \begin{figure}[H]
@@ -916,7 +915,7 @@ In this drawing the player is located at viewpoint with a view angle \begin{math
 \begin{minipage}{.4\textwidth}
 From a distance of 24 feet, the distortion cannot be ignored any more and the problem is clearly noticeable.\\
 \par
-Note that even though the player is getting closer to the wall, the ratio of A to B remain the same. Only the absolute difference is increasing.
+Note that even though the player is getting closer to the wall, the ratio of A to B remain the same. Only the absolute difference in pixels height when the column is rendered on screen is increasing.
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
@@ -1074,7 +1073,8 @@ The correction is enough to give pleasant straight lines for the walls. To make 
 
 \subsection{Drawing walls}
 With a height calculated for a column, all what remains to do is drawing a column of textured pixels.\\
-That may sound easy but it is in fact very difficult on a CPU with as little power as a 386. It is not hard in terms of mathematics but hard in terms of instructions clock consumption. To scale a column of 64 pixels texels on the screen centered vertically is expensive. It turns out if you want to do it fast enough you need a few optimizations. This is where Wolfenstein 3D takes off and leave other 3D engine or the era in the dust. This is the part where lies the two secrets of its  speed thanks to two techniques:
+\par
+That may sound easy but it is in fact very difficult on a CPU with as little power as a 386. It is not hard in terms of mathematics but hard in terms of instructions clock consumption. To scale a column of 64 pixels texels on the screen centered vertically is expensive. It turns out if you want to do it fast enough you need a few optimizations. This is where Wolfenstein 3D takes off and leave other 3D engine or the era in the dust. This is the part where lies the two secrets of its speed:
 \begin{itemize}
 \item Compiled scalers
 \item Deferred column rendering
@@ -1109,6 +1109,7 @@ It would involves having a loop, a fixed point accumulator and intermediate vari
 \end{minipage}
 
  The engine generates machine code at runtime for heights ranging from 2 pixels to 152 (the max height of the 3D canvas). This is all done in \cw{BuildCompScale}.\\
+ \note{152 is wrong: A scaler has to render a column magnified but also clipped. TODO: Find out how many there are.}
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/compscale.c}
@@ -1116,7 +1117,7 @@ It would involves having a loop, a fixed point accumulator and intermediate vari
 \par
 Given a height, \cw{BuildCompScale} generates x86 instructions in the out variable \cw{code}. As a result, instead of having one generic function accepting any height,  Wolfenstein has 38 functions with hard-coded height. To hard-code the height allows to unroll the loop and reduce the overhead.\\
 \par
-With this optimization, minifying a 64 textures to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 120 pixels takes 841 instructions. A precompiled scaler function has a fixed cost of 7 instructions per pixel: It doesn't get any faster than that!\\
+With this optimization, minifying a 64 textures to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 120 pixels takes 841 instructions. A precompiled scaler function has a fixed cost of 7 instructions per pixel: It doesn't get any faster than that.\\
 
 \par
 What is the RAM cost incurred by precompiling and caching these scalers? It takes 1 + 7 instructions per pixel written to scale a column. If all size were generated from 2,4,6...152 (76 values for 38 pairs), we can use Gauss method to calculate the size:\\
@@ -1467,7 +1468,7 @@ Each sprites is rendered individually in function \cw{ScaleShape (int xcenter, i
  \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
  \end{figure}
 \par
-The X coordinate is used to place a sprite horizontally on the screen and the Y coordinate is used for clipping. Like walls, sprites don't need to be place vertically either since they are drawn in the same 64x64 texels as the wall.\\
+The X coordinate is used to place a sprite horizontally on the screen and the Y coordinate is used for clipping. Like walls, sprites don't need to be place vertically since they are drawn in the same 64x64 texels space.\\
 \par
   \begin{minipage}{.5\textwidth}
      \fullimage{guard_sprite.png}
@@ -1573,7 +1574,7 @@ Then 49 transparent pixels. And finally one sequence of 5 pixels for the light h
 \par
 \scaledimage{0.8}{light_sprite_column_bottom.png}
 \par
-Total: 64 texels. This column is encoded with 1 command + 5 bytes of payload + 1 command bytes + 5 bytes of payload + 0x00 end marker. Total size 17 bytes.\\
+Total: 64 texels. This column is encoded with 2 commands each being: 1 byte offet +  1 byte length + 5 bytes of payload. At the end a payloadless command with length 0x00 marks the end. Total size 17 bytes.\\
  \end{minipage}
 \begin{minipage}{.5\textwidth}
 \begin{figure}[H]
@@ -1587,7 +1588,7 @@ Total: 64 texels. This column is encoded with 1 command + 5 bytes of payload + 1
 
  
 \par
-The idea is to prevent a scaler compiler from consuming the full 64 texels by patching the x86 instructions with an early return instruction \cw{ret}. In order to to that, the code generator also generates patch locations. The \cw{t\_compscale} structure containing a compiled scaler not only features the x86 instruction in \cw{code}, it also features patching offset.\\
+The idea is to prevent a scaler from consuming the full 64 texels by patching the x86 instructions with an early return instruction \cw{ret}. In order to to that, the code generator also generates patch locations. The \cw{t\_compscale} structure containing a compiled scaler not only features the x86 instruction in \cw{code}, it also features patching offset.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/t_compscale.c}
@@ -1648,7 +1649,7 @@ Drawing the weapon at the bottom is straight forward. It uses the same type of r
 
 
 \subsection{A.I}
-The 3D engine not only draw things, it also allows all objects to "think" and take actions like firing, walking or emit sounds. Those thinking objects are called "actors".\\
+To simulate enemies, some objects are allowed to "think" and take actions like firing, walking or emit sounds. Those thinking objects are called "actors".\\
 \par
 
 
@@ -1706,7 +1707,7 @@ By far the most important stimuli and what makes the player feel like the A.I is
 
 
 \subsubsection{Sound propagation}
-Early on the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience. Propagating sounds in realtime is hard. A bloodfill algorithm could have been used but that would have been slow. To speed things up, maps are preprocessed. Each room delimites an area. At runtime the engine maintains a matrix of portal connecting areas and updates it when a door opens or closes. Knowing if an enemy can hear the main character gunfire is a simple lookup in a table.
+Early on the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience and propagating it realistically in realtime is hard. A bloodfill algorithm could have been used but that would have been slow. To speed things up, maps are preprocessed. Each room delimits an area. At runtime the engine maintains a matrix of portal connecting areas and updates it when a door opens or closes. Knowing if an enemy can hear the main character gunfire is a simple lookup in a table.
 
 \par
 \begin{figure}[H]
@@ -1756,7 +1757,7 @@ In the source code:\\
 
 
 \subsubsection{Sound non propagation}
-Perfect sound progation is a simplist model. When a gun is fired, all enemies which could hear it will shout "Achtung!" (Attention!) and converge toward the origin of the sound. That would get old pretty fast. So make things more spicy, the designers introduced a little hack that goes a long way to make I.A appear smarter than it is.
+Perfect sound propagation is a simplistic model. When a gun is fired, all enemies which can hear it will shout "Achtung!" (Attention!) and converge toward the origin of the sound. That would get old pretty fast. To make things more spicy, the designers introduced a little hack that goes a long way to make the I.A appear smarter than it is.
 
 
 \par
@@ -1790,7 +1791,7 @@ Perfect sound progation is a simplist model. When a gun is fired, all enemies wh
   \end{figure}
   \par
   \begin{minipage}{0.6\textwidth}
-  Feeling safe, she will likely run straight to the door or maybe go left (or worse: right) to see what is in these corners. Surprise ! An enemy was "hiding". This behavior is only possible thanks to special tiles marked "AMBUSH" which make the engine not propagate sound to these tiles.\\
+  Feeling safe, she will likely run straight to the door or maybe go left (or worse: right) to see what is in these corners. Surprise ! An enemy was "hiding". This behavior is possible thanks to special tiles marked "AMBUSH" which make the engine not propagate sound to actors standing on these tiles.\\
   \par
    This is probably one of the cheapest feature in the engine yet it results in what most would agree is the soul of the game.
   \end{minipage}

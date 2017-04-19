@@ -1,6 +1,6 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-To study the machine it is easier to break it down in small parts. Five sub-systems stand out: Inputs, CPU, RAM, Video, and Audio, together forming a pipeline.\\
+To study the IBM PC it is easier to break it down in small parts. Five sub-systems stand out: Inputs, CPU, RAM, Video, and Audio, together forming a pipeline.\\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/fun_pipeline.pdf}
@@ -29,7 +29,7 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
 
 \section{CPU: Central Processing Unit}
   \subsection{Overview}
-  PC performances in the 90s were so overwhelmingly dominated by their CPU that a machine was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had a 80386 or equivalent inside, it was called a "386". If it had an Intel 80286, it was a "286".\\
+  The performances of a PC was so overwhelmingly dominated by its CPU that a machine was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had a 80386 or equivalent inside, it was called a "386". If it had an Intel 80286, it was a "286".\\
 \par
   The ubiquitous CPU manufacturer was Intel with its line of x86 microprocessors. Machines based on the 16 bits 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor, the 80386 released in June 1986. Given the adoption curve, Wolfenstein 3D was targeted at a PC running on a 386 CPU, with degraded performance (yet still playable) on a 286.\\
 \par
@@ -65,35 +65,35 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
     \end{axis}
    
    \end{tikzpicture}
-   \caption{Comparison\protect\footnotemark of CPUs with MIPS \protect\footnotemark. Labels are Name/Mhz}
+   \caption{Comparison\protect\footnotemark of CPUs with MIPS \protect\footnotemark.}
  \end{figure}
  \footnotetext{Source: "Roy Longbottom's PC Benchmark Collection".}
  \footnotetext{Million Instructions Per Second.}
  \par
   \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 MIPS.\\
   \par
- Intel built two versions of the 386: The 386-SX and 386-DX. They are identical processors yet the DX version is almost twice as powerful as the SX (on the chart the \cw{386 SX 33Mhz} and the \cw{386 DX 33Mhz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM being twice as wide on the DX (32 bits vs 16 bits). Despite its inferiority, the SX sold well because it was cheaper and also a lot of people had no idea what that "bus" lingo meant, they just wanted "a 386".\\
+ Intel built two versions of the 386: The 386-SX and 386-DX. They are identical processors yet the DX version is almost twice as powerful as the SX (on the chart the \cw{386 SX 33Mhz} and the \cw{386 DX 33Mhz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM being twice as wide on the DX (32 bits vs 16 bits). Despite its inferiority, the SX sold well because it was cheaper and a lot of people had no idea what a "bus" was, they just wanted "a 386".\\
  \par
 Two other companies produced Intel clones: AMD and Cyrix. Their mediocre performances did not justify the lower cost and as a result they never gained significant market share. Almost all PCs featured an Intel CPU. Interestingly, AMD evolved to become a serious challenger\footnote{The history of AMD vs Intel litigations could be the subject of a book.} while Cyrix merged with National Semiconductor in 1997.\\
 \par
 
-A 386 CPU can be summarized to the following elements:
+A 386 CPU can be summarized by the following elements:
 \begin{itemize}
-\item An ALU\footnote{Arithmetic Logic Unit} performing \cw{add}, \cw{sub}, \cw{mul} et cetera.
+\item An Arithmetic Logic Unit performing \cw{add}, \cw{sub}, \cw{mul} et cetera.
 \item 15 registers:
 \begin{itemize}
-  \item 32-bits General Purpose Registers: EAX, EBX, ECX, EDX
-  \item 32-bits Index Registers: ESI, EDI, EBP, ESP
-  \item 32-bits Program Counter: EIP
-  \item 16-bits Segment Registers: CS, DS, ES, FS, GS, SS
-  \item 16-bits Status Register
+  \item 32-bit General Purpose Registers: EAX, EBX, ECX, EDX
+  \item 32-bit Index Registers: ESI, EDI, EBP, ESP
+  \item 32-bit Program Counter: EIP
+  \item 16-bit Segment Registers: CS, DS, ES, FS, GS, SS
+  \item 16-bit Status Register
 \end{itemize}
-\item 32 bits address bus for up to 4GB of flat addressable RAM
+\item A 32 bit address bus for up to 4GB of flat addressable RAM
 \item Memory Paging Unit
 \end{itemize}
  
 \par
-Despite its power compared to the 286, the architecture of a 386 is very simple. In particular, notice the absence of pipelining, i-cache, and d-cache. The CPU essentially revolves around its 32 bits ALU crunching 32-bits integers.
+Despite its power compared to the 286, the architecture of a 386 is very simple. In particular, notice the absence of pipelining, i-cache, and d-cache. The CPU essentially revolves around its 32 bit ALU crunching 32-bit integers.
 
 \begin{figure}[H]
 \centering
@@ -111,9 +111,9 @@ Despite its power compared to the 286, the architecture of a 386 is very simple.
 
   \subsection{Floating Point}
   
-   All that CPU power was not necessarily useful for programming a game. In order to perform the trigonometric calculations for 3D effects, the engine has to keep track of the fractional part of each operation. It may not look like an issue since the C programming language has a type (\codeword{float}) precisely for that purpose. But in practice it is a problem, and to understand it we need to understand how that \codeword{float} works.\\
+   All that CPU power was not necessarily useful for programming a game. In order to perform the trigonometric computations for 3D effects, the engine has to keep track of the fractional part of each operation. It may not look like an issue since the C programming language has a type (\codeword{float}) precisely for that purpose. But in practice it is a problem, and to understand it we need to understand how that \codeword{float} works.\\
 \\
- As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{What every Computer Scientist should know about Floating-Point}. I could not agree more. Yet it is important to get it in order to fully grasp how useful it is to program a 3D engine. In the C language, \codeword{float}s are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
+ As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{What every Computer Scientist should know about Floating-Point}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is to program a 3D engine. In the C language, \codeword{float}s are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
   \item One bit S for the sign
   \item Seven bits E for the exponent
@@ -132,7 +132,7 @@ Despite its power compared to the 286, the architecture of a 386 is very simple.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/floating_point_math.pdf}
-\caption{Floating Point three sections.}
+\caption{The three sections of a Floating Point number.}
 \end{figure}
   \bigskip  
 
@@ -148,7 +148,7 @@ How numbers are stored and interpreted is usually explained with the formula:\\
 \end{figure}
 \bigskip  
 
-Although correct, this way of explaining floating point usually leaves programmers completely clueless. I blame this ignoble notation for discouraging legions of programmers, scaring them to the point where they never looked back to understand how floating point actually works. Fortunately, there is a better way to explain it. Instead of Exponent, think of a Window between two consecutive power of two integers. Instead of a Mantissa, think of an Offset within that window.\\ 
+Although correct, this way of explaining floating point usually leaves programmers completely clueless. I blame this dreadful notation for discouraging legions of programmers, scaring them to the point where they never looked back to understand how floating point actually works. Fortunately, there is a better way to explain it. Instead of Exponent, think of a Window between two consecutive power of two integers. Instead of a Mantissa, think of an Offset within that window.\\ 
 \par
   
 \begin{figure}[H]
@@ -157,7 +157,7 @@ Although correct, this way of explaining floating point usually leaves programme
 \caption{Alternative Floating Point internals.}
 \end{figure}
   \bigskip  
-The window tells within which two consecutive power of two the number will be [0,1], [1,2], [2,4], [4,8] and so on (up to [$2^{127}$,$2^{128}$]. The offset divides the window in $ 2^{23} = 8388608 $  bucket. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g [2,4]), you can "float" it right and represent the number within the next window (e.g [4,8]). It only costs a little bit of precision.\\
+The window tells within which two consecutive power-of-two the number will be: [0,1], [1,2], [2,4], [4,8] and so on (up to [$2^{127}$,$2^{128}$]. The offset divides the window in $ 2^{23} = 8388608 $  bucket. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g [2,4]), you can "float" it right and represent the number within the next window (e.g [4,8]). It only costs a little bit of precision.\\
 
 
 \par \bu{Trivia :} How much precision is lost when the window covers a wider range? Let's take an example with window [0,1] where the 8388608 offsets cover a range of 1 which gives a precision of $(1-0)/8388608=0.00000011920929$. In the window [2048,4096] the 8388608 offsets cover a range of $(4096-2048) = 2048$ which gives a precision $ (4096-2048)/8388608=0.0002$.\\
@@ -177,7 +177,7 @@ The next figure illustrates how the number 6.1 would be encoded. The window must
 Here is a detailed example which calculates the floating point representation of the number 3.14.
 \begin{itemize}
  \item The number 3.14 is positive  $\rightarrow S=0$.
- \item The number 3.14 is between the power of two 2 and 4 so the floating window must start at $2^1$  $\rightarrow E=128$.
+ \item The number 3.14 is between the power of two 2 and 4 so the floating window must start at $2^1$  $\rightarrow E=128$ (see formula where window is $2^{(E-127)}$).
  \item Finally there are $2^{23}$ offsets available so 3.14 is at $\frac{4-3.14}{2} = 0.43 $. The mantissa/offset $\rightarrow M = 2^{23}*0.43 = 4781506$
 \end{itemize}
 
@@ -222,7 +222,7 @@ Floating point arithmetic is a powerful tool. It can represent very small or hug
 \par
 Floating point is handy, but the drawback is that it is also computationally expensive. The reason is simple. In order to add, subtract, multiply or divide two numbers, they both have to be expressed with the same window. Which means converting one number to the representation used by the other, usually with higher precision than 32 bits (typically 80 bits on Intel FPUs)\footnote{To fully grasp how much processing a FPU does, it helps to read a software implementation. I found Berkeley SoftFloat helpful.}.\\
 \\
-This is not a problem when everything is hardwired within an hardware floating point unit but it is a big problem for the 386. If you take a look again at the architecture diagram you will notice that it only has an ALU. \emph{A 386 doesn't have a hardware Floating Point Unit}. If \cw{float} operations are found in the code, they are emulated in software by the compiler, resulting in terribly slow processing. So slow they are not usable for anything real-time.\\ 
+This is not a problem when everything is hardwired within an hardware floating point unit but it is a big problem for the 386. If you refer back to the architecture diagram you will notice that it only has an ALU. \emph{A 386 doesn't have a hardware Floating Point Unit}. If \cw{float} operations are found in the code, they are emulated in software by the compiler, resulting in terribly slow processing. So slow they are not usable for anything real-time.\\ 
 \par
 
 
@@ -243,7 +243,7 @@ This is not a problem when everything is hardwired within an hardware floating p
 
 
 \par
-A possible solution to the lack of a hardware floating point unit would have been to multiply an integer by 100 or 1000 to perform fractional operation and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes a minimum of 6-9 cycles and a divide (\cw{div}) is even worse with 22-25 cycles depending if operands are RAM or register.\\ 
+A possible solution to the lack of a hardware floating point unit would have been to multiply an integer by 100 or 1000 to perform fractional operation and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes a minimum of 6-9 cycles and a divide (\cw{div}) is even worse with 22-25 cycles depending if the operands are RAM or register.\\ 
 \par
 As a result, a game engine designer was stuck in an awkward situation with two half solutions to his problem. Integers which were fast but not accurate enough and Floats which were accurate but not fast enough.\\
 \par
@@ -832,7 +832,7 @@ The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but also s
   \fullimage{hardware/sbpro.png} 
   \caption{A Sound Blaster Pro card.}
 \end{figure}
-The model above is a CT1330A. Notice the double FM1312 chip in the center. The two big chips in the upper left are the DSP (CT1341) and the Mixer. Below, labeled "Creative" is the big CT1316 big bus interface.\\
+The model above is a CT1330A. Notice the double FM1312 chip in the center. The two big chips in the upper left are the DSP (CT1341) and the Mixer. Below, labeled "Creative" is the big CT1316 bus interface.\\
 \par
 \bu{Trivia :} The card appears to have a 16 bits ISA bus connector (check the difference with a Sound Blaster 1.0). However it does not have 'fingers' for data transfer on the higher "AT" portion of the bus connector. It uses the 16-bit extension to the ISA bus to provide the user with an additional choice for an IRQ (10) and DMA (0)m channel only found on the 16-bit portion of the edge connector.\\
 \par
