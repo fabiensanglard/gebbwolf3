@@ -174,7 +174,7 @@ The next figure illustrates how the number 6.1 would be encoded. The window must
 \end{figure}
   \bigskip
   
-Here is a detailed example which calculates the floating point representation of the number 3.14.
+Here is a detailed example to calculates the floating point representation of a number we know well: 3.14.
 \begin{itemize}
  \item The number 3.14 is positive  $\rightarrow S=0$.
  \item The number 3.14 is between the power of two 2 and 4 so the floating window must start at $2^1$  $\rightarrow E=128$ (see formula where window is $2^{(E-127)}$).
@@ -263,14 +263,17 @@ As a result, a game engine designer was stuck in an awkward situation with two h
 
 
 
+
+
+
+
+
+
+
 \section{RAM}
-A 386 can operate in two modes:\\
+The first CPUs in the Intel x86 family were designed in 1976. A time where RAM was very expensive, the 8080 and 8086 had 16 bit registers with a 20 bit wide address bus capable of addressing 1MB of RAM. It is difficult to stress how big 1MB of RAM was in the 70s but as an example, the Apple II and the Commodore 64 both shipped with 64KB which was enough to write and run amazing things. Sixteen bit register and 20 bit address bus was plenty even though programming was difficult and required combining two registers to build a pointer. In 1986, the hardware had gotten cheaper and Intel had decided to make a departure from the old architecture with its i286 and i386. These new CPUs could be put in what was called "Protected Mode" and take full advantage of their 32 bit registers and 24 bits wide address bus offering up to 16 MB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. To make sure old programs could still run, the 386 and 286 could be put in "Read Mode" which replicates how the Intel 8080 and 8086 operated: 16 bits registers, 20 bits address bus giving 1MB addressable RAM with segmented addressing.\\
 \par
-\begin{itemize}
-  \item The new\footnote{Well, in 1991 it was new!} Protected Mode with  32 bits registers and 24 bits address bus wide offering up to 16 MB of flat RAM protectable with a MMU\footnote{Memory Management Unit}.
-  \item The backward compatible Real Mode. Available only to allow old software to run on a modern machine. This memory model replicates how the Intel 8086 CPU operated: 16 bits registers, 20 bits address bus giving 1MB addressable RAM with segmented addressing. 
-\end{itemize}
-For compatibility reasons all PCs start in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20-year-old Real Mode. Unfortunately, there was a major obstacle: the operating system MS-DOS by Microsoft Corporation.
+For compatibility reasons all PCs must start in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20-year-old Real Mode. Unfortunately, there was a major obstacle: the operating system MS-DOS by Microsoft Corporation.
   
 
 
@@ -279,18 +282,18 @@ For compatibility reasons all PCs start in Real Mode. You may assume that progra
 
 
   \subsection{DOS limitations}
-  Microsoft Corporation highly valued the applications running on their operating systems. As a business priority, they were adamant to never break anything with a new system\footnote{"Tales of Application Compatibility", Old New Thing by Raymond Chen}.  Since many applications were written during the 80s on machines having only Real-Mode, DOS 5.0 kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the \emph{de-facto} operating system delivered with every machine sold prevented programmers from using the machine at its full potential. Developers were forced to ignore all the features of their 1992 CPU and use it like a very fast Intel 8086 CPU from 1976:\\
+  Microsoft Corporation highly valued the applications running on their operating systems. As a business priority, they were adamant to never break anything with a new system\footnote{"Tales of Application Compatibility", Old New Thing by Raymond Chen}.  Since many applications were written during the 80s on machines having only Real-Mode, DOS 5.0 kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the \emph{de-facto} operating system delivered with every machine sold prevented programmers from using the machine at its full potential. Developers were forced to ignore all the features of their 1992 CPU and use it like a very fast Intel 8086 CPU from 1976. They were thus limited to the following characteristics: \\
 \begin{itemize}
 \item ALU
 \item 15 registers:
 \begin{itemize}
-  \item 16-bits General Purpose Registers: AX, BX, CX, DX
-  \item 16-bits Index Registers: SI, DI, BP, SP
-  \item 16-bits Program Counter: IP
-  \item 16-bits Segment Registers: CS, DS, ES, FS, GS, SS
-  \item 16-bits Status Register
+  \item 16-bit General Purpose Registers: AX, BX, CX, DX
+  \item 16-bit Index Registers: SI, DI, BP, SP
+  \item 16-bit Program Counter: IP
+  \item 16-bit Segment Registers: CS, DS, ES, FS, GS, SS
+  \item 16-bit Status Register
 \end{itemize}
-\item Up to 1MB of RAM.
+\item Up to 1MB of RAM
 \end{itemize}
 
 
@@ -300,7 +303,7 @@ For compatibility reasons all PCs start in Real Mode. You may assume that progra
 
 
 
-  \subsection{The infamous Real Mode: 1MB RAM max}
+  \subsection{The infamous Real Mode: 1MB RAM limit}
   With Protected Mode unavailable, developers of 1991 programmed like it was 1976. With a 20 bits wide address bus offering only 1MB of addressable RAM. No matter how much memory was installed on the machine, only 1MB could be addressed. To top it all off, addressing had to be done not with the 32 bits registers available but by combining two 16 bits registers together. One was the segment, the other an offset within that segment. Hence the name: '16 bits segmented programming'.
 
   \bigskip
@@ -309,7 +312,7 @@ The memory layout is as follow:\\
 \item From 00000h to 003FFh : the Interrupt Vector Table.
 \item From 00400h to 004FFh : BIOS data.
 \item From 00500h to 005FFh : command.com+io.sys.
-\item From 00600h to 9FFFFh : Usable by a program (about 620KB in the best case). 
+\item From 00600h to 9FFFFh : Usable by a program (about 620kB in the best case). 
 \item From A0000h to FFFFFh : UMA (Upper Memory Area): Reserved to bios ROM, video card and sound card mapped I/O.
 \end{itemize}
 
@@ -322,18 +325,18 @@ The memory layout is as follow:\\
 \end{figure}
 
 
-Out of the original 1024KB, only 640KB (called Conventional Memory) were usable to a program. 384KB were reserved for the UMA\footnote{Upper Memory Area} and every single driver installed (\codeword{.SYS} and \codeword{.COM})  took away from the remaining 640KB.
+Out of the original 1024KB, only 640KB (called Conventional Memory) were usable to a program. 384KB were reserved for the UMA and every single driver installed (\codeword{.SYS} and \codeword{.COM})  took away from the remaining 640KB.
 
 \bigskip
 
-\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KB of Conventional Memory. Needless to say French people learned pretty fast that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a qwerty keyboard but IDDAD on an azerty keyboard without the French driver loaded.}.\\
+\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KB of Conventional Memory. Needless to say French people learned pretty quickly that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a qwerty keyboard but IDDAD on an azerty keyboard without the French driver loaded.}.\\
 \\
 
 
 
 
 
-\subsection{The infamous Real Mode: 16 bits Segmented addressing}
+\subsection{The infamous Real Mode: 16 bit Segmented addressing}
 With a 20 bits address bus and registers too small to contain a whole address (they are 16 bits wide), Intel had to come up with an addressing system. Their solution was to combine two 16 bits registers, one designating a segment and the other an offset within that segment.\\
 \par
 \begin{figure}[H]
@@ -343,12 +346,12 @@ With a 20 bits address bus and registers too small to contain a whole address (t
 \label{fig:register_comb_to_20_bits}
 \end{figure}
 \par
-There are two kinds of pointers: \cw{near} and \cw{far}. A \cw{near} pointer is 16 bits and considered \emph{fast} because it can be used as is (but it only allows a \cw{jmp} in the current code segment). A \cw{far} pointer can access anything and allows a \cw{jmp} anywhere but it is slower since a 16 bits segment register has to be shifted left 4 bits and combined with the other 16 bits offset register to form a 20 bits address.\\
+There are two kinds of pointers: \cw{near} and \cw{far}. A \cw{near} pointer is 16 bit and considered \emph{fast} because it can be used as is (but it only allows a \cw{jmp} in the current code segment). A \cw{far} pointer can access anything and allows a \cw{jmp} anywhere but it is slower since a 16 bit segment register has to be shifted left 4 bits and combined with the other 16 bit offset register to form a 20 bits address.\\
 
-That may not sound too bad but in practice this segmented addressing leads to many issues.
-The least problematic is about the language. Since C was invented on a flat memory machine, it had to be augmented by PCs compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro are provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. That's an ugly wart on C but that's manageable. Of course \cw{libc} is also "different": \cw{malloc} returns a \cw{near} pointer and therefore can only allocate 64K. To get more than 64K, \cw{farmalloc} is needed.\\
+That may not sound too bad, but in practice this segmented addressing leads to many issues.
+The least problematic is about the language. Since C was invented on a flat memory machine, it had to be augmented by PCs compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro are provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. Of course \cw{libc} is also "different": \cw{malloc} returns a \cw{near} pointer and therefore can only allocate up to 64kB. To get more than 64K, \cw{farmalloc} is needed.\\
 \\
-The really big issue is how two pointers referring to the same address can fail an equality test. In this model, the 1MB of RAM is divided in 65536 paragraphs by the segment pointer. A paragraph is 16 bytes but an offset can be up to 65536 which results in many overlaps. It is easy to understand with the following examples:\\
+The larger issue is that two pointers referring to the same address can fail an equality test. In this model, the 1MB of RAM is divided in 65536 paragraphs by the segment pointer. A paragraph is 16 bytes but an offset can be up to 65536 which results in many overlaps. It is easy to understand with the following examples.\\
 \par
 Pointer A defined as:\\
 \par
@@ -372,7 +375,7 @@ Pointer C defined as:\\
 \lstinputlisting[language=C]{code/pointer_madness3}
 \end{minipage}
 
-As defined A, B and C all point to the same memory location however they will fail a comparison test.\\
+As defined, A, B and C all point to the same memory location however they will fail a comparison test.\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pointer_madness.c}
@@ -385,16 +388,16 @@ Will output:\\
 \end{minipage}
 \par
 
-With this system, pointer arithmetic must also receive careful considerations. A \cw{far} pointer increment only increments the offset, not the segment. If you iterate on an array more than 64KB you will end up wrapping around. You could use yet an other type of pointer \cw{int huge*} to make pointer arithmetic work beyond 64K but really, nobody wants to go there.
+With this system, pointer arithmetic must also receive careful consideration. A \cw{far} pointer increment only increments the offset, not the segment. If you iterate on an array larger than 64kB you will end up wrapping around. You could use yet an other type of pointer \cw{int huge*} to make pointer arithmetic work beyond 64k but really, nobody wants to go there.
 
 
 
 
   \subsection{Extended Memory}
 
-The 20 bits address bus of Real Mode limits the addressable RAM to 1MB. But machines of 1992 came equipped with more, typically 2MB and even sometimes 4MB for the most fortunate customers.\\
+The 20 bit address bus of Real Mode limits the addressable RAM to 1MB. But machines of 1992 came equipped with more, typically 2MB and even sometimes 4MB for the most fortunate customers.\\
 \par 
-The workaround at the time to access these resources was to install drivers that would open a window beyond the addressable RAM as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around bank switching. The drivers allow for manipulating 16KB unit of data called "page" via a 64KB area called "Page Frame". Upon request to the driver, the CPU is switched to Protected Mode, a page is swapped between the EMS and the HMA. The CPU is then switched back to Real Mode where the 16KB page is now accessible. Given this mechanism, no executable code can be stored there, it is only useful to store assets.
+The workaround at the time to access these resources was to install drivers that would open a window beyond the addressable RAM, as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around bank switching. The drivers allow for manipulating 16kB units of data called "pages" via a 64KB area called "Page Frame". Upon request to the driver, the CPU is switched to Protected Mode, a page is swapped between the EMS\footnote{Expanded Memory Specification} and the HMA\footnote{High memory area}. The CPU is then switched back to Real Mode where the 16KB page is now accessible. Given this mechanism, no executable code can be stored there, it is only useful to store data.
 
 \begin{figure}[H]
 \centering
@@ -413,11 +416,11 @@ Or they could have no idea they had to install driver, load nothing at startup, 
 \textbf{\underline{Trivia :}}  As of 2016, more than thirty five years after the introduction of the 8086, in the name of backward compatibility, all PCs in the world still start in Real Mode. A bootloader switches them to Protected Mode, loads the kernel, and then real startup can begin.
 
 \bigskip
-To learn more about EMS be sure to read Edward Mendelson's excellent article "A Slot Full of RAM"\footnote{PC Mag, (1989-12-12).}. If you are really hardcore, you can also check out XMS programming reference:\footnote{eXtended Memory Specification (XMS) July 19, 1988.}\\
+To learn more about EMS be sure to read Edward Mendelson's excellent article "A Slot Full of RAM"\footnote{PC Mag, (1989-12-12).}. To learn more about this topic, read the XMS programming reference:\footnote{eXtended Memory Specification (XMS) July 19, 1988.}\\
 \par
 
 \subsubsection{A system "Impossible to love"}
-At this point, if you are puzzled by the CPU and its design you are not alone. Over the years I came around many ways to describe this madness but two particularly stand out.\\
+At this point, if you are puzzled by the CPU and its design you are not alone. Over the years I came across many ways to describe this madness but two particularly stand out.\\
 \par
  \begin{fancyquotes}
    The x86 is an architecture that is difficult to explain and impossible to love.\\
@@ -436,7 +439,7 @@ And:\\
 
 
 \par
-\bu{Trivia :} 640KB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a very famous flight arcade game released in 1993) executable is 745KB which obviously doesn't fit in Conventional Memory. The trick was to use a technique of "overlays". The compiler inserted instructions at compile time to detect when the CPU IP\footnote{Instruction Pointer} was about to be beyond a page. These instructions swapped code segment from RAM to HDD and issued a \cw{jmp} to reset the CPU at the beginning of the next page.
+\bu{Trivia :} 640kB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745kB, which obviously doesn't fit in Conventional Memory. The trick was to use a technique of "overlays". The compiler inserted instructions at compile time to detect when the CPU IP\footnote{Instruction Pointer} was about to move beyond a page. These instructions swapped code segment from RAM to HDD and issued a \cw{jmp} to reset the CPU at the beginning of the next page.
 
 
 
@@ -465,14 +468,14 @@ PCs were connected to CRT monitors. Big, heavy, small diagonal, cathodic ray bas
 \label{fig:lcd_vs_crt}
 \end{figure}
 
-\textbf{\underline{Trivia :}} How big and heavy could a CRT be ? The InterView 28hd96 by Integraph weighed 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).\\
+\textbf{\underline{Trivia :}} How big and heavy could a CRT be? The InterView 28hd96 by Integraph weighed 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).\\
 \\
 The main issue in this system is that CRTs are analogic systems while computers are digital. An interface is needed between the two and it came as a series of chipsets called "Adapters". 
 
   \subsection{History of Video Adapters}
 
 The first adapter of the family was released in 1981. The Monochrome Display
-   Adapter (\codeword{MDA}) offers two colors allowing text with 80 columns by 25 lines.  Not great, but it had the merit to be standard on every PC. Many other systems followed over the years, each of them preserving backward compatibility.
+   Adapter (\codeword{MDA}) offered two colors allowing text with 80 columns by 25 lines.  Not great, but it had the merit to be standard on every PC. Many other systems followed over the years, each of them preserving backward compatibility.
 \bigskip
   
  \begin{figure}[H]
@@ -502,7 +505,7 @@ The first adapter of the family was released in 1981. The Monochrome Display
 \caption{Video interface history.}\label{fig:vga_history}
 \end{figure}
 
-Each iteration added new features and by 1991 the ubiquitous graphic system was the VGA. All video cards installed on PCs had to follow the standard set by IBM. The universality of that system was a double-edged sword. On one side developers had to program for only one graphic system. But on the other side, there was no escaping its shortcomings.\\
+Each iteration added new features and by 1991 the ubiquitous graphic system was VGA. All video cards installed on PCs had to follow the standard set by IBM. The universality of that system was a double-edged sword. On one side developers had to program for only one graphic system. But on the other side, there was no escaping its shortcomings.\\
 
 \begin{figure}[H] 
   \centering 
@@ -523,17 +526,17 @@ Each iteration added new features and by 1991 the ubiquitous graphic system was 
 
 \subsection{VGA Architecture}
 
-The VGA can be summarized as three major systems with input, storage, and output systems:\\
+VGA can be summarized as three major systems with input, storage, and output systems:\\
 
 \begin{itemize}
-\item The Graphic Controller and Sequence Controller controlling how the VGA RAM is accessed (interface CPU-VRAM)
+\item The Graphic Controller and Sequence Controller controlling how the VGA RAM is accessed (the CPU-VRAM interface)
 \item The framebuffer (the VRAM) made of not one memory bank of 256KB but four memory banks of 64KB
 \item The CRTC Controller and the DAC\footnote{Digital To Analog Converter} taking care of converting the Palette indexed framebuffer to RGB and then to analogical signal (interface VRAM-CRT)
 \end{itemize}
 
 The most surprising part of the architecture is obviously the framebuffer. Why have four small fragmented banks instead of one big linear one?\\
 \\
-The first part of the explanation comes from backward compatibility. The version before VGA, the EGA, had only 64KB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
+The first part of the explanation comes from backward compatibility. The version before VGA, EGA, had only 64kB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
 \\
 But the real reason was RAM latency and the need for a minimum bandwidth. A CRT running at 70Hz and displaying 640x480 in 16 colors needs a pixel every 1/(640*480*70)th of a second. At this resolution, one pixel is encoded on 4 bits. Each nibble is translated to a 888 RGB color by the DAC. That encoding divides bandwidth by six, but you still need one byte every 91 nano-seconds. Unfortunately, RAM access latency was 200ns. Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz, so the DAC would starve. If latency could not be reduced, the throughput could still be improved by reading from four banks at the time. Reading in parallel give an amortized RAM latency of 200/4 = 50ns which is fast enough.\\
 \par
@@ -586,7 +589,7 @@ In order to configure this mess of planes and the controllers, 300 poorly docume
 
 
 
-To compensate for the complexity, IBM provided a routine to initialize all the registers via one simple BIOS call. A configuration can be selected out of 15 available (a configuration is called a "mode") with an associated resolution, color numbers, and memory layout.
+To compensate for the complexity, IBM provided a routine to initialize all the registers via one simple BIOS call. A configuration can be selected out of 15 available (a configuration is called a "mode") with an associated resolution, number of colors, and memory layout.
 
 \subsection{VGA Modes}
 
@@ -598,14 +601,14 @@ The BIOS can be called to configure the VGA as follows.
 \begin{tabularx}{\textwidth}[c]{llllr}
 \hline
 \textbf{Mode} & \textbf{Type} & \textbf{Format} & \textbf{Colors}          & \multicolumn{1}{l}{\textbf{RAM Mapping}} \\ \hline
-0             & text          & 40x25           & 16 gradient (monochrome) & b8000h                                \\ \hline
+0             & text          & 40x25           & 16 (monochrome) & b8000h                                \\ \hline
 1             & text          & 40x25           & 16                       & b8000h                                \\ \hline
-2             & text          & 80x25           & 16 gradient (monochrome) & b8000h                                \\ \hline
+2             & text          & 80x25           & 16 (monochrome) & b8000h                                \\ \hline
 3             & text          & 80x25           & 16                       & b8000h                                \\ \hline
 4             & CGA Graphics  & 320x200         & 4                        & b8000h                                \\ \hline
-5             & CGA Graphics  & 320x200         & 4 gradient (monochrome)  & b8000h                                \\ \hline
+5             & CGA Graphics  & 320x200         & 4 (monochrome)  & b8000h                                \\ \hline
 6             & CGA Graphics  & 640x200         & 2                        & b8000h                                \\ \hline
-7             & MDA text      & 9x14            & 3 gradient (monochrome)  & b0000h                                \\ \hline
+7             & MDA text      & 9x14            & 3 (monochrome)  & b0000h                                \\ \hline
 0Dh           & EGA graphic   & 320x200         & 16                       & A0000h                                \\ \hline
 0Eh           & EGA graphic   & 640x200         & 16                       & A0000h                                \\ \hline
 0Fh           & EGA graphic   & 640x350         & 3                        & A0000h                                \\ \hline
@@ -622,7 +625,7 @@ The BIOS can be called to configure the VGA as follows.
 
 
  \subsection{VGA Programming: Memory mapping}
-To write to the VRAM the 1MB address space maps 64KB starting as indicated in the Mode table. In mode 13h for example, the VRAM is mapped in RAM from 0xA0000 to 0xAFFFF. The first question that may pop in your mind is "How to access 256KB of RAM with only 64KB of address space?". The answer is: "bank switching". Write and Read operations are routed based on a mask register indicating which bank should be read or written.\\
+To write to the VRAM the 1MB address space maps 64KB starting as indicated in the Mode table. In mode 13h for example, the VRAM is mapped from 0xA0000 to 0xAFFFF. The first question that may pop in your mind is "How to access 256KB of RAM with only 64KB of address space?". The answer is: "bank switching". Write and Read operations are routed based on a mask register indicating which bank should be read or written.\\
 \par
  \begin{figure}[H]
 \centering
@@ -646,7 +649,7 @@ To write to the VRAM the 1MB address space maps 64KB starting as indicated in th
 \end{figure}
 \par
 
-The only good thing about this mode is that it has square pixels. The 640x480 aspect ratio matches the 4:3 of a CRT so there is no distortion of the framebuffer when it is outputted to the screen. But pretty much everything else is bad:\\
+The only good thing about this mode is that it has square pixels. The 640x480 aspect ratio matches the 4:3 of a CRT so there is no distortion of the framebuffer when it is output to the screen. But pretty much everything else is bad:\\
 \begin{itemize}
 \item No double buffer: 640X480/2 = 0x25800 bytes which is more than half the 256KB (0x40000) of VRAM available.
 \item The high resolution is actually a drawback for a 3D engine since more pixels means more calculations and more drawing.
@@ -676,10 +679,10 @@ The only good thing about this mode is that it has square pixels. The 640x480 as
 When writing or reading a value V at address K in RAM, the Chain-4 breaks the address down into two parts:
 \begin{itemize}
 \item The 2 low bits are used to configure the mask automatically. Hence 0x00 goes to bank 0, 0x01 to bank 1, 0x10 to bank 2 and 0x11 to bank 3.
-\item The 14 high bits are right switched by two bits and used as offset in the bank.
+\item The 14 high bits are right shifted by two bits and used as offset in the bank.
 \end{itemize}
   \par
-  For example, writing at 0xABF13 in RAM would result in writing in bank 3 at offset 0xBF1. Since this is all hardwired in the Chain-4, this address gymnastic is fast and totally invisible to the user.
+  For example, writing at 0xABF13 in RAM would result in writing in bank 3 at offset 0xBF1. Since this is all hardwired in the Chain-4, this extra work is fast and totally invisible to the user.
  \begin{figure}[H]
 \centering
       \includegraphics[width=\textwidth]{imgs/drawings/mode_13h_example.pdf}
@@ -693,16 +696,16 @@ The side effect of this convenience mechanism is that 75\% of the RAM is wasted 
   \lstinputlisting[ language={[x86masm]Assembler}]{code/vga_mode13.asm}
   
   \par
-  The \codeword{int 10} is a software interrupt caught by the BIOS routine in charge of graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA register with the corresponding mode. After the VGA is initialized one can write to the mapped \cw{0xA0000}. It is simpler to follow with a code sample, here is some code to clear the screen to black.\\
+  The \codeword{int 10} instruction is a software interrupt caught by the BIOS routine in charge of graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA register with the corresponding mode. After the VGA is initialized one can write to the mapped memory at \cw{0xA0000}. It is simpler to follow with a code sample; here is some code to clear the screen to black.\\
   
   \begin{minipage}{\textwidth}
   \lstinputlisting[language=C]{code/clear_vga.c}
   \end{minipage}
   \par
-  Mode 13h looks a bit better than 12h but it is in fact also terrible for games or even photos:\\
+  Mode 13h looks a bit better than 12h but it is in fact also terrible for games or even static images:\\
   \begin{itemize}
 \item With Chain-4 all the RAM address space is used and there is no way to have a double buffer.
-\item Since the resolution is 320x200, the aspect ratio (1.6) does not fit the monitor (which is 1.333). As a result the framebuffer stored in the VRAM is stretched when transfered to the CRT. It may sound like a small distortion but it can be quite problematic. An example with a circle in the framebuffer displaying as an ellipse on the screen speaks for itself.
+\item Since the resolution is 320x200, the aspect ratio (1.6) does not fit the monitor (which is 1.333). As a result the framebuffer stored in the VRAM is stretched when transfered to the CRT. It may seem like a small distortion but it can be quite problematic. An example with a circle in the framebuffer displaying as an ellipse on the screen speaks for itself.
 \end{itemize}
 
 \begin{figure}[H]
@@ -722,7 +725,7 @@ The side effect of this convenience mechanism is that 75\% of the RAM is wasted 
 
 
 
-\subsection{The importance of doublebuffering}
+\subsection{The importance of double buffering}
 Double buffering has been mentioned often while describing the hardware, but so far we have not reviewed why it is paramount to achieving smooth animation. With only one buffer the software has to work at exactly the frequency of the CRT (70Hz). Otherwise a phenomenon known as "tearing" appears. Let's take the example of an animation rendering a circle moving from the left to the right:
 \par
 \begin{figure}[H]
@@ -766,7 +769,7 @@ A PC came equipped with a beeper, commonly known as a "PC Speaker". This is a si
 \end{figure}
 
 \par
- To this day, it is the first output device to be activated during the boot process. The purpose of this primitive loudspeaker is to signal hardware problems with beep codes. Ninety nine percent of the time it was supposed to remain silent.\\
+ To this day, it is the first output device to be activated during the boot process. The purpose of this primitive loudspeaker is to signal hardware problems with beep codes. It was supposed to remain silent after a successful boot.\\
 \par
 \begin{tabularx}{\textwidth}{l l}
 \textbf{Beep Code} & \textbf{Meaning}  \\ \hline
@@ -782,7 +785,7 @@ Continuous Hi-Lo Beeps           & CPU Overheating \\ \hline
 \end{tabularx}\\
 \bigskip
 \par
-Needless to say square waves are not useful for anything pleasant to hear. Some people had started to see a market and they companies began manufacturing what were known as "sound cards". You could buy them separately and insert them into one of the ISA slots of the machine. These cards could be connected to real audio speakers via 3.5mm jack and tremendously improved sound capabilities. In 1991, three companies were on the market: Adlib, Creative, and Disney for a total of four cards.\\
+Needless to say, square waves are not useful for anything pleasant to hear. Some people had started to see a market and they companies began manufacturing what were known as "sound cards". You could buy them separately and insert them into one of the ISA slots of the machine. These cards could be connected to real audio speakers via 3.5mm jack and tremendously improved sound capabilities. In 1991, Adlib, Creative, and Disney shared the market with four cards.\\
 \par
 \begin{itemize}
 \item Adlib music card
@@ -791,7 +794,7 @@ Needless to say square waves are not useful for anything pleasant to hear. Some 
 \item Disney Sound Source
 \end{itemize}
 \par
-Even though adoption was increasing (Creative would go on to sell one million SoundBlaster cards in 1991), a vast majority of PCs had no sound cards which once again presented a huge problem for game developers.
+Even though adoption was increasing (Creative would go on to sell one million SoundBlaster cards in 1991), a vast majority of PCs had no sound card which once again presented a huge problem for game developers.
 
 
   \subsection{AdLib}
@@ -811,7 +814,7 @@ Even though adoption was increasing (Creative would go on to sell one million So
 
 
   \subsection{Sound Blaster}
-  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative. It was a smart product which clearly was targeting Adlib's dominant position. Not only were they equipped with the same OPL2 chip, providing 100\% compatibility with Adlib music playback, but they were also technologically superior with a DSP\footnote{An Intel MCS-51 market as a "Digital Sound Processor", not "Digital Signal Processor"}  allowing PCM playback (digitized sounds) at 8 bits per sample and up to 22.05Hz sampling rate. The card also came with a DA-15 port allowing connection of a joystick. Most importantly, the SoundBlaster was \$90 cheaper than the Adlib.\\ 
+  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative. It was a smart product which was clearly targeting Adlib's dominant position. Not only was it equipped with the same OPL2 chip, providing 100\% compatibility with Adlib music playback, but it was also technologically superior with a DSP\footnote{An Intel MCS-51 market as a "Digital Sound Processor", not "Digital Signal Processor"}  allowing PCM playback (digitized sounds) at 8 bits per sample and up to 22.05Hz sampling rate. The card also came with a DA-15 port allowing connection of a joystick. Most importantly, the SoundBlaster was \$90 cheaper than the Adlib.\\ 
 \par
 
 \begin{figure}[H] 
@@ -820,13 +823,16 @@ Even though adoption was increasing (Creative would go on to sell one million So
   \caption{A SoundBlaster (v2). }
 \end{figure}
 \par
-The above picture is the CT1350B model. Notice the OPL2 chip (labeled FM1312), the big CT1336 bus interface on the center left and the CT1351 DSP on the upper left. Notice the 8 bits ISA bus connector.\\
+The above picture is the CT1350B model. Notice the OPL2 chip (labeled FM1312), the big CT1336 bus interface (labeled "CREATIVE") on the center left, the CT1351 DSP on the upper left and the 8 bits ISA bus connector.\\
 \par
   \bu{Trivia :} The numerous qualities of the card over the Adlib made the Sound Blaster the de-facto standard shortly after its release and eventually brought Adlib to bankruptcy\footnote{The reign of the Sound Blaster came to an end with Windows 95, which standardized the programming interface at application level and eliminated the importance of compatibility with Sound Blaster}.
 
 
+
+
+
   \subsection{Sound Blaster Pro}
-The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but also supported stereo 22.05 kHz playback and 44.1 kHz in mono. It also added a "mixer" to blend audio sources from mic, line in, and CD. Stereo was achieved with a pair of YM3812 chips (one for each audio channel).\\
+The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but added support for stereo 22.05 kHz playback and 44.1 kHz in mono. It also added a "mixer" to blend audio sources from mic, line in, and CD. Stereo was achieved with a pair of YM3812 chips (one for each audio channel).\\
 \begin{figure}[H] 
   \centering 
   \fullimage{hardware/sbpro.png} 
@@ -840,7 +846,7 @@ The model above is a CT1330A. Notice the double FM1312 chip in the center. The t
 
 
   \subsection{Disney Sound Source}
-  Landing on the mark in 1990, Disney sold a marvelous piece of hardware. Plugged into the printer port (parallel port) of the PC, a 8 bits DAC based on the "Covox Speech Thing" was connected to a speaker box. It was incredibly easy to setup, simple to program (could only play one type of PCM and had no FM synthesizer) and very cheap compared to the other audio solutions (\$14). It would have made programmers and customers happy if it was not for a serious issue due to the bandwidth of the port (150 kbit/s) which limited the PCM sampling rate to 7000Hz.  This was still enough to produce pleasant sounds but fell short when compared to the 22Hz or even 44Khz of a Sound Blaster Pro.
+  Debuting in 1990, Disney sold a marvelous piece of audio hardware. Plugged into the printer port (parallel port) of the PC, a 8 bits DAC based on the "Covox Speech Thing" was connected to a speaker box. It was incredibly easy to setup, simple to program (it could only play one type of PCM and had no FM synthesizer) and very cheap compared to the other audio solutions (\$14). It would have made programmers and customers happy if it was not for a serious issue due to the bandwidth of the port (150 kbit/s) which limited the PCM sampling rate to 7000Hz.  This was still enough to produce pleasant sounds but fell short when compared to the 22Hz or even 44Khz of a Sound Blaster Pro.
   \par
   \begin{figure}[H] 
     \centering 
