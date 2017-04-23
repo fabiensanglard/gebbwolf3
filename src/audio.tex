@@ -10,7 +10,7 @@ The idea is to configure the hardware to trigger a hardware interrupt at a regul
  Wolfenstein 3D uses the latter approach and keep things in its ISR very small and short. To this effect everything in the audio and heartbeat system is written in assembly and it avoid "heavy" processing.
 
 \subsection{IRQs and ISRs}
-The IRQ and ISR system relies on two chips: The Intel 8254 which is a PIT \footnote{Programmable Interval Timers} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Controller}. The PIT features a crystal oscillating in square waves. On each edges, it decrements its three counters. When a counter hits zero it generate an IRQ. One counter is connected to the buzzer and generate sounds, one counter is connected to the RAM to automatically perform something called "Memory refresh".  The third counters is connected to the PIC. 
+The IRQ and ISR system relies on two chips: The Intel 8254 which is a PIT \footnote{Programmable Interval Timers} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each edges, it decrements its three counters. When a counter hits zero it generate an IRQ. One counter is connected to the buzzer and generate sounds, one counter is connected to the RAM to automatically perform something called "Memory refresh".  The third counters is connected to the PIC. 
 \par
 \begin{figure}[H]
 \centering
@@ -44,10 +44,10 @@ The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at
 \end{figure}
 Using these two chips and placing its own function at Interrupt Vector Table \#8, the engine can stop its runtime at a regular time interval, effectively implementing a subsystem running concurrently with everything else.\\
 \par
-The engine can decide at what frequency to be interrupted, depending on that type of sound/music it needs to play (digitized sounds are much more taxing than MIDI based sound effects). As a result, three different ISRs can be found at IVT \#8: 
+The engine can decide at what frequency to be interrupted, depending on that type of sound/music it needs to play (digitized sounds are much more taxing than musics). As a result, three different ISRs can be found at IVT \#8: 
 \begin{enumerate}
 \item \cw{SDL\_t0ExtremeAsmService} when running at 7000Hz, to play digitized (PCM) sound.
-\item \cw{SDL\_t0FastAsmService} when running at 700Hz when playing MIDI music and sound effects.
+\item \cw{SDL\_t0FastAsmService} when running at 700Hz when playing music and FM sound effects.
 \item \cw{SDL\_t0SlowAsmService} when running at 140Hz to play sound effects on the beeper via PWM.
 \end{enumerate}
 \par
@@ -101,11 +101,11 @@ The audio system is complex because of the fragmentation of the audio devices it
 \lstinputlisting[language=C,morekeywords={longword}]{code/sound.h}
 \end{minipage}
 \par
-But in the implementation lays a maze of functions directly accessing the I/O port of four sound outputs: Adlib, SoundBlaster, Buzzer and Disney Sound source. These ouput all belong to one of the three supported family of sound generator: FM Synthesizer (Frequency Modulation), PCM (Pulse Code Modulation) or PWM (Pulse Width Modulation).\\
+But in the implementation lays a maze of functions directly accessing the I/O port of four sound outputs: Adlib, SoundBlaster, Buzzer and Disney Sound source. All belong to one of the three supported family of sound generator: FM Synthesizer (Frequency Modulation), PCM (Pulse Code Modulation) or PWM (Pulse Width Modulation).\\
 
 
 \subsection{Music}
-Playing music is not too messy since only PC equipped with a FM synthesizer can play tracks (a.k.a: With an Adlib or a SoundBlaster inside). Because SoundBlaster made its programming interface compatible with Adlib there is only one code path to both cards. There is not a lot of magic here since this part uses a piece of hardware designed and dedicated to this specific task. There are however a few cool tricks.\\
+Playing music is not too messy since only PC equipped with a Yamaha YM3812 FM synthesizer can play tracks (a.k.a: With an Adlib or a SoundBlaster inside). Because SoundBlaster made its programming interface compatible with Adlib there is only one code path to both cards. There is not a lot of magic here since this part uses a piece of hardware well designed and dedicated to this specific task. There are however a few cool tricks.\\
 \par
 The music system streams data to the sound cards.  Musics in the 90s were not in digitalized format like CD or MP3 nowadays (that would have taken too much storage space and bandwidth). Instead musics are stored as series of notes played on channels together simulating instruments. The format used is close to the notorious MIDI but with a few variation and is called IMF\footnote{Id Music Format}. It is proprietary to id software and designed with OPL2 in mind (the raw format is exactly what is sent to the Adlib/Soundblaster synthesizer with no transformations). IMF has a hardcoded playback rate and music notes are played at 700 Hz.\\
 \par
@@ -118,13 +118,9 @@ Hardware limitations dictated certain aspects of the design of the musics. The F
 \par
 Programming the OPL2 output is esoteric to say the least. Adlib and Creative did publish SDK but they were expensive.  Documentation was sparse and often cryptic. Today it is almost impossible to find.\\
 \par
-The OPL2 is made of 9 channels able to emulate an instrument. Each channel is made of two oscillator, a Modulator which output are fed into a Carrier's input.
+The OPL2 is made of 9 channels able to emulate an instrument. Each channel is made of two oscillator, a Modulator which outputs are fed into a Carrier's input. Each channel has individual settings including Frequency, Envelope (Attack rate, Decay rate, Sustain level, Release rate, Vibrato). Each oscillator can also pick a waveform (these uncanny form are what gave the YM3812 is recognizable sound).\\
 \par
-
-Each channel has individual settings including Frequency, Envelope (Attack rate, Decay rate, Sustain level, Release rate, Vibrato). Each oscillator can also pick a waveform (these uncanny form are what gave the YM3812 is recognizable sound).
-\par
-
-These 9 channels are controlled by 244 internal registers. They are accessed via two ports mapped in the PC RAM. One is to read/write the card's register and the other one to read data.\\
+ To control all these channels, a developers must configure the OPL2's 244 internal registers. They are all accessed via two external ports mapped in the PC RAM. One is to set the card's internal register and the other one to read/write data to it.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/audio_ports.c}
@@ -149,7 +145,7 @@ Wait three point three (3.3) microseconds for the address, and twenty-three (23)
  
 
 \par
-The engine does not know about any of the details of the OPL2. There is zero abstraction layer or transformation here. An IMF song is made of a serie of messages containing exactly the message to send to the OPL2. Each message is four bytes:\\
+The engine does not know about any of the details of the OPL2. There is zero abstraction layer or transformation here. An IMF song is made of a serie of messages containing exactly the values to write to the register and data ports of the OPL2. Each message is four bytes:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/adlib_message.c}
@@ -177,14 +173,14 @@ the audio configurations are many. The sound settings screen illustrate well how
  \fullimage{audio/audio_settings.png}
  \end{figure}
 \par
-Sound effects and Digitized sounds are actually the same thing. Sound effects are stored in three formats. Once for PC Speaker, once for Adlib and once for SoundBlaster/Disney Sound Source. The sounds were stored in one \cw{AudioT} archive by Muse. Sounds are segregated by format but always stored in the same order. This way a sound can be accessed in three formats by using \cw{ADLIB\_BASE} + \cw{sound\_ID} or \cw{SOUNDBLASTER\_BASE} + \cw{sound\_ID}\\
+Sound effects and Digitized sounds are actually the same thing. Sound effects are stored in three formats. Once for PC Speaker, once for Adlib and once for SoundBlaster/Disney Sound Source. The sounds are stored in the \cw{AudioT} archive by Muse. Sounds are segregated by format but always stored in the same order. This way a sound can be accessed in three formats by using \cw{STARTPCSOUNDS} + \cw{sound\_ID} or \cw{STARTADLIBSOUNDS} + \cw{sound\_ID}\\
 
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/muse_header.c}
 \end{minipage}
 \par
-Strangely, only PC speaker and Adlib sounds are stored in the \cw{AUDIO.*} files, the digitized sound are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used.\\
+Strangely, only PC speaker and Adlib sounds are stored in the \cw{AUDIOT.*} files, the digitized sound are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used.\\
 \note{Question for the developers: Why not include the sb sounds in AudioT?} 
 \par
 
@@ -207,7 +203,7 @@ Adlib only has a FM synthesize and it is used to play sound on its Channel 1. Th
 \subsection{Disney Sound sound system: PCM}
 The Disney Source is simple to program\footnote{The Programmer's Guide to the Disney Sound Source is a wooping 2 pages!} because it can do only one thing. It plays PCM audio in format 8 bits at 7000Hz on a single channel. And that's it, nothing more, nothing less. As soon as it is plugged in the parallel port, its 8 bits DAC will read from an internal 16 bytes deep FIFO and turn them into sound via its integrated loud speaker.\\ 
 \par
-Hence every times it awakes, the audio system simply read the parallel port to check if the FIFO is not full. If it is not, the engine pushes as many bits as possible until the FIFO is full and returns. When the FIFO gets empty, the Disney Sound source stops making noise.\\
+Hence every times the audio system awakes, it read the DAC status to check if the FIFO is not full. If it is not, the engine pushes as many bits as possible until the FIFO is full and returns. When the FIFO gets empty, the Disney Sound source stops making noise.\\
 \par
 
 
@@ -255,14 +251,14 @@ Based on the distance, an intensity (hardcoded 0-15) is send to the left and rig
 \lstinputlisting[language=C]{code/soundblasterconf.c}
 \end{minipage}
 \par
-This line defines a variable \cw{BLASTER} which the engine retrieve and parse at runtime with \cw{getenv}. \cw{A} tells what port the card is using. \cw{I} gives away the interrupt vector it is associated with. Finally \cw{D} gives the DMA channel to use for data transfer. Of course for all this to work the sound card had to be configured accordingly via its jumpers connectors.
+This line defines a variable \cw{BLASTER} which the engine retrieves and parses at runtime with \cw{getenv}. \cw{A} tells what port the card is using. \cw{I} gives away the interrupt vector it is associated with. Finally \cw{D} gives the DMA channel to use for data transfer. Of course for all this to work the sound card had to be configured accordingly via its jumpers connectors.
 See \cw{SDL\_SBPlaySeg} and the ISR \cw{SDL\_SBService} 
 
 
 
 
  
-\subsubsection{Sound on PC Speaker: PWM}
+\subsection{Sound on PC Speaker: PWM}
 The hardware chapter described a problem for sound effects. The default PC speaker can only generate square waves resulting in long beep which are not acceptable for game.\\
 
 \par
@@ -290,7 +286,7 @@ The idea is to approximate a signal using square waves. It is simpler to underst
  \end{figure}
 \par
 
-To do this, the audio system once again relies on the PIT chipset. Counter 0 i used to trigger the audio system. Counter 1 cannot be used either since it is used to refresh the RAM periodically. Counter 2 however is directly connected to the PC Speaker. The trick is to set this timer to one-shot mode (Mode 1) and program the desired square wave frequency. \\
+To do this, the audio system once again relies on the PIT chipset. Counter 0 is used to trigger the audio system. Counter 1 cannot be used either since it is used to refresh the RAM periodically. Counter 2 however is directly connected to the PC Speaker. The trick is to set this Counter 2 to square wave mode (Mode 3) so it will repeats after it triggers and program the desired square wave frequency. \\
 \par
 \begin{figure}[H]
 \centering
@@ -307,13 +303,37 @@ To do this, the audio system once again relies on the PIT chipset. Counter 0 i u
 \caption{Available mode of a PIT counter.}
 \end{figure}
 \par 
-When instructed to play a PWM sound effect, the audio system set itself to run at 140Hz. An audio effect in this format is simply a serie of bytes instructing what square wave to play for the next 1/140th of a second. The formula used is:
+When instructed to play a PWM sound effect, the audio system set itself to run at 140Hz via PIC Counter 0. Every times it wakes up, it reads the frequency to maintain for the next 1/140th of a seconds and write it to Counter 2. The frequencies to use are encoded as a stream of byte, the value is decoded as follow:\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pwm.c}
 \end{minipage}
 \par
-The sound was not great, but it was better than a beep\footnote{It gave surprisingly good results such as in Monkey Island music. See the video "LGR - Evolution of PC Audio - As Told by Secret of Monkey Island", https://www.youtube.com/watch?v=a324ykKV-7Y.}.\\
+In the assembly, three I/O port are accessed:\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/pwm_code_header.c}
+\end{minipage}
+\par
+Notice how the $ * 60$ is not calculated. Once again the engine tries to save as much CPU time as possible by using a bit of RAM. The frequency is read from a loopup table \cw{pcSoundLookup}:\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/pcSoundLookup.c}
+\end{minipage}
+\par
+Notice how \cw{6b} (\cw{10110110}) is sent to the PIC Command register (\cw{pcTAccess}=\cw{0x43}):
+\begin{itemize}
+	\item \cw{10} = Target Counter 2.
+ 	\item \cw{11} = High \& low byte of counter updated.
+	\item \cw{011} = Square Wave Generator.
+	\item \cw{0} = 16 bits mode.
+\end{itemize}
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language={[x86masm]Assembler}]{code/pwm_code.asm}
+\end{minipage}
+\par
+The end result was not great, but it was better than a beep\footnote{Lucas Art however obtained surprisingly good results for they game Monkey Island. See the video "LGR - Evolution of PC Audio - As Told by Secret of Monkey Island", https://www.youtube.com/watch?v=a324ykKV-7Y.}.\\
 \par
 
 \bu{Hidden feature :} The source code features an audio code path that was never allowed to ship. It can play digitized sound via the PC Speaker.\\
@@ -323,8 +343,7 @@ The sound was not great, but it was better than a beep\footnote{It gave surprisi
 \lstinputlisting[language=C]{code/sound_fork.c}
 \end{minipage}
 \par
-Notice the \cw{SDL\_PCPlaySample} path allowing PCM to be played on the buzzer. This codepath was never enabled in shipping product.\\
-\par
+Notice the \cw{SDL\_PCPlaySample} path allowing PCM to be played on the buzzer. This codepath was never enabled in shipping product.
 \footnote{You can hear the difference on youtube: "Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects" at https://www.youtube.com/watch?v=1BtlsjJRnFU}.\\
 \par
 \note{Why was this never shipped?}
