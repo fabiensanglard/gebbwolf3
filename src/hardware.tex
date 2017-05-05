@@ -102,7 +102,7 @@ Despite its power compared to the 286, the architecture of a 386 is very simple.
 \caption{Architecture of an i386 (courtesy \cw{http://www.walkerb.net/}).}
 \end{figure}
 
-
+ A 12 byte instruction prefetch queue\footnote{Documentation states 18 bytes but a bug workaround reduced the size to 12 bytes} feeds variable size instructions\footnote{All Intel CPUs are Complex instruction set computing.} to a three stages pipeline made of Decode, Execute, and Retire. Note that an instruction cannot enter the pipeline as long as the previous one as not been retired. As a result, even a simple instruction such as \cw{ADD} takes two cycles to complete\footnote{Source: http://zsmith.co/intel\_a.html\#add}.
 
 
 
@@ -243,7 +243,7 @@ This is not a problem when everything is hardwired within an hardware floating p
 
 
 \par
-A possible solution to the lack of a hardware floating point unit would have been to multiply an integer by 100 or 1000 to perform fractional operation and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes a minimum of 6-9 cycles and a divide (\cw{div}) is even worse with 22-25 cycles depending if the operands are RAM or register.\\ 
+A possible solution to the lack of a hardware floating point unit would have been to multiply an integer by 100 or 1000 to perform fractional operation and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes a minimum of 6-9 cycles and a divide (\cw{div}) is even worse with 22-25 cycles depending if the operands are RAM or register\footnote{Source: http://zsmith.co/intel\_i.html\#imul}.\\ 
 \par
 As a result, a game engine designer was stuck in an awkward situation with two half solutions to his problem. Integers which were fast but not accurate enough and Floats which were accurate but not fast enough.\\
 \par
