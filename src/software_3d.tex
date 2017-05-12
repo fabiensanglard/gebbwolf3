@@ -574,7 +574,7 @@ With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to st
  \includegraphics[width=.5\textwidth]{imgs/drawings/coordinate_system.png}
 \end{figure}
 \par
-Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column height are 29:3. Player position is 16:16. Angle however is an \cw{int} representing 10th of degrees with a range [0, 3600].
+Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column heights are 29:3. The player position is 16:16. Angles however are \cw{int}s representing 10th of degrees with a range [0, 3600].
 
 
 
@@ -611,7 +611,7 @@ VSD is not only complicated to get done, it is also hard to get done fast. It is
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/situation.pdf}
- %\input{imgs/drawings/casting_a_ray/situation.tex}
+ 
 \end{figure}
 
 In a world with no constraint, it is difficult to find the intersection of a ray with an object.\\
@@ -624,7 +624,7 @@ In the example above, a valid approach would be to iterate over all objects in t
 \end{figure}
 
 
-In a world with some contraints the problem become much simpler. If a map is made of square block alixed with axis and evenly distributed on a grid, the solution giving 100\% accuracy and low runtime is to check for 'hit` only where a ray crosses the grid. This is the choice Wolfenstein 3D made and that explains why it can only draw perpendicular walls, all of them being 8 feet by 8 feet by 8 feet cubes.
+In a world with some contraints the problem become much simpler. If a map is made of alixed aligned square block evenly distributed on a grid, the solution giving 100\% accuracy and low runtime overhead is to check for 'hits` only where a ray crosses the grid. This is the choice Wolfenstein 3D made and that explains why it can only draw perpendicular walls, all of them being 8 feet by 8 feet by 8 feet cubes.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/fixed.pdf}
@@ -652,7 +652,7 @@ If you made extremely jagged block maps that would turn into many dozen independ
  \includegraphics[width=\textwidth]{imgs/drawings/dda.pdf}
 \end{figure}
 \par
-The reason DDA is so fast is because once the first intersection of a ray with an axis is known (A for Y axis and B for Y axis) all subsequent intersections coordinate are two cheap additions away.
+The reason DDA is so fast is because once the first intersection of a ray with an axis is known (A for Y axis and B for X axis) all subsequent intersections coordinate are two cheap additions away.
 \par
 
 
@@ -678,7 +678,7 @@ $G = (F.x +1, F.y + xstep)$\\
 \end{equation*}
 
 
-
+\par
 In a similar fashion for the vertical intersections:\\
   \begin{equation*}
     \scalebox{1.3}{
@@ -691,8 +691,7 @@ $E = (B.x + ystep, A.y + 1)$\\
 $D = (E.x + ystep, E.y + 1)$\\
 }
 \end{equation*}
-
-This CPU power limitation and associated grid solution bubbled up all the way to the game designer. It explains why all Wolfenstein 3D maps are made of square elements all aligned on axis.\\
+Note that $ystep$ and $ystep$ are simple lookup into the \cw{tan} array since $xstep=tan(\theta)$ and $ystep=(90-\theta)$ where $\theta$ is the angle of the ray in map coordinates. This CPU power limitation and associated grid solution bubbled up all the way to the game designer. It explains why all Wolfenstein 3D maps are made of axis aligned square elements.\\
 \par
 \begin{figure}[H]
   \centering
@@ -752,7 +751,7 @@ or load a saved game from before you went into that maze.\\
 \textbf{Joe Siegler - Past Pioneers of the Shareware Revolution}
 \end{fancyquotes}
 \par
-\bu{Trivia :} What is Aardwolf? A maned striped mammal (Proteles cristatus) of southern and eastern Africa that resembles the related hyenas and feeds chiefly on carrion and insects. It was back them the mascot of Id, appearing on Tom's Gotta Lists and the Commander Keen 6 Hint Sheet.
+\bu{Trivia :} What is Aardwolf? A maned striped mammal (Proteles cristatus) of southern and eastern Africa that resembles the related hyenas and feeds chiefly on carrion and insects. It was back then the mascot of Id, appearing on Tom's Gotta Lists and the Commander Keen 6 Hint Sheet.
 
 
 
@@ -776,7 +775,7 @@ or load a saved game from before you went into that maze.\\
  
  
 \subsubsection{Raycasting: DDA Algorithm}
-The DDA intersection algorithm is implemented in a fully handcrafted 740 lines of assembly routine: \cw{AsmRefresh}. It is represented here in pseudo-C for readability. It consists of two while looks (one checking vertical intersection and one checking the horizontal) ping-ponging with each other via goto. It is highly unorthodox and super efficient.\\
+The DDA intersection algorithm is implemented in a fully handcrafted 740 lines of assembly routine: \cw{AsmRefresh}. It is represented here in pseudo-C for readability. It consists of two while loops (one each for vertical and horizontal intersections) ping-ponging with each other via goto. It is highly unorthodox and super efficient.\\
 \par
 
 
@@ -786,7 +785,7 @@ The DDA intersection algorithm is implemented in a fully handcrafted 740 lines o
 \end{minipage}
 This implementation results in many \cw{jmp} instructions. These would kill the i-cache and empty the pipeline on a modern CPU. But on a an architecture devoid of pipeline and code cache such as the 386 it is not a problem at all.\\
 \par
-This part of the code relies heavily on unit circle principles. Because we need to know by how much we go up/down when advancing on X axis and how much we go left/right when advancing on the Y axis, the \cw{tan} function is expecially useful. It is easier to understand with the unit circle drawn (remember the circle radius R is equal to 1).
+This part of the code relies heavily on unit circle principles. Because we need to know by how much we go up/down when advancing on the X axis and how much we go left/right when advancing on the Y axis, the \cw{tan} function is expecially useful. It is easier to understand with the unit circle drawn (remember the circle radius R is equal to 1).
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/unit_circle.tex}
@@ -814,7 +813,7 @@ When advancing 1 on the X axis, the ray moves up $tan(\alpha)$ on the Y axis. Th
 
 
 \subsubsection{High school math}
-Before proceeding to the next session describing what is done with the distance player <-> wall, a short reminder of something taught in highschool. The fundation of most calculations in the engine, SOH-CAH-TOA.\\
+Before proceeding to the next session describing what is done with the distance from the player to the wall, here is a short reminder of something taught in highschool, the fundation of most calculations in the engine: SOH-CAH-TOA.\\
 \par
  \begin{fancyquotes}
   I'm no super mathematician-- I learned high school math well enough to solve real world problems with it.\\
