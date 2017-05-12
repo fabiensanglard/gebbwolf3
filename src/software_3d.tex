@@ -1,10 +1,10 @@
 \section{Action Phase: 3D Renderer}
-After the player is done setting up the game via the 2D renderer, comes time for the 3D engine to shine. It is based on a simple yet powerful technology called raycasting. The core idea is to cast a ray for each column of pixel visible on the screen. Based on the distance \cw{d} from the point of view to where the ray hits a wall, a height \cw{h} can be calculated:\\
+After the player is done setting up the game via the 2D renderer, comes time for the 3D engine to shine. It is based on a simple yet powerful technology called raycasting. The core idea is to cast a ray for each column of pixel visible on the screen. Based on the distance \cw{d} from the point of view to where the ray hits a wall, a height \cw{h} can be calculated ($X$ is a simple scaling factor.):\\
 \par
 \begin{figure}[H]
   \centering
   \begin{equation*}
-      \scalebox{2.0}{$h = \frac{X}{d}$}
+      \scalebox{2.0}{$h = \frac{X}{d}$} 
   \end{equation*}
 \end{figure}
 \par
@@ -45,7 +45,7 @@ This is a pretty standard design for an engine from the early 90. However it has
 \par
 To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulate things at fixed timesteps. This hack result in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
 \par
-In 1993, Doom engine would solve this issue by simulating the world at fixed intervals.\\
+In 1993, the Doom engine would solve this issue by simulating the world at fixed intervals.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed_game_loop.c}
@@ -65,7 +65,7 @@ Before diving into details, here is an overview of the five stages involved in d
  \item Clear the framebuffer by drawing the floor and the ceiling (both solid color).
  \item For each column of pixel on screen, cast a ray from the player to the nearest wall. Draw a textured column of pixels with height inversely proportional to the distance.
  \item Draw the sprites (enemies, lamps, barrels).
- \item Draw the weapon.	
+ \item Draw the weapon\footnote{A modern 3D engine would render the weapon first and leverage the depth buffer to save fillrate. In that era, memory access were so slow is was faster to accept a little bit of overdraw.}.	
  \item Flip buffers: Instruct CRT Controller to use the framebuffer just composed on next vsync.
 \end{enumerate}
 In the next six screenshots, the engine has been modified to slow down in order to see the content of the framebuffer at the end of each stage.\\
@@ -177,17 +177,17 @@ Before starting to draw frames, the 3D renderer sets up the VRAM with static ele
 This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the reserved white canvas in the center. Small portions at the bottom of the HUD are updated: Level, Score, Lives, Status, Health, Ammo, and Current weapon get a special treatment via an other VGA trick in order to speed up rendition.\\
 \par
 
-The hardware chapter described the Mode 12h which despite being unfit for games still had something interesting. Mode 12h is a 16 colors mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operation are one byte wide, it is not hard to imagine the difficulty to plot a single pixel without changing the other stored in the same bytes. One would have to do four read, four xor and four writes. Since the designer of the VGA were not complete sadist they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
+The hardware chapter described the Mode 12h which despite being unfit for games still had an interesting charcteristic. Mode 12h is a 16 color mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operation are one byte wide, it is not hard to imagine the difficulty to plot a single pixel without changing the other stored in the same bytes. One would have to do four read, four xor and four writes. Since the designer of the VGA were not complete sadist they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
 \par
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/latches.pdf}
  \end{figure}
-With this architecture, each time the VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written to the VRAM, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmer to plot a bit in a byte easily with one read, one ALU setup and one write.\\
+With this architecture, each time the VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written to the VRAM, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmers to set a bit in a byte easily with one read, one ALU setup and one write.\\
 \par
-Mode Y does not need latches to operate since values are stored in byte and banks can be updated individually thanks to the mask. However tinkerers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. By getting a little bit creative, the circuitry can be repurposed. The ALU in from of each bank can be setup to use only the latch for writing. With such a setup, upon doing one read, four latches are populated at once. And four bytes in the bank are written with only on write to the RAM. This system allows transfer from VRAM to VRAM 4 bytes at a time.\\
+Mode Y does not need latches to operate since values are stored in bytes and banks can be updated individually thanks to the mask. However tinkerers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. By getting a little bit creative, the circuitry can be repurposed. The ALU in from of each bank can be setup to use only the latch for writing. With such a setup, upon doing one read, four latches are populated at once. And four bytes in the bank are written with only one write to the RAM. This system allows transfer from RAM to VRAM 4 bytes at a time.\\
 \par
-To take full advantage of this optimization, the 3D renderer upload images to the VRAM above the fourth page. In total, the 43 sprites used to update the HUD are loaded in the asset page when the engine starts up.\\
+To take full advantage of this optimization, the 3D renderer uploads images to the VRAM above the fourth page. In total, the 43 sprites used to update the HUD are loaded in the asset page when the engine starts up.\\
 
 \begin{minipage}{.23\textwidth}
      \fullimage{latched/91.png}
@@ -357,15 +357,15 @@ To take full advantage of this optimization, the 3D renderer upload images to th
 
 \bu{Tick :} Images are stored woven. All bytes for bank 0 first, then all bytes for bank 1 and so on. This clever way to store data allow a bank to be loaded very fast with one single \cw{memcpy} (four \cw{memcpy} per image).\\
 \par
-All these assets account for 48*24*4 (weapons sprites) + 14*8*16 (numerals and keys sprites) + 24*24*32 (faces sprites) + 224 * 48 (paused + psyched) = 34,816 bytes. There is therefore $2^{18}-320*208*3 - 34,816=27,648$ bytes unused VRAM in the fourth VGA page.\\
+All these assets account for 48*24*4 (weapons sprites) + 14*8*16 (numerals and keys sprites) + 24*24*32 (faces sprites) + 224 * 48 (paused + psyched) = 34,816 bytes. There are therefore 27,648 unused bytes in the fourth VGA page.\\
 \par
-For this trick to work images source and destination have to be aligned on four byte horizontally in screen space. If you take a look at the location of each elements on screen you can see that elements are aligned on four horizontally but vertically there is no such constraint.
+For this trick to work, images source and destination have to be aligned on four byte horizontally in screen space. If you take a look at the location of each elements on screen you can see that elements are aligned on four pixels horizontally but there is no such constraint vertically.
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
 \end{figure}
 
-While it is faster to write four pixel in one operations, the trick does not provide a full 400\% speed increase since all writes have to be done in all three screen pages. It is vivid when looking at the routine updating the status (hero's face).\\
+While it is faster to write four pixel in one operation, the trick does not provide a full 400\% speed increase since all writes have to be done in all three screen pages. It is obvious when looking at the routine updating the status (hero's face).\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/StatusDrawPic.c}
@@ -374,7 +374,7 @@ While it is faster to write four pixel in one operations, the trick does not pro
 
 
 \subsection{Clearing the screen}
-At the beginning of a frame, the engine switch to the next page and clears the 3D area with ceiling and floor colors. To this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all bank simultaneously. Again, since values are written 16 bits at a time it can write 8 pixels at a time.\\ 
+At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. To this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. Again, since values are written 16 bits at a time it can write 8 pixels at a time.\\ 
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
@@ -382,7 +382,7 @@ At the beginning of a frame, the engine switch to the next page and clears the 3
 \par
 Clearing the 3D canvas made of 304*152=46,208 pixels requires only 46,208/8 = 5776 write operations.\\
 \par
-The colors for the floor and the ceiling are not coming from the maps data files. The ground is always the same color (\cw{0x19}) and the ceiling colors are hardcoded in the engine on a per level basis.\\
+The colors for the floor and the ceiling do not come from the maps data files. The ground is always the same color (\cw{0x19}) and the ceiling colors are hardcoded in the engine on a per level basis.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=byte]{code/vgaCeiling.c}
@@ -433,7 +433,7 @@ Fixed Point allows to keep track of fractions while still using the integer oper
 \begin{figure}[H]
  \centering
   \input{imgs/drawings/fp.tex}
- \caption{Fixed point layout 8:8 (8-bits for integer part and 8 bits for fractional part).} \label{fig:mips}
+ \caption{Fixed point layout 8:8 (8-bits for the integer part and 8 bits for the fractional part).} \label{fig:mips}
 \end{figure}
 
 The same sequence of bits \emph{0010010010010010} with different powers of two...
@@ -498,9 +498,9 @@ The beauty of fixed point is that addition and subtraction work exactly like int
    \caption{1.5 >> 2 = 0.75} 
 \end{figure}
 
-The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONNAL\_PART}. In the game, player position is \cw{16:16}. The grid location is one shift operation away \cw{player->x $\gg$ 16}.\\
+The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONNAL\_PART}. In the game, the player position is \cw{16:16}. The grid location is one shift operation away \cw{player->x $\gg$ 16}.\\
 \par
- The special case is when performing multiplication. There are two ways to do it: Either multiply two 32 bits into a 64 bits (and drop the upper and lower 16 bits) or drop the precision of both fixed point and then multiply then into a 32 bits. Both methods involve accepting a lose of data via overflow or underflow. Let's take the example of $98.7539 * 1.5$.
+ The special case is when performing multiplication. There are two ways to do it: Either multiply two 32 bits into a 64 bits (and drop the upper and lower 16 bits) or drop the precision of both fixed point and then multiply then into a 32 bits. Both methods involve accepting a loss of data via overflow or underflow. Let's take the example of $98.7539 * 1.5$.
 
 
 \par
@@ -516,7 +516,7 @@ The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTION
    \caption{* 1.5} 
 \end{figure} 
 \par
-First right shift both operators:\\
+First shift both operators by 4 bits to the right:\\
 \par
 \begin{figure}[H]
  \centering
@@ -540,7 +540,7 @@ $128 + 16 + 4 + 0.125 = 148.125 $\\
 \par
 Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bit disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8).\\
 \par
-In Wolf source code, all fixed points variables are 32 bits wide and use a special \cw{typedef}.\\
+In the source code, all fixed points variables are 32 bits wide and use a special \cw{typedef}.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed.c}
@@ -568,7 +568,7 @@ Or it can be more complex due to a type of tweaked \cw{fixed} used for raycastin
 
 
 \subsubsection{Coordinate System}
-With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. The coordinate system find its origin in the upper left. A map is a grid of 64 by 64 blocks. 
+With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. The coordinate system finds its origin in the upper left. A map is a grid of 64 by 64 blocks. 
 \begin{figure}[H]
   \centering
  \includegraphics[width=.5\textwidth]{imgs/drawings/coordinate_system.png}

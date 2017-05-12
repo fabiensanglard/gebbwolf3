@@ -112,7 +112,7 @@ Development took seven months (from November 1991 to May 1992) during which id S
 
 
 \section{Organization}
-The organization of the team was pretty much standard for a game studio of this era. Four guys crammed in one room which dictated a fast pace and strong sense of camaraderie (and a lot of noise disturbance given John Romero and Tom Hall's type of interaction). Notice on the upper floor the SNES where countless games of F-Zero were played and the Dungeons \& Dragons area extensively mentioned in "Masters of Doom". To have a team member with his apartment directly above the studio was not out of the ordinary\footnote{90 Hours A Week And Loving It!}. The team's space was setup as follows.
+The organization of the team was pretty much standard for a game studio of this era. Four guys crammed in one room which dictated a fast pace and strong sense of camaraderie (and a lot of noise disturbance given John Romero and Tom Hall's type of interaction). On the map (next page) you can see on the upper floor the SNES where countless games of F-Zero were played and the Dungeons \& Dragons area extensively mentioned in "Masters of Doom". To have a team member (John Carmack) with his apartment directly above the studio was not out of the ordinary\footnote{ "90 Hours A Week And Loving It!" by Andy Hertzfeld.}. The team's space was setup as follows.
 \par
 \begin{figure}[H]
   \centering
@@ -181,7 +181,7 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA modes, where \cw{Mode 13h} and \cw{Mode 4h} (figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting RAM address. This allows a trick where two graphic cards are plugged in the same PC. One MCA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally. This setup allows a developer to debug the game engine with breakpoints.\\
+You may have noticed in the listing of VGA modes that \cw{Mode 13h} and \cw{Mode 4h} (figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting RAM address. This allows a trick where two graphic cards are plugged in the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally. This setup allows a developer to debug the game engine with breakpoints.\\
 \begin{figure}[H]
 \centering
   \shadowbox{
@@ -221,11 +221,11 @@ All graphic assets were produced by Adrian Carmack\footnote{Kevin Cloud did a fe
 
 
 \par
-Since the VGA is palette based (colors were not specified via 24-bits RGB but via indices pointing to a 256 colors table) the creative process was difficult. The artist had first to make the key decision of which colors would go in the palette\footnote{Some games like "Monkey Island" used many palettes depending on the section of the game. id Software went for a simpler solution with one palette for the whole game.} and then draw everything with only these colors.\\
+Since the VGA is palette based (colors were not specified via 24-bit RGB but via indices pointing to a 256 colors table) the creative process was difficult. The artist had first to make the key decision of which colors would go in the palette\footnote{Some games like "Monkey Island" used many palettes depending on the section of the game. id Software went for a simpler solution with one palette for the whole game.} and then draw everything with only these colors.\\
 \begin{figure}[H]
   \centering
 \fullimage{palette.png}
- \caption{Wolfentein 3D palette: Everything in the game is drawn using one of these 256 colors.}
+ \caption{Wolfentein 3D palette: Everything in the game is drawn using these 256 colors.}
 \end{figure}
 The palette coordinates are horizontally from \cw{0x00} to \cw{0x0F} and vertically from \cw{0x00} to \cw{0xF0}. The horizontal blue gradient at the bottom starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is a special color deemed transparent by the engine and always skipped during rendition.\\
 \par
@@ -356,7 +356,7 @@ The hint manual also contains several photos of the team back in the days; it is
 
 
 \section{Maps}
-Maps were created using an in-house editor called TED5, short for Tile EDitor. TED was not created specially for Wolf 3D, but was originally made for the Commander Keen series and improved over the years. It was a versatile tool since it allowed for creating maps of side scroller games but also top-down games like Rescue Rover and Wolf 3D. TED5 does not stand-alone; in order to start it needs an asset archive and the header associated (as described in the graphic asset workflow). This way, texture ids are directly encoded in the map.\\
+Maps were created using an in-house editor called TED5, short for Tile EDitor. TED was not created specially for Wolf 3D, but was originally made for the Commander Keen series and improved over the years. It was a versatile tool since it allowed for creating maps of side scroller games but also top-down games like Rescue Rover and Wolf 3D. TED5 does not stand-alone; in order to start, it needs an asset archive and the header associated (as described in the graphic asset workflow). This way, texture ids are directly encoded in the map.\\
 
  \begin{figure}[H]
 \centering
