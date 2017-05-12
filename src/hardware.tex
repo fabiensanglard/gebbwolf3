@@ -271,7 +271,7 @@ As a result, a game engine designer was stuck in an awkward situation with two h
 
 
 \section{RAM}
-The first CPUs in the Intel x86 family were designed in 1976. A time where RAM was very expensive, the 8080 and 8086 had 16 bit registers with a 20 bit wide address bus capable of addressing 1MB of RAM. It is difficult to stress how big 1MB of RAM was in the 70s but as an example, the Apple II and the Commodore 64 both shipped with 64KB which was enough to write and run amazing things. Sixteen bit register and 20 bit address bus was plenty even though programming was difficult and required combining two registers to build a pointer. In 1986, the hardware had gotten cheaper and Intel had decided to make a departure from the old architecture with its i286 and i386. These new CPUs could be put in what was called "Protected Mode" and take full advantage of their 32 bit registers and 24 bits wide address bus offering up to 16 MB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. To make sure old programs could still run, the 386 and 286 could be put in "Read Mode" which replicates how the Intel 8080 and 8086 operated: 16 bits registers, 20 bits address bus giving 1MB addressable RAM with segmented addressing.\\
+The first CPUs in the Intel x86 family were designed in 1976. A time where RAM was very expensive, the 8080 and 8086 had 16 bit registers with a 20 bit wide address bus capable of addressing 1MiB of RAM. It is difficult to stress how big 1MiB of RAM was in the 70s but as an example, the Apple II and the Commodore 64 both shipped with 64kiB which was enough to write and run amazing things. Sixteen bit register and 20 bit address bus was plenty even though programming was difficult and required combining two registers to build a pointer. In 1986, the hardware had gotten cheaper and Intel had decided to make a departure from the old architecture with its i286 and i386. These new CPUs could be put in what was called "Protected Mode" and take full advantage of their 32 bit registers and 24 bits wide address bus offering up to 16 MiB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. To make sure old programs could still run, the 386 and 286 could be put in "Read Mode" which replicates how the Intel 8080 and 8086 operated: 16 bits registers, 20 bits address bus giving 1MiB addressable RAM with segmented addressing.\\
 \par
 For compatibility reasons all PCs must start in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20-year-old Real Mode. Unfortunately, there was a major obstacle: the operating system MS-DOS by Microsoft Corporation.
   
@@ -293,7 +293,7 @@ For compatibility reasons all PCs must start in Real Mode. You may assume that p
   \item 16-bit Segment Registers: CS, DS, ES, FS, GS, SS
   \item 16-bit Status Register
 \end{itemize}
-\item Up to 1MB of RAM
+\item Up to 1MiB of RAM
 \end{itemize}
 
 
@@ -303,8 +303,8 @@ For compatibility reasons all PCs must start in Real Mode. You may assume that p
 
 
 
-  \subsection{The infamous Real Mode: 1MB RAM limit}
-  With Protected Mode unavailable, developers of 1991 programmed like it was 1976. With a 20 bits wide address bus offering only 1MB of addressable RAM. No matter how much memory was installed on the machine, only 1MB could be addressed. To top it all off, addressing had to be done not with the 32 bits registers available but by combining two 16 bits registers together. One was the segment, the other an offset within that segment. Hence the name: '16 bits segmented programming'.
+  \subsection{The infamous Real Mode: 1MiB RAM limit}
+  With Protected Mode unavailable, developers of 1991 programmed like it was 1976. With a 20 bits wide address bus offering only 1MiB of addressable RAM. No matter how much memory was installed on the machine, only 1MiB could be addressed. To top it all off, addressing had to be done not with the 32 bits registers available but by combining two 16 bits registers together. One was the segment, the other an offset within that segment. Hence the name: '16 bits segmented programming'.
 
   \bigskip
 The memory layout is as follow:\\
@@ -312,7 +312,7 @@ The memory layout is as follow:\\
 \item From 00000h to 003FFh : the Interrupt Vector Table.
 \item From 00400h to 004FFh : BIOS data.
 \item From 00500h to 005FFh : command.com+io.sys.
-\item From 00600h to 9FFFFh : Usable by a program (about 620kB in the best case). 
+\item From 00600h to 9FFFFh : Usable by a program (about 620KiB in the best case). 
 \item From A0000h to FFFFFh : UMA (Upper Memory Area): Reserved to bios ROM, video card and sound card mapped I/O.
 \end{itemize}
 
@@ -320,16 +320,16 @@ The memory layout is as follow:\\
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/real_mode.pdf}
 
-\caption{First 1MB of RAM layout.}
+\caption{First 1MiB of RAM layout.}
 \label{fig:fp_internals}
 \end{figure}
 
 
-Out of the original 1024KB, only 640KB (called Conventional Memory) were usable to a program. 384KB were reserved for the UMA and every single driver installed (\codeword{.SYS} and \codeword{.COM})  took away from the remaining 640KB.
+Out of the original 1024KB, only 640KiB (called Conventional Memory) were usable to a program. 384KiB were reserved for the UMA and every single driver installed (\codeword{.SYS} and \codeword{.COM})  took away from the remaining 640KB.
 
 \bigskip
 
-\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KB of Conventional Memory. Needless to say French people learned pretty quickly that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a qwerty keyboard but IDDAD on an azerty keyboard without the French driver loaded.}.\\
+\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KiB of Conventional Memory. Needless to say French people learned pretty quickly that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a qwerty keyboard but IDDAD on an azerty keyboard without the French driver loaded.}.\\
 \\
 
 
@@ -351,7 +351,7 @@ There are two kinds of pointers: \cw{near} and \cw{far}. A \cw{near} pointer is 
 That may not sound too bad, but in practice this segmented addressing leads to many issues.
 The least problematic is about the language. Since C was invented on a flat memory machine, it had to be augmented by PCs compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro are provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. Of course \cw{libc} is also "different": \cw{malloc} returns a \cw{near} pointer and therefore can only allocate up to 64kB. To get more than 64K, \cw{farmalloc} is needed.\\
 \\
-The larger issue is that two pointers referring to the same address can fail an equality test. In this model, the 1MB of RAM is divided in 65536 paragraphs by the segment pointer. A paragraph is 16 bytes but an offset can be up to 65536 which results in many overlaps. It is easy to understand with the following examples.\\
+The larger issue is that two pointers referring to the same address can fail an equality test. In this model, the 1MiB of RAM is divided in 65536 paragraphs by the segment pointer. A paragraph is 16 bytes but an offset can be up to 65536 which results in many overlaps. It is easy to understand with the following examples.\\
 \par
 Pointer A defined as:\\
 \par
@@ -388,16 +388,16 @@ Will output:\\
 \end{minipage}
 \par
 
-With this system, pointer arithmetic must also receive careful consideration. A \cw{far} pointer increment only increments the offset, not the segment. If you iterate on an array larger than 64kB you will end up wrapping around. You could use yet an other type of pointer \cw{int huge*} to make pointer arithmetic work beyond 64k but really, nobody wants to go there.
+With this system, pointer arithmetic must also receive careful consideration. A \cw{far} pointer increment only increments the offset, not the segment. If you iterate on an array larger than 64KiB you will end up wrapping around. You could use yet an other type of pointer \cw{int huge*} to make pointer arithmetic work beyond 64k but really, nobody wants to go there.
 
 
 
 
   \subsection{Extended Memory}
 
-The 20 bit address bus of Real Mode limits the addressable RAM to 1MB. But machines of 1992 came equipped with more, typically 2MB and even sometimes 4MB for the most fortunate customers.\\
+The 20 bit address bus of Real Mode limits the addressable RAM to 1MB. But machines of 1992 came equipped with more, typically 2MiB and even sometimes 4MiB for the most fortunate customers.\\
 \par 
-The workaround at the time to access these resources was to install drivers that would open a window beyond the addressable RAM, as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around bank switching. The drivers allow for manipulating 16kB units of data called "pages" via a 64KB area called "Page Frame". Upon request to the driver, the CPU is switched to Protected Mode, a page is swapped between the EMS\footnote{Expanded Memory Specification} and the HMA\footnote{High memory area}. The CPU is then switched back to Real Mode where the 16KB page is now accessible. Given this mechanism, no executable code can be stored there, it is only useful to store data.
+The workaround at the time to access these resources was to install drivers that would open a window beyond the addressable RAM, as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around bank switching. The drivers allow for manipulating 16KiB units of data called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, the CPU is switched to Protected Mode, a page is swapped between the EMS\footnote{Expanded Memory Specification} and the HMA\footnote{High memory area}. The CPU is then switched back to Real Mode where the 16KiB page is now accessible. Given this mechanism, no executable code can be stored there, it is only useful to store data.
 
 \begin{figure}[H]
 \centering
@@ -411,7 +411,7 @@ Unfortunately, once again, nothing was standardized. Users could load different 
 \item eXtended Memory Specification (XMS) drivers: HIMEM.SYS.
 \end{itemize}
 
-Or they could have no idea they had to install driver, load nothing at startup, and not use any of the RAM beyond 1MB. This use case was a big issue. Many customers could not understand why, even though they had installed (extremely expensive\footnote{In 1992, 4MB of RAM cost \$149 which adjusted to inflation would be \$256 in 2016.}) megabytes of RAM on their machine, the game they just purchased would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (see Appendix "\nameref{chap:barrier640}") along with the game to make it clear it was not their fault.\\
+Or they could have no idea they had to install driver, load nothing at startup, and not use any of the RAM beyond 1MB. This use case was a big issue. Many customers could not understand why, even though they had installed (extremely expensive\footnote{In 1992, 4MiB of RAM cost \$149 which adjusted to inflation would be \$256 in 2016.}) megabytes of RAM on their machine, the game they just purchased would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (see Appendix "\nameref{chap:barrier640}") along with the game to make it clear it was not their fault.\\
 
 \textbf{\underline{Trivia :}}  As of 2016, more than thirty five years after the introduction of the 8086, in the name of backward compatibility, all PCs in the world still start in Real Mode. A bootloader switches them to Protected Mode, loads the kernel, and then real startup can begin.
 
@@ -439,7 +439,7 @@ And:\\
 
 
 \par
-\bu{Trivia :} 640kB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745kB, which obviously doesn't fit in Conventional Memory. The trick was to use a technique of "overlays". The compiler inserted instructions at compile time to detect when the CPU IP\footnote{Instruction Pointer} was about to move beyond a page. These instructions swapped code segment from RAM to HDD and issued a \cw{jmp} to reset the CPU at the beginning of the next page.
+\bu{Trivia :} 640KiB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745kB, which obviously doesn't fit in Conventional Memory. The trick was to use a technique of "overlays". The compiler inserted instructions at compile time to detect when the CPU IP\footnote{Instruction Pointer} was about to move beyond a page. These instructions swapped code segment from RAM to HDD and issued a \cw{jmp} to reset the CPU at the beginning of the next page.
 
 
 
@@ -518,7 +518,7 @@ Each iteration added new features and by 1991 the ubiquitous graphic system was 
   \fullimage{hardware/diamond_stealth_vram_revb2.png} 
   \caption{A VGA card Diamond Stealth (16 bits ISA). Courtesy of \cw{vgamuseum.info}.}
 \end{figure}
-\bu{Trivia :} There was no GPU market back then. Since all video cards "only" had to be VGA compatible with 256KB of RAM, most people just bought the cheapest thing available. Note however that some cards had an 8 bits ISA bus connector (like the Trident) and some had an ISA 16 bits connector like the Diamond, making the Diamond transfer data twice as fast.\\
+\bu{Trivia :} There was no GPU market back then. Since all video cards "only" had to be VGA compatible with 256KiB of RAM, most people just bought the cheapest thing available. Note however that some cards had an 8 bits ISA bus connector (like the Trident) and some had an ISA 16 bits connector like the Diamond, making the Diamond transfer data twice as fast.\\
 \par
 
 
@@ -530,13 +530,13 @@ VGA can be summarized as three major systems with input, storage, and output sys
 
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlling how the VGA RAM is accessed (the CPU-VRAM interface)
-\item The framebuffer (the VRAM) made of not one memory bank of 256KB but four memory banks of 64KB
+\item The framebuffer (the VRAM) made of not one memory bank of 256KiB but four memory banks of 64KB
 \item The CRTC Controller and the DAC\footnote{Digital To Analog Converter} taking care of converting the Palette indexed framebuffer to RGB and then to analogical signal (interface VRAM-CRT)
 \end{itemize}
 
 The most surprising part of the architecture is obviously the framebuffer. Why have four small fragmented banks instead of one big linear one?\\
 \\
-The first part of the explanation comes from backward compatibility. The version before VGA, EGA, had only 64kB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
+The first part of the explanation comes from backward compatibility. The version before VGA, EGA, had only 64KiB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
 \\
 But the real reason was RAM latency and the need for a minimum bandwidth. A CRT running at 70Hz and displaying 640x480 in 16 colors needs a pixel every 1/(640*480*70)th of a second. At this resolution, one pixel is encoded on 4 bits. Each nibble is translated to a 888 RGB color by the DAC. That encoding divides bandwidth by six, but you still need one byte every 91 nano-seconds. Unfortunately, RAM access latency was 200ns. Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz, so the DAC would starve. If latency could not be reduced, the throughput could still be improved by reading from four banks at the time. Reading in parallel give an amortized RAM latency of 200/4 = 50ns which is fast enough.\\
 \par
@@ -625,7 +625,7 @@ The BIOS can be called to configure the VGA as follows.
 
 
  \subsection{VGA Programming: Memory mapping}
-To write to the VRAM the 1MB address space maps 64KB starting as indicated in the Mode table. In mode 13h for example, the VRAM is mapped from 0xA0000 to 0xAFFFF. The first question that may pop in your mind is "How to access 256KB of RAM with only 64KB of address space?". The answer is: "bank switching". Write and Read operations are routed based on a mask register indicating which bank should be read or written.\\
+To write to the VRAM the 1MiB address space maps 64KiB starting as indicated in the Mode table. In mode 13h for example, the VRAM is mapped from 0xA0000 to 0xAFFFF. The first question that may pop in your mind is "How to access 256KiB of RAM with only 64KiB of address space?". The answer is: "bank switching". Write and Read operations are routed based on a mask register indicating which bank should be read or written.\\
 \par
  \begin{figure}[H]
 \centering
@@ -651,7 +651,7 @@ To write to the VRAM the 1MB address space maps 64KB starting as indicated in th
 
 The only good thing about this mode is that it has square pixels. The 640x480 aspect ratio matches the 4:3 of a CRT so there is no distortion of the framebuffer when it is output to the screen. But pretty much everything else is bad:\\
 \begin{itemize}
-\item No double buffer: 640X480/2 = 0x25800 bytes which is more than half the 256KB (0x40000) of VRAM available.
+\item No double buffer: 640X480/2 = 0x25800 bytes which is more than half the 256KiB (0x40000) of VRAM available.
 \item The high resolution is actually a drawback for a 3D engine since more pixels means more calculations and more drawing.
 \item 16 colors looks really, REALLY ugly.
 \end{itemize}

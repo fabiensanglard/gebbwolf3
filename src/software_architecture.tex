@@ -220,7 +220,7 @@ A block can be marked with attributes:
 \item \cw{PURGEBITS} : 0-3 level, 0= unpurgable, 1= purgable, 2= ???, 3= purge first.
 \end{itemize}
 
-The memory manager starts by allocating all available RAM via \cw{malloc}/\cw{farmalloc} and creates a \cw{LOCKED} block of size 1KB at the end. The linked list uses two pointers: \cw{HEAD} and \cw{ROVER} which point on the second to last block.
+The memory manager starts by allocating all available RAM via \cw{malloc}/\cw{farmalloc} and creates a \cw{LOCKED} block of size 1KiB at the end. The linked list uses two pointers: \cw{HEAD} and \cw{ROVER} which point on the second to last block.
  \par
 \begin{figure}[H]
 \centering
@@ -310,7 +310,7 @@ The precaching mechanism is not particularly clever: It loads as many page from 
 \par
 This design has a small annoying flaw. On a low memory machine a cache miss will occur at the worse possible moment when the player opens the last door of a level and is about to find himself confronted to the heavy powered final boss. An enemy that has never been seen before and therefore not in the cache of the Page Manager. This incurs the worse case of cache miss. One that will requires a long access to the hard-drive, a lag often resulting in an undeserved and humiliating death.\\
 \par
-The size of the swap file varies depending on the version of the game you play: \cw{VSWAP.WL1} (shareware) is 742KB while \cw{VSWAP.WL6} (full version) is 1,500KB. In both case a machine with 2MB of RAM on top of the factory issued 1MB is enough to have all assets loaded during pre-caching.\\
+The size of the swap file varies depending on the version of the game you play: \cw{VSWAP.WL1} (shareware) is 742KiB while \cw{VSWAP.WL6} (full version) is 1,500KB. In both case a machine with 2MiB of RAM on top of the factory issued 1MiB is enough to have all assets loaded during pre-caching.\\
 \par
 \bu{Trashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, it is "trashing". The HDD is put to heavy contribution and the framerate drops. Trashing can happen if too many different resources are visible on the screen. In order to help designers balance their creativity with the needs for a decent framerate, the engine detects trashing and flashes the screen border red when it runs in dev-mode.\\
 \par
@@ -444,13 +444,13 @@ That is what the "signon" screen is for: Self diagnostic.
 \fullimage{signon.png}
 \end{figure}
 \par
-Besides showing recognized devices such as mouse, joystick and sound cards, the most important metric here is labeled "MAIN". Due to the architecture described in the first chapter, a DOS program has only 640KB of RAM available. Each driver loaded by the user takes away from these 640KB. If too much is used to the point where DOS cannot load the executable in RAM, user will see the following error message.\\
+Besides showing recognized devices such as mouse, joystick and sound cards, the most important metric here is labeled "MAIN". Due to the architecture described in the first chapter, a DOS program has only 640KiB of RAM available. Each driver loaded by the user takes away from these 640KB. If too much is used to the point where DOS cannot load the executable in RAM, user will see the following error message.\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/OutOfMemory.txt}
 \end{minipage}
 \par
-The signon screen shows that Wolf3D needs at least 320KB of Conventional RAM. John Romero wrote a note a release note to help people understand what was going on and avoid angry calls. You can read it in the annex under "The 640KB Barrier".\\
+The signon screen shows that Wolf3D needs at least 320KiB of Conventional RAM. John Romero wrote a note a release note to help people understand what was going on and avoid angry calls. You can read it in the annex under "The 640KB Barrier".\\
 \par 
 At the time signon is displayed, the only manager loader is the Memory Manager. There is not even a filesystem for the engine to access yet. That is why the palette and the signon screen are compiled within Wolf3D executable. This is done so they are loaded to RAM by the operating system (DOS) loader. All the engine does is load the palette into the VGA, copy the signon bitmap from RAM to VRAM and fill the blocks with green or yellow based on what was detected.\\
 \par

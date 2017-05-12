@@ -30,7 +30,7 @@ A driver has to be lowed at startup for the mouse to be accessible. The operatin
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/mouse.sys.c}
 \end{minipage}
-The driver takes almost 5KB of RAM. With the driver loaded all interactions happen with software interrupt \cw{0x33}. The interface works with request issued in register AX and response issued in registers CX, BX and DX. With Borland compiler syntactic sugar it is easy to write with almost no boilerplate (notice direct access to registers thanks to \_AX and co special keywords.\\
+The driver takes almost 5KiB of RAM. With the driver loaded all interactions happen with software interrupt \cw{0x33}. The interface works with request issued in register AX and response issued in registers CX, BX and DX. With Borland compiler syntactic sugar it is easy to write with almost no boilerplate (notice direct access to registers thanks to \_AX and co special keywords.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/mouse_request.c}
