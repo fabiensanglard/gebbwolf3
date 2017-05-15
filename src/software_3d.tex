@@ -830,15 +830,15 @@ Before proceeding to the next session describing what is done with the distance 
 
 
 
-This drawing is all the math you need to understand fish eye correction and coordinate projections which is used to place player, enemies, items and calculate sounds locations.\\
+This drawing is all the math you need to understand fish eye correction and coordinate projections used to place player, enemies, items and calculate sounds locations.\\
 
 
 
 
 
 
-\subsubsection{Calculate column height}
-Once the intersection between a ray and a wall is found (from coordinate (\cw{viewx},\cw{viewy} to (\cw{xintercept},\cw{yintercept})), it is time to calculate how tall the column of pixel for this ray should be. It happens in the function \cw{CalcHeight}.\\
+\subsubsection{Calculating column heights}
+Once the intersection between a ray and a wall is found from coordinate (\cw{viewx},\cw{viewy}) to (\cw{xintercept},\cw{yintercept}), it is time to calculate how tall the column of pixel for this ray should be. It happens in the function \cw{CalcHeight}.\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/CalcHeight.c}
@@ -870,7 +870,7 @@ Something is fishy here. Let's explain with an example.\\
  \caption{Raycasting using distance d} \label{fig:Raycasting2}
 \end{figure}
 
-In this drawing the player is located at viewpoint with a view angle \begin{math}\alpha\end{math}. A ray has been cast from \cw{viewpoint} and it hit a wall at \cw{intercept}. The distance \codeword{d} is a straight line between the player point of view and the location where the ray hit the line which can be obtained with $d = \sqrt{dx^2 + dy^2}$. Repeated for all rays, such an algorithm would result in a "fisheye effect".
+In this drawing the player is located at \cw{viewpoint} with a view angle \begin{math}\alpha\end{math}. A ray has been cast from \cw{viewpoint} and it hit a wall at \cw{intercept}. The distance \codeword{d} is a straight line between the player point of view and the location where the ray hit the line which can be obtained with $d = \sqrt{dx^2 + dy^2}$. Repeated for all rays, such an algorithm would result in a "fisheye effect".
 
 
 
@@ -939,7 +939,7 @@ Note that even though the player is getting closer to the wall, the ratio of A t
 \begin{minipage}{.4\textwidth}
 At a closer range (12 feet) the distortion is straight up unpleasant with a claustrophobic touch.\\
 \par
-To avoid this distortion and get a more pleasant rendition, what must be used is not the direct distance \cw{d} but \cw{d} projected on the perpendicular of the view direction (\cw{z}).
+To avoid this distortion and get a more pleasant rendition, what must be used is not the direct distance \cw{d} but \cw{d} projected on the camera plane (perpendicular to the view direction (\cw{z})).
  \end{minipage}
 \begin{minipage}{.6\textwidth}
  \begin{figure}[H]
@@ -1003,7 +1003,7 @@ $z = A + B = dx * \cos(\alpha) - dy * \sin(\alpha) $
   \end{equation*}
 \end{figure}
 \par
-For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy). It would rotate coordinates from map space to player space (where axis orientation is dictated by player view angle).
+For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy). It would rotate coordinates from map space to player space (where axis orientation is dictated by the player view angle).
 \begin{figure}[H]
   \centering
   \begin{equation*}
@@ -1034,9 +1034,9 @@ For people who like equations, the overall operation can be seen as the multipli
  \end{figure}
 
 
-I personally find the graphic explanation with SOH-CAH-TOA much more clear.\\
+I personally find the graphic explanation with SOH-CAH-TOA clearer.\\
 \par
-The correction is enough to give pleasant straight lines for the walls. To make the difference vivid, here are a few screenshots showing two version of the same scene next to each others. First uncorrected (with fisheyes) and then with projected distance instead of direct distance.\\
+The correction is enough to give pleasant straight lines for the walls. To make the difference obvious, here are a few screenshots showing two versions of the same scene next to each other. First uncorrected (with fisheye) and then with projected distance instead of direct distance.\\
 
  \begin{minipage}{\textwidth}
  
@@ -1071,9 +1071,9 @@ The correction is enough to give pleasant straight lines for the walls. To make 
 
 
 \subsection{Drawing walls}
-With a height calculated for a column, all what remains to do is drawing a column of textured pixels.\\
+With a height calculated for a column, all that remains to do is draw a column of textured pixels.\\
 \par
-That may sound easy but it is in fact very difficult on a CPU with as little power as a 386. It is not hard in terms of mathematics but hard in terms of instructions clock consumption. To scale a column of 64 pixels texels on the screen centered vertically is expensive. It turns out if you want to do it fast enough you need a few optimizations. This is where Wolfenstein 3D takes off and leave other 3D engine or the era in the dust. This is the part where lies the two secrets of its speed:
+That may sound easy but it is in fact difficult on a CPU with as little power as a 386. To scale a column of 64 texels on the screen centered vertically is expensive. It turns out if you want to do it fast enough you need a few optimizations. This is where Wolfenstein 3D takes off and leave other 3D engines of the era in the dust. This is the part where lie the two secrets of its speed:
 \begin{itemize}
 \item Compiled scalers
 \item Deferred column rendering
@@ -1088,7 +1088,7 @@ All columns of pixels representing the walls are centered vertically and either 
  \fullimage{scaler_valign.png}
  \end{figure}
 \par
-As the photoshoped pink line shows, every column of pixels for a wall are centered vertically. There is no horizontal offset. In order to do that, a naive approach would be to use a generic routine looking something like this.\\
+As the photoshoped pink line shows, every column of pixels for a wall is centered vertically. There is no horizontal offset. In order to do that, a naive approach would be to use a generic routine looking something like this.\\
 
 
 \par
@@ -1097,9 +1097,9 @@ As the photoshoped pink line shows, every column of pixels for a wall are center
 \end{minipage}
 
 \par
-It would involves having a loop, a fixed point accumulator and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible function allows \cw{scaleTextureToHeight} to accept any height from \cw{0} to \cw{INT\_MAX}.\\
+It would involves a loop, a fixed point accumulator and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible function allows \cw{scaleTextureToHeight} to accept any height from \cw{0} to \cw{INT\_MAX}.\\
 \par
- But there is a faster way to do it which involves the usual RAM vs CPU tradeoff. In this case we can invest a little bit of RAM storage to gain a lot of CPU time.\\
+ But there is a faster way to do it which involves the usual RAM vs CPU tradeoff. In this case we can invest a little bit of RAM to gain a lot of CPU time.\\
  \par 
  The idea is to remove the genericity of the scaler and instead generate hard-coded functions.\\
 \par
@@ -1114,27 +1114,19 @@ It would involves having a loop, a fixed point accumulator and intermediate vari
 \lstinputlisting[language=C]{code/compscale.c}
 \end{minipage}
 \par
-Given a height, \cw{BuildCompScale} generates x86 instructions in the out variable \cw{code}. As a result, instead of having one generic function accepting any height,  Wolfenstein has 38 functions with hard-coded height. To hard-code the height allows to unroll the loop and reduce the overhead.\\
+Given a height, \cw{BuildCompScale} generates x86 instructions in the out variable \cw{code}. As a result, instead of having one generic function accepting any height,  Wolfenstein has 38 functions with a hard-coded height. To hard-code the height allows to unroll the loop and reduce the overhead.\\
 \par
-With this optimization, minifying a 64 textures to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 120 pixels takes 841 instructions. A precompiled scaler function has a fixed cost of 7 instructions per pixel: It doesn't get any faster than that.\\
-
+With this optimization, minifying a column of 64 texels to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 128 pixels takes 705 (64*11+1) instructions. A precompiled scaler function has a fixed cost of 7 instructions per pixel when minifing and $3+4*scaling_factor$ instructions per pixel when magnifing: It doesn't get any faster than that.\\
+\note{The following calculation is entirely false. Need to redo everything....:}
 \par
-What is the RAM cost incurred by precompiling and caching these scalers? It takes 1 + 7 instructions per pixel written to scale a column. If all size were generated from 2,4,6...152 (76 values for 38 pairs), we can use Gauss method to calculate the size:\\
-\par
-$154*38*7=40,964$ bytes\\
-\par
-That cost was deemed too high. To save RAM, past size 76, only every other even size are generated (2,4,6,,..,72,74,76) and (78,82,86,...,144,148,152). RAM consumption becomes (still with Gauss method):\\
-\par
-$78*19*7+9*230*7=24,8642$ bytes\\
-\par
-Skipping compiled scaler generation involves using the wrong scaler when one is not available and introduces small artifacts but they are barely noticeable.\\
+What is the RAM cost incurred by precompiling and caching these scalers? When rendering to its maximum dimension in the 3D canvas, the engine generates all scalers of even height from 2 to 512. That's 255 scalers for a total code size of 307,359 bytes.\\ That cost was deemed too high. To save RAM, past size 76, only every other even size are generated (2,4,6,,..,72,74,76) and (78,82,86,...,504,508,512). This trick generates only 136 scalers for a total code size of 126,120 bytes.\\
+Skipping compiled scaler generation involves using the wrong scaler when one is not available and introduces small visual artifacts but they are barely noticeable.\\
 \par
 Notice that scalers are generated at startup but if the 3D canvas dimensions is changed they have to be re-generated. This is what happens after a resize while the "thinking" screen is showing.
 \begin{figure}[H]
  \centering
  \fullimage{thinking.png}
 \end{figure}
-\note{My math is wrong i do not account for magnifying beyond the limit of the 3D canvas}
 
 
 
@@ -1143,24 +1135,24 @@ Notice that scalers are generated at startup but if the 3D canvas dimensions is 
 
 
 \subsubsection{Deferred column drawing}
-There is a second level of trick to speed up rendering. The idea is to defer rendering a column of pixels when certain conditions are met and use the VGA banks to duplicate entire column and save write operations.\\
+The second level of optimization is based on defered rendering. When a column of pixels meets certain conditions, it is buffered and rendered later in a batch, leveraging the VGA mask to save write operations.\\
 \par 
-A naive raycaster/compiled scaler coupling would have looked like this.\\
+A simple raycaster with compiled scalers would have looked like this.\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/naive_raycaster_pseudocode.c}
 \end{minipage}
 \par
-But the engine is not done this way. Instead it buffers what to draw like as follow.\\
+But the engine does not do this. Instead it buffers what to draw as follows.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wolf3d_raycaster_pseudocode.c}
 \end{minipage}
 
 \par
-This buffering is done because the renderer allows itself to cheat a little when two rays are deemed similar enough. If consecutive rays share characteristics, they are grouped together and drawn at the same height, regardless of their distance from the player point of view. This process introduces a little distortion but unlock a formidable speed up where the engine can write multiple column on the screen, up to eight pixels in 3 writes.\\
+This buffering is done because the renderer allows itself to cheat a little when two rays are deemed similar enough. If consecutive rays share characteristics, they are grouped together and drawn at the same height, regardless of their distance from the player's point of view. This process introduces a little distortion but unlocks a formidable speed up: the engine can write multiple columns on the screen, up to eight pixels in 3 writes.\\
 \par
-Rays are similar if they hit the same wall and resulting in the same \cw{v} horizontal texture coordinate. In short this optimization leverages wall magnification.\\
+Rays are similar if they hit the same wall and result in the same \cw{v} horizontal texture coordinate. In short this optimization leverages wall magnification.\\
 
 \par
 The best case for this trick is shown in the following screenshots. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiples pixels horizontally. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
@@ -1169,13 +1161,14 @@ The best case for this trick is shown in the following screenshots. The player i
  \fullimage{post_optimization_1_show.png}
 \end{figure}
 
-This trick is only possible because of an interesting property of the VGA bank layout. If you take a look at the right, you see a 3D view with its associated bank storage underneath. Each bank looks like a compressed version of the screen because they store every four columns. Each bank stores 80 columns to be exact. Bank 0 stores column 0, column 4, column, 8 and so on. Bank 1 stores column 1, column 5, column 9 and so on. Column 0 and Column 1 are at the same address in bank 0 and bank 1.
+This trick is only possible because of an interesting property of the VGA bank layout. If you take a look on page \pageref{vga_layout}, you see a 3D view with its associated bank storage underneath. Each bank looks like a compressed version of the screen because they store every four columns. Each bank stores 80 columns to be exact. Bank 0 stores column 0, column 4, column, 8 and so on. Bank 1 stores column 1, column 5, column 9 and so on. Column 0 and Column 1 are at the same address in bank 0 and bank 1.
  \par
   \begin{minipage}{\textwidth}
  
 \centering
   \scaledimage{0.9}{vga_layout/wolf3d_7.png}
-\vspace*{0.5cm}
+\vspace*{0.3cm}
+\label{vga_layout}
 \centering
   \scaledimage{0.9}{vga_layout/wolf3d_7_bank.png}
 
@@ -1263,7 +1256,7 @@ In the worse case scenario, the engine needs to draw eight column of pixels, und
  \end{figure}
 
 
-A better case where two passes allow to draw 6 columns of pixels in two passes:\\
+A better case where two passes allow to draw 6 columns of pixels:\\
  \par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pass_0_5.c}
@@ -1280,7 +1273,7 @@ A better case where two passes allow to draw 6 columns of pixels in two passes:\
 
 
 
-To take real case examples, the engine has been modified to draw in pink column of pixels which were written "for free" thanks to the VGA mask manipulation. We can see the performances improvement is very significant with 50\% write operations avoided.
+To take real case examples, the engine has been modified to draw in pink column of pixels which were written "for free" thanks to the VGA mask manipulation. We can see the performances improvement is significant with 50\% of write operations avoided.
 
 \begin{minipage}{\textwidth}
  \centering
@@ -1300,7 +1293,7 @@ To take real case examples, the engine has been modified to draw in pink column 
  \vspace*{0.5cm}\\
  \scaledimage{0.9}{post_optimization_2_pink_show.png}
 \end{minipage}
-This technique helps to solve the worse case scenario were a lot of pixels have to be written due to the size of the wall. It only really shines when a lot of magnification occurs. For walls far away (minified) this technique doesn't help at all but it doesn't matter since small walls are cheap to render.\\
+This technique helps solve the worse case scenario were a lot of pixels have to be written due to the size of the wall. It only really shines when a lot of magnification occurs. For walls far away (minified) this technique doesn't help at all but it doesn't matter since small walls are cheap to render.\\
 
 
 
@@ -1324,7 +1317,7 @@ This technique helps to solve the worse case scenario were a lot of pixels have 
 
 
 \subsubsection{Texturing}
-A subtle but extremely efficient trick used to improve quality of the wall rendition is pre-baked light texturing. The wall textures assets are generated twice by the artists: Once lighted and once darker.\\
+A subtle but extremely efficient trick used to improve quality of the wall rendition is pre-baked light texturing. The wall textures assets are generated twice by the artists: Once lit and once unlit.\\
   \begin{figure}[H]
 \centering
  \fullimage{baked_lights_wood.png}
@@ -1447,7 +1440,7 @@ The ray caster (\codeword{AsmRefresh}) writes \cw{true} in the visible tile arra
 \end{minipage}
 \par 
 
-The way the visible tile array is used is not the most subtle part of the engine (it runs in $\mathcal{O}(n^2)$ time) but it works well due to the low number of sprites. All sprites on the map are tested for visibility with \cw{spotvis} and their height is calculated. They are all added to an array unsorted. A final double loop draw all sprites far to near (using sprite height to extract the farther on each iteration).\\
+The way the visible tile array is used is not the most subtle part of the engine (it runs in $\mathcal{O}(n^2)$ time) but it works well due to the low number of sprites. All sprites on the map are tested for visibility with \cw{spotvis} and their height is calculated. They are all added to an array unsorted. A final double loop draws all sprites from far to near (using sprite height to extract the further on each iteration).\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/build_vis_list.c}
@@ -1459,7 +1452,7 @@ The way the visible tile array is used is not the most subtle part of the engine
 
 
 \subsubsection{Rendition}
-Each sprites is rendered individually in function \cw{ScaleShape (int xcenter, int shapenum, unsigned height)}. The sprite is transformed from map space to player space using the same SOH-CAH-TOA math seen in the "Drawing Walls" section.
+Each sprites is rendered individually in the function \cw{ScaleShape (int xcenter, int shapenum, unsigned height)}. The sprite is transformed from map space to player space using the same SOH-CAH-TOA math seen in the "Drawing Walls" section.
 
 \par
 \begin{figure}[H]
@@ -1467,7 +1460,7 @@ Each sprites is rendered individually in function \cw{ScaleShape (int xcenter, i
  \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
  \end{figure}
 \par
-The X coordinate is used to place a sprite horizontally on the screen and the Y coordinate is used for clipping. Like walls, sprites don't need to be place vertically since they are drawn in the same 64x64 texels space.\\
+The X coordinate is used to place a sprite horizontally on the screen and the Y coordinate is used for clipping. Like walls, sprites don't need to be placed vertically since they are drawn in the same 64x64 texels space.\\
 \par
   \begin{minipage}{.5\textwidth}
      \fullimage{guard_sprite.png}
@@ -1499,7 +1492,7 @@ But sprites are special. Walls fill the full 64x64 space and are fully opaque bu
 
 \par
 
-\bu{Trivia :} Sprites with a lot of transparency (such as the two shown previously) would later turn out a major fillrate issue with hardware accelerated renderer for the iOS port.\\
+\bu{Trivia :} Sprites with a lot of transparency (such as the two shown previously) would later turn out to be a major fillrate issue with the hardware accelerated renderer for the iOS port.\\
 \par
 \begin{fancyquotes}
 Wolfenstein (and Doom) originally drew the characters as sparse stretched columns of solid pixels (vertical instead of horizontal for efficiency in interleaved planar mode-X VGA), but OpenGL versions need to generate a square texture with transparent pixels.  Typically this is then drawn by either alpha blending or alpha testing a big quad that is mostly empty space.  You could play through several early levels of Wolf without this being a problem, but in later levels there are often large fields of dozens of items that stack up to enough overdraw to max out the GPU and drop the framerate to 20 fps.  The solution is to bound the solid pixels in the texture and only draw that restricted area, which solves the problem with most items, but Wolf has a few different heavily used ceiling lamp textures that have a small lamp at the top and a thin but full width shadow at the bottom.  A single bounds doesn't exclude many texels, so I wound up including two bounds, which made them render many times faster. 
@@ -1521,7 +1514,7 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 
 
 \subsubsection{Clipping}
-Like everything in the game, sprites are made and drawn as columns. Before drawing each columns in a sprite, the engine determines if it is occluded by a wall. This is called clipping and it is an easy step thanks to wall and sprites being in the same 64x64 coordinate system. Once the sprite's position is transformed in player space, the distance Y allows to generate a height. That height is the same calculated for the walls. Therefore to find out if a sprite column if behind a wall, the engine just compare the heights of the wall against the height of the actor.\\
+Like everything in the game, sprites are made of and drawn as columns. Before drawing each columns in a sprite, the engine determines if it is occluded by a wall. This is called clipping and it is an easy step thanks to walls and sprites being in the same 64x64 coordinate system. Once the sprite's position is transformed in player space, the distance Y allows to generate a height. That height is the same calculated for the walls. Therefore to find out if a sprite column if behind a wall, the engine just compare the heights of the wall against the height of the actor.\\
 \par
 In order to do that, the raycaster keeps tracks of each height calculated for each column in an occlusion array called \cw{wallheight}.\\
 \par
@@ -1547,12 +1540,12 @@ Since the entire screen is refreshed on the next frame, the occlusion array does
 
 
 \subsubsection{Drawing things}
-Sprites rendition benefits from the same optimization we saw in walls (a.k.a: compiled scalers and deferred rendering). But since sprites introduce transparency, the technique are slightly adjusted.
+Sprites rendition benefits from the same optimization we saw in walls (a.k.a: compiled scalers and deferred rendering). But since sprites introduce transparency, the techniques are slightly adjusted.
 
 \subsubsection{Compiled scalers}
-Visible sprite column rendition is also done with the compiled scalers. But the scalers cannot be used as they were generated. A compiler scaler draws its speed from its absence of parameters. It is  an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and write/scale a predetermined number of pixels. For example, compiled scaler 112 always read 64 pixels of texture and magnify it to 134 pixels on the screen.\\
+Visible sprite column rendition is also done with the compiled scalers. But the scalers cannot be used directly. A compiler scaler draws its speed from its absence of parameters. It is  an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and write/scale a predetermined number of pixels. For example, compiled scaler 112 always reads 64 pixels of texture and magnify it to 134 pixels on the screen.\\
 \par
-Sprites are stored in a special way to allow tweaked compiled scaled to skip transparency.\\
+Sprites are stored in a special way to allow tweaked compiled scaler to skip transparency.\\
 \par
 A sprite is stored as an array of 64 entries. Each entries is a serie of "commands" forming a column. A command features:
 \begin{enumerate}
@@ -1565,7 +1558,7 @@ The last command in a column is marked with an offset of \cw{0x00}.\\
 \par
 
 \begin{minipage}{.5\textwidth}
-\bu{Example :} Column \#25 in lamp sprite is made of 5 transparent pixels then one sequence of 5 pixels for the lamp:\\
+\bu{Example :} Column \#25 in the lamp sprite is made of 5 transparent pixels then one sequence of 5 pixels for the lamp:\\
 \par
 \scaledimage{0.8}{light_sprite_column_head.png}
 \par
@@ -1593,7 +1586,7 @@ The idea is to prevent a scaler from consuming the full 64 texels by patching th
 \lstinputlisting[language=C]{code/t_compscale.c}
 \end{minipage}
 \par
-There are 64 patch location per scaler (one for each length of pixels besides 64 desired, stored in \cw{codeofs[]}), allowing to write a \cw{RETF} instruction causing an early return. For each command in a sprite column, the engine looks up how many texels is the command payload, lookup where to patch the scaler, save the intruction at this location and overwrites it with a \cw{RETF}. After the scaler returns (and the command payload has been rendered), the scaler is unpatched.\\
+There are 64 patch location per scaler (one for each length of pixels besides 64 desired, stored in \cw{codeofs[]}), allowing to write a \cw{RETF} instruction causing an early return. For each command in a sprite column, the engine looks up how many texels is the command payload, looks up where to patch the scaler, saves the intruction at this location and overwrites it with a \cw{RETF}. After the scaler returns (and the command payload has been rendered), the scaler is unpatched.\\
 \par
 In the assembly optimized code, note how the engine knows where to patch the code thanks to a \cw{BX} register which point to \cw{codeofs}.
 \par

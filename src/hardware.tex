@@ -28,10 +28,10 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
 
 
 \section{CPU: Central Processing Unit}
-  \subsection{Overview}
-  The performances of a PC was so overwhelmingly dominated by its CPU that a machine was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had a 80386 or equivalent inside, it was called a "386". If it had an Intel 80286, it was a "286".\\
-\par
-  The ubiquitous CPU manufacturer was Intel with its line of x86 microprocessors. Machines based on the 16 bits 80286 released in 1982 were on the decline and progressively replaced by Intel's first 32 bits processor, the 80386 released in June 1986. Given the adoption curve, Wolfenstein 3D was targeted at a PC running on a 386 CPU, with degraded performance (yet still playable) on a 286.\\
+  
+  In 1991 there were 56 millions PCs in USA \footnote{"Computers". Collier's Encyclopedia. Vol. 7, 1992: 114, 129.}. The performances of these machines were so overwhelmingly dominated by the CPU that a PC was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had a 80386 or equivalent, it was called a "386". If it had an Intel 80286, it was a "286".\\
+\subsection{Overview}
+  The ubiquitous CPU manufacturer was Intel with its line of x86 microprocessors. Machines based on the 16 bits 80286 processor did not sell well\footnote{Bill Gates dubbed it "Brain Dead"} but its successor the 80386 introduced in 1985 was immensely successful\footnote{SALES}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
 \par
 
 
@@ -73,11 +73,42 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
   \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 MIPS.\\
   \par
  Intel built two versions of the 386: The 386-SX and 386-DX. They are identical processors yet the DX version is almost twice as powerful as the SX (on the chart the \cw{386 SX 33Mhz} and the \cw{386 DX 33Mhz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM being twice as wide on the DX (32 bits vs 16 bits). Despite its inferiority, the SX sold well because it was cheaper and a lot of people had no idea what a "bus" was, they just wanted "a 386".\\
+
+
+
  \par
-Two other companies produced Intel clones: AMD and Cyrix. Their mediocre performances did not justify the lower cost and as a result they never gained significant market share. Almost all PCs featured an Intel CPU. Interestingly, AMD evolved to become a serious challenger\footnote{The history of AMD vs Intel litigations could be the subject of a book.} while Cyrix merged with National Semiconductor in 1997.\\
+\textbf{\underline{Trivia :}} Two other companies produced Intel clones: AMD and Cyrix. Their mediocre performances did not justify the lower cost and as a result they never gained significant market share. Almost all PCs featured an Intel CPU. Interestingly, AMD evolved to become a serious challenger\footnote{The history of AMD vs Intel litigations could be the subject of a book.} while Cyrix merged with National Semiconductor in 1997.\\
 \par
 
-A 386 CPU can be summarized by the following elements:
+\subsection{The Intel 80386}
+The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started at a side project for a small team in San Jose while select employees in Portland worked on the flagshit P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performances, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel}. Two choices in the design of the 386 constributed to its success. For one the designers had decided to listen to the programmers feedback and dropped the idea to use a new instruction set. As a result the 386 is fully backward compatibility with the 286. They also managed to add a 32 bit operating mode solving a lot of the memory addressing issues of the 286.\\
+\par
+\textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View. New York: McGraw-Hil} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "Software poison".\\
+\par
+The 80386 relies on six units with a three stages pipeline.\\
+\par
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imgs/drawings/386_architecture.pdf}
+\end{figure}
+\par
+The Bus Unit was capable of operating with a 32 bit or a 16 bit bus. This proved a huge assest for manufacturers who were able to reuse the design of their 286 (16 bit) motherboards.
+\par
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imgs/drawings/processing_unit.pdf}
+\end{figure}
+\par
+The three units in the execution group form a three stage pipeline where a 16 byte instruction prefetch queue feeds variable size instructions\footnote{All Intel CPUs are Complex instruction set computing.} to a three stages pipeline made of Decode, Execute, and Retire. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imgs/drawings/instruction_pipeline.pdf}\\
+\end{figure}
+\par
+\textbf{\underline{Trivia :}} The prefetcher is linear, it cannot predict the result of a branch and as a result a jump (\cw{JMP}) instruction triggers a flush in the prefetch queue and the decoded instruction FIFO.\\
+\par
+From a programming perspective, a 386 CPU can be summarized by the following elements:
 \begin{itemize}
 \item An Arithmetic Logic Unit performing \cw{add}, \cw{sub}, \cw{mul} et cetera.
 \item 15 registers:
@@ -91,19 +122,27 @@ A 386 CPU can be summarized by the following elements:
 \item A 32 bit address bus for up to 4GB of flat addressable RAM
 \item Memory Paging Unit
 \end{itemize}
+ \par
+ \textbf{\underline{Trivia :}} Despite its pipeline design, the 386 cannot do an operation in less than one cycle. Even simple \cw{ADD reg, reg} or even \cw{INC reg} takes two instructions.\\
+ \par
  
-\par
-Despite its power compared to the 286, the architecture of a 386 is very simple. In particular, notice the absence of pipelining, i-cache, and d-cache. The CPU essentially revolves around its 32 bit ALU crunching 32-bit integers.
 
-\begin{figure}[H]
-\centering
-  
-      \includegraphics[width=\textwidth]{imgs/drawings/80386DX_arch.png}
-\caption{Architecture of an i386 (courtesy \cw{http://www.walkerb.net/}).}
+  \begin{figure}[H]
+\centering  
+\begin{tabularx}{\textwidth}{ X  Y }
+  \toprule
+  \textbf{Instruction type} &  \textbf{Clocks} \\
+  \toprule 
+   \cw{ADD reg16, reg16} & 2  \\
+   \cw{INC reg16} & 2  \\
+   \cw{IMUL reg16, reg16} & 12-25\footnote{Not all multiplications are equal. The 80386 uses an early-out multiply algorithm. The actual number of clocks depends on the position of the most significant bit in the optimizing multiplier}  \\
+   \cw{IDIV reg16, reg16} & 27 \\
+   \cw{MOV [reg16], reg16} & 4 \\
+  \toprule
+\end{tabularx}
+\caption{386 instruction cost\protect\footnotemark.}
 \end{figure}
-
- A 12 byte instruction prefetch queue\footnote{Documentation states 18 bytes but a bug workaround reduced the size to 12 bytes} feeds variable size instructions\footnote{All Intel CPUs are Complex instruction set computing.} to a three stages pipeline made of Decode, Execute, and Retire. Note that an instruction cannot enter the pipeline as long as the previous one as not been retired. As a result, even a simple instruction such as \cw{ADD} takes two cycles to complete\footnote{Source: http://zsmith.co/intel\_a.html\#add}.
-
+\footnotetext{Source:INTEL 80386 PROGRAMMER'S REFERENCE MANUAL 1986}
 
 
 
@@ -112,7 +151,7 @@ Despite its power compared to the 286, the architecture of a 386 is very simple.
   \subsection{Floating Point}
   
    All that CPU power was not necessarily useful for programming a game. In order to perform the trigonometric computations for 3D effects, the engine has to keep track of the fractional part of each operation. It may not look like an issue since the C programming language has a type (\codeword{float}) precisely for that purpose. But in practice it is a problem, and to understand it we need to understand how that \codeword{float} works.\\
-\\
+\par
  As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{What every Computer Scientist should know about Floating-Point}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is to program a 3D engine. In the C language, \codeword{float}s are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
   \item One bit S for the sign
@@ -221,7 +260,7 @@ And finally the graphic representation with window and offset:\\
 Floating point arithmetic is a powerful tool. It can represent very small or huge values while keeping track of fractional parts of a number, and also protecting from overflow by floating the window when necessary.\\
 \par
 Floating point is handy, but the drawback is that it is also computationally expensive. The reason is simple. In order to add, subtract, multiply or divide two numbers, they both have to be expressed with the same window. Which means converting one number to the representation used by the other, usually with higher precision than 32 bits (typically 80 bits on Intel FPUs)\footnote{To fully grasp how much processing a FPU does, it helps to read a software implementation. I found Berkeley SoftFloat helpful.}.\\
-\\
+\par
 This is not a problem when everything is hardwired within an hardware floating point unit but it is a big problem for the 386. If you refer back to the architecture diagram you will notice that it only has an ALU. \emph{A 386 doesn't have a hardware Floating Point Unit}. If \cw{float} operations are found in the code, they are emulated in software by the compiler, resulting in terribly slow processing. So slow they are not usable for anything real-time.\\ 
 \par
 
@@ -330,7 +369,7 @@ Out of the original 1024KB, only 640KiB (called Conventional Memory) were usable
 \bigskip
 
 \textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KiB of Conventional Memory. Needless to say French people learned pretty quickly that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a qwerty keyboard but IDDAD on an azerty keyboard without the French driver loaded.}.\\
-\\
+\par
 
 
 
@@ -350,7 +389,7 @@ There are two kinds of pointers: \cw{near} and \cw{far}. A \cw{near} pointer is 
 
 That may not sound too bad, but in practice this segmented addressing leads to many issues.
 The least problematic is about the language. Since C was invented on a flat memory machine, it had to be augmented by PCs compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro are provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. Of course \cw{libc} is also "different": \cw{malloc} returns a \cw{near} pointer and therefore can only allocate up to 64kB. To get more than 64K, \cw{farmalloc} is needed.\\
-\\
+\par
 The larger issue is that two pointers referring to the same address can fail an equality test. In this model, the 1MiB of RAM is divided in 65536 paragraphs by the segment pointer. A paragraph is 16 bytes but an offset can be up to 65536 which results in many overlaps. It is easy to understand with the following examples.\\
 \par
 Pointer A defined as:\\
@@ -397,7 +436,13 @@ With this system, pointer arithmetic must also receive careful consideration. A 
 
 The 20 bit address bus of Real Mode limits the addressable RAM to 1MB. But machines of 1992 came equipped with more, typically 2MiB and even sometimes 4MiB for the most fortunate customers.\\
 \par 
-The workaround at the time to access these resources was to install drivers that would open a window beyond the addressable RAM, as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around bank switching. The drivers allow for manipulating 16KiB units of data called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, the CPU is switched to Protected Mode, a page is swapped between the EMS\footnote{Expanded Memory Specification} and the HMA\footnote{High memory area}. The CPU is then switched back to Real Mode where the 16KiB page is now accessible. Given this mechanism, no executable code can be stored there, it is only useful to store data.
+The workaround at the time to access these resources was to install drivers that would open a window beyond the addressable RAM, as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around bank switching. The drivers allow for manipulating 16KiB units of data called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, the CPU is switched to Protected Mode, a page is swapped between the EMS\footnote{Expanded Memory Specification} and the HMA\footnote{High memory area}. The CPU is then switched back to Real Mode where the 16KiB page is now accessible. Given this mechanism, no executable code can be stored there, it is only useful to store data.\\
+\par
+\textbf{\underline{Trivia :}} Switching from Real Mode to Protected Mode is easy. Setting the Control Register bit 1 to 1 and it can be done in 6 instructions:
+\par
+\lstinputlisting[ language={[x86masm]Assembler}]{code/switch_to_protected_mode.asm}
+\par
+However, switching back from Protected Mode to Real Mode is impossible on 286 since Intel designers never envisioned this would be needed. As a result the only way is to issue a reset instruction \cw{HALT} to the CPU which can take milliseconds to execute. The 386 does not have this problem since it recognizes correctly when CR0 bit 1 is set back to 0.
 
 \begin{figure}[H]
 \centering
@@ -420,7 +465,7 @@ To learn more about EMS be sure to read Edward Mendelson's excellent article "A 
 \par
 
 \subsubsection{A system "Impossible to love"}
-At this point, if you are puzzled by the CPU and its design you are not alone. Over the years I came across many ways to describe this madness but two particularly stand out.\\
+At this point, if you are puzzled by the CPU and its design you are not alone. Over the years I came across many ways to describe this madness but three particularly stand out.\\
 \par
  \begin{fancyquotes}
    The x86 is an architecture that is difficult to explain and impossible to love.\\
@@ -435,7 +480,12 @@ And:\\
    \par
 \textbf{Eccles-Jordan Trigger - Codeproject.com.}
  \end{fancyquotes}\\
-
+\par
+ \begin{fancyquotes}
+    Software poison.\\
+   \par
+\textbf{Steve Morris - Co-Architect of the Intel 8086.}
+ \end{fancyquotes}\\
 
 
 \par
@@ -469,7 +519,7 @@ PCs were connected to CRT monitors. Big, heavy, small diagonal, cathodic ray bas
 \end{figure}
 
 \textbf{\underline{Trivia :}} How big and heavy could a CRT be? The InterView 28hd96 by Integraph weighed 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).\\
-\\
+\par
 The main issue in this system is that CRTs are analogic systems while computers are digital. An interface is needed between the two and it came as a series of chipsets called "Adapters". 
 
   \subsection{History of Video Adapters}
@@ -535,9 +585,9 @@ VGA can be summarized as three major systems with input, storage, and output sys
 \end{itemize}
 
 The most surprising part of the architecture is obviously the framebuffer. Why have four small fragmented banks instead of one big linear one?\\
-\\
+\par
 The first part of the explanation comes from backward compatibility. The version before VGA, EGA, had only 64KiB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
-\\
+\par
 But the real reason was RAM latency and the need for a minimum bandwidth. A CRT running at 70Hz and displaying 640x480 in 16 colors needs a pixel every 1/(640*480*70)th of a second. At this resolution, one pixel is encoded on 4 bits. Each nibble is translated to a 888 RGB color by the DAC. That encoding divides bandwidth by six, but you still need one byte every 91 nano-seconds. Unfortunately, RAM access latency was 200ns. Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz, so the DAC would starve. If latency could not be reduced, the throughput could still be improved by reading from four banks at the time. Reading in parallel give an amortized RAM latency of 200/4 = 50ns which is fast enough.\\
 \par
 Keep in mind that this architecture reduced the penalty of read operations, but plotting a pixel in the framebuffer with a write operation was still slow. To write to the VRAM as little as possible was very important in order to maintain a decent framerate. 
