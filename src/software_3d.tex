@@ -1815,9 +1815,7 @@ Each enemy is given specific orders which dictate his actions once he knows of y
 
 
 \subsubsection{Patrolling}
-I/A is also augmented with map waypoints for patrolling.\\
-\par
-\note{Elaborate on how it is done}
+In "path" mode, an agent simulates patrolling. There is no path finding, it is all done via waypoints which change the direction of an agent. After stepping on a "change direction" tile, the agent keeps on walking straight until it hits a wall. All waypoints are placed manually by the map designer with TED5. In E1M1, German shepherd (marked a "D") spawn in a kennel with many waypoints.\\
 \par
 \begin{figure}[H]
  \centering
