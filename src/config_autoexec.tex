@@ -1,6 +1,7 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-Upon startup, the operating system reads two files automatically from the booting device (which could be either the hard-drive(C:) or floppy disk (A:).\\
+At startup, the operating system reads two files automatically from the booting device (which can be either the hard-drive \cw{C:} or floppy disk \cw{A:}). Each line 
+in \cw{CONFIG.SYDS} instruct DOS to load a device drive or configure where to load something in RAM. 
 \par
 CONFIG.SYS:\\
  \begin{lstlisting}[breaklines=true,breakindent=0em]
@@ -10,10 +11,12 @@ DEVICEHIGH=C:\WINDOWS\EMM386.EXE AUTO RAM
 DEVICE=C:\WINDOWS\MOUSE.SYS
 \end{lstlisting}
 \par
+The file \cw{AUTOEXEC.BAT} is more like a batch file used to define variable. Notice \cw{BLASTER} variable which is parsed in Wolfenstein3D to know how to talk to the sound card.\\
+\par
 AUTOEXEC.BAT:\\
  \begin{lstlisting}[breaklines=true,breakindent=0em]
 @echo off
-SET SOUND=C:\\CREATIVE\CTSND
+SET SOUND=C:\CREATIVE\CTSND
 SET BLASTER=A220 I5 D1 H5 P330 E620 T6
 SET PATH=C:\DOS;C:\ 
 \end{lstlisting}

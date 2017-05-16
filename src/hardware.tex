@@ -81,32 +81,31 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
 \par
 
 \subsection{The Intel 80386}
-The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started at a side project for a small team in San Jose while select employees in Portland worked on the flagshit P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performances, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel}. Two choices in the design of the 386 constributed to its success. For one the designers had decided to listen to the programmers feedback and dropped the idea to use a new instruction set. As a result the 386 is fully backward compatibility with the 286. They also managed to add a 32 bit operating mode solving a lot of the memory addressing issues of the 286.\\
+The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagshit P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performances, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel}. Two choices in the design of the 386 contributed to its success. For one the designers decided to listen to the programmers feedback and dropped the idea to use a new instruction set. As a result the 386 is fully backward compatibility with the 286. They also managed to add a 32 bit operating mode which solves many of the memory addressing issues of the 286.\\
 \par
 \textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View. New York: McGraw-Hil} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "Software poison".\\
 \par
-The 80386 relies on six units with a three stages pipeline.\\
+The 80386 relies on three systems and a three stages instructions pipeline.\\
 \par
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/386_architecture.pdf}
 \end{figure}
 \par
-The Bus Unit was capable of operating with a 32 bit or a 16 bit bus. This proved a huge assest for manufacturers who were able to reuse the design of their 286 (16 bit) motherboards.
+The Bus Unit is the only difference between a SX and a DX. The SX has a 16 bit bus which allowed PC manufacturers to reuse the design of the 286 motherboards and drove the price down significantly. The DX was had a fully 32 bit Bus unit.
 \par
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/processing_unit.pdf}
 \end{figure}
 \par
-The three units in the execution group form a three stage pipeline where a 16 byte instruction prefetch queue feeds variable size instructions\footnote{All Intel CPUs are Complex instruction set computing.} to a three stages pipeline made of Decode, Execute, and Retire. 
+The three units in the execution group form a three stages pipeline: Prefetch, Decode, and Execute. The Prefetch Unit wakes up when the Execution unit is performing but not using the bus and stores instructions in a 16 byte array. The prefetcher is linear and cannot predict the result of a branch. A jump (\cw{JMP}) instruction triggers a flush of the entire pipeline. Instructions go down the pipeline and are decoded by the Decode Unit, the result of the decode operation is storedin a three elements FIFO where they are picked up by the Execution Unit.\\
+\par
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/instruction_pipeline.pdf}\\
 \end{figure}
-\par
-\textbf{\underline{Trivia :}} The prefetcher is linear, it cannot predict the result of a branch and as a result a jump (\cw{JMP}) instruction triggers a flush in the prefetch queue and the decoded instruction FIFO.\\
 \par
 From a programming perspective, a 386 CPU can be summarized by the following elements:
 \begin{itemize}
@@ -123,7 +122,7 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
 \item Memory Paging Unit
 \end{itemize}
  \par
- \textbf{\underline{Trivia :}} Despite its pipeline design, the 386 cannot do an operation in less than one cycle. Even simple \cw{ADD reg, reg} or even \cw{INC reg} takes two instructions.\\
+ \textbf{\underline{Trivia :}} Despite its pipeline design, the 386 cannot do an operation in less than two cycles. Even a simple \cw{ADD reg, reg} or \cw{INC reg} take two clocks. This is mostly due to the abscenece of SRAM on-chip cache.\\
  \par
  
 
@@ -138,9 +137,11 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
    \cw{IMUL reg16, reg16} & 12-25\footnote{Not all multiplications are equal. The 80386 uses an early-out multiply algorithm. The actual number of clocks depends on the position of the most significant bit in the optimizing multiplier}  \\
    \cw{IDIV reg16, reg16} & 27 \\
    \cw{MOV [reg16], reg16} & 4 \\
+   \cw{OUT [reg16], reg16} & 25 \\
+   \cw{IN [reg16], reg16} & 26 \\
   \toprule
 \end{tabularx}
-\caption{386 instruction cost\protect\footnotemark.}
+\caption{386 instruction cost\protect\footnotemark}
 \end{figure}
 \footnotetext{Source:INTEL 80386 PROGRAMMER'S REFERENCE MANUAL 1986}
 
@@ -442,7 +443,7 @@ The workaround at the time to access these resources was to install drivers that
 \par
 \lstinputlisting[ language={[x86masm]Assembler}]{code/switch_to_protected_mode.asm}
 \par
-However, switching back from Protected Mode to Real Mode is impossible on 286 since Intel designers never envisioned this would be needed. As a result the only way is to issue a reset instruction \cw{HALT} to the CPU which can take milliseconds to execute. The 386 does not have this problem since it recognizes correctly when CR0 bit 1 is set back to 0.
+However, switching back from Protected Mode to Real Mode is impossible on a 286 since Intel designers never envisioned this would be needed. As a result the only way is to issue a reset instruction \cw{HALT} to the CPU which can take milliseconds to execute. The 386 does not have this problem since it recognizes correctly when \cw{CR0} bit 1 is set back to 0.
 
 \begin{figure}[H]
 \centering
@@ -450,7 +451,7 @@ However, switching back from Protected Mode to Real Mode is impossible on 286 si
 \caption{Expanded/Extended memory layout}
 \label{fig:ems_xms_layout}
 \end{figure}
-Unfortunately, once again, nothing was standardized. Users could load different drivers providing different memory mapping systems:
+Unfortunately extended memory was not standardized. Users could load different drivers providing different memory mapping systems:
 \begin{itemize}
 \item Expanded Memory Specification (EMS) drivers: EMM368.SYS.
 \item eXtended Memory Specification (XMS) drivers: HIMEM.SYS.
