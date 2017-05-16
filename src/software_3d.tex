@@ -571,7 +571,7 @@ Or it can be more complex due to a type of tweaked \cw{fixed} used for raycastin
 With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. The coordinate system finds its origin in the upper left. A map is a grid of 64 by 64 blocks. 
 \begin{figure}[H]
   \centering
- \includegraphics[width=.5\textwidth]{imgs/drawings/coordinate_system.png}
+ \includegraphics[width=.5\textwidth]{imgs/drawings/coo_sys.pdf}
 \end{figure}
 \par
 Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column heights are 29:3. The player position is 16:16. Angles however are \cw{int}s representing 10th of degrees with a range [0, 3600].
@@ -1368,9 +1368,10 @@ Upon hitting a "DOOR" tile, the raycaster consult the \cw{doorposition} array. T
  \par
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{imgs/drawings/test_door.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/door_test.pdf}
 \end{figure}
 \par
+Testing if a ray is stopped by a door or not costs almost nothing: $A.x + \dfrac{ystep}{2} < doorposition[doorIndex]$. In case of success the ray traverses the wall tile and keeps on being tested against the grid. Otherwise the ray is a hit, the coordinate of the point of interception are calculated as $Intercept.X = A.X + \dfrac{ystep}{2}$ and $Intercept.Y = A.Y + \dfrac{TILE\_SIZE}{2}$ and passed to the renderer.
 
 
 
@@ -1429,7 +1430,9 @@ Visible tile tracking is done in the simplest way with a 64x64 boolean array ind
 
  At the beginning of each frame, the engine clears the array.\\
 \par
+\begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/clear_vis_wold3d.c}
+ \end{minipage}
  \par
  Note that because register are 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations.\\
  \par

@@ -469,20 +469,21 @@ To rough out compositions, I used Cakewalk ("CW"). I had been using it for sever
 
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/music_pipeline.png}
+
+ \includegraphics[width=\textwidth]{imgs/drawings/music_pipelione.pdf}
  \caption{Music pipeline as described by Bobby Prince.}
 \end{figure}
-The OPL format is also called IMF\footnote{Id software Music File}. Because it supports only the YM3812, it is tailored for the chip with zero abstraction layer. It consists of a stream of machine language commands with associated delays. The stream pilots the nine channels in the OPL2. A channel is able to simulate an instrument and play notes thanks to two oscillators, one playing the role of a modulator and the other the role of a carrier. The way a channel is programmed is described in detail in the "Software" chapter.
+The OPL format is also called IMF\footnote{Id software Music File}. Because it supports only the YM3812, it is tailored for the chip with zero abstraction layer. It consists of a stream of machine language commands with associated delays. The stream pilots the nine channels in the OPL2. A channel is able to simulate an instrument and play notes thanks to two oscillators, one playing the role of a modulator and the other the role of a carrier. There are many other ways to control a channel such as envelope, frequency or octave. The way a channel is programmed is described in detail in the "Software" chapter.
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/channel.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/channel.pdf}
 \end{figure}
 \par
 \bu{Trivia :}  The YM3812's unmistakable sonority is due to its pecular set of waveform transformer (they are right after the output of each oscillator in the drawing). Four waveforms are available on the OPL2.
 \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/wave.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/wave_transform.pdf}
 \end{figure}
 
 
@@ -572,7 +573,7 @@ The game shipped as follows:\\
 \par
 \begin{figure}[H]
 \centering
-\scaledimage{0.disk}{7.png}\\
+\scaledimage{0.7}{disk.png}\\
 \end{figure}
 \par
 Above, a 3\nicefrac{1}{2}-inch floppy widely used to share and redistribute the game. The upper left hole allows the disk reader to recognize if the disk is a low capacity (720 KiB) or a high capacity (1.44 MiB), The upper right hole features a sliding tab which when obstructing the hole forbids writting to the disk, making it read-only. Once inserted in the floppy disk reader, the metalic part slides to the right to expose the magnetic disk.
