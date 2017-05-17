@@ -696,6 +696,7 @@ Note that $ystep$ and $ystep$ are simple lookup into the \cw{tan} array since $x
 \begin{figure}[H]
   \centering
  \fullimage{e1m1.png}
+ \label{mape1m1}
  \caption{The legendary E1M1. Player is the green arrow at the bottom.}
 \end{figure}
 
@@ -1702,7 +1703,7 @@ By far the most important stimuli and what makes the player feel like the A.I is
 
 
 \subsubsection{Sound propagation}
-Early on the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience and propagating it realistically in realtime is hard. A bloodfill algorithm could have been used but that would have been slow. To speed things up, maps are preprocessed. Each room delimits an area. At runtime the engine maintains a matrix of portal connecting areas and updates it when a door opens or closes. Knowing if an enemy can hear the main character gunfire is a simple lookup in a table.
+Early on the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience and propagating it realistically in realtime is hard. A bloodfill algorithm could have been used but that would have been slow. To speed things up, maps are preprocessed. Each room delimits an area. At runtime the engine maintains a matrix of portals connecting areas and updates it when a door opens or closes. Knowing if an enemy can hear the main character gunfire is a simple lookup in a table.
 
 \par
 \begin{figure}[H]
@@ -1815,11 +1816,13 @@ Each enemy is given specific orders which dictate his actions once he knows of y
 
 
 \subsubsection{Patrolling}
-In "path" mode, an agent simulates patrolling. There is no path finding, it is all done via waypoints which change the direction of an agent. After stepping on a "change direction" tile, the agent keeps on walking straight until it hits a wall. All waypoints are placed manually by the map designer with TED5. In E1M1, German shepherd (marked a "D") spawn in a kennel with many waypoints.\\
+In "path" mode, an agent simulates patrolling. There is no path finding, it is all done via waypoints which change the direction of an agent. After stepping on a "change direction" tile, the agent keeps on walking straight until it hits a wall. All waypoints are placed manually by the map designer with TED5.\\ 
+\par
+The waypoint system was used in other creative ways like In E1M1 to simulate the agitation of german shepherds (marked a "D"). A detailed view of the right wings of the map from page \pageref{mape1m1} shows no less than eight waypoints making the dogs run in circles and zigzagging.\\
 \par
 \begin{figure}[H]
  \centering
- \includegraphics[width=0.98\textwidth]{imgs/drawings/path.png}
+ \scaledimage{0.8}{path.png}
 \end{figure}
 \par
 
