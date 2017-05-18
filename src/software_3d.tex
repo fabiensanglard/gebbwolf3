@@ -1004,7 +1004,7 @@ $z = A + B = dx * \cos(\alpha) - dy * \sin(\alpha) $
   \end{equation*}
 \end{figure}
 \par
-For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy). It would rotate coordinates from map space to player space (where axis orientation is dictated by the player view angle).
+For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy). It would rotate coordinates from map space to player space (where axis orientation is dictated by the player view angle). \label{rotatematrix}
 \begin{figure}[H]
   \centering
   \begin{equation*}
@@ -1108,17 +1108,17 @@ It would involves a loop, a fixed point accumulator and intermediate variables. 
 \lstinputlisting[language=C]{code/hardcoded_draw.c}
 \end{minipage}
 
- The engine generates machine code at runtime for heights ranging from 2 pixels to 152 (the max height of the 3D canvas). This is all done in \cw{BuildCompScale}.\\
- \note{152 is wrong: A scaler has to render a column magnified but also clipped. TODO: Find out how many there are.}
+ The engine generates machine code at runtime, it happens in \cw{BuildCompScale}.\\
+ 
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/compscale.c}
 \end{minipage}
 \par
-Given a height, \cw{BuildCompScale} generates x86 instructions in the out variable \cw{code}. As a result, instead of having one generic function accepting any height,  Wolfenstein has 38 functions with a hard-coded height. To hard-code the height allows to unroll the loop and reduce the overhead.\\
+Given a height, \cw{BuildCompScale} generates x86 instructions in the out variable \cw{code}. As a result, instead of having one generic function accepting any height,  Wolfenstein has 256 functions with a hard-coded height. To hard-code the height allows to unroll the loop and reduce the overhead.\\
 \par
 With this optimization, minifying a column of 64 texels to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 128 pixels takes 705 (64*11+1) instructions. A precompiled scaler function has a fixed cost of 7 instructions per pixel when minifing and $3+4*scaling_factor$ instructions per pixel when magnifing: It doesn't get any faster than that.\\
-\note{The following calculation is entirely false. Need to redo everything....:}
+
 \par
 What is the RAM cost incurred by precompiling and caching these scalers? When rendering to its maximum dimension in the 3D canvas, the engine generates all scalers of even height from 2 to 512. That's 255 scalers for a total code size of 307,359 bytes.\\ That cost was deemed too high. To save RAM, past size 76, only every other even size are generated (2,4,6,,..,72,74,76) and (78,82,86,...,504,508,512). This trick generates only 136 scalers for a total code size of 126,120 bytes.\\
 Skipping compiled scaler generation involves using the wrong scaler when one is not available and introduces small visual artifacts but they are barely noticeable.\\

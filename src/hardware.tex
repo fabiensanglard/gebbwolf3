@@ -107,6 +107,14 @@ The three units in the execution group form a three stages pipeline: Prefetch, D
 \includegraphics[width=\textwidth]{imgs/drawings/instruction_pipeline.pdf}\\
 \end{figure}
 \par
+\begin{figure}[H]
+\centering
+\shadowbox{
+  \fullimage{Intel80386.png}
+  }
+\caption{The Intel 386, 10mmx10mm packing 275,000}
+\end{figure}
+\par
 From a programming perspective, a 386 CPU can be summarized by the following elements:
 \begin{itemize}
 \item An Arithmetic Logic Unit performing \cw{add}, \cw{sub}, \cw{mul} et cetera.
@@ -439,7 +447,7 @@ The 20 bit address bus of Real Mode limits the addressable RAM to 1MB. But machi
 \par 
 The workaround at the time to access these resources was to install drivers that would open a window beyond the addressable RAM, as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around bank switching. The drivers allow for manipulating 16KiB units of data called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, the CPU is switched to Protected Mode, a page is swapped between the EMS\footnote{Expanded Memory Specification} and the HMA\footnote{High memory area}. The CPU is then switched back to Real Mode where the 16KiB page is now accessible. Given this mechanism, no executable code can be stored there, it is only useful to store data.\\
 \par
-\textbf{\underline{Trivia :}} Switching from Real Mode to Protected Mode is easy. Setting the Control Register bit 1 to 1 and it can be done in 6 instructions:
+\textbf{\underline{Trivia :}} Switching from Real Mode to Protected Mode is easy, you only need to set the Control Register bit 0 to 1. It can be done with 6 instructions:
 \par
 \lstinputlisting[ language={[x86masm]Assembler}]{code/switch_to_protected_mode.asm}
 \par
@@ -883,7 +891,7 @@ The above picture is the CT1350B model. Notice the OPL2 chip (labeled FM1312), t
 
 
   \subsection{Sound Blaster Pro}
-The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but added support for stereo 22.05 kHz playback and 44.1 kHz in mono. It also added a "mixer" to blend audio sources from mic, line in, and CD. Stereo was achieved with a pair of YM3812 chips (one for each audio channel).\\
+The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but added support for stereo 22.05 kHz playback and 44.1 kHz in mono. It also added a "mixer" to blend audio sources from mic, line in, and, CD and chose the attenuation level of left and right outputs. Stereo was achieved with a pair of YM3812 chips (one for each audio channel).\\\label{sbmixerpage}
 \begin{figure}[H] 
   \centering 
   \fullimage{hardware/sbpro.png} 

@@ -169,7 +169,7 @@ Overall the music part is simple to execude because almost everything has been p
 
 
 \section{Sound effects}
-Sound effects are were things become complicated. None of the card use the same format and
+Sound effects are where things become complicated. None of the card use the same format and
 the audio configurations are numerous. The sound settings screen illustrate well how complex it is.
 \par
 \begin{figure}[H]
@@ -177,7 +177,7 @@ the audio configurations are numerous. The sound settings screen illustrate well
  \fullimage{audio/audio_settings.png}
  \end{figure}
 \par
-Sound effects and Digitized sounds are actually the same thing. Sound effects are stored in three formats. Once for PC Speaker, once for Adlib and once for SoundBlaster/Disney Sound Source. The sounds are stored in the \cw{AudioT} archive by Muse. Sounds are segregated by format but always stored in the same order. This way a sound can be accessed in three formats by using \cw{STARTPCSOUNDS} + \cw{sound\_ID} or \cw{STARTADLIBSOUNDS} + \cw{sound\_ID}\\
+Sounds are stored in three formats. Once for PC Speaker, once for Adlib and once for SoundBlaster/Disney Sound Source in the \cw{AudioT} archive created by Muse. Sounds are segregated by format but always stored in the same order. This way a sound can be accessed in three formats by using \cw{STARTPCSOUNDS} + \cw{sound\_ID} or \cw{STARTADLIBSOUNDS} + \cw{sound\_ID}\\
 
 \par
 \begin{minipage}{\textwidth}
@@ -232,22 +232,26 @@ Since the SoundBlaster also supports 7000Hz PCM, it uses the same sound effects 
 
 
 \par
-\subsection{SoundBlaster Pro system}
+\subsection{SoundBlaster Pro system: Stereo PCM}
 \par
 
-On a "high-end" stereo SoundBlaster Pro with left and right channel, the sound is more elaborated: The sound source is rotated with the same formula as the raycaster. Using SOH-CAH-TOA.\\
-\par
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/audio_y_rotate.png}
- \end{figure}
- \par
- \begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/audio_x_rotate.png}
- \end{figure}
-\par
-Based on the distance, an intensity (hardcoded 0-15) is send to the left and right speaker.\\
+On a "high-end" SoundBlaster Pro, the Mixer described on page \pageref{sbmixerpage} is used to simulate 3D sounds. The source of the sound is first rotated with the same formula seen on page \pageref{rotatematrix}.\\
+% \par
+% \begin{figure}[H]
+% \centering
+%  \includegraphics[width=\textwidth]{imgs/drawings/audio_y_rotate.png}
+%  \end{figure}
+%  \par
+%  \begin{figure}[H]
+% \centering
+%  \includegraphics[width=\textwidth]{imgs/drawings/audio_x_rotate.png}
+%  \end{figure}
+% \par
+The player space position is used to generate two attenuation values (between 0 and 15) which are then packed in a byte and sent to the mixer.\\
+\par 
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C]{code/setposition.c}
+\end{minipage}
 \par
 \bu{Trivia :} Plugging a sound blaster card was not enough to hear sound. This was before "plug \& play" was introduced by Windows 95. The user had to write a special line in the startup command of the PC (\cw{autoexec.bat}).\\
 \par 
@@ -262,7 +266,7 @@ See \cw{SDL\_SBPlaySeg} and the ISR \cw{SDL\_SBService}
 
 
  
-\subsection{Sound on PC Speaker: PWM}
+\subsection{PC Speaker: PWM}
 The hardware chapter described a problem for sound effects. The default PC speaker can only generate square waves resulting in long beep which are not acceptable for game.\\
 
 \par
