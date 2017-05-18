@@ -571,7 +571,7 @@ Or it can be more complex due to a type of tweaked \cw{fixed} used for raycastin
 With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. The coordinate system finds its origin in the upper left. A map is a grid of 64 by 64 blocks. 
 \begin{figure}[H]
   \centering
- \includegraphics[width=.5\textwidth]{imgs/drawings/coordinate_system.png}
+ \includegraphics[width=.5\textwidth]{imgs/drawings/coo_sys.pdf}
 \end{figure}
 \par
 Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column heights are 29:3. The player position is 16:16. Angles however are \cw{int}s representing 10th of degrees with a range [0, 3600].
@@ -696,6 +696,7 @@ Note that $ystep$ and $ystep$ are simple lookup into the \cw{tan} array since $x
 \begin{figure}[H]
   \centering
  \fullimage{e1m1.png}
+ \label{mape1m1}
  \caption{The legendary E1M1. Player is the green arrow at the bottom.}
 \end{figure}
 
@@ -1368,9 +1369,10 @@ Upon hitting a "DOOR" tile, the raycaster consult the \cw{doorposition} array. T
  \par
 \begin{figure}[H]
   \centering
- \includegraphics[width=\textwidth]{imgs/drawings/test_door.png}
+ \includegraphics[width=\textwidth]{imgs/drawings/door_test.pdf}
 \end{figure}
 \par
+Testing if a ray is stopped by a door or not costs almost nothing: $A.x + \dfrac{ystep}{2} < doorposition[doorIndex]$. In case of success the ray traverses the wall tile and keeps on being tested against the grid. Otherwise the ray is a hit, the coordinate of the point of interception are calculated as $Intercept.X = A.X + \dfrac{ystep}{2}$ and $Intercept.Y = A.Y + \dfrac{TILE\_SIZE}{2}$ and passed to the renderer.
 
 
 
@@ -1429,7 +1431,9 @@ Visible tile tracking is done in the simplest way with a 64x64 boolean array ind
 
  At the beginning of each frame, the engine clears the array.\\
 \par
+\begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/clear_vis_wold3d.c}
+ \end{minipage}
  \par
  Note that because register are 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations.\\
  \par
@@ -1699,7 +1703,7 @@ By far the most important stimuli and what makes the player feel like the A.I is
 
 
 \subsubsection{Sound propagation}
-Early on the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience and propagating it realistically in realtime is hard. A bloodfill algorithm could have been used but that would have been slow. To speed things up, maps are preprocessed. Each room delimits an area. At runtime the engine maintains a matrix of portal connecting areas and updates it when a door opens or closes. Knowing if an enemy can hear the main character gunfire is a simple lookup in a table.
+Early on the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience and propagating it realistically in realtime is hard. A bloodfill algorithm could have been used but that would have been slow. To speed things up, maps are preprocessed. Each room delimits an area. At runtime the engine maintains a matrix of portals connecting areas and updates it when a door opens or closes. Knowing if an enemy can hear the main character gunfire is a simple lookup in a table.
 
 \par
 \begin{figure}[H]
@@ -1812,13 +1816,13 @@ Each enemy is given specific orders which dictate his actions once he knows of y
 
 
 \subsubsection{Patrolling}
-I/A is also augmented with map waypoints for patrolling.\\
+In "path" mode, an agent simulates patrolling. There is no path finding, it is all done via waypoints which change the direction of an agent. After stepping on a "change direction" tile, the agent keeps on walking straight until it hits a wall. All waypoints are placed manually by the map designer with TED5.\\ 
 \par
-\note{Elaborate on how it is done}
+The waypoint system was used in other creative ways like In E1M1 to simulate the agitation of german shepherds (marked a "D"). A detailed view of the right wings of the map from page \pageref{mape1m1} shows no less than eight waypoints making the dogs run in circles and zigzagging.\\
 \par
 \begin{figure}[H]
  \centering
- \includegraphics[width=0.98\textwidth]{imgs/drawings/path.png}
+ \scaledimage{0.8}{path.png}
 \end{figure}
 \par
 

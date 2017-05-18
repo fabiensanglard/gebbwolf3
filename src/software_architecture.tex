@@ -173,14 +173,13 @@ An ISR\footnote{Interrupt Service Routine} is installed in the Interrupt Vector 
 
 The source code is structured in two layers. WL\_* files are high-level layers relying on low-level ID\_* sub-systems called Managers interacting with the hardware.\\
 \par
- \par
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/layers.png}
+\includegraphics[width=\textwidth]{imgs/drawings/layers.pdf} 
  \end{figure}
  \par
-\par
 There are seven managers in total:\\
+
 \begin{itemize}
 	\item Memory
 	\item Page
@@ -190,6 +189,7 @@ There are seven managers in total:\\
 	\item User
 	\item Input
 \end{itemize}
+\par
 The WL\_ stuff was written specifically for Wolf3D while the ID\_ managers were reused from previous games (likely Catacomb 3D) and improved for the needs of the new engine.
 \note{What does L stands for in WL ?}
 \begin{figure}[H]
