@@ -1,5 +1,5 @@
 \section{Action Phase: 3D Renderer}
-After the player is done setting up the game via the 2D renderer, comes time for the 3D engine to shine. It is based on a simple yet powerful technology called raycasting. The core idea is to cast a ray for each column of pixel visible on the screen. Based on the distance \cw{d} from the point of view to where the ray hits a wall, a height \cw{h} can be calculated ($X$ is a simple scaling factor.):\\
+After the player is done setting up the game via the 2D renderer, it comes time for the 3D engine to shine. It is based on a simple yet powerful technology called raycasting. The core idea is to cast a ray for each column of pixels visible on the screen. Based on the distance \cw{d} from the point of view to where the ray hits a wall, a height \cw{h} can be calculated ($X$ is a simple scaling factor.):\\
 \par
 \begin{figure}[H]
   \centering
@@ -8,7 +8,7 @@ After the player is done setting up the game via the 2D renderer, comes time for
   \end{equation*}
 \end{figure}
 \par
-Even for a complex scene involving multiple door and rooms this method can delivers fast intersection calculations.
+Even for a complex scene involving multiple door and rooms, this method can deliver fast intersection calculations.
 \par
 \begin{figure}[H]
 \centering
@@ -24,26 +24,26 @@ Even for a complex scene involving multiple door and rooms this method can deliv
 
 
 \subsection{Life of a frame}
-As we saw when we unrolled the loop, the action scene is made of frames in a loop which in pseudo code look as follows:\\
+As we saw when we unrolled the loop, the action scene is made of frames in a loop, which in pseudo code look as follows:\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/flawded_game_loop.c}
  \end{minipage}
 \par
-This is a pretty standard design for an engine from the early 90. However it has a major flaw. Each slice of the game has a different duration depending on how long it took to render and update the word. This variability makes the game nondeterministic from one machine to an other. Or even between two runs on the same machine as a matter of fact. In the next drawing, all three timeslice representing three frames have different durations.\\
+This is a pretty standard design for an engine from the early 90s. However it has a major flaw: each slice of the game has a different duration depending on how long it takes to render and update. This variability makes the game nondeterministic from one machine to an other, or even between two runs on the same machine. In the next drawing, all three timeslices representing three frames have different durations.\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.pdf}
  
  \end{figure}
-  At the beginning of each frame, the engine retrives user inputs and combine them to the duration of the previous frame to update the world. Even if inputs are recorded for each frame, the same game could not be replayed. Because upon replaying a recorded game the engine would invariably reach a point where no inputs are available because a frame took longer or shorter to render. A simple disk access taking longer could have altered the duration of a frame, resulting in a different world outcome.\\
+  At the beginning of each frame, the engine retrives user inputs and combines them with the duration of the previous frame to update the world. Even if inputs are recorded for each frame, the same game could not be replayed as upon replaying a recorded game the engine would invariably reach a point where no inputs are available because a frame took longer or shorter to render. A simple disk access taking longer could have altered the duration of a frame, resulting in a different world outcome.\\
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/replay.pdf}
  \caption{The second frame rendered faster than during recording. No inputs are available for the player. Replay is now out of sync.}
  \end{figure}
 \par
-To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulate things at fixed timesteps. This hack result in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
+To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulates things at fixed times. This hack resulted in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
 \par
 In 1993, the Doom engine would solve this issue by simulating the world at fixed intervals.\\
 \par
@@ -51,7 +51,7 @@ In 1993, the Doom engine would solve this issue by simulating the world at fixed
  \lstinputlisting[language=C]{code/fixed_game_loop.c}
  \end{minipage}
 \par
-This design decouple the renderer from the world updates. Timeslices are always the same duration. User inputs can be recorded and replayed without getting out of sync.
+This design decouples the renderer from the world updates. Timeslices are always the same duration. User inputs can be recorded and replayed without getting out of sync.
 \par
  \begin{figure}[H]
 \centering
@@ -60,13 +60,13 @@ This design decouple the renderer from the world updates. Timeslices are always 
  \end{figure}
 
 \subsection{Life of a 3D frame}
-Before diving into details, here is an overview of the five stages involved in drawing a 3D scene.\\
+Five stages are involved in drawing a 3D scene:\\
 \begin{enumerate}
- \item Clear the framebuffer by drawing the floor and the ceiling (both solid color).
- \item For each column of pixel on screen, cast a ray from the player to the nearest wall. Draw a textured column of pixels with height inversely proportional to the distance.
- \item Draw the sprites (enemies, lamps, barrels).
- \item Draw the weapon\footnote{A modern 3D engine would render the weapon first and leverage the depth buffer to save fillrate. In that era, memory access were so slow is was faster to accept a little bit of overdraw.}.	
- \item Flip buffers: Instruct CRT Controller to use the framebuffer just composed on next vsync.
+ \item Clear the framebuffer by drawing the floor and the ceiling (both solid colors).
+ \item For each column of pixels on screen, cast a ray from the player to the nearest wall. Draw a textured column of pixels with height inversely proportional to the distance.
+ \item Draw the sprites (enemies, lamps, barrels.)
+ \item Draw the weapon\footnote{A modern 3D engine would render the weapon first and leverage the depth buffer to save fillrate. In that era, however, memory access was so slow it was faster to accept a bit of overdraw.}.	
+ \item Flip buffers: instruct CRT Controller to use the framebuffer just composed on next vsync.
 \end{enumerate}
 In the next six screenshots, the engine has been modified to slow down in order to see the content of the framebuffer at the end of each stage.\\
 \begin{figure}[H]
@@ -106,9 +106,9 @@ The longer the distance the ray traveled, the smaller the column is drawn on scr
  \caption{Phase 2: Drawing Walls: 160 rays}  
 \end{figure}
  \begin{minipage}{.4\textwidth}
- Doors are not sprites, they are part of the solid world. Notice how on the map a door is a block aligned with the wall yet it is rendered farther.\\
+ Doors are not sprites, they are part of the solid world. Notice how on the map a door is block aligned with the wall yet is rendered farther.\\
  \par
- The raycaster recognize door tiles and inject a delta to the distance a ray traveled. If the door is partially open, the raycaster is also able to detect if the ray should stop or allowed to traverse the tile.
+ The raycaster recognizes door tiles and injects a delta to the distance a ray traveled. If the door is partially open, the raycaster is also able to detect if the ray should stop or be allowed to traverse the tile.
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
@@ -174,18 +174,18 @@ Before starting to draw frames, the 3D renderer sets up the VRAM with static ele
   \centering
  \fullimage{hud_empty.png}
 \end{figure}
-This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine will draw the 3D view in the reserved white canvas in the center. Small portions at the bottom of the HUD are updated: Level, Score, Lives, Status, Health, Ammo, and Current weapon get a special treatment via an other VGA trick in order to speed up rendition.\\
+This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine draws the 3D view in the reserved white canvas in the center. Small portions at the bottom of the HUD are updated: Level, Score, Lives, Status, Health, Ammo, and Current Weapon receive special treatment via another VGA trick in order to speed up rendition.\\
 \par
 
-The hardware chapter described the Mode 12h which despite being unfit for games still had an interesting charcteristic. Mode 12h is a 16 color mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operation are one byte wide, it is not hard to imagine the difficulty to plot a single pixel without changing the other stored in the same bytes. One would have to do four read, four xor and four writes. Since the designer of the VGA were not complete sadist they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
+The hardware chapter described the Mode 12h, which despite being unfit for games still has an interesting charcteristic. Mode 12h is a 16 color mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operations are one byte wide, it is not hard to imagine the difficulty in plotting a single pixel without changing the others stored in the same bytes. One would have to do four read, four xor, and four writes. Since the designers of the VGA were not complete sadists, they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
 \par
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/latches.pdf}
  \end{figure}
-With this architecture, each time the VRAM is read, the latch from the corresponding bank is loaded with the read value. And each time a value is written to the VRAM, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmers to set a bit in a byte easily with one read, one ALU setup and one write.\\
+With this architecture, each time the VRAM is read, the latch from the corresponding bank is loaded with the read value. Each time a value is written to the VRAM, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmers to set a bit in a byte easily with one read, one ALU setup, and one write.\\
 \par
-Mode Y does not need latches to operate since values are stored in bytes and banks can be updated individually thanks to the mask. However tinkerers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. By getting a little bit creative, the circuitry can be repurposed. The ALU in from of each bank can be setup to use only the latch for writing. With such a setup, upon doing one read, four latches are populated at once. And four bytes in the bank are written with only one write to the RAM. This system allows transfer from RAM to VRAM 4 bytes at a time.\\
+Mode Y does not need latches to operate since values are stored in bytes, and banks can be updated individually thanks to the mask. However, tinkerers\footnote{Michael Abrash Grahic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. By getting a little creative, the circuitry can be repurposed. The ALU in front of each bank can be setup to use only the latch for writing. With such a setup, upon doing one read, four latches are populated at once and four bytes in the bank are written with only one write to the RAM. This system allows transfer from RAM to VRAM 4 bytes at a time.\\
 \par
 To take full advantage of this optimization, the 3D renderer uploads images to the VRAM above the fourth page. In total, the 43 sprites used to update the HUD are loaded in the asset page when the engine starts up.\\
 
@@ -355,17 +355,17 @@ To take full advantage of this optimization, the 3D renderer uploads images to t
      \fullimage{latched/134.png}
   \end{minipage}\
 
-\bu{Tick :} Images are stored woven. All bytes for bank 0 first, then all bytes for bank 1 and so on. This clever way to store data allow a bank to be loaded very fast with one single \cw{memcpy} (four \cw{memcpy} per image).\\
+\bu{Trick :} Images are stored woven. All bytes for bank 0, then all bytes for bank 1, and so on. This clever way to store data allows a bank to be loaded very fast with one single \cw{memcpy} (four \cw{memcpy} per image).\\
 \par
 All these assets account for 48*24*4 (weapons sprites) + 14*8*16 (numerals and keys sprites) + 24*24*32 (faces sprites) + 224 * 48 (paused + psyched) = 34,816 bytes. There are therefore 27,648 unused bytes in the fourth VGA page.\\
 \par
-For this trick to work, images source and destination have to be aligned on four byte horizontally in screen space. If you take a look at the location of each elements on screen you can see that elements are aligned on four pixels horizontally but there is no such constraint vertically.
+For this trick to work, image sources and destinations have to be aligned on four bytes horizontally in screen space. If you take a look at the location of each elements on screen you can see that elements are aligned on four pixels horizontally but there is no such constraint vertically.
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
 \end{figure}
 
-While it is faster to write four pixel in one operation, the trick does not provide a full 400\% speed increase since all writes have to be done in all three screen pages. It is obvious when looking at the routine updating the status (hero's face).\\
+While it is faster to write four pixels in one operation, this trick does not provide a full 400\% speed increase as all writes have to be done in all three screen pages. This is obvious when looking at the routine for updating the status (hero's face).\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/StatusDrawPic.c}
