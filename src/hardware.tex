@@ -67,7 +67,7 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
    \end{tikzpicture}
    \caption{Comparison\protect\footnotemark of CPUs with MIPS \protect\footnotemark.}
  \end{figure}
- \footnotetext{Source: "Roy Longbottom's PC Benchmark Collection: http://www.roylongbottom.org.uk/mips.htm".}
+ \footnotetext{Source: "Roy Longbottom's PC Benchmark Collection: http://www.roylongbottom.org.uk/mips.htm\#anchorIntel2".}
  \footnotetext{Million Instructions Per Second.}
  \par
   \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 MIPS.\\
@@ -319,7 +319,7 @@ As a result, a game engine designer was stuck in an awkward situation with two h
 
 
 \section{RAM}
-The first CPUs in the Intel x86 family were designed in 1976. A time where RAM was very expensive, the 8080 and 8086 had 16 bit registers with a 20 bit wide address bus capable of addressing 1MiB of RAM. It is difficult to stress how big 1MiB of RAM was in the 70s but as an example, the Apple II and the Commodore 64 both shipped with 64KiB which was enough to write and run amazing things. Sixteen bit registers and 20 bit address bus was plenty even though programming was difficult and required combining two registers to build a pointer. In 1986, the hardware had gotten cheaper and Intel made a departure from the old architecture with its i286 and i386. These new CPUs could be put in what was called "Protected Mode" and take full advantage of their 32 bit registers and 24 bits wide address bus offering up to 16 MiB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. To make sure old programs could still run, the 386 and 286 could be put in "Read Mode" which replicates how the Intel 8080 and 8086 operated: 16 bits registers, 20 bits address bus giving 1MiB addressable RAM with segmented addressing.\\
+The first CPUs in the Intel x86 family were designed in 1976. A time where RAM was very expensive, the 8080 and 8086 had 16 bit registers with a 20 bit wide address bus capable of addressing 1MiB of RAM. It is difficult to stress how big 1MiB of RAM was in the 70s but as an example, the Apple II and the Commodore 64 both shipped with 64KiB which was enough to write and run amazing things. Sixteen bit registers and 20 bit address bus was plenty even though programming was difficult and required combining two registers to build a pointer. In 1986, the hardware had gotten cheaper and Intel made a departure from the old architecture with its 286 and 386. These new CPUs could be put in what is called "Protected Mode" featuring a 24 bits wide address bus for up to 16 MiB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. The 386 even had 32 bit registers. To make sure old programs could still run, both processors could be put in "Read Mode" which replicates how the Intel 8080 and 8086 operated: 16 bits registers, 20 bits address bus giving 1MiB addressable RAM with segmented addressing.\\
 \par
 For compatibility reasons all PCs must start in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20-year-old Real Mode. Unfortunately, there was a major obstacle: the operating system MS-DOS by Microsoft Corporation.
   
@@ -527,7 +527,21 @@ PCs were connected to CRT monitors. Big, heavy, small diagonal, cathodic ray bas
 \label{fig:lcd_vs_crt}
 \end{figure}
 
+\begin{minipage}{.4\textwidth}
 \textbf{\underline{Trivia :}} How big and heavy could a CRT be? The InterView 28hd96 by Integraph weighed 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).\\
+\par
+In the right photo: John Carmack in 1995 working on an InterView 28hd96 while programming Quake using Visual Studio C++.\\
+\end{minipage}
+\begin{minipage}{.6\textwidth}
+\begin{figure}[H]
+  \begin{flushright}
+       %\frame{
+       \scaledimage{0.9}{johnCarmackWorking.png}
+       %}
+    \end{flushright}
+\end{figure}
+\end{minipage}
+
 \par
 The main issue in this system is that CRTs are analogic systems while computers are digital. An interface is needed between the two and it came as a series of chipsets called "Adapters". 
 
@@ -597,7 +611,7 @@ The most surprising part of the architecture is obviously the framebuffer. Why h
 \par
 The first part of the explanation comes from backward compatibility. The version before VGA, EGA, had only 64KiB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
 \par
-But the real reason was RAM latency and the need for a minimum bandwidth. A CRT running at 70Hz and displaying 640x480 in 16 colors needs a pixel every 1/(640*480*70)th of a second. At this resolution, one pixel is encoded on 4 bits. Each nibble is translated to a 888 RGB color by the DAC. That encoding divides bandwidth by six, but you still need one byte every 91 nano-seconds. Unfortunately, RAM access latency was 200ns. Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz, so the DAC would starve. If latency could not be reduced, the throughput could still be improved by reading from four banks at the time. Reading in parallel give an amortized RAM latency of 200/4 = 50ns which is fast enough.\\
+But the real reason was RAM latency and the need for a minimum bandwidth. A CRT running at 70Hz and displaying 640x480 in 16 colors needs a pixel every 1/(640*480*70)th of a second. At this resolution, one pixel is encoded on 4 bits. Each nibble is translated to a 666 RGB color by the DAC. That encoding divides bandwidth by six, but you still need one byte every 91 nano-seconds. Unfortunately, RAM access latency was 200ns. Not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz, so the DAC would starve. If latency could not be reduced, the throughput could still be improved by reading from four banks at the time. Reading in parallel give an amortized RAM latency of 200/4 = 50ns which is fast enough.\\
 \par
 Keep in mind that this architecture reduced the penalty of read operations, but plotting a pixel in the framebuffer with a write operation was still slow. To write to the VRAM as little as possible was very important in order to maintain a decent framerate. 
 
