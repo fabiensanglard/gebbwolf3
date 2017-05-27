@@ -1,16 +1,17 @@
-\section{Performance}
-With all the tricks and optimizations described, how well did the game run on most people's machines? DOSBox allows for emulating an old CPU and gives the following figures.
+\section{Performances}
+With all the tricks and optimizations described, how well did the game run on most people's machines? DOSBox allows for emulating an old CPU and gives the following figures\footnote{The original Wolfenstein3D did not show the frame rate. An altered version of the engine from http://thandor.net/article/10 featuring framerate running on DOSBOX was used to get these numbers. DOSBOX settings were chosen with 1000 cycles = 1 MIPS (confirmed with MIPS.COM DOS executable.)}.
 
 \begin{figure}[H]
 \centering
 \begin{tabularx}{\textwidth}{ X X X }
   \toprule
-  \textbf{CPU} & \textbf{Frequency (Mhz)} & \textbf{Frames per seconds} \\ \bottomrule
-  286 & 10 & 7 \\
-286 & 16 & 12 \\
-386SX & 25 &  16 \\
-386DX & 25 & 24 \\
-386DX & 33 & 30 \\ \bottomrule
+  \textbf{CPU} & \textbf{Frequency (Mhz)} & \textbf{Average framerate} \\ \bottomrule
+ 286 & 6 & 6 \\
+ 286 & 8 & 10 \\
+ 386SX & 16 &  16 \\
+ 386SX & 33 & 30 \\
+ 386DX & 33 & 50 \\
+ 386DX & 40 & 60 \\ \bottomrule
 \end{tabularx}
 \end{figure}
 
@@ -21,21 +22,21 @@ Min:  64 rays resulting in 2432 pixels to render (64*38).\\
 
   \begin{figure}[H]
 \centering
- \fullimage{adjust_view/100.png}
- \caption{Max view: 304 rays, resolution of 304x152}
+ \fullimage{adjust_view/fps16.png}
  \end{figure}
  \par
+ Above the game running in max view: 304 rays, resolution of 304x152. The simulated 386SX-16Mhz is achieving 16 frames per seconds.
 
    \begin{figure}[H]
 \centering
- \fullimage{adjust_view/50.png}
+ \fullimage{adjust_view/fps20.png}
  \caption{Max view: 224 rays, resolution of 224x112}
  \end{figure}
  \par
 
    \begin{figure}[H]
 \centering
- \fullimage{adjust_view/small.png}
+ \fullimage{adjust_view/fps52.png}
  \caption{Min view: 64 rays, resolution of 64x38}
  \end{figure}
  \par

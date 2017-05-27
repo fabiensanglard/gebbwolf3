@@ -56,8 +56,13 @@ This design decouples the renderer from the world updates. Timeslices are always
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/fixed.pdf}
- 
  \end{figure}
+
+\begin{fancyquotes}
+ Fixed versus variable game tic rates is still a debate today!  Doom using a locked tic rate made demos easy, but it also limited it to 35 fps, which later Pentium computers could get restricted by.\\
+\par
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
 
 \subsection{Life of a 3D frame}
 Five stages are involved in drawing a 3D scene:\\
@@ -371,6 +376,11 @@ While it is faster to write four pixels in one operation, this trick does not pr
 \lstinputlisting[language=C]{code/StatusDrawPic.c}
 \end{minipage}
 
+ \begin{fancyquotes}
+   Wolfenstein was the last Id game that still had the concept of score and lives.  We were still in a quarter-eating-arcade-game design mode. With Doom, you finally got to just keep playing as long as you wanted, which was a bit radical at the time!
+ \bigskip \\
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
 
 
 \subsection{Clearing the screen}
@@ -752,8 +762,14 @@ or load a saved game from before you went into that maze.\\
 \textbf{Joe Siegler - Past Pioneers of the Shareware Revolution}
 \end{fancyquotes}
 \par
-\bu{Trivia :} What is Aardwolf? A maned striped mammal (Proteles cristatus) of southern and eastern Africa that resembles the related hyenas and feeds chiefly on carrion and insects. It was the mascot of Id, appearing on Tom's Gotta Lists and the Commander Keen 6 Hint Sheet.
+\bu{Trivia :} What is Aardwolf? A maned striped mammal (Proteles cristatus) of southern and eastern Africa that resembles the related hyenas and feeds chiefly on carrion and insects. It was the mascot of Id, appearing on Tom's Gotta Lists and the Commander Keen 6 Hint Sheet.\\
+\par
 
+ \begin{fancyquotes}
+The reason for “aardwolf” was that it was the first image file in the NeXT dictionary on all of our NeXTStations.
+\bigskip \\
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
 
 
 
@@ -1540,7 +1556,13 @@ While drawing sprites, the occlusion array is read. If the height of a wall is g
 Since the entire screen is refreshed on the next frame, the occlusion array does not need to be cleared at the beginning of a frame.
 
 
-
+\begin{fancyquotes}
+There was still a little more room for improvement in compiled scaler performance for wall textures:  if the textures were reorganized so that they went “middle-out”, you could avoid half the loads by doing a 16 bit read and writing out AL for the top pixels and AH for the bottom pixels.\\
+\par 
+The combination of the compiled scalers getting more efficient at higher magnifications and the VGA latch writes avoiding entire columns let Wolf maintain almost the same speed with big walls and small walls, which was important.\\
+\par
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
 
 
 \subsubsection{Drawing things}
@@ -1687,10 +1709,15 @@ Some state chains are more complex, for example with chasing:\\
 \lstinputlisting[language=C,style=mystyle,basicstyle=\small]{code/s_grdchase.c}
 \end{minipage}
 \par
-This example was just for guards. All types of enemies (including bosses) have their own state machine. They often share actions (e.g: \cw{T\_Stand} and \cw{T\_Path}) but they also occasionally have their own.\\
 
+\begin{fancyquotes}
+The enemies in Wolf felt different based on the decision to close distance to the player either largest or smallest axis delta first - Closing smallest first made the brown shirts line up with you a long way away, making them easy to shoot.  Closing largest first made the officers come at you in a ragged diagonal, as if they were dodging your shots.\\
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
 \par
-What makes enemies interesting is how they go from standing to being aggressive via \cw{T\_Stand}. There are three ways to detect the player:\\
+All types of enemies (including bosses) have their own state machine. They often share action (e.g: \cw{T\_Stand} and \cw{T\_Path}) but they also occasionally have their own.\\
+\par
+What makes enemies interesting is how they go from standing to being aggressive via \cw{T\_Stand}. They have three ways to detect the player:
 \begin{itemize}
 \item Proximity
 \item Sight

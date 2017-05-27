@@ -117,15 +117,19 @@ With the big picture in mind, we can dive into the code and unroll the main loop
 \item \cw{long} and \cw{dword} are 32 bits.
 \end{itemize}
 \par
-Here is where the program starts.\\
+The program as expexted startsin cw{main} method.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_main.c}
 \end{minipage}
 \par
-
+Since the target machine ran in Real Mode, the code was compiled using 16 bit instructions only. For operations on \cw{long} (32 bit) Borland used their own math library. Wolf3D detects if the CPU is a 386 and replaces Bordland's integral division with instructions using 32 bit registers \cw{eax} and \cw{edx}.\\
 \par
-In \cw{InitGame}, the engine starts up and brings up all the managers (those are described in detail later.)\\
+\begin{minipage}{\textwidth}
+\lstinputlisting[language={[x86masm]Assembler}]{code/integral_div.asm}
+\end{minipage}
+\par
+In \cw{InitGame}, the engine starts up and brings up all the managers.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_init.c}
@@ -191,7 +195,7 @@ There are seven managers in total:\\
 \end{itemize}
 \par
 The WL\_ stuff was written specifically for Wolf3D while the ID\_ managers were reused from previous games (likely Catacomb 3D) and improved for the needs of the new engine.
-\note{What does L stands for in WL ?}
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/architecture.pdf}
@@ -216,7 +220,7 @@ The engine does not rely on \cw{malloc} to manage conventional memory, as this c
  \par
 A block can be marked with attributes:
 \begin{itemize}
-\item \cw{LOCKBIT} : This block of RAM cannot be moved during garbage collection.
+\item \cw{LOCKBIT} : This block of RAM cannot be moved during compaction.
 \item \cw{PURGEBITS} : Four levels available, 0= unpurgable, 1= purgable, 2= ???, 3= purge first.
 \end{itemize}
 
@@ -265,7 +269,7 @@ Eventually the free RAM will be exhausted and the first pass will fail.
   \caption{\cw{A} and \cw{E} were purged. \cw{C} and \cw{F} compacted. \cw{F} allocated in pass3.}
  \end{figure}
  \par
-But if memory is moved around, how do previous allocations still point to what they did before the garbage collection phase? Notice that a \cw{mmblockstruct} has a \cw{useptr} pointer which points to the owner of a block.  When memory is moved, the owner of the block is also updated.
+But if memory is moved around, how do previous allocations still point to what they did before the compaction phase? Notice that a \cw{mmblockstruct} has a \cw{useptr} pointer which points to the owner of a block.  When memory is moved, the owner of the block is also updated.
 
    \par
 \begin{figure}[H]
@@ -499,11 +503,10 @@ This mapping system is also called "chaining". Because 2 bits out of the address
  \par
  The waste is really the fault of the Chain-4 chip. Nobody knows who discovered this first but it turns out it is possible to disable this. The technique was popularized by Michael Abrash in Dr. Dobb's Journal of July 1991. In his article he described what he coined the Mode-X. An undocumented sequence of operations disabling Chain-4 allows for a resolution of 320x240 square pixels (since the ratio is 4:3) and full access to the 256K of RAM.\\
  \par
- Wolfenstein 3D does things slightly differently. It disables chain-4 but keeps resolution at 320x200. This mode is known as Mode-Y. \\
+ Wolfenstein 3D does things slightly differently. It disables chain-4 but keeps resolution at 320x200. This mode what coined Mode-Y many years later. \\
  \par
- \bu{Note :} Why not use Mode-X since it produces square pixels? Despite its advantage for artists, a screen using Mode-Y is 320x200 = 64000 pixels which represents 17\% fewer pixels compared to Mode-X with 320x240 = 76800 pixels. The engine already struggled to reach an acceptable framerate, so Mode-X was simply too many pixels per frame.\\
+ There are two reasons the team did not use square pixels 320x240 resolutions. Despite its advantage for artists, a screen using Mode-Y is 320x200 = 64000 pixels which represents 17\% fewer pixels compared to Mode-X with 320x240 = 76800 pixels. The engine already struggled to reach an acceptable framerate, so Mode-X was simply too many pixels per frame. And it would not even have been that great for artists either since all tools (Deluxe Paint) ran in Mode 13h which has non-square pixels. That would have created an awkward asset pipeline where Adrian worked in 320x200 but the engine rendered everything stretched in 320x240.
  \par
-\note{Ask John Carmack and John Romero why they went for Mode-Y instead of Mode-X.}
  \par
   \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/init_vga.c}
@@ -562,7 +565,7 @@ This code can run without issues at 70 frames per second since just 200 slow \cw
 This speed consideration has a fundamental impact on the engine: to draw anything fast with the VGA, it has to be drawn vertically. Everything in the engine is drawn this way: walls, sprites, menus. The ramifications of this hardware constraint are felt all the way down to how assets are stored in RAM (rotated 90 degrees) and woven to match the VGA banks layout (this is described in detail in the "Rendering sprites" section).\\
 
 \par
-The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3, and then goes back to page 1 (notice there are three buffers but this is not triple-buffering.) This solves tearing and allows the engine to draw continuously. It instructs the CRT Controller that it should scan a framebuffer in VRAM at a new offset after the next vsync.\\
+The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3, and then goes back to page 1 (notice there are three buffers but this is not triple-buffering.) This solves tearing and allows the engine to never block on vsync since it always has a valid framebuffer to draw. It instructs the CRT Controller that it should scan a framebuffer in VRAM at a new offset after the next vsync.\\
 \par
 The CRT Controller start scan offset is a 16 bits value which is updated with a little bit of assembly: first the high byte and then the low byte. The code would look as follows.\\
 \par

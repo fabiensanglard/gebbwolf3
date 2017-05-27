@@ -148,6 +148,14 @@ Random numbers are necessary for many things during runtime. For example, to cal
 \par
 The pseudo-random series is initialized using the current time modulo 256 as seen.
 \par
+
+\begin{fancyquotes}
+The random table wasn't even a shuffle - note that there are no 1s and two 2s in the table. I built it by just storing out 256 randoms from a little C program.  This was bad!
+\bigskip \\
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
+
+\par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}]{code/US_InitRndT.asm}
 \end{minipage}
@@ -158,8 +166,7 @@ The random number generator saves the last index in \cw{rndindex}. Upon request 
 \lstinputlisting[ language={[x86masm]Assembler}]{code/US_RndT.asm}
 \end{minipage}
 
-This pseudo random series of 256 values could have been generated with an 8 bits Maximun length LFSR (8,6,5,4). My assumption is that LFSR literature was hard to find at the time and finding the correct tap for a maximum length register of 16 bits was not worth the effort.\\
-\note{Johns, did I guess right?}
+This pseudo random serie of 256 values could have been generated with an 8 bits Maximun length LFSR (8,6,5,4). My assumption is that LFSR literrature was hard to find at the time and finding the correct tap for a maximum length register of 16 bits was not worth the effort.\\
 
 
 
