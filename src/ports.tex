@@ -1,13 +1,13 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
 
-The software chapter described how tightly coupled the engine is to the PC hardware. The architecture of the VGA,  the audio systems or even simple trick like the Linear Feedback Shift Register proved sometimes impossible to replicate with machines 100 times more powerful than a 386. The contrast is especially high when compared with Doom which was created with portability as a core part of the development process.\\
+The software chapter described how tightly coupled the engine was to the PC hardware. The architecture of the VGA,  the audio systems, or even a simple trick like the Linear Feedback Shift Register proved sometimes impossible to replicate with machines 100 times more powerful than a 386. This is in contrast to Doom, which was created with portability as a core part of the development process.\\
 \par
-Except for Wolf4SDL (and Chocolate Wolfenstein 3D derived from it) no port was ever able to replicate perfectly the original PC DOS experience. 
+Except for Wolf4SDL (and Chocolate Wolfenstein 3D derived from it) no port was ever able to perfectly replicate the original PC DOS experience. 
 
 
 \section{Super Nintendo}
-Released in the United States in March 1994, The port to Super Nintendo was done during the development of Doom. id Software originally intended to subcontract the port but the guy in charge failed to deliver.\\
+Released in the United States in March 1994, the port to Super Nintendo was done during the development of Doom. id Software originally intended to subcontract the port but the guy in charge failed to deliver.\\
 \par
  \begin{fancyquotes}
 Disaster Struck!\\
@@ -40,7 +40,7 @@ The solution was to sacrifice performance for implementation simplicity.  Instea
 \begin{figure}[H]
 \centering
  \fullimage{wolf3d_snes.png}
- \caption{Extremely low resolution during 3D scene: 125x125! (but the HUB and weapon are higher resolution which helps a little.)}
+ \caption{Extremely low resolution during 3D scene: 125x125! (But the HUB and weapon are higher resolution which helps a little.)}
  \end{figure}
  \par
 
@@ -54,14 +54,13 @@ The solution was to sacrifice performance for implementation simplicity.  Instea
 
 
 \section{Jaguar}
-The jaguar port was release in 1994 and it was the only other port (along with the SNES) made by id Software. It was the only port able to reach 60 frames per seconds. It was unique for having graphics in a resolution much superior to the PC release, and bilinear filtering. It also introduced two new weapons: the Flamethrower and Rocket Launcher:\\
+The Jaguar port was released in 1994 and was the only other port (along with SNES) made by id Software. It was the only port able to reach 60 frames per seconds and was unique in having graphics at a resolution far superior to the PC release, and bilinear filtering. It also introduced two new weapons: the Flamethrower and Rocket Launcher.\\
 \par
 
-The console was a mix of powerful components with severe bottleneck: 
-\bu{Trivia :} The Jaguar Chain Gun uses Doom's chaingun graphic as a base.\\
+The console was a mix of powerful components with a severe bottleneck: 
 \par
 \begin{fancyquotes}
-The memory, bus, blitter and video processor were 64 bits wide, but the processors (68k and two custom risc processors) were 32 bit.\\
+The memory, bus, bliter and video processor were 64 bits wide, but the processors (68k and two custom risc processors) were 32 bit.\\
 \\
 The bliter could do basic texture mapping of horizontal and vertical spans, but because there wasn't any caching involved, every pixel caused two ram page misses and only used 1/4 of the 64 bit bus. Two 64 bit buffers would have easily tripled texture mapping performance. Unfortunate.\\
 \\
@@ -71,13 +70,13 @@ It offered a usefull color space option that allowed you to do lighting effects 
 \\
 The video compositing engine was the most innovative part of the console. All of the characters in Wolf3D were done with just the back end scalar instead of bliting. Still, the experience with the limitations and hard failure cases of that gave me good ammunition to rail against microsoft's (thankfully aborted) talisman project.\\
 \\
-The little risc engined were decent processors. I was surprised that they didn't use off the shelf designs, but they basically worked ok. They had some design hazards (write after write) that didn't get fixed, but the only thing truly wrong with them was that they had scratchpad memory instead of caches, and couldn't execute code from main memory. I had to chunk the DOOM renderer into nine sequentially loaded overlays to get it working (with hindsight, I would have done it differently in about three...).\\
+The little risc engines were decent processors. I was surprised that they didn't use off the shelf designs, but they basically worked ok. They had some design hazards (write after write) that didn't get fixed, but the only thing truly wrong with them was that they had scratchpad memory instead of caches, and couldn't execute code from main memory. I had to chunk the DOOM renderer into nine sequentially loaded overlays to get it working (with hindsight, I would have done it differently in about three...).\\
 \\
-The 68k was slow. This was the primary problem of the system. You options were either taking it easy, running everything on the 68k, and going slow, or sweating over lots of overlayed parallel asm chunks to make something go fast on the risc processors.\\
+The 68k was slow. This was the primary problem of the system. Your options were either taking it easy, running everything on the 68k, and going slow, or sweating over lots of overlayed parallel asm chunks to make something go fast on the risc processors.\\
 \\
 That is why playstation kicked so much ass for development -- it was programmed like a single serial processor with a single fast accelerator.\\
 \\
-If the jaguar had dumped the 68k and offered a dynamic cache on the risc processors and had a tiny bit of buffering on the blitter, it could have put up a reasonable fight against sony.\\
+If the Jaguar had dumped the 68k and offered a dynamic cache on the risc processors and had a tiny bit of buffering on the bliter, it could have put up a reasonable fight against Sony.\\
 \\
 \textbf{John Carmack - Programmer (March 4th, 2000)}
 \end{fancyquotes}
@@ -93,12 +92,12 @@ If the jaguar had dumped the 68k and offered a dynamic cache on the risc process
  \fullimage{jaguar_port_gatling.png}
 \end{figure}
 \par
-Notice the 4:3 aspect ratio mandated by 1992 universal TV dimensions. The machine gun sprite was not the one from wolf3D PC but the one from Doom.
+Notice the 4:3 aspect ratio mandated by 1992 universal TV dimensions. The machine gun sprite was the one from Doom, not Wolf3D.
 \begin{figure}[H]
 \centering
  \fullimage{jaguar_port_flamethrower.png}
 \end{figure}
-A new weapon was introduced: The flamethrower.
+A new weapon was introduced: flamethrower.
 
 
 
@@ -110,7 +109,7 @@ Wolfenstein 3D was ported by John Carmack himself to iOS. The source code was re
  \fullimage{wolf_ios2.png}
  \end{figure}
  \par
- The most notorious improvement is bilinear filtering, thanks to hardware accelerated rendering.Bilinear filtering is not for everybody. Some people complained the enemies were "blurry" and wanted to see the pixels. Following, the release notes of Wolfenstein3D iOS on March 25, 2009.
+ The most notorious improvement is bilinear filtering, thanks to hardware accelerated rendering. Bilinear filtering is not for everybody. Some people complained the enemies were "blurry" and wanted to see the pixels. Following are the release notes of Wolfenstein3D iOS on March 25, 2009.
 
 \subsection{iPhone development notes}
 

@@ -1072,9 +1072,9 @@ The correction is enough to give pleasant straight lines for the walls. To make 
 
 
 \subsection{Drawing walls}
-With a height calculated for a column, all that remains to do is draw a column of textured pixels.\\
+With height calculated for a column, all that remains to do is draw a column of textured pixels.\\
 \par
-That may sound easy but it is in fact difficult on a CPU with as little power as a 386. To scale a column of 64 texels on the screen centered vertically is expensive. It turns out if you want to do it fast enough you need a few optimizations. This is where Wolfenstein 3D leaves other 3D engines of the era in the dust. The secret to its speed lies in:
+That may sound easy but is in fact difficult on a CPU with as little power as a 386. To scale a column of 64 texels on the screen centered vertically is expensive. It turns out if you want to do it fast enough you need a few optimizations. This is where Wolfenstein 3D leaves other 3D engines of the era in the dust. The secret to its speed lies in:
 \begin{itemize}
 \item Compiled scalers
 \item Deferred column rendering
@@ -1082,14 +1082,14 @@ That may sound easy but it is in fact difficult on a CPU with as little power as
 \par
 
 \subsubsection{Compiled scalers}
-All columns of pixels representing the walls are centered vertically and either magnified or minified. The goal of this game is to scale as fast as possible a column of 64 texels to any height ranging from 2 pixels to the max view height (152 pixels).\\
+All columns of pixels representing the walls are centered vertically and either magnified or minified. The goal of this game is to scale as quickly as possible a column of 64 texels to any height ranging from 2 pixels to the max view height (152 pixels.)\\
 \par
  \begin{figure}[H]
 \centering
  \fullimage{scaler_valign.png}
  \end{figure}
 \par
-As the photoshoped pink line shows, every column of pixels for a wall is centered vertically. There is no horizontal offset. In order to do that, a naive approach would be to use a generic routine looking something like this.\\
+As the photoshoped pink line shows, each column of pixels for a wall is centered vertically with no horizontal offset. In order to do that, a naive approach would be to use a generic routine looking something like this.\\
 
 
 \par
@@ -1108,20 +1108,20 @@ This would involves a loop, a fixed point accumulator, and intermediate variable
 \lstinputlisting[language=C]{code/hardcoded_draw.c}
 \end{minipage}
 
- The engine generates machine code at runtime, it happens in \cw{BuildCompScale}.\\
+ The engine generates machine code at runtime; it happens in \cw{BuildCompScale}.\\
  
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/compscale.c}
 \end{minipage}
 \par
-Given a height, \cw{BuildCompScale} generates x86 instructions in the out variable \cw{code}. As a result, instead of having one generic function accepting any height,  Wolfenstein has 256 functions with a hard-coded height. To hard-code the height allows to unroll the loop and reduce the overhead.\\
+Given a height, \cw{BuildCompScale} generates x86 instructions in the out variable \cw{code}. As a result, instead of having one generic function accepting any height,  Wolfenstein has 256 functions with a hard-coded height. Hard-coding the height allows for unrolling the loop and reducing overhead.\\
 \par
-With this optimization, minifying a column of 64 texels to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 128 pixels takes 705 (64*11+1) instructions. A precompiled scaler function has a fixed cost of 7 instructions per pixel when minifing and $3+4*scaling_factor$ instructions per pixel when magnifying. It doesn't get any faster than that.\\
+With this optimization, minifying a column of 64 texels to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 128 pixels takes 705 (64*11+1) instructions. A precompiled scaler function has a fixed cost of 7 instructions per pixel when minifying and $3+4*scaling_factor$ instructions per pixel when magnifying. It doesn't get any faster than that.\\
 
 \par
-What is the RAM cost incurred by precompiling and caching these scalers? When rendering to its maximum dimension in the 3D canvas, the engine generates all scalers of even height from 2 to 512. That's 255 scalers for a total code size of 307,359 bytes.\\ That cost was deemed too high. To save RAM, past size 76 only every other even size are generated (2,4,6,,..,72,74,76) and (78,82,86,...,504,508,512). This trick generates only 136 scalers for a total code size of 126,120 bytes.\\
-Skipping compiled scaler generation involves using the wrong scaler when one is not available and introduces small visual artifacts but they are barely noticeable.\\
+What is the RAM cost incurred by precompiling and caching these scalers? When rendering to its maximum dimension in the 3D canvas, the engine generates all scalers of even height from 2 to 512. That's 255 scalers for a total code size of 307,359 bytes.\\ That cost was deemed too high. To save RAM, past size 76 only every other even size are generated (2,4,6,..,72,74,76) and (78,82,86,...,504,508,512). This trick generates only 136 scalers for a total code size of 126,120 bytes.\\
+Skipping compiled scaler generation involves using the wrong scaler when one is not available and introduces small visual artifacts, but they are barely noticeable.\\
 \par
 Notice that scalers are generated at startup but if the 3D canvas dimensions are changed they have to be re-generated. This is what happens after a resize while the "thinking" screen is showing.
 \begin{figure}[H]
@@ -1136,7 +1136,7 @@ Notice that scalers are generated at startup but if the 3D canvas dimensions are
 
 
 \subsubsection{Deferred column drawing}
-The second level of optimization is based on defered rendering. When a column of pixels meets certain conditions, it is buffered and rendered later in a batch, leveraging the VGA mask to save write operations.\\
+The second level of optimization is based on deferred rendering. When a column of pixels meets certain conditions, it is buffered and rendered later in a batch, leveraging the VGA mask to save write operations.\\
 \par 
 A simple raycaster with compiled scalers would have looked like this.\\
 
@@ -1144,7 +1144,7 @@ A simple raycaster with compiled scalers would have looked like this.\\
 \lstinputlisting[language=C]{code/naive_raycaster_pseudocode.c}
 \end{minipage}
 \par
-But the engine does not do this. Instead it buffers what to draw as follows.\\
+Instead, the engine buffers what to draw as follows.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wolf3d_raycaster_pseudocode.c}
@@ -1153,7 +1153,7 @@ But the engine does not do this. Instead it buffers what to draw as follows.\\
 \par
 This buffering is done because the renderer allows itself to cheat a little when two rays are deemed similar enough. If consecutive rays share characteristics, they are grouped together and drawn at the same height, regardless of their distance from the player's point of view. This process introduces a little distortion but unlocks a formidable speed up: the engine can write multiple columns on the screen, up to eight pixels in 3 writes.\\
 \par
-Rays are similar if they hit the same wall and result in the same \cw{v} horizontal texture coordinate. In short this optimization leverages wall magnification.\\
+Rays are similar if they hit the same wall and result in the same \cw{v} horizontal texture coordinate. In short, this optimization leverages wall magnification.\\
 
 \par
 The best case for this trick is shown in the following screenshots. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiples pixels horizontally. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
@@ -1178,12 +1178,12 @@ This trick is only possible because of an interesting property of the VGA bank l
 
 \par
 
-As a result, to achieve this trick, the engine must be very careful to factor in the four bank bytes alignment and the position of the columns on screen. The details of this are in the method \codeword{ScalePost} in \codeword{WL\_DRAW.C}.\\
+To achieve this trick, the engine must be careful in factoring in the four bank bytes alignment and the position of the columns on screen. The details of this are in the method \codeword{ScalePost} in \codeword{WL\_DRAW.C}.\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/ScalePost.c}
 \end{minipage}
-The engine will group up to 8 columns together. Because of the VGA alignment it can take up to three passes to write them all. Since there can be many combinations of VGA bank alignment and number of pixels to draw, the VGA mask is precalculated and looked up at runtime. Each pass has its own settings. A pass runs only if the VGA mask is not zero.\\
+The engine will group up to 8 columns together. Because of the VGA alignment it can take up to three passes to write them all. Since there can be multiple combinations of VGA bank alignment and number of pixels to draw, the VGA mask is precalculated and looked up at runtime. Each pass has its own settings. A pass runs only if the VGA mask is not zero.\\
 
  \par
  \begin{minipage}{\textwidth}
@@ -1193,12 +1193,12 @@ Each \cw{mapmasks} array is used during each pass \cw{X} as:\\
 \par
  VGA\_MASK = \cw{mapmasksX[first\_column\_x\_coordinate\%4][numcolumn - 1]}\\
  \par
- The engine does an early return when VGA\_mask is equal to 0 (which is equivalent to "no more pixels are to be drawn"). It is easier to understand with drawings. First a recap of how the VGA byte mask works.
+ The engine does an early return when VGA\_mask is equal to 0 (which is equivalent to "no more pixels are to be drawn"). This is easier to demonstrate with drawings. First a recap of how the VGA byte mask works.
 \begin{itemize}
-\item Bank 0 is selected when 1<<1 (1) is set to 1.
-\item Bank 1 is selected when 1<<2 (2) is set to 1.
-\item Bank 2 is selected when 1<<3 (4) is set to 1.
-\item Bank 3 is selected when 1<<4 (8) is set to 1.
+\item Bank 0 is selected when bit 1<<1 (1) is set to 1.
+\item Bank 1 is selected when bit 1<<2 (2) is set to 1.
+\item Bank 2 is selected when bit 1<<3 (4) is set to 1.
+\item Bank 3 is selected when bit 1<<4 (8) is set to 1.
 \end{itemize}
 \par
 
@@ -1209,7 +1209,7 @@ Each \cw{mapmasks} array is used during each pass \cw{X} as:\\
  \end{figure}
 
 
-With these in mind, we can take a few example using the following layout where the engine wants to draw column of pixels.
+With these in mind, here are a few examples using the following layout where the engine wants to draw column of pixels.
 \begin{figure}[H]
 \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation1.pdf}
@@ -1232,7 +1232,7 @@ With these in mind, we can take a few example using the following layout where t
 
 
 
-If the two column are not properly aligned (like columns under pixels 3 and 4), the mask is of no help. Two passes with mask set to 8 and then 1 will be needed.\\
+If the two columns are not properly aligned (like columns under pixels 3 and 4), the mask is of no help. Two passes with mask set to 8 and then 1 will be needed.\\
  \par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pass_3_4.c}
@@ -1244,7 +1244,7 @@ If the two column are not properly aligned (like columns under pixels 3 and 4), 
  \end{figure}
 
 
-In the worse case scenario, the engine needs to draw eight column of pixels, under pixels 3,4,5,6,7,8,9 and A. Because of the poor alignment, three passes are needed.\\
+In the worse case scenario, the engine needs to draw eight columns of pixels, under pixels 3,4,5,6,7,8,9 and A. Because of the poor alignment, three passes are needed.\\
  \par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pass_3_A.c}
@@ -1257,7 +1257,7 @@ In the worse case scenario, the engine needs to draw eight column of pixels, und
  \end{figure}
 
 
-A better case where two passes allow to draw 6 columns of pixels:\\
+A better case where two passes allows drawing 6 columns of pixels:\\
  \par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pass_0_5.c}
@@ -1274,7 +1274,7 @@ A better case where two passes allow to draw 6 columns of pixels:\\
 
 
 
-To take real case examples, the engine has been modified to draw in pink column of pixels which were written "for free" thanks to the VGA mask manipulation. We can see the performances improvement is significant with 50\% of write operations avoided.
+To visualize real cases, the engine has been modified to draw columns of pixels which were written "for free" thanks to the VGA mask manipulation in pink. We can see the performance improvement is significant, with 50\% of write operations avoided.
 
 \begin{minipage}{\textwidth}
  \centering
@@ -1294,7 +1294,7 @@ To take real case examples, the engine has been modified to draw in pink column 
  \vspace*{0.5cm}\\
  \scaledimage{0.9}{post_optimization_2_pink_show.png}
 \end{minipage}
-This technique helps solve the worse case scenario were a lot of pixels have to be written due to the size of the wall. It only really shines when a lot of magnification occurs. For walls far away (minified) this technique doesn't help at all but it doesn't matter since small walls are cheap to render.\\
+This technique helps solve the worst case scenarios were a large number of pixels have to be written due to the size of the wall. It only really shines when a lot of magnification occurs. For walls far away (minified) this technique doesn't help at all, but this doesn't matter as small walls are cheap to render.\\
 
 
 
@@ -1318,7 +1318,7 @@ This technique helps solve the worse case scenario were a lot of pixels have to 
 
 
 \subsubsection{Texturing}
-A subtle but extremely efficient trick used to improve quality of the wall rendition is pre-baked light texturing. The wall textures assets are generated twice by the artists: Once lit and once unlit.\\
+A subtle but extremely efficient trick used to improve quality of the wall rendition is pre-baked light texturing. The wall textures assets are generated twice by the artists: once lit and once unlit.\\
   \begin{figure}[H]
 \centering
  \fullimage{baked_lights_wood.png}
@@ -1329,12 +1329,12 @@ A subtle but extremely efficient trick used to improve quality of the wall rendi
  \fullimage{baked_lights_stone.png}
  \end{figure}
 \par
-At runtime, upon finding ray-wall intersection, if the ray hit a vertical wall (looking at the map from above) on the Y axis, the engine uses a light texture. If the ray hits an horizontal wall (on the X axis), it uses the darker version of the same texture. It is not obvious at first but with the same scene rendered side by side with and without the effect, the difference is striking.\\
+At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (looking at the map from above) on the Y axis, the engine uses a lit texture. If the ray hits an horizontal wall (on the X axis), it uses the unlit version of the same texture. The difference is not obvious at first, but with the same scene rendered side by side with and without this effect, the visual difference is striking.\\
 \begin{minipage}{\textwidth}
 \begin{figure}[H]
 \centering
  \fullimage{backed_off.png}
- \caption{Above: Baked texture off. Below: Backed texture on.}
+ \caption{Above: Baked texture off. Below: Baked texture on.}
  \end{figure}
 
 \begin{figure}[H]
@@ -1350,8 +1350,8 @@ At runtime, upon finding ray-wall intersection, if the ray hit a vertical wall (
 
 
 
-\subsubsection{Door}
-Doors are rendered directly via the raycaster. Therefore they have no thickness, that would have been much more complicated to implement.\\
+\subsubsection{Doors}
+Doors are rendered directly via the raycaster. Therefore, they have no thickness as that would have been much more complicated to implement.\\
 \par
 \begin{figure}[H]
  \centering
@@ -1359,7 +1359,7 @@ Doors are rendered directly via the raycaster. Therefore they have no thickness,
 \end{figure}
 
 \par
-Upon hitting a "DOOR" tile, the raycaster consult the \cw{doorposition} array. The raycaster is able to calculate how far along a door is opened and if it should either stop at the door or traverse its.\\
+Upon hitting a "DOOR" tile, the raycaster consults the \cw{doorposition} array. The raycaster is able to calculate how far along a door is opened and if it should either stop at the door or traverse through.\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/door.c}
@@ -1372,7 +1372,7 @@ Upon hitting a "DOOR" tile, the raycaster consult the \cw{doorposition} array. T
  \includegraphics[width=\textwidth]{imgs/drawings/door_test.pdf}
 \end{figure}
 \par
-Testing if a ray is stopped by a door or not costs almost nothing: $A.x + \dfrac{ystep}{2} < doorposition[doorIndex]$. In case of success the ray traverses the wall tile and keeps on being tested against the grid. Otherwise the ray is a hit, the coordinate of the point of interception are calculated as $Intercept.X = A.X + \dfrac{ystep}{2}$ and $Intercept.Y = A.Y + \dfrac{TILE\_SIZE}{2}$ and passed to the renderer.
+Testing if a ray is stopped by a door or not costs almost nothing: $A.x + \dfrac{ystep}{2} < doorposition[doorIndex]$. In case of success, the ray traverses the wall tile and continues being tested against the grid. If the ray is a hit, the coordinates of the point of interception are calculated as $Intercept.X = A.X + \dfrac{ystep}{2}$ and $Intercept.Y = A.Y + \dfrac{TILE\_SIZE}{2}$ and passed to the renderer.
 
 
 
@@ -1386,7 +1386,7 @@ Testing if a ray is stopped by a door or not costs almost nothing: $A.x + \dfrac
 
 
 \subsubsection{Push walls} 
-Push wall are also implemented via the raycaster. Like door, these moving walls are also treated as a special case. If the pushwall has been activated, the raycaster adds an offset to the ray intercept coordinates.
+Push walls are also implemented via the raycaster. Like doors, these moving walls are also treated as a special case. If the push wall has been activated, the raycaster adds an offset to the ray intercept coordinates.
 
 
 
@@ -1405,7 +1405,7 @@ Push wall are also implemented via the raycaster. Like door, these moving walls 
 
 
 \subsection{Drawing sprites}
-Once the walls are drawn, it is time to render sprites such as enemies, items (ammos, weapons) and decorations (lamps, table, etc). It is a three steps operation.
+Once walls are drawn, it is time to render sprites such as enemies, items (ammos, weapons), and decorations (lamps, table, etc.) This is a three step operation.
  \begin{enumerate}
   \item Find which sprites are visible.
   \item Determine which part of the sprite is visible (not hidden by a wall).
@@ -1415,7 +1415,7 @@ Once the walls are drawn, it is time to render sprites such as enemies, items (a
 
 
 \subsubsection{Visible Sprite Determination}
-Building a list of visible sprite is done indirectly by leveraging information gathered by the raycaster relying on the observation that visible sprites are on visible tiles. The raycaster mark all tiles visited by each ray while they travel the map looking for a wall.\\
+Building a list of visible sprites is done indirectly by leveraging information gathered by the raycaster relying on the assumption that visible sprites are on visible tiles. The raycaster marks all tiles visited by each ray while they travel the map looking for walls.\\
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/marked_out_room.pdf}
@@ -1435,7 +1435,7 @@ Visible tile tracking is done in the simplest way with a 64x64 boolean array ind
  \lstinputlisting[language=C]{code/clear_vis_wold3d.c}
  \end{minipage}
  \par
- Note that because register are 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations.\\
+ Note that because register is 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations.\\
  \par
 The ray caster (\codeword{AsmRefresh}) writes \cw{true} in the visible tile array as the ray progresses towards a wall.\\
 \par
@@ -1444,7 +1444,7 @@ The ray caster (\codeword{AsmRefresh}) writes \cw{true} in the visible tile arra
 \end{minipage}
 \par 
 
-The way the visible tile array is used is not the most subtle part of the engine (it runs in $\mathcal{O}(n^2)$ time) but it works well due to the low number of sprites. All sprites on the map are tested for visibility with \cw{spotvis} and their height is calculated. They are all added to an array unsorted. A final double loop draws all sprites from far to near (using sprite height to extract the further on each iteration).\\
+While the way the visible tile array is used is not the most subtle part of the engine (it runs in $\mathcal{O}(n^2)$ time), it works well due to the low number of sprites. All sprites on the map are tested for visibility with \cw{spotvis} and their height is calculated. They are all added to an array unsorted. A final double loop draws all sprites from far to near (using sprite height to determine distance on each iteration).\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/build_vis_list.c}
@@ -1456,7 +1456,7 @@ The way the visible tile array is used is not the most subtle part of the engine
 
 
 \subsubsection{Rendition}
-Each sprites is rendered individually in the function \cw{ScaleShape (int xcenter, int shapenum, unsigned height)}. The sprite is transformed from map space to player space using the same SOH-CAH-TOA math seen in the "Drawing Walls" section.
+Each sprite is rendered individually in the function \cw{ScaleShape (int xcenter, int shapenum, unsigned height)}. The sprite is transformed from map space to player space using the same SOH-CAH-TOA math seen in the "Drawing Walls" section.
 
 \par
 \begin{figure}[H]
@@ -1464,7 +1464,7 @@ Each sprites is rendered individually in the function \cw{ScaleShape (int xcente
  \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
  \end{figure}
 \par
-The X coordinate is used to place a sprite horizontally on the screen and the Y coordinate is used for clipping. Like walls, sprites don't need to be placed vertically since they are drawn in the same 64x64 texels space.\\
+The X coordinate is used to place a sprite horizontally on the screen, while the Y coordinate is used for clipping. Like walls, sprites don't need to be placed vertically since they are drawn in the same 64x64 texels space.\\
 \par
   \begin{minipage}{.5\textwidth}
      \fullimage{guard_sprite.png}
@@ -1484,7 +1484,7 @@ The X coordinate is used to place a sprite horizontally on the screen and the Y 
  \fullimage{drawing_things.png}
 \end{figure}
 
-But sprites are special. Walls fill the full 64x64 space and are fully opaque but sprites have transparent parts. As example, the "food" sprite is only 9 texels tall. The lamp sprites uses the full height but the middle is transparent.\\
+Sprites are special, however. Walls fill the full 64x64 space and are fully opaque, while sprites have transparent parts. For example, the "food" sprite is only 9 texels tall. The lamp sprite uses the full height but the middle is transparent.\\
 
 
   \begin{minipage}{.5\textwidth} 
@@ -1518,7 +1518,7 @@ Wolfenstein (and Doom) originally drew the characters as sparse stretched column
 
 
 \subsubsection{Clipping}
-Like everything in the game, sprites are made of and drawn as columns. Before drawing each columns in a sprite, the engine determines if it is occluded by a wall. This is called clipping and it is an easy step thanks to walls and sprites being in the same 64x64 coordinate system. Once the sprite's position is transformed in player space, the distance Y allows to generate a height. That height is the same calculated for the walls. Therefore to find out if a sprite column if behind a wall, the engine just compare the heights of the wall against the height of the actor.\\
+Like everything in the game, sprites are made of and drawn as columns. Before drawing each column in a sprite, the engine determines if it is occluded by a wall. This is called clipping and is an easy step thanks to walls and sprites being in the same 64x64 coordinate system. Once the sprite's position is transformed in player space, height is generated based on the distance Y. That height is the same as calculated for the walls. Therefore to determine if a sprite column is behind a wall, the engine simply compares the height of the wall against the height of the actor.\\
 \par
 In order to do that, the raycaster keeps tracks of each height calculated for each column in an occlusion array called \cw{wallheight}.\\
 \par
@@ -1531,7 +1531,7 @@ While raycasting the occlusion array is written.\\
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_population.c}
 \end{minipage}
-While drawing sprites, the occlusion array is read. If the height of a wall is greater than a sprite, it means the wall is is front of the sprite and the full sprite rendition is skipped.\\
+While drawing sprites, the occlusion array is read. If the height of a wall is greater than that of a sprite, it means the wall is is front of the sprite and the full sprite rendition is skipped.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_usage.c}
@@ -1544,14 +1544,14 @@ Since the entire screen is refreshed on the next frame, the occlusion array does
 
 
 \subsubsection{Drawing things}
-Sprites rendition benefits from the same optimization we saw in walls (a.k.a: compiled scalers and deferred rendering). But since sprites introduce transparency, the techniques are slightly adjusted.
+Sprite rendition benefits from the same optimization we saw in walls (compiled scalers and deferred rendering.) However, since sprites introduce transparency the techniques are slightly adjusted.
 
 \subsubsection{Compiled scalers}
-Visible sprite column rendition is also done with the compiled scalers. But the scalers cannot be used directly. A compiler scaler draws its speed from its absence of parameters. It is  an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and write/scale a predetermined number of pixels. For example, compiled scaler 112 always reads 64 pixels of texture and magnify it to 134 pixels on the screen.\\
+Visible sprite column rendition is also done with the compiled scalers, but the scalers cannot be used directly. A compiled scaler draws its speed from its absence of parameters. It is an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and write/scale a predetermined number of pixels. For example, compiled scaler 112 always reads 64 pixels of texture and magnifies it to 134 pixels on the screen.\\
 \par
-Sprites are stored in a special way to allow tweaked compiled scaler to skip transparency.\\
+Sprites are stored in a special way to allow tweaked compiled scalers to skip transparency.\\
 \par
-A sprite is stored as an array of 64 entries. Each entries is a serie of "commands" forming a column. A command features:
+A sprite is stored as an array of 64 entries. Each entry is a series of "commands" forming a column. A command features:
 \begin{enumerate}
  \item A vertical offset.
  \item A vertical length.
@@ -1562,15 +1562,15 @@ The last command in a column is marked with an offset of \cw{0x00}.\\
 \par
 
 \begin{minipage}{.5\textwidth}
-\bu{Example :} Column \#25 in the lamp sprite is made of 5 transparent pixels then one sequence of 5 pixels for the lamp:\\
+\bu{Example :} Column \#25 in the lamp sprite is made of 5 transparent pixels, followed by one sequence of 5 pixels for the lamp:\\
 \par
 \scaledimage{0.8}{light_sprite_column_head.png}
 \par
-Then 49 transparent pixels. And finally one sequence of 5 pixels for the light halo.\\
+Followed by 49 transparent pixels, and finally one sequence of 5 pixels for the light halo.\\
 \par
 \scaledimage{0.8}{light_sprite_column_bottom.png}
 \par
-Total: 64 texels. This column is encoded with 2 commands each being: 1 byte offet +  1 byte length + 5 bytes of payload. At the end a payloadless command with length 0x00 marks the end. Total size 17 bytes.\\
+Total: 64 texels. This column is encoded with 2 commands of 1 byte offset +  1 byte length + 5 bytes of payload. A payloadless command with length 0x00 marks the end. Total size is 17 bytes.\\
  \end{minipage}
 \begin{minipage}{.5\textwidth}
 \begin{figure}[H]
@@ -1584,34 +1584,34 @@ Total: 64 texels. This column is encoded with 2 commands each being: 1 byte offe
 
  
 \par
-The idea is to prevent a scaler from consuming the full 64 texels by patching the x86 instructions with an early return instruction \cw{ret}. In order to to that, the code generator also generates patch locations. The \cw{t\_compscale} structure containing a compiled scaler not only features the x86 instruction in \cw{code}, it also features patching offset.\\
+The idea is to prevent a scaler from consuming the full 64 texels by patching the x86 instructions with an early return instruction \cw{ret}. In order to do that, the code generator also generates patch locations. The \cw{t\_compscale} structure containing a compiled scaler not only features the x86 instruction in \cw{code}, it also features patching offset.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/t_compscale.c}
 \end{minipage}
 \par
-There are 64 patch location per scaler (one for each length of pixels besides 64 desired, stored in \cw{codeofs[]}), allowing to write a \cw{RETF} instruction causing an early return. For each command in a sprite column, the engine looks up how many texels is the command payload, looks up where to patch the scaler, saves the intruction at this location and overwrites it with a \cw{RETF}. After the scaler returns (and the command payload has been rendered), the scaler is unpatched.\\
+There are 64 patch locations per scaler (one for each length of pixels besides 64 desired, stored in \cw{codeofs[]}), which allows for writing a \cw{RETF} instruction causing an early return. For each command in a sprite column, the engine looks up how many texels the command payload is and where to patch the scaler, then saves the intruction at this location and overwrites it with a \cw{RETF}. After the scaler returns (and the command payload has been rendered), the scaler is unpatched.\\
 \par
-In the assembly optimized code, note how the engine knows where to patch the code thanks to a \cw{BX} register which point to \cw{codeofs}.
+In the assembly optimized code, note how the engine knows where to patch the code thanks to a \cw{BX} register which points to \cw{codeofs}.
 \par
 \begin{minipage}{\textwidth}
   \lstinputlisting[language={[x86masm]Assembler}]{code/self_modifying.asm}
 \end{minipage}
 \par
-Patching the scaler is not enough. It only allows to consume less than 64 texels. In order to draw a "hole" properly on screen, the engine also needs to know how many pixels to skip vertically in screenspace before starting the scaler on the next command. This is were the \cw{width[]} array is used. The scaler generator also saved 64 entries to convert sprites transparent height into screen space height.\\
+Patching the scaler is not enough. It only allows for consuming less than 64 texels. In order to draw a "hole" properly on screen, the engine also needs to know how many pixels to skip vertically in screenspace before starting the scaler on the next command. This is where the \cw{width[]} array is used. The scaler generator also saves 64 entries to convert sprites' transparent height into screen space height.\\
 
 
 \subsubsection{Deferred rendering}
-The same deferred drawing technique we saw for walls is also used for sprites. It is especially powerful when a sprite is magnified.\\
+The same deferred drawing technique we saw for walls is also used for sprites, and is especially powerful when a sprite is magnified.\\
 
 \par
 \begin{figure}[H]
  \centering
  \fullimage{magnified_enemy_before.png}
 \end{figure}
-In this scene, the 64x64 guard sprite is magnified 2.2 times. By zooming in, we see that each column is repeated at least twice. Sometimes three times. It is a perfect optimization case for the VGA planes deferred renderer.\\
+In this scene, the 64x64 guard sprite is magnified 2.2 times. By zooming in, we see that each column is repeated at least twice and sometimes three times. It is a perfect optimization case for the VGA planes deferred renderer.\\
 \par
-A modified version of the engine draw in pink columns which were drawn "for free" thanks to the VGA mask. In this case most column were drawn only once. Magnification was a totally free operation despite more than twice the number of texel written to the screen.\\
+A modified version of the engine (drawing columns which were drawn "for free" thanks to the VGA mask in pink) is again used to demonstrate.  In this case most columns were drawn only once. Magnification was a totally free operation despite more than twice the number of texel written to the screen.\\
 
 \par
 \begin{figure}[H]
@@ -1629,7 +1629,7 @@ A modified version of the engine draw in pink columns which were drawn "for free
 
 
 \subsection{Drawing weapon}
-Drawing the weapon at the bottom is straight forward. It uses the same type of rendition for sprite but with specific code where clipping is disabled in function \cw{ScaleShape}. The same compiled scaler and deferred rendition trick are used.
+Drawing the weapon at the bottom is straight forward. It uses the same type of rendition for sprites but with specific code where clipping is disabled in function \cw{ScaleShape}. The same compiled scaler and deferred rendition tricks are used.
 
 
 
@@ -1645,7 +1645,7 @@ Drawing the weapon at the bottom is straight forward. It uses the same type of r
 
 
 \subsection{A.I}
-To simulate enemies, some objects are allowed to "think" and take actions like firing, walking or emit sounds. Those thinking objects are called "actors".\\
+To simulate enemies, some objects are allowed to "think" and take actions like firing, walking, or emitting sounds. Those thinking objects are called "actors".\\
 \par
 
 
@@ -1653,7 +1653,7 @@ To simulate enemies, some objects are allowed to "think" and take actions like f
 
 
 
-Actors are programmed via state machine. They can be aggressive, they can be sneaky or they can be dumb (like when they are a rocket). To model their behavior, all enemies have an associated state:
+Actors are programmed via state machine. They can be aggressive, they can be sneaky, or they can be dumb (like when they are a rocket.) To model their behavior, all enemies have an associated state:
 \begin{itemize}
 \item Standing
 \item Attack
@@ -1665,7 +1665,7 @@ Actors are programmed via state machine. They can be aggressive, they can be sne
 \item Special Boss state
 \end{itemize}
 
-With each state are associated \cw{think} and \cw{action} method pointer. There is also a \cw{next} to indicate which state the actor should transition to once it is finished with the current state/action.\\
+With each state are associated \cw{think} and \cw{action} method pointers. There is also a \cw{next} to indicate which state the actor should transition to once it is finished with the current state.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/statetype.c}
@@ -1680,30 +1680,30 @@ A guard in standing position always stays in the same state (\cw{next} points to
 \lstinputlisting[language=C,style=mystyle,basicstyle=\small,morekeywords={statetype, NULL, true, false}]{code/s_grdstand.c}
 \end{minipage}
 \par
-Some state chain are more complex like for example chasing:\\
+Some state chains are more complex, for example with chasing:\\
 
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,style=mystyle,basicstyle=\small]{code/s_grdchase.c}
 \end{minipage}
 \par
-This example was just for guards. All types of enemies (including bosses) have their own state machine. They often share action (e.g: \cw{T\_Stand} and \cw{T\_Path}) but they also occasionally have their own.\\
+This example was just for guards. All types of enemies (including bosses) have their own state machine. They often share actions (e.g: \cw{T\_Stand} and \cw{T\_Path}) but they also occasionally have their own.\\
 
 \par
-What makes enemies interesting is how they go from standing to being aggressive via \cw{T\_Stand}. They have three ways to detect the player:\\
+What makes enemies interesting is how they go from standing to being aggressive via \cw{T\_Stand}. There are three ways to detect the player:\\
 \begin{itemize}
 \item Proximity
 \item Sight
 \item Noise
 \end{itemize}
-By far the most important stimuli and what makes the player feel like the A.I is smart is the sound.
+By far the most important stimuli and what makes the player feel like the A.I is smart is reaction to noise.
 
 
 
 
 
 \subsubsection{Sound propagation}
-Early on the game teaches the player that enemies will react to gunfire and seek where the sound was coming from. Sound is an essential part of the experience and propagating it realistically in realtime is hard. A bloodfill algorithm could have been used but that would have been slow. To speed things up, maps are preprocessed. Each room delimits an area. At runtime the engine maintains a matrix of portals connecting areas and updates it when a door opens or closes. Knowing if an enemy can hear the main character gunfire is a simple lookup in a table.
+Early on the game teaches the player that enemies will react to gunfire and seek out the source. Sound is an essential part of the experience and propagating it realistically in realtime is hard. A bloodfill algorithm could have been used but that would have been slow. To speed things up, maps are preprocessed. Each room delimits an area. At runtime the engine maintains a matrix of portals connecting areas and updates it when a door opens or closes. Determining if an enemy can hear the player's gunfire is then a simple lookup in a table.
 
 \par
 \begin{figure}[H]
@@ -1717,7 +1717,7 @@ Early on the game teaches the player that enemies will react to gunfire and seek
 \begin{figure}[H]
  \centering
  \includegraphics[width=.75\textwidth]{imgs/drawings/sound_area/area.pdf}
- \caption{The same map after is has been pre-processed for audio propagration. Each block belongs to an area.}
+ \caption{The same map after is has been pre-processed for audio propogation. Each block belongs to an area.}
 \end{figure}
 \par
 
@@ -1728,13 +1728,13 @@ Early on the game teaches the player that enemies will react to gunfire and seek
  \includegraphics[width=.5\textwidth]{imgs/drawings/soud_propagation/areaconnect.pdf}
 \end{figure}
 \par
-At runtime, the engine maintains a matrix of portal. Each time a door is opened or closed, the array \cw{areaconnect} is updated. 
+At runtime, the engine maintains a matrix of portals. Each time a door is opened or closed, the array \cw{areaconnect} is updated. 
 
 \par
 \begin{figure}[H]
  \centering
  \includegraphics[width=.5\textwidth]{imgs/drawings/soud_propagation/areabyplayer.pdf}
- \caption{Determining if an area can hear the player is a simple lookup in \cw{areabyplayer}.}
+ \caption{Determining if enemies in an area can hear the player is a lookup in \cw{areabyplayer}.}
 \end{figure}
 \par
 In the source code:\\
@@ -1753,7 +1753,7 @@ In the source code:\\
 
 
 \subsubsection{Sound non propagation}
-Perfect sound propagation is a simplistic model. When a gun is fired, all enemies which can hear it will shout "Achtung!" (Attention!) and converge toward the origin of the sound. That would get old pretty fast. To make things more spicy, the designers introduced a little hack that goes a long way to make the I.A appear smarter than it is.
+Perfect sound propagation is a simplistic model. When a gun is fired, all enemies which can hear it will shout "Achtung!" (Attention!) and converge toward the origin of the sound. This would get old pretty fast, though. To make gameplay spicier, the designers introduced a little hack that goes a long way in making AI appear smarter than it is.
 
 
 \par
@@ -1767,7 +1767,7 @@ Perfect sound propagation is a simplistic model. When a gun is fired, all enemie
 
   \begin{minipage}{0.6\textwidth}
   There is a perfect example early on in the game in map E1M1.\\
-  \par At this point in the level, the player have learned that enemies react to gun fire sounds and converge toward its origin. Upon entering this room and dispatching the guard, he/she will naturally assume this is a safe place, a bounded area where no other enemies can be encountered (otherwise they would have showed up by now or at least they would have shouted).
+  \par At this point, the player has learned that enemies will react to gunfire and move toward its origin. Upon entering this room and dispatching the guard, she naturally assumes this is a safe place -- a bounded area where no other enemies can be encountered (otherwise they would have shown up or at least shouted by now.)
   \end{minipage}
   \begin{minipage}{0.4\textwidth}
   \begin{flushright}
@@ -1787,9 +1787,9 @@ Perfect sound propagation is a simplistic model. When a gun is fired, all enemie
   \end{figure}
   \par
   \begin{minipage}{0.6\textwidth}
-  Feeling safe, she will likely run straight to the door or maybe go left (or worse: right) to see what is in these corners. Surprise ! An enemy was "hiding". This behavior is possible thanks to special tiles marked "AMBUSH" which make the engine not propagate sound to actors standing on these tiles.\\
+  Feeling safe, she will either run straight to the door or go left (or worse: right) to see what is in these corners. Surprise! An enemy was "hiding". This behavior is possible thanks to special tiles marked "AMBUSH" which make the engine not propagate sound to actors standing on these tiles.\\
   \par
-   This is probably one of the cheapest feature in the engine yet it results in what most would agree is the soul of the game.
+   This is probably one of the cheapest features in the engine, yet it results in what most would agree is the soul of the game.
   \end{minipage}
   \begin{minipage}{0.4\textwidth}
   \begin{flushright}
@@ -1803,7 +1803,7 @@ Perfect sound propagation is a simplistic model. When a gun is fired, all enemie
 
 \par
 
-\bu{Trivia :} The ambush behavior is explained in the Hint Book as follow:\\
+\bu{Trivia :} The ambush behavior is explained in the Hint Book as follows:\\
 \par
 \begin{fancyquotes}
 Each enemy is given specific orders which dictate his actions once he knows of your presence. Some are ordered to immediately attack, while others are trained to act only upon visual contact.
@@ -1812,13 +1812,13 @@ Each enemy is given specific orders which dictate his actions once he knows of y
 \textbf{Kevin Cloud. The Official Hint Manual for Wolfenstein 3D}
  \end{fancyquotes}
 \par
-\bu{Trivia :} Bug or dedication, a guard on an \cw{AMBUSH} tile will react ONLY to the player sight. Seeing an other actor/dog die right in front of him will not activate him.\\
+\bu{Trivia :} Be it bug or dedication, a guard on an \cw{AMBUSH} tile will react ONLY to seeing the player. Seeing another actor/dog die right in front of him will not activate him.\\
 
 
 \subsubsection{Patrolling}
-In "path" mode, an agent simulates patrolling. There is no path finding, it is all done via waypoints which change the direction of an agent. After stepping on a "change direction" tile, the agent keeps on walking straight until it hits a wall. All waypoints are placed manually by the map designer with TED5.\\ 
+In "path" mode, an agent simulates patrolling. There is no path finding; this is all done via waypoints which change the direction of an agent. After stepping on a "change direction" tile, the agent keeps on walking straight until it hits a wall. All waypoints are manually placed by the map designer with TED5.\\ 
 \par
-The waypoint system was used in other creative ways like In E1M1 to simulate the agitation of german shepherds (marked a "D"). A detailed view of the right wings of the map from page \pageref{mape1m1} shows no less than eight waypoints making the dogs run in circles and zigzagging.\\
+The waypoint system was used in other creative ways, like in E1M1 to simulate the agitation of german shepherds (marked a "D".) A detailed view of the right wings of the map from page \pageref{mape1m1} shows no less than eight waypoints making the dogs run in circles and zigzag.\\
 \par
 \begin{figure}[H]
  \centering
