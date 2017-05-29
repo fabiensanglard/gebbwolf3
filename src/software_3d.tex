@@ -1335,6 +1335,9 @@ This technique helps solve the worst case scenarios were a large number of pixel
 
 \subsubsection{Texturing}
 A subtle but extremely efficient trick used to improve quality of the wall rendition is pre-baked light texturing. The wall textures assets are generated twice by the artists: once lit and once unlit.\\
+\par
+At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (looking at the map from above) on the Y axis, the engine uses a lit texture. If the ray hits an horizontal wall (on the X axis), it uses the unlit version of the same texture. The difference is not obvious at first, but with the same scene rendered side by side with and without this effect, the visual difference is striking.\\
+\par
   \begin{figure}[H]
 \centering
  \fullimage{baked_lights_wood.png}
@@ -1345,7 +1348,7 @@ A subtle but extremely efficient trick used to improve quality of the wall rendi
  \fullimage{baked_lights_stone.png}
  \end{figure}
 \par
-At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (looking at the map from above) on the Y axis, the engine uses a lit texture. If the ray hits an horizontal wall (on the X axis), it uses the unlit version of the same texture. The difference is not obvious at first, but with the same scene rendered side by side with and without this effect, the visual difference is striking.\\
+
 \begin{minipage}{\textwidth}
 \begin{figure}[H]
 \centering
@@ -1712,6 +1715,7 @@ Some state chains are more complex, for example with chasing:\\
 
 \begin{fancyquotes}
 The enemies in Wolf felt different based on the decision to close distance to the player either largest or smallest axis delta first - Closing smallest first made the brown shirts line up with you a long way away, making them easy to shoot.  Closing largest first made the officers come at you in a ragged diagonal, as if they were dodging your shots.\\
+\par
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
 \par

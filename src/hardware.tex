@@ -319,7 +319,7 @@ As a result, a game engine designer was stuck in an awkward situation with two h
 
 
 \section{RAM}
-The first CPUs in the Intel x86 family were designed in 1976. A time where RAM was very expensive, the 8080 and 8086 had 16 bit registers with a 20 bit wide address bus capable of addressing 1MiB of RAM. It is difficult to stress how big 1MiB of RAM was in the 70s but as an example, the Apple II and the Commodore 64 both shipped with 64KiB which was enough to write and run amazing things. Sixteen bit registers and 20 bit address bus was plenty even though programming was difficult and required combining two registers to build a pointer. In 1986, the hardware had gotten cheaper and Intel made a departure from the old architecture with its 286 and 386. These new CPUs could be put in what is called "Protected Mode" featuring a 24 bits wide address bus for up to 16 MiB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. The 386 even had 32 bit registers. To make sure old programs could still run, both processors could be put in "Read Mode" which replicates how the Intel 8080 and 8086 operated: 16 bits registers, 20 bits address bus giving 1MiB addressable RAM with segmented addressing.\\
+The first CPUs in the Intel x86 family were designed in 1976. A time where RAM was very expensive, the 8080 and 8086 had 16 bit registers with a 20 bit wide address bus capable of addressing 1MiB of RAM. It is difficult to stress how big 1MiB of RAM was in the 70s but as an example, the Apple II and the Commodore 64 both shipped with 64KiB which was enough to write and run amazing things. Sixteen bit registers and 20 bit address bus was plenty even though programming was difficult and required combining two registers to build a pointer. In 1986, the hardware had gotten cheaper and Intel made a departure from the old architecture with its 286 and 386. These new CPUs could be put in what is called "Protected Mode" featuring a 24 bits wide address bus for up to 16 MiB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. The 386 also had 32 bit registers in Protected Mode. To make sure old programs could still run, both processors could be put in "Read Mode" which replicates how the Intel 8080 and 8086 operated: 16 bits registers, 20 bits address bus giving 1MiB addressable RAM with segmented addressing.\\
 \par
 For compatibility reasons all PCs must start in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20-year-old Real Mode. Unfortunately, there was a major obstacle: the operating system MS-DOS by Microsoft Corporation.
   
@@ -443,15 +443,18 @@ With this system, pointer arithmetic must also receive careful consideration. A 
 
   \subsection{Extended Memory}
 
-The 20 bit address bus of Real Mode limits the addressable RAM to 1MB. But machines of 1992 came equipped with more, typically 2MiB and even sometimes 4MiB for the most fortunate customers.\\
-\par 
-The workaround at the time to access these resources was to install drivers that would open a window beyond the addressable RAM, as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around bank switching. The drivers allow for manipulating 16KiB units of data called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, the CPU is switched to Protected Mode, a page is swapped between the EMS\footnote{Expanded Memory Specification} and the HMA\footnote{High memory area}. The CPU is then switched back to Real Mode where the 16KiB page is now accessible. Given this mechanism, no executable code can be stored there, it is only useful to store data.\\
+The 20 bit address bus of Real Mode limits the addressable RAM to 1MB. Machines of 1992 came equipped with more, typically 2MiB and even sometimes 4MiB for the most fortunate customers. This memory located beyond the addressable space is called "Extended Memory". The workaround at the time to access these resources was to install specialized drivers\footnote{See CONFIG.SYS in the appendice.}.\\
 \par
-\textbf{\underline{Trivia :}} Switching from Real Mode to Protected Mode is easy, you only need to set the Control Register bit 0 to 1. It can be done with 6 instructions:
+Unfortunately extended memory access was not standardized. Users could load either of the drivers provided with DOS:
+\begin{itemize}
+\item Expanded Memory Specification (EMS) drivers: EMM368.SYS.
+\item eXtended Memory Specification (XMS) drivers: HIMEM.SYS.
+\end{itemize}
+
+Or they could have no idea they had to install a driver, load nothing at startup, and not use any of the RAM beyond 1MB. This use case was a big issue. Many customers could not understand why, even though they had installed (extremely expensive\footnote{In 1992, 4MiB of RAM cost \$149 which adjusted to inflation would be \$256 in 2016.}) megabytes of RAM on their machine, the game they just purchased would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (see Appendix "\nameref{chap:barrier640}") along with the game to make it clear it was not their fault.\\
 \par
-\lstinputlisting[ language={[x86masm]Assembler}]{code/switch_to_protected_mode.asm}
-\par
-However, switching back from Protected Mode to Real Mode is impossible on a 286 since Intel designers never envisioned this would be needed. As a result the only way is to issue a reset instruction \cw{HALT} to the CPU which can take milliseconds to execute. The 386 does not have this problem since it recognizes correctly when \cw{CR0} bit 1 is set back to 0.
+How are these drivers working? After all, how does one access RAM outside of the addressable space? On the 386 the driver switched the CPU into protected mode, performed whatever was asked and switched the CPU back to real mode. On the 286, there was no way to switch back the CPU to real mode\footnote{The only way was to reset the CPU with an \cw{HALT} instruction which could take milliseconds.} but there was an undocumented \cw{LOADALL} instruction which allows to manipulate an hidden register offsetting all RAM access.
+\footnote{"HIMEM.SYS, unreal mode, and LOADALL": http://www.os2museum.com/wp/himem-sys-unreal-mode-and-loadall/}
 
 \begin{figure}[H]
 \centering
@@ -459,19 +462,27 @@ However, switching back from Protected Mode to Real Mode is impossible on a 286 
 \caption{Expanded/Extended memory layout}
 \label{fig:ems_xms_layout}
 \end{figure}
-Unfortunately extended memory was not standardized. Users could load different drivers providing different memory mapping systems:
-\begin{itemize}
-\item Expanded Memory Specification (EMS) drivers: EMM368.SYS.
-\item eXtended Memory Specification (XMS) drivers: HIMEM.SYS.
-\end{itemize}
 
-Or they could have no idea they had to install driver, load nothing at startup, and not use any of the RAM beyond 1MB. This use case was a big issue. Many customers could not understand why, even though they had installed (extremely expensive\footnote{In 1992, 4MiB of RAM cost \$149 which adjusted to inflation would be \$256 in 2016.}) megabytes of RAM on their machine, the game they just purchased would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (see Appendix "\nameref{chap:barrier640}") along with the game to make it clear it was not their fault.\\
 
 \textbf{\underline{Trivia :}}  As of 2016, more than thirty five years after the introduction of the 8086, in the name of backward compatibility, all PCs in the world still start in Real Mode. A bootloader switches them to Protected Mode, loads the kernel, and then real startup can begin.
 
-\bigskip
-To learn more about EMS be sure to read Edward Mendelson's excellent article "A Slot Full of RAM"\footnote{PC Mag, (1989-12-12).}. To learn more about this topic, read the XMS programming reference:\footnote{eXtended Memory Specification (XMS) July 19, 1988.}\\
+
+\subsubsection{EMS API}
+
+The EMS driver opens a window beyond the addressable RAM, as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around memory mapping. The driver allow for manipulating four units of 16KiB called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, a frame can be swapped into the page frame.\\
 \par
+
+
+
+\subsubsection{XMS API}
+The XMS driver works like \cw{malloc}, it provides operations such as allocate, free, realloc and the most important one move which allows to copy from extended RAM to conventional RAM\footnote{eXtended Memory Specification (XMS) July 19, 1988.}.
+
+
+
+
+
+
+
 
 \subsubsection{A system "Impossible to love"}
 At this point, if you are puzzled by the CPU and its design you are not alone. Over the years I came across many ways to describe this madness but three particularly stand out.\\
@@ -995,7 +1006,7 @@ Of course it is also backward compatible and an 8 bits ISA card can be plugged i
  \par
  On a 16 bits VGA card, 33,400,000 bits per seconds gives 33,400,000/8/64000 = 65 frames per seconds.\\
  \par
- If you factor in other things which had to transit on the bus such as palette, keyboard interrupt, mouse inputs, and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand how important it was to limit data transfer and why no PC of the era could max out the VGA's 70 frame per seconds. The best demos and games usually reached 60 frames per seconds.
+ If you factor in other things which had to transit on the bus such as palette, keyboard interrupt, mouse inputs, and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand how important it was to limit data transfer and why few software of the era could max out the VGA's 70 frame per seconds\footnote{Specialized demos could reach 70 fps on VGA by careful management of unchanged regions or using planar writes for the 4x speedup.}.
 
 
 \section{Summary}

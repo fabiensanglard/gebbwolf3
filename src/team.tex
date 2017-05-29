@@ -70,7 +70,7 @@ In November 1991, the team was free from any obligations to SoftDisk. The next g
 \end{figure}
 \footnotetext{Jay and Kevin were recruited on April 1st, 1992 but were still given credits for participating to the game development.}
  \footnotetext{Robert has already worked with id Software before on Keen 4-6. Robert also remained a contractor, he was never a full-time employee.}
- \footnotetext{Jason wrote part of the page manager and is credited for introducing John Carmack to Unix development,
+ \footnotetext{Jason wrote part of the page manager and is credited for introducing John Carmack to Unix development which ultimately led to the purchase of a Next ColorStation.}
 
 \begin{fancyquotes}
 Jason was part of id at the start, but we parted ways during Wolf development.
@@ -78,7 +78,7 @@ Jason was part of id at the start, but we parted ways during Wolf development.
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
 
-which ultimately led to the purchase of a Next ColorStation.}
+
  
 \begin{figure}[H]
 \centering
@@ -163,7 +163,7 @@ We started with floppy data transfer, but we had a Novell network on coax Ethern
 
 
 
-Development was done with Borland C++ 3.1 (but the language used was C). The editor uses VGA mode 3 offering a screen 80 characters wide and 25 characters tall.\\
+Development was done with Borland C++ 3.1 (but the language used was C) which ran in VGA mode 3 offering a screen 80 characters wide and 25 characters tall.\\
 \par
 John Carmack took care of the runtime code. John Romero programmed many of the tools (TED map editor, Graphic assets packers, Muse sound packer). Jason Blochowiak was contracted to write important subsystems of the game (Input manager, Page Manager, Sound Manager, User Manager).\\
 \\
@@ -272,7 +272,7 @@ After the graphic assets were generated, a tool (IGRAB-ED) packed all the ILBMs 
  \end{minipage}
  
  In the engine code, asset usage is "hardcoded" via an enum. This enum is an offset into the 
- \cw{HEAD} dictionary which gives an offset in the \cw{DATA} archive. Thanks to this indirection layer, the assets could be regenerated and reordered at will with no modification in the source code.\\
+ \cw{HEAD} table which gives an offset in the \cw{DATA} archive. Thanks to this indirection layer, the assets could be regenerated and reordered at will with no modification in the source code.\\
  \par
  \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/assets_usage.c}\par
