@@ -568,9 +568,9 @@ This code can run without issues at 70 frames per second since just 200 slow \cw
 This speed consideration has a fundamental impact on the engine: to draw anything fast with the VGA, it has to be drawn vertically. Everything in the engine is drawn this way: walls, sprites, menus. The ramifications of this hardware constraint are felt all the way down to how assets are stored in RAM (rotated 90 degrees) and woven to match the VGA banks layout (this is described in detail in the "Rendering sprites" section).\\
 
 \par
-The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3, and then goes back to page 1 (notice there are three buffers but this is not triple-buffering.) This solves tearing and allows the engine to never block on vsync since it always has a valid framebuffer to draw. It instructs the CRT Controller that it should scan a framebuffer in VRAM at a new offset after the next vsync.\\
+The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3, and then goes back to page 1. This solves tearing and allows the engine to never block on vsync since it always has a valid framebuffer to draw to. Changing page is done by instructing the CRT Controller that it should scan a framebuffer at a different offset after the next vsync.\\
 \par
-The CRT Controller start scan offset is a 16 bits value which is updated with a little bit of assembly: first the high byte and then the low byte. The code would look as follows.\\
+The CRT Controller scan offset is a 16 bits value which is updated with a little bit of assembly writing to a VGA register: first the high byte and then the low byte. The code would look as follows.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}]{code/pageflip.c}
