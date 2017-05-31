@@ -5,7 +5,7 @@ Wolfenstein 3D, released on May 5th, 1992, established the First Person Shooter 
 \fullimage{action_packed.png}
 \end{figure}
 \par
-But the many fans did not stop at beating the game. Driven by a desire to modify it and make their own characters and maps, they started to explore and reverse engineer the engine. Within a few months the asset formats were well known and people released mods\footnote{MODified version.} with altered graphics, sounds effects, music, and maps. However, the core of the game, the 3D engine and the secrets of its speed, remained mostly unknown.\\
+But the many fans did not stop at beating the game. Driven by a desire to modify it and make their own characters and maps, they started to explore and reverse engineer. Within a few months the asset formats were well known and people released mods\footnote{MODified version.} with altered graphics, sounds effects, music, and maps. However, the core of the game, the 3D engine and the secrets of its speed, remained mostly unknown.\\
 \\
 It was kept secret for an obvious reason: a powerful engine is an essential asset for a gaming company. As a means to outperforming competitors, it's good business practice to keep other programmers clueless. This allows for maintaining a technological advantage, making betters games and generating more profit.\\
 \\
@@ -25,7 +25,7 @@ Second, it created a window back in time to 1991. Having reviewed complex engine
 \\
 But why go through so much trouble? After all, if you were a game company and you wanted to make video games, you had video game consoles dedicated to this very specific task. The Genesis, the Super NES, and the Neo-Geo had sprite engines which despite limitations such as size and number allowed movement of something on the screen by simply updating its $(x,y)$ coordinates. They were able to easily generate smooth animation at 60 frames per second, had controllers, had an audio system for sound and music, and were homogeneous (e.g: all SNES were the same). If you still really wanted to use a personal computer for a game, why not use an Amiga 500 which was packed with coprocessors designed for animation?\\
 \\
-The reason fits in one word: Framebuffer. The kind of game id Software wanted to create could not be done with a sprite engine or tricks from a Copper\footnote{Nickname of a powerful Amiga co-processor allowing operations at vsync level.}. They wanted to shake the gaming world by providing an immersive experience in three dimensions. In order to do that they needed to draw a full screen, pixel by pixel, in a framebuffer before it was sent to the monitor. \\
+The reason fits in one word: Framebuffer. The kind of game id Software wanted to create could not be done with a sprite engine or tricks from a Copper\footnote{Nickname of a powerful Amiga co-processor allowing operations at hsync level.}. They wanted to shake the gaming world by providing an immersive experience in three dimensions. In order to do that they needed to draw a full screen, pixel by pixel, in a framebuffer before it was sent to the monitor. \\
 \par
 To draw all these pixels they needed a powerful CPU and a PC outperform any console on the market. No Amiga\footnote{Jimmy Maher advances an interesting theory in his book "The Future was here: The Commodore Amiga": People wanted to play First Person Shooter, which the Amiga architecture did not allow. This inability ultimately provoked the downfall of Commodore's best seller.}, even with their co-processor, could rival a PC in terms of raw power.
 \par
@@ -38,13 +38,14 @@ With its fast CPU and 256K framebuffer, a 1991 PC looked promising at first. Exc
 \item The CPU could only do integer operations but the mathematics required for 3D calculations involved keeping track of fractions.
 \item The PC Speaker, the default sound device, could only produce square waves. A bunch of "beeps" which were more annoying than anything else.
 \end{itemize}
-On top of these major blockers lied a four major difficulties:\\
+On top of these major blockers lied fuve major difficulties:\\
 \begin{itemize}
 \item The RAM addressing mode was not flat but segmented, resulting in complex and error prone pointer arithmetics.
 \item VGA pixels were not square: the framebuffer was stretched vertically when
 transferred to the screen.
 \item The audio ecosystem was fragmented: various sound systems had different capabilities and expectations.
 \item The machine could only address 1MB of RAM. To go beyond you had to enter a fragmented eco-system of drivers.
+\item The bus was slow and I/O with the VRAM was a bottleneck. It was impossible to write a full framebuffer each frame.
 \end{itemize}
 
 Overall, it looked like the machine was \emph{doom}ed to do boring things. But many around the world did not accept that and tinkered with the hardware to achieve unexpected results. How they did it is the raison d'\^etre of this book. I've chosen to divide this book in three chapters. By first showing the hardware constraints, I hope programmers will develop an appreciation for the software and how it navigates obstacles, sometimes turning limitations into advantages.

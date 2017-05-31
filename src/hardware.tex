@@ -226,15 +226,15 @@ Here is a detailed example to calculates the floating point representation of a 
 \begin{itemize}
  \item The number 3.14 is positive  $\rightarrow S=0$.
  \item The number 3.14 is between the power of two 2 and 4 so the floating window must start at $2^1$  $\rightarrow E=128$ (see formula where window is $2^{(E-127)}$).
- \item Finally there are $2^{23}$ offsets available so 3.14 is at $\frac{4-3.14}{2} = 0.43 $. The mantissa/offset $\rightarrow M = 2^{23}*0.43 = 4781506$
+ \item Finally there are $2^{23}$ offsets available so 3.14 is at $\frac{3.14 -2 }{4 - 2} = 0.57 $. The mantissa/offset $\rightarrow M = 2^{23}*0.57 = 4781507$
 \end{itemize}
 
 Which in binary translates to:
 
 \begin{itemize}
-\item S = 0
-\item E = 10000000
-\item M = 1001000111101111000011
+\item S = 0 = 0b
+\item E = 128 = 10000000b
+\item M = 4781507 = 1001000111101111000011b
 \end{itemize}
 
 \begin{figure}[H]
@@ -245,7 +245,7 @@ Which in binary translates to:
 \end{figure}
   \bigskip
 
-The value 3.14 is therefore approximated to 3.140000104904175.\\
+The value 3.14 is therefore approximated to 3.14000000000000012.\\
 
 The corresponding value with the ugly and useless formula:
 
@@ -541,7 +541,7 @@ PCs were connected to CRT monitors. Big, heavy, small diagonal, cathodic ray bas
 \begin{minipage}{.4\textwidth}
 \textbf{\underline{Trivia :}} How big and heavy could a CRT be? The InterView 28hd96 by Integraph weighed 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).\\
 \par
-In the right photo: John Carmack in 1995 working on an InterView 28hd96 while programming Quake using Visual Studio C++.\\
+In the photo on the right : John Carmack in 1996 working on an InterView 28hd96 while programming Quake 2 using Visual Studio C++.\\
 \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
