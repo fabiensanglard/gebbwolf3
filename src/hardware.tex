@@ -453,7 +453,7 @@ Unfortunately extended memory access was not standardized. Users could load eith
 
 Or they could have no idea they had to install a driver, load nothing at startup, and not use any of the RAM beyond 1MB. This use case was a big issue. Many customers could not understand why, even though they had installed (extremely expensive\footnote{In 1992, 4MiB of RAM cost \$149 which adjusted to inflation would be \$256 in 2016.}) megabytes of RAM on their machine, the game they just purchased would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (see Appendix "\nameref{chap:barrier640}") along with the game to make it clear it was not their fault.\\
 \par
-How are these drivers working? After all, how does one access RAM outside of the addressable space? On the 386 the driver switched the CPU into protected mode, performed whatever was asked and switched the CPU back to real mode. On the 286, there was no way to switch back the CPU to real mode\footnote{The only way was to reset the CPU with an \cw{HALT} instruction which could take milliseconds.} but there was an undocumented \cw{LOADALL} instruction which allows to manipulate an hidden register offsetting all RAM access.
+How are these drivers working? After all, how does one access RAM outside of the addressable space? On the 386 the driver switched the CPU into protected mode, performed whatever was asked and switched the CPU back to real mode. On the 286, there was no way to switch back the CPU to real mode\footnote{The first hack to do the impossible put a magical value into a special memory location to prevent the BIOS from reinitializing the computer after a reset, and then caused a reset through the i8042 keyboard controller which would externally reset the CPU. Other techniques involved generating a triple fault (faulting in a fault handler, usually by invalidating the IDTR and causing an interrupt). Using the triple fault was much faster. Going through the keyboard controller took almost a millisecond but the triple fault performed in a hundred microseconds} but there was an undocumented \cw{LOADALL} instruction which allows to manipulate an hidden register offsetting all RAM access.
 \footnote{"HIMEM.SYS, unreal mode, and LOADALL": http://www.os2museum.com/wp/himem-sys-unreal-mode-and-loadall/}
 
 \begin{figure}[H]
@@ -985,23 +985,31 @@ Finally, the sound card connected via the ISA bus provided a new port: a Game Po
 
 
 \section{Bus}
-Although developers had no control over them, it is still worth mentioning how these components were connected via the Northbridge and Southbridge chipsets.\\ 
+Although developers had no control over them, it is still worth mentioning how these components were connected to each others.\\ 
 \par
-\begin{figure}[H]
-\centering
-      \includegraphics[width=\textwidth]{imgs/drawings/bus.pdf}
-\end{figure}
+
+The ISA\footnote{Industry Standard Architecture} bus connectes the CPU to all devices, including RAM. It was already 10 years old in 1991 but still used universally in every PC shipping. The data path to the RAM is either 16 bits wide for 286 and 386SX or 32 bits on 386DX based machines. It runs at the same frequency as the CPU.\\
 \par
-The Northbridge connecting the CPU to the RAM is 16 bits wide on 286 and 386SX but 32 bits wide on 386DX machines. It runs at the same frequency as the CPU.\\
-\par
-The Southbridge runs on an ISA\footnote{Industry Standard Architecture} bus. Introduced in 1981, it can be either:
+The rest of the bus connecting to everything that is not the RAM can be of two kinds:
 \begin{itemize}
 \item 8-bit wide at 4.77 MHz  for 19.1 Mbit/s
 \item 16-bit wide at 8.33MHz for 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates}.
 \end{itemize}
 Of course it is also backward compatible and an 8 bits ISA card can be plugged into a 16 bits ISA bus.\\
 \par
+\begin{figure}[H]
+\centering
+      \includegraphics[width=\textwidth]{imgs/drawings/bus.pdf}
+\end{figure}
+\par
+\bu{Trivia :} On ISA all devices are connected to the bus at all time and listen on the bus address lane. Each device features an "address decoder" to detect if it should reply to a bus request. This is how the VGA RAM is "mapped" in RAM. The VGA card "address decoder"  filters out everything that is not within \cw{A0000h} and \cw{AFFFFh}. Accordingly the RAM disregard any request that is within the range [\cw{A0000h} - \cw{AFFFFh}].\\
+\par
+ \begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imgs/drawings/isa.pdf}
+\end{figure}
 
+\par
  In practice, due to packet overhead and interrupts, the effective bandwidth of the bus is divided by two. As a result, a PC equipped with an 8-bits ISA VGA card can push 19.1Mbits/s/2 = 1.5MB/s. In Mode 13h, since a frame is 320x200 = 64,000 bytes, the theoretical maximum framerate with a CPU taking 0ms to render a frame is 1,500,000 / 64,000 = 23 frames per seconds.\\
  \par
  On a 16 bits VGA card, 33,400,000 bits per seconds gives 33,400,000/8/64000 = 65 frames per seconds.\\

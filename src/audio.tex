@@ -183,8 +183,8 @@ Sounds are stored in three formats. Once for PC Speaker, once for AdLib, and onc
 \lstinputlisting[language=C,morekeywords={longword}]{code/muse_header.c}
 \end{minipage}
 \par
-Strangely, only PC speaker and AdLib sounds are stored in the \cw{AUDIOT.*} files, the digitized sounds are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used.\\
-\note{Question for the developers: Why not include the sb sounds in AudioT?} 
+Strangely, only PC speaker and AdLib sounds are stored in the \cw{AUDIOT.*} files, the digitized sounds are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used. Nobody can remember why.\\
+
 \par
 
 
@@ -351,9 +351,9 @@ While the end result was not great, it was better than a beep\footnote{Lucas Art
 \end{minipage}
 \par
 Notice the \cw{SDL\_PCPlaySample} path allowing PCM to be played on the buzzer. This codepath was never enabled in shipping product.
-\footnote{You can hear the difference on youtube: "Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects" at https://www.youtube.com/watch?v=1BtlsjJRnFU}.\\
+\footnote{You can hear the difference on youtube: "Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects" at https://www.youtube.com/watch?v=1BtlsjJRnFU}. We may speculate it was a matter of overheard but the cost would have been the same as the Disney Sound Source playback. Questioning the authors of the game did not shed light on this mystery.\\
 \par
-\note{Why was this never shipped?}
+
 
 
 

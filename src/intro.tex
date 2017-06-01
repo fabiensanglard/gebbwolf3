@@ -38,14 +38,14 @@ With its fast CPU and 256K framebuffer, a 1991 PC looked promising at first. Exc
 \item The CPU could only do integer operations but the mathematics required for 3D calculations involved keeping track of fractions.
 \item The PC Speaker, the default sound device, could only produce square waves. A bunch of "beeps" which were more annoying than anything else.
 \end{itemize}
-On top of these major blockers lied fuve major difficulties:\\
+On top of these major blockers lied five major difficulties:\\
 \begin{itemize}
 \item The RAM addressing mode was not flat but segmented, resulting in complex and error prone pointer arithmetics.
 \item VGA pixels were not square: the framebuffer was stretched vertically when
 transferred to the screen.
 \item The audio ecosystem was fragmented: various sound systems had different capabilities and expectations.
 \item The machine could only address 1MB of RAM. To go beyond you had to enter a fragmented eco-system of drivers.
-\item The bus was slow and I/O with the VRAM was a bottleneck. It was impossible to write a full framebuffer each frame.
+\item The bus was slow and I/O with the VRAM was a bottleneck. It was next to impossible to write a full framebuffer each frame.
 \end{itemize}
 
 Overall, it looked like the machine was \emph{doom}ed to do boring things. But many around the world did not accept that and tinkered with the hardware to achieve unexpected results. How they did it is the raison d'\^etre of this book. I've chosen to divide this book in three chapters. By first showing the hardware constraints, I hope programmers will develop an appreciation for the software and how it navigates obstacles, sometimes turning limitations into advantages.
