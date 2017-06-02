@@ -25,7 +25,7 @@ Once downloaded and decompressed, the archive \codeword{woldsrc.zip} contains an
 \end{minipage}
 
 \par
- The code is 90\% in C with assembly for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code is not a meaningful metric against a single codebase but excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Chrome (Google's web browser) is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
+ The code is 90\% in C with assembly\footnote{All the assembly in Wolf3D is done with TASM (a.k.a Turbo Assembler by Borland). It uses Intel notation where the destination is before the source: \cw{instr} \cw{dest} \cw{source}} for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code is not a meaningful metric against a single codebase but excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Chrome (Google's web browser) is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
 \par
 \begin{figure}[H]
 \centering
