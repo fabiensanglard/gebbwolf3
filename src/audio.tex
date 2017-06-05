@@ -322,7 +322,7 @@ In the assembly, three I/O ports are accessed:\\
 \lstinputlisting[language=C]{code/pwm_code_header.c}
 \end{minipage}
 \par
-Notice how the $ * 60$ is not calculated. Once again the engine tries to save as much CPU time as possible by using a bit of RAM. The frequency is read from a loopup table \cw{pcSoundLookup}:\\
+Notice how the $ * 60$ is not calculated. Once again the engine tries to save as much CPU time as possible by using a bit of RAM. The frequency is read from a lookup table \cw{pcSoundLookup}:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pcSoundLookup.c}

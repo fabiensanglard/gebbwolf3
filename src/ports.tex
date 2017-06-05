@@ -186,7 +186,7 @@ I doubled the starting ammo on a fresh level start.  If a player just got killed
 There are 60 levels in the original Wolf dataset, and I wanted people to have the freedom to easily jump around between different levels and skills, so there is no enforcement of starting at the beginning.  The challenge is to /complete /a level, not /get to/ a level.  It is fun to start filling in the grid of level completions and awards, and it often feels better to try a different level after a death.  The only exception to the start-anywhere option is that you must find the entrance to the secret levels before you can start a new game there.\\
 \par
 
-In watching the early testers, the biggest issue I saw was people sliding off doors before they opened, and having to maneuver back around to go through.  In Wolf, as far as collision detection was concerned, everything was just a 64×64 tile map that was either solid or passable.
+In watching the early testers, the biggest issue I saw was people sliding off doors before they opened, and having to maneuver back around to go through.  In Wolf, as far as collision detection was concerned, everything was just a 64 x 64 tile map that was either solid or passable.
 Doors changed the tile state when they completed opening or began closing.  There was discussion about magnetizing the view angle towards doors, or somehow beveling the areas around the doors, but it turned out to be pretty easy to make the door tiles only have a solid central core against the player, so players would slide into the "notch" with the door until it opened.  This made a huge improvement in playability.\\
 \par
 
@@ -221,7 +221,7 @@ Implementing an automap was pretty straightforward, and it probably added more t
 When I was first thinking about the project I sort of assumed that we wouldn't bother with music, but Wolf3D Redux already had code that converted the old id music format into ogg, so we would up with support at the beginning, and it turned out pretty good.  We wound up ripping the red book audio tracks from one of the later commercial Wolf releases and encoding at a different bitrate, but I probably wouldn't have bothered if not for the initial support.  It would have been nice to re-record the music with a high quality MIDI synth, but we didn't have the original MIDI source, and Christian said that the conversion back from the id music format to midi was a little spotty, and would take a fair amount of work to get right.  I emailed Bobby Prince, the original composer, to see if he had any high quality versions still around, but he didn't get back with me.\\
 \par
 
-The game is definitely simplistic by modern standards, but it still has its moments.  Getting the drop on a brown shirt just as he is pulling his pistol from the holster.  Making an SS do the "twitchy dance" with your machine gun.  Rounding a corner and unloading your weapon on … a potted plant.  Simplistic plays well on the iPhone.\\
+The game is definitely simplistic by modern standards, but it still has its moments.  Getting the drop on a brown shirt just as he is pulling his pistol from the holster.  Making an SS do the "twitchy dance" with your machine gun.  Rounding a corner and unloading your weapon on ... a potted plant.  Simplistic plays well on the iPhone.\\
 \par
 
 \subsection{Programming notes}
