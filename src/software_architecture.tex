@@ -89,7 +89,7 @@ The archive contains more than just source code, it also features:
 The game engine is divided in three blocks:
 \begin{itemize}
 \item 2D menu engine which lets the user configure the game.
-\item 3D game renderer where the player spends most of her time.
+d\item 3D game renderer where the player spends most of his time.
 \item Sound system which runs concurrently with either the 2D or 3D renderer. 
 \end{itemize}
 The three systems communicate via shared memory. The renderer writes music and sound requests to the RAM (also making sure the assets are ready.) These requests are read by the sound "loop". The sound system also writes to the RAM for the renderers since it is in charge of the heartbeat of the whole engine. The renderers update the world according to the wall-time tracked by \cw{TimeCount} variable.
@@ -151,7 +151,7 @@ The sound system is started via the Sound Manager in \cw{SDL\_SetTimerSpeed}. Wh
 \par
 The reason for interrupts is extensively explained in the Chapter "Audio and Heartbeat". In short, with an OS supporting neither process nor thread, it was the only way to have something execute concurrently with the rest of the engine.\\
 \par
-An ISR\footnote{Interrupt Service Routine} is installed in the Interrupt Vector Table to repond to the interrupt. Note how the ISR can be called at frequencies of 140Hz, 700Hz, or even 7000Hz depending on the needs of the sound system being driven.\\
+An ISR\footnote{Interrupt Service Routine} is installed in the Interrupt Vector Table to respond to the interrupt. Note how the ISR can be called at frequencies of 140Hz, 700Hz, or even 7000Hz depending on the needs of the sound system being driven.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/soundsystem_interrupt.c}
@@ -504,7 +504,7 @@ This mapping system is also called "chaining". Because 2 bits out of the address
  \end{figure}
 
  \par
- The waste is really the fault of the Chain-4 chip. Nobody knows who discovered this first but it turns out it is possible to disable this. The technique was popularized by Michael Abrash in Dr. Dobb's Journal of July 1991. In his article he described what he coined the Mode-X. An undocumented sequence of operations disabling Chain-4 allows for a resolution of 320x240 square pixels (since the ratio is 4:3) and full access to the 256K of RAM.\\
+ The waste is really the fault of the Chain-4 chip. Nobody knows who discovered this first but it turns out it is possible to disable this. The technique was popularized by Michael Abrash in Dr. Dobb's Journal of July 1991. In his article he described what he coined in the Mode-X. An undocumented sequence of operations disabling Chain-4 allows for a resolution of 320x240 square pixels (since the ratio is 4:3) and full access to the 256K of RAM.\\
  \par
  Wolfenstein 3D does things slightly differently. It disables chain-4 but keeps resolution at 320x200. This mode what coined Mode-Y many years later. \\
  \par
@@ -563,7 +563,7 @@ The solution is to change how we draw to the screen. Instead of going top to bot
 \end{minipage}
 
 \par
-This code can run without issues at 70 frames per second since just 200 slow \cw{out} instructions are used.\\
+This code can run without issues at 70 frames per second since just 200 slow \cw{outp} instructions are used.\\
 \par
 This speed consideration has a fundamental impact on the engine: to draw anything fast with the VGA, it has to be drawn vertically. Everything in the engine is drawn this way: walls, sprites, menus. The ramifications of this hardware constraint are felt all the way down to how assets are stored in RAM (rotated 90 degrees) and woven to match the VGA banks layout (this is described in detail in the "Rendering sprites" section).\\
 
@@ -595,7 +595,7 @@ This glitch shows both misalignment and part of one page and part of another pag
  \includegraphics[width=\textwidth]{imgs/drawings/triple_pages_trick.pdf}
 \end{figure}
 \par
-In VRAM, Page 0 is at 0x0000, page 1 at 0x3E80 and page 2 at 0x7000. Instructing the CRTC to use page 1 instead of page 0 requires updating the high byte 0x00 to 0x3E and the low byte 0x00 to 0x80. Since updates are not atomic, poor timing could result in the CRTC picking up a value of 0x3E00 instead of 0x3E80:\\
+In VRAM, Page 1 is at 0x0000, page 2 at 0x3E80 and page 3 at 0x7000. Instructing the CRTC to use page 2 instead of page 1 requires updating the high byte 0x00 to 0x3E and the low byte 0x00 to 0x80. Since updates are not atomic, poor timing could result in the CRTC picking up a value of 0x3E00 instead of 0x3E80:\\
 \par
 \par
 \begin{minipage}{\textwidth}
