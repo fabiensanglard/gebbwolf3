@@ -205,7 +205,7 @@ Although correct, this way of explaining floating point usually leaves programme
 \caption{Alternative Floating Point internals.}
 \end{figure}
   \bigskip  
-The window tells within which two consecutive power-of-two the number will be: [0,1], [1,2], [2,4], [4,8] and so on (up to [$2^{127}$,$2^{128}$]. The offset divides the window in $ 2^{23} = 8388608 $  bucket. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g [2,4]), you can "float" it right and represent the number within the next window (e.g [4,8]). It only costs a little bit of precision.\\
+The window tells within which two consecutive power-of-two the number will be: [0,1], [1,2], [2,4], [4,8] and so on (up to [$2^{127}$,$2^{128}$]. The offset divides the window in $ 2^{23} = 8388608 $  buckets. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g [2,4]), you can "float" it right and represent the number within the next window (e.g [4,8]). It only costs a little bit of precision.\\
 
 
 \par \bu{Trivia :} How much precision is lost when the window covers a wider range? Let's take an example with window [0,1] where the 8388608 offsets cover a range of 1 which gives a precision of $(1-0)/8388608=0.00000011920929$. In the window [2048,4096] the 8388608 offsets cover a range of $(4096-2048) = 2048$ which gives a precision $ (4096-2048)/8388608=0.0002$.\\
@@ -226,7 +226,7 @@ Here is a detailed example to calculates the floating point representation of a 
 \begin{itemize}
  \item The number 3.14 is positive  $\rightarrow S=0$.
  \item The number 3.14 is between the power of two 2 and 4 so the floating window must start at $2^1$  $\rightarrow E=128$ (see formula where window is $2^{(E-127)}$).
- \item Finally there are $2^{23}$ offsets available so 3.14 is at $\frac{3.14 -2 }{4 - 2} = 0.57 $. The mantissa/offset $\rightarrow M = 2^{23}*0.57 = 4781507$
+ \item Finally there are $2^{23}$ offsets available to express where 3.14 falls within the interval [2-4]. It is at $\frac{3.14 -2 }{4 - 2} = 0.57\%$ within the interval which makes the offset $ M = 2^{23}*0.57 = 4781507$
 \end{itemize}
 
 Which in binary translates to:
@@ -247,7 +247,7 @@ Which in binary translates to:
 
 The value 3.14 is therefore approximated to 3.14000000000000012.\\
 
-The corresponding value with the ugly and useless formula:
+The corresponding value with the ugly formula:
 
 \begin{equation}
 3.14 = (-1)^0 * 1.57 * 2^{(128-127)}
@@ -766,7 +766,7 @@ When writing or reading a value V at address K in RAM, the Chain-4 breaks the ad
 \item The 14 high bits are right shifted by two bits and used as offset in the bank.
 \end{itemize}
   \par
-  For example, writing at 0xABF13 in RAM would result in writing in bank 3 at offset 0xBF1. Since this is all hardwired in the Chain-4, this extra work is fast and totally invisible to the user.
+  For example, writing at 0xABF13 in RAM would result in writing in bank 3 at offset 0xBF13 >> 2 = 2FC4. Since this is all hardwired in the Chain-4, this extra work is fast and totally invisible to the user.
  \begin{figure}[H]
 \centering
       \includegraphics[width=\textwidth]{imgs/drawings/mode_13h_example.pdf}

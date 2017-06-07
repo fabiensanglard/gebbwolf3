@@ -668,22 +668,22 @@ DDA is so fast because once the first intersection of a ray with an axis is know
 
 \begin{equation*}
     \scalebox{1.3}{
-$C = (A.x +1, A.y + xstep)$\\
+$C = (X_{A} +1, Y_{A} + xstep)$\\
 }
 \end{equation*}
 \begin{equation*}
     \scalebox{1.3}{
-$D = (C.x +1, C.y + xstep)$\\
+$D = (X_{C} +1, Y_{C} + xstep)$\\
 }
 \end{equation*}
 \begin{equation*}
     \scalebox{1.3}{
-$F = (D.x +1, D.y + xstep)$\\
+$F = (X_{D} +1, Y_{D} + xstep)$\\
 }
 \end{equation*}
 \begin{equation*}
     \scalebox{1.3}{
-$G = (F.x +1, F.y + xstep)$\\
+$G = (X_{F} +1, Y_{F} + xstep)$\\
 }
 \end{equation*}
 
@@ -693,12 +693,12 @@ Similarly, for the vertical intersections:\\
   \begin{equation*}
     \scalebox{1.3}{
 
-$E = (B.x + ystep, A.y + 1)$\\
+$E = (X_{B} + ystep, Y_{B} + 1)$\\
 }
 \end{equation*}
   \begin{equation*}
     \scalebox{1.3}{
-$D = (E.x + ystep, E.y + 1)$\\
+$D = (X_{E} + ystep, Y_{E} + 1)$\\
 }
 \end{equation*}
 Note that $ystep$ and $ystep$ are simple lookups into the \cw{tan} array since $xstep=tan(\theta)$ and $ystep=(90-\theta)$ where $\theta$ is the angle of the ray in map coordinates. This CPU power limitation and associated grid solution explain why all Wolfenstein 3D maps are made of axis aligned square elements.\\
@@ -1178,7 +1178,7 @@ The best case for this trick is shown in the following screenshots. The player i
  \fullimage{post_optimization_1_show.png}
 \end{figure}
 
-This trick is only possible because of an interesting property of the VGA bank layout. If you take a look on page \pageref{vga_layout}, you see a 3D view with its associated bank storage underneath. Each bank looks like a compressed version of the screen because they store every four columns. Each bank stores 80 columns to be exact. Bank 0 stores column 0, column 4, column, 8 and so on. Bank 1 stores column 1, column 5, column 9 and so on. Column 0 and Column 1 are at the same address in bank 0 and bank 1.
+This trick is only possible because of an interesting property of the VGA bank layout. If you take a look on page \pageref{vga_layout}, you see a 3D view with its associated bank storage underneath. Each bank looks like a compressed version of the screen because they store every fourth column. Each bank stores 80 columns to be exact. Bank 0 stores column 0, column 4, column, 8 and so on. Bank 1 stores column 1, column 5, column 9 and so on. Column 0 and Column 1 are at the same address in bank 0 and bank 1.
  \par
   \begin{minipage}{\textwidth}
  
