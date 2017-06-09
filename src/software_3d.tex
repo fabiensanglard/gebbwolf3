@@ -662,28 +662,30 @@ If you made extremely jagged block maps that would turn into many dozen independ
  \includegraphics[width=\textwidth]{imgs/drawings/dda.pdf}
 \end{figure}
 \par
+
+
 DDA is so fast because once the first intersection of a ray with an axis is known (A for Y axis and B for X axis), all subsequent intersections' coordinates are two cheap additions away.
 \par
 
 
 \begin{equation*}
     \scalebox{1.3}{
-$C = (X_{A} +1, Y_{A} + xstep)$\\
+$C = (X_{A} +1, Y_{A} + ystep)$\\
 }
 \end{equation*}
 \begin{equation*}
     \scalebox{1.3}{
-$D = (X_{C} +1, Y_{C} + xstep)$\\
+$D = (X_{C} +1, Y_{C} + ystep)$\\
 }
 \end{equation*}
 \begin{equation*}
     \scalebox{1.3}{
-$F = (X_{D} +1, Y_{D} + xstep)$\\
+$F = (X_{D} +1, Y_{D} + ystep)$\\
 }
 \end{equation*}
 \begin{equation*}
     \scalebox{1.3}{
-$G = (X_{F} +1, Y_{F} + xstep)$\\
+$G = (X_{F} +1, Y_{F} + ystep)$\\
 }
 \end{equation*}
 
@@ -693,15 +695,15 @@ Similarly, for the vertical intersections:\\
   \begin{equation*}
     \scalebox{1.3}{
 
-$E = (X_{B} + ystep, Y_{B} + 1)$\\
+$E = (X_{B} + xstep, Y_{B} + 1)$\\
 }
 \end{equation*}
   \begin{equation*}
     \scalebox{1.3}{
-$D = (X_{E} + ystep, Y_{E} + 1)$\\
+$D = (X_{E} + xstep, Y_{E} + 1)$\\
 }
 \end{equation*}
-Note that $ystep$ and $ystep$ are simple lookups into the \cw{tan} array since $xstep=tan(\theta)$ and $ystep=tan(90-\theta)$ where $\theta$ is the angle of the ray in map coordinates. This CPU power limitation and associated grid solution explain why all Wolfenstein 3D maps are made of axis aligned square elements.\\
+Note that $ystep$ and $ystep$ are simple lookups into the \cw{tan} array since $xstep=tan(\theta)$ and $ystep=tan(90-\theta)$ where $\theta$ is the angle of the ray in map coordinates\footnote{A visual reminder of how the unit circle works can be found on page \pageref{unit_circle}.}. This CPU power limitation and associated grid solution explain why all Wolfenstein 3D maps are made of axis aligned square elements.\\
 \par
 \begin{figure}[H]
   \centering
@@ -803,6 +805,7 @@ The DDA intersection algorithm is implemented in a fully handcrafted 740 lines o
 This implementation results in many \cw{jmp} instructions. These would kill the i-cache and empty the pipeline on a modern CPU. But on a an architecture devoid of pipeline and code cache such as the 386 it is not a problem at all.\\
 \par
 This part of the code relies heavily on unit circle principles. Because we need to know by how much we go up/down when advancing on the X axis and how much we go left/right when advancing on the Y axis, the \cw{tan} function is especially useful. This is easier to understand with the unit circle drawn (circle radius R is equal to 1).
+\label{unit_circle}
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/unit_circle.tex}
@@ -1247,7 +1250,7 @@ With these in mind, here are a few examples using the following layout where the
 
 
 
-
+\label{simd_vga}
 If the two columns are not properly aligned (like columns under pixels 3 and 4), the mask is of no help. Two passes with mask set to 8 and then 1 will be needed.\\
  \par
  \begin{minipage}{\textwidth}

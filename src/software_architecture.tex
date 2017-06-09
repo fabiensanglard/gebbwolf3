@@ -89,7 +89,7 @@ The archive contains more than just source code, it also features:
 The game engine is divided in three blocks:
 \begin{itemize}
 \item 2D menu engine which lets the user configure the game.
-d\item 3D game renderer where the player spends most of his time.
+d\item 3D game renderer where the player spends most of her time.
 \item Sound system which runs concurrently with either the 2D or 3D renderer. 
 \end{itemize}
 The three systems communicate via shared memory. The renderer writes music and sound requests to the RAM (also making sure the assets are ready.) These requests are read by the sound "loop". The sound system also writes to the RAM for the renderers since it is in charge of the heartbeat of the whole engine. The renderers update the world according to the wall-time tracked by \cw{TimeCount} variable.
@@ -504,7 +504,7 @@ This mapping system is also called "chaining". Because 2 bits out of the address
  \end{figure}
 
  \par
- The waste is really the fault of the Chain-4 chip. Nobody knows who discovered this first but it turns out it is possible to disable this. The technique was popularized by Michael Abrash in Dr. Dobb's Journal of July 1991. In his article he described what he coined in the Mode-X. An undocumented sequence of operations disabling Chain-4 allows for a resolution of 320x240 square pixels (since the ratio is 4:3) and full access to the 256K of RAM.\\
+ The waste is really the fault of the Chain-4 chip. Nobody knows who discovered this first but it turns out it is possible to disable this. The technique was popularized by Michael Abrash in Dr. Dobb's Journal of July 1991. In his article he described what he coined the Mode-X. An undocumented sequence of operations disabling Chain-4 allows for a resolution of 320x240 square pixels (since the ratio is 4:3) and full access to the 256K of RAM.\\
  \par
  Wolfenstein 3D does things slightly differently. It disables chain-4 but keeps resolution at 320x200. This mode what coined Mode-Y many years later. \\
  \par

@@ -1,7 +1,13 @@
-\documentclass[crop,tikz,ifthenelse]{standalone}
+\documentclass[tikz]{standalone}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usetkzobj{all}
+
 \usetikzlibrary{calc}
 \begin{document}
 \begin{tikzpicture}[]
+
+
 
 \newcommand\minx{-0.3}
 \newcommand\maxx{6}
@@ -79,10 +85,10 @@
 %\fill[blue] ($(\xprojection, -1)!(D)!(\xprojection, 5)$) circle (0.05);
 %\fill[blue] ($(\xprojection, -1)!(F)!(\xprojection, 5)$) circle (0.05);
 %\fill[blue] ($(\xprojection, -1)!(G)!(\xprojection, 5)$) circle (0.05);
-\draw[<->, >=stealth, blue] ($(\xprojection, -1)!(A)!(\xprojection, 5)$) -- ($(\xprojection, -1)!(C)!(\xprojection, 5)$) node[pos=0.5, left, blue](0.5) {\tiny xstep};
-\draw[<->, >=stealth, blue] ($(\xprojection, -1)!(C)!(\xprojection, 5)$) -- ($(\xprojection, -1)!(D)!(\xprojection, 5)$) node[pos=0.5, left, blue](0.5) {\tiny xstep};
-\draw[<->, >=stealth, blue] ($(\xprojection, -1)!(D)!(\xprojection, 5)$) -- ($(\xprojection, -1)!(F)!(\xprojection, 5)$) node[pos=0.5, left, blue](0.5) {\tiny xstep};
-\draw[<->, >=stealth, blue] ($(\xprojection, -1)!(F)!(\xprojection, 5)$) -- ($(\xprojection, -1)!(G)!(\xprojection, 5)$) node[pos=0.5, left, blue](0.5) {\tiny xstep};
+\draw[<->, >=stealth, blue] ($(\xprojection, -1)!(A)!(\xprojection, 5)$) -- ($(\xprojection, -1)!(C)!(\xprojection, 5)$) node[pos=0.5, left, blue](0.5) {\tiny ystep};
+\draw[<->, >=stealth, blue] ($(\xprojection, -1)!(C)!(\xprojection, 5)$) -- ($(\xprojection, -1)!(D)!(\xprojection, 5)$) node[pos=0.5, left, blue](0.5) {\tiny ystep};
+\draw[<->, >=stealth, blue] ($(\xprojection, -1)!(D)!(\xprojection, 5)$) -- ($(\xprojection, -1)!(F)!(\xprojection, 5)$) node[pos=0.5, left, blue](0.5) {\tiny ystep};
+\draw[<->, >=stealth, blue] ($(\xprojection, -1)!(F)!(\xprojection, 5)$) -- ($(\xprojection, -1)!(G)!(\xprojection, 5)$) node[pos=0.5, left, blue](0.5) {\tiny ystep};
 
 \draw[blue, dotted] (A) -- ($(\xprojection, -1)!(A)!(\xprojection, 5)$);
 \draw[blue, dotted] (C) -- ($(\xprojection, -1)!(C)!(\xprojection, 5)$);
@@ -99,9 +105,14 @@
 \draw[red, dotted] (H) -- ($(-1, \yprojection)!(H)!(4, \yprojection)$);
 
 
-\draw[<->, >=stealth, red] ($(-1, \yprojection)!(B)!(4, \yprojection)$) -- ($(-1, \yprojection)!(E)!(4, \yprojection)$) node[pos=0.5, above, red](0.5) {\tiny ystep};
+\draw[<->, >=stealth, red] ($(-1, \yprojection)!(B)!(4, \yprojection)$) -- ($(-1, \yprojection)!(E)!(4, \yprojection)$) node[pos=0.5, above, red](0.5) {\tiny xstep};
 
-\draw[<->, >=stealth, red] ($(-1, \yprojection)!(E)!(4, \yprojection)$) -- ($(-1, \yprojection)!(H)!(4, \yprojection)$) node[pos=0.5, above, red](0.5) {\tiny ystep};
+\draw[<->, >=stealth, red] ($(-1, \yprojection)!(E)!(4, \yprojection)$) -- ($(-1, \yprojection)!(H)!(4, \yprojection)$) node[pos=0.5, above, red](0.5) {\tiny xstep};
+
+\coordinate (theta_horitontal_point) at (1,0.5);
+
+\tkzMarkAngle[fill= gray,size=0.6](theta_horitontal_point,player,A);
+\tkzLabelAngle[pos = 0.4](A,player,theta_horitontal_point){ $\theta$};
 
 \end{tikzpicture}
 \end{document}
