@@ -30,11 +30,11 @@ However, there is a limitation to this trick: only bytes at the same address in 
  \end{figure}
 Pixels 0, 1, 2, 3 can be written in one write.\\
 Pixels 3 and 4 need two writes.\\
-Pixels 3, 4, 5, 6, 7, 8 need three writes.\\
+Pixels 3, 4, 5, 6, 7, 8 need three writes\footnote{How the mask allows to write multiple pixels at once is extensively described on page \pageref{simd_vga}.}.\\
 
 
 \par
-The rest of the 2D renderer is pretty straight forward. It uses the US Manager extensively to render text and the Cache manager to retrieve assets from HDD to RAM. Note that assets are called "pic" as opposed to "sprites" in the 3D renderer. Pictures are all Huffman-compressed (VGADICT, VGAHEAD, VGAGRAPH). Menus are exactly what one would expect. They are stored in an array of struct, featuring hard-coded strings and function pointers for each button. Here is the code to draw the "Main Menu" shown previously.\\
+The rest of the 2D renderer is pretty straight forward. It uses the US Manager extensively to render text and the Cache manager to retrieve assets from HDD to RAM. Note that assets are called "pic" as opposed to "sprites" in the 3D renderer. Pictures are all Huffman-compressed (VGADICT, VGAHEAD, VGAGRAPH). Menus stored in an array of struct. Here is the code to draw the "Main Menu" shown previously.\\
 
 \par
 \begin{minipage}{\textwidth}
