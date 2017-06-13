@@ -124,7 +124,7 @@ Programming the OPL2 output is esoteric to say the least. AdLib and Creative did
 \par
 The OPL2 is made of 9 channels able to emulate an instrument. Each channel is made of two oscillators: a Modulator whose outputs are fed into a Carrier's input. Each channel has individual settings including frequency and envelope (composed of attack rate, decay rate, sustain level, release rate, and vibrato.) Each oscillator can also pick a waveform (these uncanny forms are what gave the YM3812 its recognizable sound.)\\
 \par
- To control all of these channels, a developer must configure the OPL2's 244 internal registers. These are all accessed via two external ports mapped in the PC RAM. One port is for setting the card's internal register and the other is to read/write data to it.\\
+ To control all of these channels, a developer must configure the OPL2's 244 internal registers. These are all accessed via two external ports. One port is for setting the card's internal register and the other is to read/write data to it.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/audio_ports.c}
