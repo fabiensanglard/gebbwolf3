@@ -29,7 +29,7 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
 
 \section{CPU: Central Processing Unit}
   
-  In 1991 there were 56 millions PCs in USA \footnote{"Computers". Collier's Encyclopedia. Vol. 7, 1992: 114, 129.}. The performances of these machines were so overwhelmingly dominated by the CPU that a PC was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had a 80386 or equivalent, it was called a "386". If it had an Intel 80286, it was a "286".\\
+  In 1991 there were 56 millions PCs in USA \footnote{"Computers". Collier's Encyclopedia. Vol. 7, 1992: 114, 129.}. The performance of these machines were so overwhelmingly dominated by the CPU that a PC was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had a 80386 or equivalent, it was called a "386". If it had an Intel 80286, it was a "286".\\
 \subsection{Overview}
   The ubiquitous CPU manufacturer was Intel with its line of x86 microprocessors. Machines based on the 16 bits 80286 processor did not sell well\footnote{Bill Gates dubbed it "Brain Dead"} but its successor the 80386 introduced in 1985 was immensely successful\footnote{SALES}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
 \par
@@ -67,8 +67,12 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
    \end{tikzpicture}
    \caption{Comparison\protect\footnotemark of CPUs with MIPS \protect\footnotemark.}
  \end{figure}
- \footnotetext{Source: "Roy Longbottom's PC Benchmark Collection: http://www.roylongbottom.org.uk/mips.htm\#anchorIntel2".}
- \footnotetext{Million Instructions Per Second.}
+ \par
+  % Latex footnote I HATE YOU !!!!!!
+ \addtocounter{footnote}{-1}
+  \footnotetext{Source: "Roy Longbottom's PC Benchmark Collection: http://www.roylongbottom.org.uk/mips.htm\#anchorIntel2".}
+   \stepcounter{footnote}
+  \footnotetext{Million Instructions Per Second.}
  \par
   \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 MIPS.\\
   \par
@@ -77,11 +81,11 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
 
 
  \par
-\textbf{\underline{Trivia :}} Two other companies produced Intel clones: AMD and Cyrix. Their mediocre performances did not justify the lower cost and as a result they never gained significant market share. Almost all PCs featured an Intel CPU. Interestingly, AMD evolved to become a serious challenger\footnote{The history of AMD vs Intel litigations could be the subject of a book.} while Cyrix merged with National Semiconductor in 1997.\\
+\textbf{\underline{Trivia :}} Two other companies produced Intel clones: AMD and Cyrix. Their mediocre performance did not justify the lower cost and as a result they never gained significant market share. Almost all PCs featured an Intel CPU. Interestingly, AMD evolved to become a serious challenger\footnote{The history of AMD vs Intel litigations could be the subject of a book.} while Cyrix merged with National Semiconductor in 1997.\\
 \par
 
 \subsection{The Intel 80386}
-The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagshit P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performances, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel}. Two choices in the design of the 386 contributed to its success. For one the designers decided to listen to the programmers feedback and dropped the idea to use a new instruction set. As a result the 386 is fully backward compatibility with the 286. They also managed to add a 32 bit operating mode which solves many of the memory addressing issues of the 286.\\
+The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagshit P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel}. Two choices in the design of the 386 contributed to its success. For one the designers decided to listen to the programmers feedback and dropped the idea to use a new instruction set. As a result the 386 is fully backward compatibility with the 286. They also managed to add a 32 bit operating mode which solves many of the memory addressing issues of the 286.\\
 \par
 \textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View. New York: McGraw-Hil} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "Software poison".\\
 \par
@@ -163,9 +167,9 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
 \par
  As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{What every Computer Scientist should know about Floating-Point}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is to program a 3D engine. In the C language, \codeword{float}s are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
-  \item One bit S for the sign
-  \item Seven bits E for the exponent
-  \item Twenty four bits for the mantissa
+  \item 1 bit S for the sign
+  \item 8 bits E for the exponent
+  \item 23 bits for the mantissa
 \end{itemize} 
 
 \begin{figure}[H]
@@ -245,7 +249,7 @@ Which in binary translates to:
 \end{figure}
   \bigskip
 
-The value 3.14 is therefore approximated to 3.14000000000000012.\\
+The value 3.14 is therefore approximated to 3.1400001049041748046875.\\
 
 The corresponding value with the ugly formula:
 
@@ -278,7 +282,7 @@ This is not a problem when everything is hardwired within an hardware floating p
 \par
 
 
-\textbf{\underline{Trivia :}} People who really wanted an hardware floating point unit could buy one. In the 90s the only people who could possibly want one would have been scientists (as per Intel understanding of the market). They were marketed as "Math CoProcessor". Performances were average and price was outrageous\footnote{\$200 in 1993 equivalent to \$350 in 2016.}. As a result, sales were mediocre.\\
+\textbf{\underline{Trivia :}} People who really wanted an hardware floating point unit could buy one. In the 90s the only people who could possibly want one would have been scientists (as per Intel understanding of the market). They were marketed as "Math CoProcessor". Performance were average and price was outrageous\footnote{\$200 in 1993 equivalent to \$350 in 2016.}. As a result, sales were mediocre.\\
 \begin{figure}[H]
 \centering
   \shadowbox{
