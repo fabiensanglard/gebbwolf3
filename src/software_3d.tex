@@ -581,7 +581,7 @@ Or it can be more complex due to a type of tweaked \cw{fixed} used for raycastin
 With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. The coordinate system finds its origin in the upper left. A map is a grid of 64 by 64 blocks. 
 \begin{figure}[H]
   \centering
- \includegraphics[width=.5\textwidth]{imgs/drawings/coo_sys.pdf}
+ \includegraphics[width=.8\textwidth]{imgs/drawings/coo_sys.pdf}
 \end{figure}
 \par
 Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column heights are 29:3. The player position is 16:16. Angles however are \cw{int}s representing 10th of degrees with a range [0, 3600].
@@ -703,7 +703,7 @@ $E = (X_{B} + xstep, Y_{B} + 1)$\\
 $D = (X_{E} + xstep, Y_{E} + 1)$\\
 }
 \end{equation*}
-Note that $ystep$ and $ystep$ are simple lookups into the \cw{tan} array since $xstep=tan(\theta)$ and $ystep=tan(90-\theta)$ where $\theta$ is the angle of the ray in map coordinates\footnote{A visual reminder of how the unit circle works can be found on page \pageref{unit_circle}.}. This CPU power limitation and associated grid solution explain why all Wolfenstein 3D maps are made of axis aligned square elements.\\
+Note that $ystep$ and $xstep$ are simple lookups into the \cw{tan} array since $xstep=tan(\theta)$ and $ystep=tan(90-\theta)$ where $\theta$ is the angle of the ray in map coordinates\footnote{A visual reminder of how the unit circle works can be found on page \pageref{unit_circle}.}. This CPU power limitation and associated grid solution explain why all Wolfenstein 3D maps are made of axis aligned square elements.\\
 \par
 \begin{figure}[H]
   \centering

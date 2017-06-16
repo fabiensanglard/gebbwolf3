@@ -102,7 +102,11 @@ Wolf uses a 17 bits Maximum-Length LFSR with two taps to generate a serie of pse
 \par
 \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/fibonacci.pdf} \end{figure}
 \par
-The above diagram is slow to implement in software. There is an alternative way to represent a LFSR called "Galois", which is the way Wolfenstein 3D implements its LFSR and writes 320x200=64000 pixels exactly once with deterministic duration.
+The Fibonacci representation helps to understand the general idea. But it is not how a LFSR is usually implemented in software. The reason is that it scales linearely with the number of taps. With four taps, you need three sequencial XOR operations:
+\par
+\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/fibonacci_hard.pdf} \end{figure}
+\par
+There is an alternative way to represent a LFSR called "Galois", which is the way Wolfenstein 3D implements its LFSR and writes 320x200=64000 pixels exactly once with deterministic duration.
 \par
 \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/galois.pdf} \end{figure}
       
