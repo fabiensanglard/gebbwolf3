@@ -25,7 +25,7 @@ This episode was enough to convince them they had not only the talent to feed th
   \toprule
   \textbf{Name} &  \textbf{Age} & \textbf{Occupation} \\
   \toprule 
-   John Carmack & 22 &  Programming\\
+   John Carmack & 21 &  Programming\\
    John Romero & 25 &  Programming\\
    Adrian Carmack & 22 &  Artist\\
    Tom Hall & 28 &  Creative Director\\
@@ -185,23 +185,20 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA modes that \cw{Mode 13h} and \cw{Mode 4h} (figure~\ref{fig:vga_modes} on page~\pageref{fig:vga_modes})  don't have the same starting RAM address. This allows a trick where two graphic cards are plugged in the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally. This setup allows a developer to debug the game engine with breakpoints.\\
+You may have noticed in the listing of VGA modes that \cw{Mode 13h} and \cw{Mode 4h} (figure on page~\pageref{fig:vga_modes})  don't have the same starting RAM address. This allows a trick where two graphic cards are plugged in the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally. This setup allows a developer to debug the game engine with breakpoints.\\
+\par
 \begin{figure}[H]
-\centering
-  \shadowbox{
-      \fullimage{wolf_screen1.png}
-  }  
-\caption{Monitor 1 with Borland Turbo Debugger 386}
-\label{fig:dm1}
+  \centering
+      \scaledimage{0.8}{wolf_screen1.png}
+
 \end{figure}
+
+Above, Monitor 1 with Borland Turbo Debugger 386. Below Monitor 2 running the game.
 
 \begin{figure}[H]
 \centering
-  \shadowbox{
-      \fullimage{wolf_screen2.png}
-  }  
-\caption{Monitor 2 running the game as normal}
-\label{fig:dm1}
+      \scaledimage{0.8}{wolf_screen2.png}
+
 \end{figure}
 
 
@@ -266,7 +263,7 @@ The graphic assets are divided in two categories:
 After the graphic assets were generated, a tool (IGRAB-ED) packed all the ILBMs files together in an archive and generated a C header file with asset IDs. The engine references an asset directly by using these IDs.\\
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/drawing_plain.eps}
+ \includegraphics[width=.9\textwidth]{imgs/drawings/drawing_plain.eps}
  \caption{Asset creation pipeline for the 2D Menu items}
 \end{figure}
 \par
