@@ -230,7 +230,7 @@ Here is a detailed example to calculates the floating point representation of a 
 \begin{itemize}
  \item The number 3.14 is positive  $\rightarrow S=0$.
  \item The number 3.14 is between the power of two 2 and 4 so the floating window must start at $2^1$  $\rightarrow E=128$ (see formula where window is $2^{(E-127)}$).
- \item Finally there are $2^{23}$ offsets available to express where 3.14 falls within the interval [2-4]. It is at $\frac{3.14 -2 }{4 - 2} = 0.57\%$ within the interval which makes the offset $ M = 2^{23}*0.57 = 4781507$
+ \item Finally there are $2^{23}$ offsets available to express where 3.14 falls within the interval [2-4]. It is at $\frac{3.14 -2 }{4 - 2} = 0.57$ within the interval which makes the offset $ M = 2^{23}*0.57 = 4781507$
 \end{itemize}
 
 Which in binary translates to:
