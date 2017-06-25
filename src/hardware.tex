@@ -1,6 +1,6 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-To study the IBM PC it is easier to break it down in small parts. Five sub-systems stand out: Inputs, CPU, RAM, Video, and Audio, together forming a pipeline.\\
+To study the IBM PC it is easier to first break it down in small parts. Five sub-systems form a pipepline: Inputs, CPU, RAM, Video, and Audio.\\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/fun_pipeline.pdf}
@@ -8,7 +8,7 @@ To study the IBM PC it is easier to break it down in small parts. Five sub-syste
 \label{fig:digraph}
 \end{figure}
 
-Overall, the pipeline generates a lot of friction since manufacturers had not embraced the gaming industry yet. Some parts are bad, some are very bad, and some were downright impossible to deal with.\\
+Overall, the pipeline generates a lot of friction since manufacturers had not embraced the gaming industry yet. Some parts are bad, some are very bad, and some are downright impossible to deal with.\\
 \par
 
 \begin{figure}[H]
@@ -22,16 +22,16 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
   Inputs & Ok \\ 
   CPU & Impossible \\ \bottomrule
 \end{tabularx}
-\caption{Component quality for a 3D game engine.}
+\caption{Component quality for a game engine.}
 \end{figure}
 
 
 
 \section{CPU: Central Processing Unit}
   
-  In 1991 there were 56 millions PCs in USA \footnote{"Computers". Collier's Encyclopedia. Vol. 7, 1992: 114, 129.}. The performance of these machines were so overwhelmingly dominated by the CPU that a PC was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had a 80386 or equivalent, it was called a "386". If it had an Intel 80286, it was a "286".\\
+  In 1991 there were 56 million PCs in USA \footnote{"Computers". Collier's Encyclopedia. Vol. 7, 1992: 114, 129.}. The performance of these machines were so overwhelmingly dominated by the CPU that a PC was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had a 80386 or equivalent, it was called a "386". If it had an Intel 80286, it was a "286".\\
 \subsection{Overview}
-  The ubiquitous CPU manufacturer was Intel with its line of x86 microprocessors. Machines based on the 16 bits 80286 processor did not sell well\footnote{Bill Gates dubbed it "Brain Dead"} but its successor the 80386 introduced in 1985 was immensely successful\footnote{SALES}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
+  The ubiquitous CPU manufacturer was Intel with its line of x86 microprocessors\footnote{73\% of PC sold in 1989 featured an Intel CPU according to Intel Corporation Annual Report.}. Machines based on the 16 bits 80286 processor did not sell well but their successors with the 80386 introduced in 1985 were immensely successful\footnote{An estimated 3.74 million 386 based systems were sold in 1990. Source: Dataquest PC Magazine February 1992.}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
 \par
 
 
@@ -81,29 +81,29 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
 
 
  \par
-\textbf{\underline{Trivia :}} Two other companies produced Intel clones: AMD and Cyrix. Their mediocre performance did not justify the lower cost and as a result they never gained significant market share. Almost all PCs featured an Intel CPU. Interestingly, AMD evolved to become a serious challenger\footnote{The history of AMD vs Intel litigations could be the subject of a book.} while Cyrix merged with National Semiconductor in 1997.\\
+\textbf{\underline{Trivia :}} Two other companies produced Intel clones: AMD and Cyrix. Their mediocre performance did not justify the lower cost and as a result they never gained significant market share. Almost all PCs featured an Intel CPU. Interestingly, AMD evolved to become a serious challenger\footnote{The history of AMD vs Intel litigations could be the subject of its own book.} while Cyrix merged with National Semiconductor in 1997.\\
 \par
 
 \subsection{The Intel 80386}
-The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagshit P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel}. Two choices in the design of the 386 contributed to its success. For one the designers decided to listen to the programmers feedback and dropped the idea to use a new instruction set. As a result the 386 is fully backward compatibility with the 286. They also managed to add a 32 bit operating mode which solves many of the memory addressing issues of the 286.\\
+The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagship P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel}. Two choices in the design of the 386 contributed to its success. First, the designers decided to listen to the programmers feedback and dropped the idea to use a new instruction set. As a result the 386 is fully backward compatibile with the 286. Second, they managed to add a 32 bit operating mode which solves many of the memory addressing issues of the 286.\\
 \par
-\textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View. New York: McGraw-Hil} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "Software poison".\\
+\textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View. New York: McGraw-Hil} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "software poison".\\
 \par
-The 80386 relies on three systems and a three stages instructions pipeline.\\
+The 80386 relies on three systems and a three stage instruction pipeline.\\
 \par
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/386_architecture.pdf}
 \end{figure}
 \par
-The Bus Unit is the only difference between a SX and a DX. The SX has a 16 bit bus which allowed PC manufacturers to reuse the design of the 286 motherboards and drove the price down significantly. The DX was had a fully 32 bit Bus unit.
+The Bus Unit is the only difference between a SX and a DX. The SX has a 16 bit bus which allowed PC manufacturers to reuse the design of the 286 motherboards and drove the price down significantly. The DX had a fully 32 bit Bus unit.
 \par
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/processing_unit.pdf}
 \end{figure}
 \par
-The three units in the execution group form a three stages pipeline: Prefetch, Decode, and Execute. The Prefetch Unit wakes up when the Execution unit is performing but not using the bus and stores instructions in a 16 byte array. The prefetcher is linear and cannot predict the result of a branch. A jump (\cw{JMP}) instruction triggers a flush of the entire pipeline. Instructions go down the pipeline and are decoded by the Decode Unit, the result of the decode operation is storedin a three elements FIFO where they are picked up by the Execution Unit.\\
+The three units in the execution group form a three stage pipeline: Prefetch, Decode, and Execute. The Prefetch Unit wakes up when the Execution unit is performing but not using the bus and stores instructions in a 16 byte array. The prefetcher is linear and cannot predict the result of a branch. As a result, a jump (\cw{JMP}) instruction triggers a flush of the entire pipeline. Instructions go down the pipeline and are decoded by the Decode Unit: the result of the decode operation is stored in a three elements FIFO where they are picked up by the Execution Unit.\\
 \par
 
 \begin{figure}[H]
@@ -116,12 +116,12 @@ The three units in the execution group form a three stages pipeline: Prefetch, D
 \shadowbox{
   \fullimage{Intel80386.png}
   }
-\caption{The Intel 386, 10mmx10mm packing 275,000 transistors}
+\caption{The Intel 386, 10mm by 10mm packing 275,000 transistors}
 \end{figure}
 \par
 From a programming perspective, a 386 CPU can be summarized by the following elements:
 \begin{itemize}
-\item An Arithmetic Logic Unit performing \cw{add}, \cw{sub}, \cw{mul} et cetera.
+\item Arithmetic Logic Unit performing \cw{add}, \cw{sub}, \cw{mul} et cetera.
 \item 15 registers:
 \begin{itemize}
   \item 32-bit General Purpose Registers: EAX, EBX, ECX, EDX
@@ -130,11 +130,11 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
   \item 16-bit Segment Registers: CS, DS, ES, FS, GS, SS
   \item 16-bit Status Register
 \end{itemize}
-\item A 32 bit address bus for up to 4GB of flat addressable RAM
+\item 32 bit address bus for up to 4GB of flat addressable RAM
 \item Memory Paging Unit
 \end{itemize}
  \par
- \textbf{\underline{Trivia :}} Despite its pipeline design, the 386 cannot do an operation in less than two cycles. Even a simple \cw{ADD reg, reg} or \cw{INC reg} take two clocks. This is mostly due to the abscenece of SRAM on-chip cache.\\
+ \textbf{\underline{Trivia :}} Despite its pipeline design, the 386 cannot do an operation in less than two cycles. Even a simple \cw{ADD reg, reg} or \cw{INC reg} takes two clocks. This is due to the absence of a SRAM on-chip cache and a slow decoding unit.\\
  \par
  
 
@@ -163,7 +163,7 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
 
   \subsection{Floating Point}
   
-   All that CPU power was not necessarily useful for programming a game. In order to perform the trigonometric computations for 3D effects, the engine has to keep track of the fractional part of each operation. It may not look like an issue since the C programming language has a type (\codeword{float}) precisely for that purpose. But in practice it is a problem, and to understand it we need to understand how that \codeword{float} works.\\
+   All that CPU power was not necessarily useful for programming a game. In order to perform the trigonometric computations for 3D effects, the engine has to keep track of the fractional part of each operation. This may not look like an issue since the C programming language has a type (\codeword{float}) precisely for that purpose. But in practice it is a problem, and to understand it we need to understand how \codeword{float} works.\\
 \par
  As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{What every Computer Scientist should know about Floating-Point}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is to program a 3D engine. In the C language, \codeword{float}s are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
@@ -192,30 +192,31 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
 How numbers are stored and interpreted is usually explained with the formula:\\
 \par
 \begin{figure}[H]
-\begin{equation}\label{eq:fp}
-\large
-(-1)^S * 1.M * 2^{(E-127)}
-\end{equation}
+\begin{equation*}\label{eq:fp}
+\scalebox{1.5}{
+$(-1)^S * 1.M * 2^{(E-127)}$
+}
+\end{equation*}
  \caption{How everybody hates floating point to be explained to them.}
 \end{figure}
 \bigskip  
 
-Although correct, this way of explaining floating point usually leaves programmers completely clueless. I blame this dreadful notation for discouraging legions of programmers, scaring them to the point where they never looked back to understand how floating point actually works. Fortunately, there is a better way to explain it. Instead of Exponent, think of a Window between two consecutive power of two integers. Instead of a Mantissa, think of an Offset within that window.\\ 
+Although correct, this way of explaining floating point usually leaves programmers completely clueless. I blame this dreadful notation for discouraging legions of programmers, scaring them to the point where they never looked back to understand how floating point actually works. Fortunately, there is a better way to explain it. Instead of exponent, think of a window between two consecutive power of two integers. Instead of a mantissa, think of an offset within that window.\\ 
 \par
   
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/floating_point_intuitive.pdf}
-\caption{Alternative Floating Point internals.}
+\caption{Alternate Floating Point internals.}
 \end{figure}
   \bigskip  
-The window tells within which two consecutive power-of-two the number will be: [0,1], [1,2], [2,4], [4,8] and so on (up to [$2^{127}$,$2^{128}$]. The offset divides the window in $ 2^{23} = 8388608 $  buckets. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g [2,4]), you can "float" it right and represent the number within the next window (e.g [4,8]). It only costs a little bit of precision.\\
+The window tells within which two consecutive power-of-two the number will be: [0,1], [1,2], [2,4], [4,8] and so on (up to [$2^{127}$,$2^{128}$]. The offset divides the window in $ 2^{23} = 8388608 $  buckets. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g [2,4]), you can "float" it right and represent the number within the next window (e.g [4,8]). This only costs a little bit of precision.\\
 
 
 \par \bu{Trivia :} How much precision is lost when the window covers a wider range? Let's take an example with window [0,1] where the 8388608 offsets cover a range of 1 which gives a precision of $(1-0)/8388608=0.00000011920929$. In the window [2048,4096] the 8388608 offsets cover a range of $(4096-2048) = 2048$ which gives a precision $ (4096-2048)/8388608=0.0002$.\\
 \par
 
-The next figure illustrates how the number 6.1 would be encoded. The window must start at 4 and span to next power of two, 8. The offset is about half way down the window.
+The next figure illustrates how the number 6.1 would be encoded. The window must start at 4 and span to the next power of two, 8. The offset is about half way down the window.
 
 \begin{figure}[H]
 \centering
@@ -253,11 +254,13 @@ The value 3.14 is therefore approximated to 3.1400001049041748046875.\\
 
 The corresponding value with the ugly formula:
 
-\begin{equation}
-3.14 = (-1)^0 * 1.57 * 2^{(128-127)}
-\end{equation}
+\begin{equation*}
+\scalebox{1.5}{
+$(-1)^0 * 1.57 * 2^{(128-127)} = 3.14$
+}
+\end{equation*}
 
-\bigskip
+\par
 
 And finally the graphic representation with window and offset:\\
 
@@ -272,13 +275,13 @@ And finally the graphic representation with window and offset:\\
 
 Floating point arithmetic is a powerful tool. It can represent very small or huge values while keeping track of fractional parts of a number, and also protecting from overflow by floating the window when necessary.\\
 \par
-Floating point is handy, but the drawback is that it is also computationally expensive. The reason is simple. In order to add, subtract, multiply or divide two numbers, they both have to be expressed with the same window. Which means converting one number to the representation used by the other, usually with higher precision than 32 bits (typically 80 bits on Intel FPUs)\footnote{To fully grasp how much processing a FPU does, it helps to read a software implementation. I found Berkeley SoftFloat helpful.}.\\
+Floating point is handy, but the drawback is that it is also computationally expensive. The reason is simple. In order to add, subtract, multiply or divide two numbers, they both have to be expressed with the same window. This means converting one number to the representation used by the other, usually with higher precision than 32 bits (typically 80 bits on Intel FPUs)\footnote{To fully grasp how much processing a FPU does, it helps to read a software implementation. I found Berkeley SoftFloat helpful.}.\\
 \par
 This is not a problem when everything is hardwired within an hardware floating point unit but it is a big problem for the 386. If you refer back to the architecture diagram you will notice that it only has an ALU. \emph{A 386 doesn't have a hardware Floating Point Unit}. If \cw{float} operations are found in the code, they are emulated in software by the compiler, resulting in terribly slow processing. So slow they are not usable for anything real-time.\\ 
 \par
 
 
- \textbf{\underline{Trivia :}} Since floating point units were so slow, why did the C language end up with \cw{float} and \cw{double} types ? After all, the machine used to invent the language (PDP-11) did not have a floating point unit! The manufacturer (DEC) had promised to Dennis Ritchie and Ken Thompson the next model would have one\footnote{The Development of the C Language by Dennis M. Ritchie.}. Being astronomy enthusiasts they decided to add those two types to their language.\\
+ \textbf{\underline{Trivia :}} Since floating point units were so slow, why did the C language end up with \cw{float} and \cw{double} types ? After all, the machine used to invent the language (PDP-11) did not have a floating point unit! The manufacturer (DEC) had promised to Dennis Ritchie and Ken Thompson the next model would have one\footnote{The Development of the C Language by Dennis M. Ritchie.}. Being astronomy enthusiasts, they decided to add those two types to their language.\\
 \par
 
 
@@ -288,7 +291,7 @@ This is not a problem when everything is hardwired within an hardware floating p
   \shadowbox{
       \fullimage{BOX_IntelBOX387SX20.jpg}
   }
-\caption{Intel 1991 ad for "Math CoProcessor".}
+\caption{Intel 1991 ad for a "Math CoProcessor".}
 \label{fig:fp_internals}
 \end{figure}
 
@@ -323,9 +326,11 @@ As a result, a game engine designer was stuck in an awkward situation with two h
 
 
 \section{RAM}
-The first CPUs in the Intel x86 family were designed in 1976. A time where RAM was very expensive, the 8080 and 8086 had 16 bit registers with a 20 bit wide address bus capable of addressing 1MiB of RAM. It is difficult to stress how big 1MiB of RAM was in the 70s but as an example, the Apple II and the Commodore 64 both shipped with 64KiB which was enough to write and run amazing things. Sixteen bit registers and 20 bit address bus was plenty even though programming was difficult and required combining two registers to build a pointer. In 1986, the hardware had gotten cheaper and Intel made a departure from the old architecture with its 286 and 386. These new CPUs could be put in what is called "Protected Mode" featuring a 24 bits wide address bus for up to 16 MiB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. The 386 also had 32 bit registers in Protected Mode. To make sure old programs could still run, both processors could be put in "Read Mode" which replicates how the Intel 8080 and 8086 operated: 16 bits registers, 20 bits address bus giving 1MiB addressable RAM with segmented addressing.\\
+The first CPUs in the Intel x86 family were designed in 1976. At a time when RAM was very expensive, the 8080 and 8086 had 16 bit registers with a 20 bit wide address bus capable of addressing 1MiB of RAM. It is difficult to stress how big 1MiB of RAM was in the 70s but as an example the Apple II and the Commodore 64 both shipped with 64KiB which was enough to write and run amazing things. Sixteen bit registers and 20 bit address bus were plenty even though programming was difficult and required combining two registers to build a pointer.\\
 \par
-For compatibility reasons all PCs must start in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20-year-old Real Mode. Unfortunately, there was a major obstacle: the operating system MS-DOS by Microsoft Corporation.
+By 1986, hardware had gotten cheaper and Intel made a departure from the old architecture with its 286 and 386. These new CPUs could be put in what is called "Protected Mode" featuring a 24 bits wide address bus for up to 16 MiB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. The 386 also had 32 bit registers in Protected Mode. To make sure old programs could still run, both processors could be put in "Read Mode" which replicates how the Intel 8080 and 8086 operated: 16 bits registers, 20 bits address bus giving 1MiB addressable RAM with segmented addressing.\\
+\par
+For compatibility reasons all PCs have to start in Real Mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20-year-old Real Mode. Unfortunately, there was a major obstacle: the operating system MS-DOS by Microsoft Corporation.
   
 
 
@@ -333,8 +338,8 @@ For compatibility reasons all PCs must start in Real Mode. You may assume that p
 
 
 
-  \subsection{DOS limitations}
-  Microsoft Corporation highly valued the applications running on their operating systems. As a business priority, they were adamant to never break anything with a new system\footnote{"Tales of Application Compatibility", Old New Thing by Raymond Chen}.  Since many applications were written during the 80s on machines having only Real-Mode, DOS 5.0 kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the \emph{de-facto} operating system delivered with every machine sold prevented programmers from using the machine at its full potential. Developers were forced to ignore all the features of their 1992 CPU and use it like a very fast Intel 8086 CPU from 1976. They were thus limited to the following characteristics: \\
+  \subsection{DOS Limitations}
+  Microsoft Corporation highly valued the applications running on their operating systems. As a business priority, they were adamant to never break anything with a new system\footnote{"Tales of Application Compatibility", Old New Thing by Raymond Chen}.  Since many applications were written during the 80s on machines having only Real-Mode, DOS 5.0 kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the de-facto operating system delivered with every machine sold prevented programmers from using the machine at its full potential. Developers were forced to ignore all the features of a 1992 CPU and instead use it like a very fast Intel 8086 CPU from 1976. They were thus limited to the following characteristics: \\
 \begin{itemize}
 \item ALU
 \item 15 registers:
@@ -351,11 +356,11 @@ For compatibility reasons all PCs must start in Real Mode. You may assume that p
 
 \bigskip
 
- \textbf{\underline{Trivia :}} One year earlier, in 1991, a student from the University of Helsinki started working on a hobby ("nothing big") of his. An operating system which contrary to DOS was able to use the CPU in Protected Mode and take advantage of the MMU and the 32 bits registers. It would become Microsoft's worse nightmare. Linus Torvalds had just started what would become Linux.
+ \textbf{\underline{Trivia :}} One year earlier, in 1991, a student from the University of Helsinki started working on a hobby ("nothing big") of his: an operating system which contrary to DOS was able to use the CPU in Protected Mode and take advantage of the MMU and the 32 bits registers. It would become Microsoft's worst nightmare. Linus Torvalds had just started what would become Linux.
 
 
 
-  \subsection{The infamous Real Mode: 1MiB RAM limit}
+  \subsection{The Infamous Real Mode: 1MiB RAM limit}
   With Protected Mode unavailable, developers of 1991 programmed like it was 1976. With a 20 bits wide address bus offering only 1MiB of addressable RAM. No matter how much memory was installed on the machine, only 1MiB could be addressed. To top it all off, addressing had to be done not with the 32 bits registers available but by combining two 16 bits registers together. One was the segment, the other an offset within that segment. Hence the name: '16 bits segmented programming'.
 
   \bigskip
@@ -377,18 +382,18 @@ The memory layout is as follow:\\
 \end{figure}
 
 
-Out of the original 1024KB, only 640KiB (called Conventional Memory) were usable to a program. 384KiB were reserved for the UMA and every single driver installed (\codeword{.SYS} and \codeword{.COM})  took away from the remaining 640KB.
+Out of the original 1024KB, only 640KiB (called Conventional Memory) were accessible to a program. 384KiB were reserved for the UMA and every single driver installed (\codeword{.SYS} and \codeword{.COM})  took away from the remaining 640KB.
 
 \bigskip
 
-\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so their AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KiB of Conventional Memory. Needless to say French people learned pretty quickly that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a qwerty keyboard but IDDAD on an azerty keyboard without the French driver loaded.}.\\
+\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KiB of Conventional Memory. Needless to say French people learned pretty quickly that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a qwerty keyboard but IDDAD on an azerty keyboard without the French driver loaded.}.\\
 \par
 
 
 
 
 
-\subsection{The infamous Real Mode: 16 bit Segmented addressing}
+\subsection{The Infamous Real Mode: 16 bit Segmented addressing}
 With a 20 bits address bus and registers too small to contain a whole address (they are 16 bits wide), Intel had to come up with an addressing system. Their solution was to combine two 16 bits registers, one designating a segment and the other an offset within that segment.\\
 \par
 \begin{figure}[H]
@@ -427,7 +432,7 @@ Pointer C defined as:\\
 \lstinputlisting[language=C]{code/pointer_madness3}
 \end{minipage}
 
-As defined, A, B and C all point to the same memory location however they will fail a comparison test.\\
+As defined, A, B, and C all point to the same memory location however they will fail a comparison test.\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pointer_madness.c}
@@ -440,7 +445,7 @@ Will output:\\
 \end{minipage}
 \par
 
-With this system, pointer arithmetic must also receive careful consideration. A \cw{far} pointer increment only increments the offset, not the segment. If you iterate on an array larger than 64KiB you will end up wrapping around. You could use yet an other type of pointer \cw{int huge*} to make pointer arithmetic work beyond 64k but really, nobody wants to go there.
+With this system, pointer arithmetic must also receive careful consideration. A \cw{far} pointer increment only increments the offset, not the segment. If you iterate on an array larger than 64KiB you will end up wrapping around. You could use yet another type of pointer \cw{int huge*} to make pointer arithmetic work beyond 64k but really, nobody wants to go there.
 
 
 
@@ -455,9 +460,9 @@ Unfortunately extended memory access was not standardized. Users could load eith
 \item eXtended Memory Specification (XMS) drivers: HIMEM.SYS.
 \end{itemize}
 
-Or they could have no idea they had to install a driver, load nothing at startup, and not use any of the RAM beyond 1MB. This use case was a big issue. Many customers could not understand why, even though they had installed (extremely expensive\footnote{In 1992, 4MiB of RAM cost \$149 which adjusted to inflation would be \$256 in 2016.}) megabytes of RAM on their machine, the game they just purchased would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (see Appendix "\nameref{chap:barrier640}") along with the game to make it clear it was not their fault.\\
+Or they could have no idea they had to install a driver, load nothing at startup, and not use any of the RAM beyond 1MB. This use case was a big issue. Many customers could not understand why despite installing (extremely expensive\footnote{In 1992, 4MiB of RAM cost \$149 which adjusted to inflation would be \$256 in 2016.}) megabytes of RAM on their machine, the game they just purchased would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (see Appendix "\nameref{chap:barrier640}") along with the game to make it clear it was not their fault.\\
 \par
-How are these drivers working? After all, how does one access RAM outside of the addressable space? On the 386 the driver switched the CPU into protected mode, performed whatever was asked and switched the CPU back to real mode. On the 286, there was no way to switch back the CPU to real mode\footnote{The first hack to do the impossible put a magical value into a special memory location to prevent the BIOS from reinitializing the computer after a reset, and then caused a reset through the i8042 keyboard controller which would externally reset the CPU. Other techniques involved generating a triple fault (faulting in a fault handler, usually by invalidating the IDTR and causing an interrupt). Using the triple fault was much faster. Going through the keyboard controller took almost a millisecond but the triple fault performed in a hundred microseconds} but there was an undocumented \cw{LOADALL} instruction which allows to manipulate an hidden register offsetting all RAM access.
+How are these drivers working? After all, how does one access RAM outside of the addressable space? On the 386 the driver switched the CPU into protected mode, performed whatever was asked, and switched the CPU back to real mode. On the 286, there was no way to switch back to real mode\footnote{The first hack to do the impossible put a magical value into a special memory location to prevent the BIOS from reinitializing the computer after a reset, and then caused a reset through the i8042 keyboard controller which would externally reset the CPU. Other techniques involved generating a triple fault (faulting in a fault handler, usually by invalidating the IDTR and causing an interrupt). Using the triple fault was much faster. Going through the keyboard controller took almost a millisecond but the triple fault performed in a hundred microseconds} but there was an undocumented \cw{LOADALL} instruction which allowed manipulate of an hidden register offsetting all RAM access.
 \footnote{"HIMEM.SYS, unreal mode, and LOADALL": http://www.os2museum.com/wp/himem-sys-unreal-mode-and-loadall/}
 
 \begin{figure}[H]
@@ -473,7 +478,7 @@ How are these drivers working? After all, how does one access RAM outside of the
 
 \subsubsection{EMS API}
 
-The EMS driver opens a window beyond the addressable RAM, as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around memory mapping. The driver allow for manipulating four units of 16KiB called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, a frame can be swapped into the page frame.\\
+The EMS driver opens a window beyond the addressable RAM, as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around memory mapping. The driver allows for manipulating four units of 16KiB called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, a frame can be swapped into the page frame.\\
 \par
 
 
@@ -488,7 +493,7 @@ The XMS driver works like \cw{malloc}, it provides operations such as allocate, 
 
 
 
-\subsubsection{A system "Impossible to love"}
+\subsubsection{A system "impossible to love"}
 At this point, if you are puzzled by the CPU and its design you are not alone. Over the years I came across many ways to describe this madness but three particularly stand out.\\
 \par
  \begin{fancyquotes}
