@@ -478,13 +478,13 @@ How are these drivers working? After all, how does one access RAM outside of the
 
 \subsubsection{EMS API}
 
-The EMS driver opens a window beyond the addressable RAM, as shown in Figure \ref{fig:ems_xms_layout}. The idea revolves around memory mapping. The driver allows for manipulating four units of 16KiB called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, a frame can be swapped into the page frame.\\
+The EMS driver opens a window beyond the addressable RAM, as shown on page \pageref{fig:ems_xms_layout}. The idea revolves around memory mapping. The driver allows for manipulating four units of 16KiB called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, a frame can be swapped into the page frame.\\
 \par
 
 
 
 \subsubsection{XMS API}
-The XMS driver works like \cw{malloc}, it provides operations such as allocate, free, realloc and the most important one move which allows to copy from extended RAM to conventional RAM\footnote{eXtended Memory Specification (XMS) July 19, 1988.}.
+The XMS driver works\footnote{eXtended Memory Specification (XMS) July 19, 1988.} like \cw{malloc}, it provides operations such as allocate, free, realloc and the most important one move which allows copying from extended RAM to conventional RAM.
 
 
 
@@ -518,7 +518,7 @@ And:\\
 
 
 \par
-\bu{Trivia :} 640KiB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745kB, which obviously doesn't fit in Conventional Memory. The trick was to use a technique of "overlays". The compiler inserted instructions at compile time to detect when the CPU IP\footnote{Instruction Pointer} was about to move beyond a page. These instructions swapped code segment from RAM to HDD and issued a \cw{jmp} to reset the CPU at the beginning of the next page.
+\bu{Trivia :} 640KiB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745kB, which obviously doesn't fit in Conventional Memory. The trick was to use a technique of "overlays" pages where only a few overlays are loaded when the game starts but the compiler had inserted instructions able to detect when the CPU IP\footnote{Instruction Pointer} is about to reach the end of an overlay. These instructions swapped in RAM the rest of the instructions and issued a \cw{jmp} for the CPU to follow. The technique can be seen as an exercise of graph paging.
 
 
 
