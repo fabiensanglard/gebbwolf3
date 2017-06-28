@@ -31,8 +31,8 @@
 \coordinate (procsin) at ($(origin)!(point)!(yaxis)$);
 \coordinate (projcos) at ($(origin)!(point)!(xaxis)$) ;
 
-\node[left]  at (procsin) {\Large $sin(\alpha)$};
-\node[below] at (projcos) {\Large $cos(\alpha)$};
+\node[left]  at (procsin) {\Large $sin(\theta)$};
+\node[below] at (projcos) {\Large $cos(\theta)$};
 
 \draw[dotted] (projcos) -- (point) ;
 \draw[dotted] (procsin) -- (point) ;
@@ -42,10 +42,10 @@
 \coordinate (extended_point) at (2,1.4);%(35:3);
 %\coordinate (tan_point) at (intersection of origin--extended_point and tanbottom -- tantop );
 
-\node[right] at (extended_point) {\Large $tan(\alpha)$};
+\node[right] at (extended_point) {\Large $tan(\theta)$};
 
 \tkzMarkAngle[fill= gray,size=0.6](xaxis,origin,extended_point);
-\tkzLabelAngle[pos = 0.4](extended_point,origin,xaxis){\Large $\alpha$};
+\tkzLabelAngle[pos = 0.4](extended_point,origin,xaxis){\Large $\theta$};
 \draw (origin) -- (extended_point) ;
 \end{tikzpicture}
 % \end{document}
