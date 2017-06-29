@@ -1,7 +1,7 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
 \section{Getting the Source Code}
-The game engine source code was uploaded on id software's ftp\footnote{File Transfer Protocol.} server July 21st, 1995.\\ 
+The game engine source code was uploaded on id software's ftp\footnote{File Transfer Protocol.} server on July 21st, 1995.\\ 
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[]{code/ftp_url.txt}
@@ -25,7 +25,7 @@ Once downloaded and decompressed, the archive \codeword{woldsrc.zip} contains an
 \end{minipage}
 
 \par
- The code is 90\% in C with assembly\footnote{All the assembly in Wolf3D is done with TASM (a.k.a Turbo Assembler by Borland). It uses Intel notation where the destination is before the source: \cw{instr} \cw{dest} \cw{source}} for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code is not a meaningful metric against a single codebase but excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Chrome (Google's web browser) is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
+ The code is 90\% in C with assembly\footnote{All the assembly in Wolf3D is done with TASM (a.k.a Turbo Assembler by Borland.) It uses Intel notation where the destination is before the source: \cw{instr} \cw{dest} \cw{source}} for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code is not a meaningful metric against a single codebase but excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Google's Chrome browser is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
 \par
 \begin{figure}[H]
 \centering
@@ -72,10 +72,10 @@ It's "COLUMN", you dumb FUCK!\\
  
 The archive contains more than just source code, it also features:
 \begin{itemize}
-\item \codeword{GOODSTUF.TXT:} Two emails from fans demonstrating the success of the game: an ex-POW and a Microsoft employee.
-\item \codeword{SIGNON.OBJ:} The startup screen showing the system characteristic (RAM, EMS, XMS, Joystick, SoundCards) was linked in the binary. This weird design choice is explained later.
+\item \codeword{GOODSTUF.TXT:} Two emails from fans (and ex-POW and a Microsoft employee) demonstrating the success of the game.
+\item \codeword{SIGNON.OBJ:} The startup screen showing the system characteristics (RAM, EMS, XMS, Joystick, SoundCards) was linked in the binary. This weird design choice is explained later.
 \item \codeword{GAMEPAL.OBJ:} Game palette. Hardcoded and linked in the executable for the same reason as \cw{SIGNON.OBJ}.
-\item \codeword{README:} How to build. You can also find a complete tutorial in the author's article "Let's compile like its 1992" on \cw{fabiensanglard.net}.
+\item \codeword{README:} How to build. You can also find a complete tutorial in "Let's compile like its 1992" on \cw{fabiensanglard.net}.
 \item Many files resulting from a previous compilation attempt.
 \end{itemize}
 
@@ -85,11 +85,11 @@ The archive contains more than just source code, it also features:
 
 
 
-\section{Big picture}
+\section{Big Picture}
 The game engine is divided in three blocks:
 \begin{itemize}
 \item 2D menu engine which lets the user configure the game.
-d\item 3D game renderer where the player spends most of her time.
+\item 3D game renderer where the player spends most of her time.
 \item Sound system which runs concurrently with either the 2D or 3D renderer. 
 \end{itemize}
 The three systems communicate via shared memory. The renderer writes music and sound requests to the RAM (also making sure the assets are ready.) These requests are read by the sound "loop". The sound system also writes to the RAM for the renderers since it is in charge of the heartbeat of the whole engine. The renderers update the world according to the wall-time tracked by \cw{TimeCount} variable.
@@ -110,20 +110,20 @@ The three systems communicate via shared memory. The renderer writes music and s
 
 
 
-\subsection{Unrolled loop}
+\subsection{Unrolled Loop}
 With the big picture in mind, we can dive into the code and unroll the main loop starting in \cw{int main()}. The two renderers are regular loops but due to limitations explained later, the sound system is interrupt driven and therefore out of \cw{main}. Because of the Real Mode, C types don't mean what people would expect from 32 bits architecture.
 \begin{itemize}
 \item \cw{int} and \cw{word} are 16 bits.
 \item \cw{long} and \cw{dword} are 32 bits.
 \end{itemize}
 \par
-The program as expexted startsin cw{main} method.\\
+The program as expected starts in the \cw{int main()} method.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_main.c}
 \end{minipage}
 \par
-Since the target machine ran in Real Mode, the code was compiled using 16 bit instructions only. For operations on \cw{long} (32 bit) Borland used their own math library. Wolf3D detects if the CPU is a 386 and replaces Bordland's integral division with instructions using 32 bit registers \cw{eax} and \cw{edx}.\\
+Since the target machine ran in Real Mode, the code was compiled using 16 bit instructions only. For operations on \cw{long} (32 bit) Borland used their own math library. In \cw{Patch386} Wolfenstein 3D detects if the CPU is a 386 and replaces Bordland's integral division with instructions using 32 bit registers \cw{eax} and \cw{edx}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}]{code/integral_div.asm}
@@ -149,7 +149,7 @@ Then comes the core loop, where 2D renderer and 3D renderer are called forever.\
 \par
 The sound system is started via the Sound Manager in \cw{SDL\_SetTimerSpeed}. While there is a famous game development library called Simple DirectMedia Layer (SDL), the prefix \cw{SDL\_} has nothing to do with it. It stands for SounD Low level. (SDL did not even exist in 1991.)\\
 \par
-The reason for interrupts is extensively explained in the Chapter "Audio and Heartbeat". In short, with an OS supporting neither process nor thread, it was the only way to have something execute concurrently with the rest of the engine.\\
+The reason for interrupts is extensively explained in \ref{audio_and_heartbeat} "\nameref{audio_and_heartbeat}". In short, with an OS supporting neither process nor thread, it was the only way to have something execute concurrently with the rest of the engine.\\
 \par
 An ISR\footnote{Interrupt Service Routine} is installed in the Interrupt Vector Table to respond to the interrupt. Note how the ISR can be called at frequencies of 140Hz, 700Hz, or even 7000Hz depending on the needs of the sound system being driven.\\
 \par
@@ -194,12 +194,12 @@ There are seven managers in total:\\
 	\item Input
 \end{itemize}
 \par
-The WL\_ stuff was written specifically for Wolf3D while the ID\_ managers were reused from previous games (likely Catacomb 3D) and improved for the needs of the new engine.
+The WL\_ stuff was written specifically for Wolf3D while the ID\_ managers were reused from previous games (Hovertank 3D and Catacomb 3D) and improved for the needs of the new engine.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/architecture.pdf}
-\caption{Architecture with engine and sub-systems (in white) connected to I/O (in gray).}
+\caption{Architecture with engine and sub-systems (in white) connected to I/O (in gray.)}
 \label{fig:architecture}
 \end{figure}
 Next to the hard drives (HDD) you can see the assets packed as described in the Team chapter.
@@ -254,7 +254,7 @@ Eventually the free RAM will be exhausted and the first pass will fail.
  \caption{Pass 1 failure: Not enough RAM after the ROVER.}
  \end{figure}
  \par
- If the first pass fails, the second pass looks for a "hole" between the head and the rover. This pass is also allowed to purge unused blocks. If for example block B was marked as \cw{PURGEABLE}, it will be deleted and replaced with the new block E. At this point fragmentation starts to appear (like if \cw{malloc} was used).\\
+ If the first pass fails, the second pass looks for a "hole" between the head and the rover. This pass will also purge unused blocks. If for example block B was marked as \cw{PURGEABLE}, it will be deleted and replaced with the new block E. At this point fragmentation starts to appear (like if \cw{malloc} was used.)\\
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/mm_after_head.pdf}
@@ -266,7 +266,7 @@ Eventually the free RAM will be exhausted and the first pass will fail.
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/mm_compact.pdf}
-  \caption{\cw{A} and \cw{E} were purged. \cw{C} and \cw{F} compacted. \cw{F} allocated in pass3.}
+  \caption{\cw{A} and \cw{E} were purged. \cw{C} and \cw{D} compacted. \cw{F} allocated in pass3.}
  \end{figure}
  \par
 But if memory is moved around, how do previous allocations still point to what they did before the compaction phase? Notice that a \cw{mmblockstruct} has a \cw{useptr} pointer which points to the owner of a block.  When memory is moved, the owner of the block is also updated.
@@ -278,7 +278,10 @@ But if memory is moved around, how do previous allocations still point to what t
  \caption{\cw{E} is locked and cannot be compacted.}
  \end{figure}
  \par
- As some blocks are marked as \cw{LOCKED}, compacting can be disturbed. Upon encountering a locked block, compacting stops and the next block will be moved immediately after the locked block, even if there was space available between the last block and the locked block. In the above drawing, C was moved after E, even though it could have been moved before. Avoiding this waste would have made the memory manager more complicated, so the waste was deemed acceptable. Often in designing a component you have to be practical and establish a certain trade off between accuracy and complexity.
+ As some blocks are marked as \cw{LOCKED}, compacting can be disturbed. Upon encountering a locked block, compacting stops and the next block will be moved immediately after the locked block, even if there was space available between the last block and the locked block.\\
+ \par
+  In the above drawing, C was moved after E, even though it could have been moved before. Avoiding this waste would have made the memory manager more complicated, so the waste was deemed acceptable. Often in designing a component you have to be practical and establish a certain trade off between accuracy and complexity.\\
+  \par
 
 
 
@@ -296,16 +299,18 @@ A dedicated memory manager was probably justified for Wolf, but they are a huge 
 \subsection{Page Manager (PM)}
 The Page Manager is dedicated to the 3D engine. Its task is to make sure assets such as wall texture, sprites, and sound effects stored on HDD are available in RAM for the CPU to use. Jason Blochowiak seems to have been the main author and his previous experience with Unix clearly influenced the design of this component. It is built around the concept of paging and swapping. \\
 \par
-Instead of using a memory address to identify a page like Unix, an asset ID is used. These IDs are generated by IGRAB-ed. Each asset consumes a full "page". Like Unix, all pages have the same size, 4KiB. When the engine needs a resource, it requests a page with the resource ID from the Page Manager. All types of RAM (Conventional, EMS, and XMS) are leveraged but they are not equal, they is a hierarchy. Originally all assets are on HDD in file \cw{VSWAP.WL1} which contains all assets for 3D sequences. When a request for an asset is received, the L1 cache (comprised of Conventional and EMS RAM) is looked up first \circled{1}. In case of a miss, the L2 cache is consulted \circled{2}. If the page is found there, it is transfered to L1. If the page is still not found in L2, it is loaded from the HDD directly to L1 \circled{3}. L2 is only written to when a page is evicted from L1. Every time a page is accessed, it is also tagged with the current frame number. This tag is used to enforce the eviction policy.
+Instead of using a memory address to identify a page like Unix, an asset ID is used. These IDs are generated by IGRAB-ed. Each asset consumes a full "page". Like Unix, all pages have the same size, 4KiB. When the engine needs a resource, it requests a page with the resource ID from the Page Manager. All types of RAM (Conventional, EMS, and XMS) are leveraged but there is a hierarchy.\\
+\par
+Originally all assets for 3D sequences are on HDD in file \cw{VSWAP.WL1}. When a request for an asset is received, the L1 cache (comprised of Conventional and EMS RAM) is looked up first \circled{1}. In case of a miss, the L2 cache is consulted \circled{2}. If the page is found there, it is transferred to L1. If the page is still not found in L2, it is loaded from the HDD directly to L1 \circled{3}. L2 is only written to when a page is evicted from L1. Every time a page is accessed, it is also tagged with the current frame number. This tag is used to enforce the eviction policy.
  \par
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/page_manager_architecture.pdf}
  \end{figure}
  \par
- The architecture of the Page Manager suggests it originally only supported Conventional and EMS RAM. Support for XMS was added later on as a last resort/L12 mechanism.\\
+ The architecture of the Page Manager suggests it originally only supported Conventional and EMS RAM. Support for XMS was added later on as a last resort (L2) mechanism.\\
  \par
-In order to minimize the cost of page misses, the engine preloads the page cache before a level start. This is known as the "Get Psyched" screen:
+In order to minimize the cost of page misses, the engine preloads the page cache before a level start. The user experiences this as the "Get Psyched" screen:
  \par
 \begin{figure}[H]
 \centering
@@ -315,9 +320,9 @@ In order to minimize the cost of page misses, the engine preloads the page cache
  \par
 The precaching mechanism is not particularly clever: it loads as many pages from the swap file as possible. It doesn't try to look at what is actually used in the level but instead loads assets in the order they are stored in \cw{VSWAP} file on the HDD. On a machine with low memory (less than 1MB), the eviction policy (LRU) stabilizes the cache after a few minutes in a level.\\
 \par
-This design has a small annoying flaw. On a low memory machine, a cache miss will occur when the player opens the last door of a level and is about to find himself confronted with the heavy power final boss. This enemy that has never been seen before, and therefore is not in the cache of the Page Manager. This incurs the worst possible case of cache miss, requiring a long access to the hard-drive and resulting in a lag often leading to an undeserved (and humiliating) death.\\
+This design has a small yet annoying flaw. On a low memory machine, a cache miss will occur when the player opens the last door of a level and is about to find himself confronted with the heavy power final boss. This enemy that has never been seen before, and therefore is not in the cache of the Page Manager. This incurs the worst possible case of cache miss: a long access to the hard-drive is required and results in a lag, often leading to an undeserved (and humiliating) death.\\
 \par
-The size of the swap file varies depending on the version of the game you play: \cw{VSWAP.WL1} (shareware) is 742KiB while \cw{VSWAP.WL6} (full version) is 1,500KB. In both cases a machine with 2MiB of RAM on top of the factory issued 1MiB is enough to have all assets loaded during pre-caching.\\
+The size of the swap file varies depending on the version of the game you play: \cw{VSWAP.WL1} (shareware) is 742KiB while \cw{VSWAP.WL6} (full version) is 1,500KB. In both cases a machine with 2MiB of RAM on top of the factory issued 1MiB is enough to have all assets loaded during precaching.\\
 \par
 \bu{Trashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, "trashing" occurs. The HDD is put to heavy contribution, and framerate drops. Trashing can happen if too many different resources are visible on the screen. In order to help designers balance their creativity with the needs for a decent framerate, the engine detects trashing and flashes the screen border red when running in dev-mode.\\
 \par
@@ -347,7 +352,7 @@ The video manager features two parts:
 
 
 \subsection{Cache Manager (CA)}
-A cache manager is a small but critical component, as it loads and decompresses maps, graphics, and music stored on the filesystem and makes them available in RAM. Assets of each kind are stored in two files. A header file contains the offset to allow translation from asset ID to byte offset in the data file.\\
+The cache manager is a small but critical component, as it loads and decompresses maps, 2D graphics, and music stored on the filesystem and makes them available in RAM. Assets of each kind are stored in two files. A header file contains the offset to allow translation from asset ID to byte offset in the data file.\\
  \par
 \begin{figure}[H]
 \centering
@@ -356,7 +361,7 @@ A cache manager is a small but critical component, as it loads and decompresses 
  \par
 \bu{Note:} All resources are compressed. In the case of maps and audio, compression is hard-coded in the engine. For graphics, however, a third file (\cw{DICT}) contains the compression dictionary to decompress each asset. The Cache Manager handles decompression transparently.\\
 \par
-\bu{Trivia :} Is it a typo in filename \cw{AUDIOHEA.WL} ? Correct spelling would be \cw{AUDIOHEAD.WL}. Where is the \cw{D}? This is in fact a limitation of the operating system. DOS only allows 8.3 filename (at most eight characters followed by a dot, then at most three characters for the extension).
+\bu{Trivia :} Is there a typo in the filename \cw{AUDIOHEA.WL} ? Correct spelling would be \cw{AUDIOHEAD.WL}. Where is the \cw{D}? This is in fact a limitation of the operating system. DOS only allows 8.3 filename (at most eight characters followed by a dot, then at most three characters for the extension.)
 
 
 
@@ -367,7 +372,7 @@ A cache manager is a small but critical component, as it loads and decompresses 
 
 \subsection{User Manager (US)}
 \begin{minipage}{0.7\textwidth}
-The User Manager is largely based on Catacomb 3D code and was written by Jason Blochowiak. The copy/paste is very visible since 90\% of the functions declared in the header (ID\_US.H) are not actually implemented in \cw{ID\_US.C}. 
+The User Manager is largely based on the Catacomb 3D code and was written by Jason Blochowiak. The copy/paste is very visible since 90\% of the functions declared in the header (ID\_US.H) are not actually implemented in \cw{ID\_US.C}. 
 It is a poorly named manager as it mostly takes care of text layout. When a \cw{WL\_*} high level routine needs to draw a string, it is passed to \cw{US\_Print} which does all measurement (e.g: Draw string centered)
 and then passes this information to the Video Manager (\cw{VW\_DrawPropString}), which takes care of rendition.
 \end{minipage}
@@ -391,7 +396,7 @@ and then passes this information to the Video Manager (\cw{VW\_DrawPropString}),
 
 
 \subsection{Sound Manager (SD)}
-The Sound Manager abstracts interaction with all four sound systems supported: PC Speaker, AdLib, Sound Blaster, and SoundSource. It is a beast of its own since it doesn't run inside the engine. Instead it is called via IRQ at a much higher frequency than the engine (the engine runs at a maximum 70Hz, while the sound manager ranges from 140Hz to 7000Hz). It must run quickly and is therefore not only written in assembly, but its assets are also privileged when it comes to memory allocation. All of its assets are loaded in Conventional Memory to avoid a cache miss in the Page Manager.\\
+The Sound Manager abstracts interaction with all four sound systems supported: PC Speaker, AdLib, Sound Blaster, and SoundSource. It is a beast of its own since it doesn't run inside the engine. Instead it is called via IRQ at a much higher frequency than the engine (the engine runs at a maximum 70Hz, while the sound manager ranges from 140Hz to 7000Hz.) It must run quickly and is therefore not only written in assembly, but its assets are also privileged when it comes to memory allocation. All of its assets are loaded in Conventional memory to avoid a cache miss in the Page Manager.\\
  \par
 \begin{figure}[H]
 \centering
@@ -417,7 +422,7 @@ The sound manager is described extensively in the "Sound and Music" section.
 
 
 \subsection{Input Manager (IN)}
-Abstract interactions with joystick, keyboard and mouse. Features a lot of boring boilerplate code to deal with PS/2, Serial and DA-15 ports, with each using their own I/O addresses.
+Abstracts interactions with joystick, keyboard and mouse. Features a lot of boring boilerplate code to deal with PS/2, Serial and DA-15 ports, with each using their own I/O addresses.
 
 
 
@@ -435,14 +440,14 @@ Abstract interactions with joystick, keyboard and mouse. Features a lot of borin
 
 
 \section{Startup}
-As the game engine starts, it deals with difficulties shown in the hardware section. This is where things become really interesting.
+As the game engine starts, it must deal with difficulties shown in the hardware section. This is where things become really interesting.
 
 
 
 
 
 \subsection{Signon}
-The first (mild) issue to deal with is the heterogeneous ecosystem of PCs on the market. With different drivers loaded and different sound cards, the engine has to figure out how much RAM is installed and whether or not it will be able to run. If not it has to let the user know what the problem is. That was important as id Software was a small team, and did not have CSR\footnote{Customer Service Representatives.} around to pickup the phone and help unhappy customers troubleshoot their issues.\\
+The first (mild) issue to deal with was the heterogeneous ecosystem of PCs on the market. With different drivers loaded and different sound cards, the engine has to figure out how much RAM is installed and whether or not it will be able to run. If not, it has to let the user know what the problem is. That was important as id Software was a small team, without the resources to help every unhappy customer troubleshoot his issues.\\
 \par
 That is what the "signon" screen is for: self diagnostics. 
 \par
@@ -459,7 +464,7 @@ Besides showing recognized devices such as mouse, joystick, and sound cards, the
 \par
 The signon screen shows that Wolf3D needs at least 320KiB of Conventional RAM. John Romero wrote a release note to help people understand what was going on and avoid angry calls. You can read it in the annex under "The 640KB Barrier".\\
 \par 
-At the time signon is displayed, the only loaded manager is the Memory Manager. There is not even a filesystem for the engine to access yet. That is why the palette and the signon screen are compiled within the executable. This is done so they are loaded in RAM by the operating system (DOS) loader. All the engine does is load the palette into the VGA, copy the signon bitmap from RAM to VRAM, and fill the blocks with green or yellow based on what was detected.\\
+At the time signon is displayed, the only loaded manager is the Memory Manager. There is not even a filesystem for the engine to access yet. That is why the palette and the signon screen are compiled within the executable. This is done so they are loaded in RAM by the operating system (DOS) loader. All the engine does is load the palette into the VGA, copy the signon bitmap from RAM to VRAM, and fill the "thermometer" blocks with green or yellow based on what was detected.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/signonscreen.c}
@@ -486,7 +491,7 @@ After that screen, the \cw{introscn} variable (using 320x200 bytes = 64KB) is un
 
 
 
-\subsection{Solving the VGA problem}
+\subsection{Solving the VGA Problem}
 The Hardware chapter describing the video system left us with an unresolved issue: all the VGA modes lack double buffering capability.\\
 \par
  The most appealing mode (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. The Chain-4 chipset in the VGA circuitry automatically maps the RAM starting at \cw{A0000h} to the four VRAM banks. 
@@ -496,7 +501,7 @@ The Hardware chapter describing the video system left us with an unresolved issu
       \includegraphics[width=\textwidth]{imgs/drawings/mode_13h.pdf}
 \end{figure}
 
-This mapping system is also called "chaining". Because 2 bits out of the address are used to route a write/read operation to a bank, only 14 bits are used for the actual offset in the bank. Since 14 bits can only address 16384 values, this system results in 75\% of the VRAM left unusable.\\
+This mapping system is also called "chaining". Because 2 bits out of the address are used to route a write/read operation to a bank, only 14 bits are used for the actual offset in the bank. Since 14 bits can only address 16384 values, this system results in 75\% of VRAM left unusable.\\
 
 \begin{figure}[H]
 \centering
@@ -504,11 +509,11 @@ This mapping system is also called "chaining". Because 2 bits out of the address
  \end{figure}
 
  \par
- The waste is really the fault of the Chain-4 chip. Nobody knows who discovered this first but it turns out it is possible to disable this. The technique was popularized by Michael Abrash in Dr. Dobb's Journal of July 1991. In his article he described what he coined the Mode-X. An undocumented sequence of operations disabling Chain-4 allows for a resolution of 320x240 square pixels (since the ratio is 4:3) and full access to the 256K of RAM.\\
+ The waste is really the fault of the Chain-4 chip. It turns out it is possible to disable this. The technique was popularized by Michael Abrash in Dr. Dobb's Journal of July 1991. In his article he described what he coined the Mode-X. An undocumented sequence of operations disabling Chain-4 allows for a resolution of 320x240 square pixels (since the ratio is 4:3) and full access to the 256K of RAM.\\
  \par
- Wolfenstein 3D does things slightly differently. It disables chain-4 but keeps resolution at 320x200. This mode what coined Mode-Y many years later. \\
+ Wolfenstein 3D does things slightly differently. It disables Chain-4 but keeps resolution at 320x200. This mode was coined Mode-Y many years later. \\
  \par
- There are two reasons the team did not use square pixels 320x240 resolutions. Despite its advantage for artists, a screen using Mode-Y is 320x200 = 64000 pixels which represents 17\% fewer pixels compared to Mode-X with 320x240 = 76800 pixels. The engine already struggled to reach an acceptable framerate, so Mode-X was simply too many pixels per frame. And it would not even have been that great for artists either since all tools (Deluxe Paint) ran in Mode 13h which has non-square pixels. That would have created an awkward asset pipeline where Adrian worked in 320x200 but the engine rendered everything stretched in 320x240.
+ There are two reasons the team did not use 320x240 square pixels. Despite its advantage for artists, a screen using Mode-Y is 320x200 = 64000 pixels, which represents 17\% fewer pixels compared to Mode-X with 320x240 = 76800 pixels. The engine already struggled to reach an acceptable framerate, so Mode-X was simply too many pixels per frame. And it would not even have been that great for artists either since all tools (Deluxe Paint) ran in Mode 13h which has non-square pixels. That would have created an awkward pipeline where Adrian assets would have been created and rendered at different resolutions.
  \par
  \par
   \begin{minipage}{\textwidth}
@@ -537,9 +542,9 @@ The magic happens in function \cw{VL\_DePlaneVGA} where VGA registers are manipu
  \includegraphics[width=\textwidth]{imgs/drawings/vga_layout/vga_ram_architecture.pdf}
  \end{figure}
 \par
-But the engine is not done yet. Tweaking Mode 13h into Mode-Y solves one big problem but introduces two smaller ones: one about speed and the other about correctness.\\
+But the engine is not done yet. Tweaking Mode 13h into Mode-Y solves one big problem but introduces two smaller ones: one about speed and one about correctness.\\
 \par
-Let's look at speed first. With chain-4 out of the picture the developer is now in charge of selecting the bank to write to. This can easily be done with a simple function.\\
+Let's look at speed first. With Chain-4 out of the picture the developer is now in charge of selecting the bank to write to. This can easily be done with a simple function.\\
 \par
  \par
  \begin{minipage}{\textwidth}
@@ -547,7 +552,7 @@ Let's look at speed first. With chain-4 out of the picture the developer is now 
 \end{minipage}
  \par
 
-Now the code sample from the hardware chapter to clear the screen only adds a modulo.\\
+Now the code sample from the hardware chapter on page \pageref{clearvga} to clear the screen only adds a modulo.\\
 \par
 \par
 \begin{minipage}{\textwidth}
@@ -556,16 +561,16 @@ Now the code sample from the hardware chapter to clear the screen only adds a mo
 \par
 The code looks innocuous, but as simple as it is, it cannot run at more than 5 frames per second. The problem is we replaced something done in hardware with something done in software. The \cw{outp} instructions are simply too slow.\\
 \par
-The solution is to change how we draw to the screen. Instead of going top to bottom and left to right, we need to go left to right and top to bottom to minimize the number of bank switches.\\
+The solution is to change how we draw to the screen. Instead of going top to bottom then left to right, we need to go left to right then top to bottom to minimize the number of bank switches.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/cleanScreenClever.c}
 \end{minipage}
 
 \par
-This code can run without issues at 70 frames per second since just 200 slow \cw{outp} instructions are used.\\
+This code can run without issue at 70 frames per second since just 200 slow \cw{outp} instructions are used.\\
 \par
-This speed consideration has a fundamental impact on the engine: to draw anything fast with the VGA, it has to be drawn vertically. Everything in the engine is drawn this way: walls, sprites, menus. The ramifications of this hardware constraint are felt all the way down to how assets are stored in RAM (rotated 90 degrees) and woven to match the VGA banks layout (this is described in detail in the "Rendering sprites" section).\\
+This speed consideration has a fundamental impact on the engine: to draw anything fast with the VGA, it has to be drawn vertically. Everything in the engine is drawn this way: walls, sprites, menus. The ramifications of this hardware constraint are felt all the way down to how assets are stored in RAM (rotated 90 degrees) and woven to match the VGA banks layout (this is described in detail in \ref{drawingSprites} "\nameref{drawingSprites}".\\
 
 \par
 The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3, and then goes back to page 1. This solves tearing and allows the engine to never block on vsync since it always has a valid framebuffer to draw to. Changing page is done by instructing the CRT Controller that it should scan a framebuffer at a different offset after the next vsync.\\
@@ -588,7 +593,7 @@ This code looks like it would work, but there is a major flaw with it. If you we
  \fullimage{crtc_scanstart_problem.png}
  \end{figure}
 \par
-This glitch shows both misalignment and part of one page and part of another page. This problem has to do with atomicity. The CRTC starting address is a 16-bits value but the \cw{out} instruction can only write 8-bits at a time. If the pages are setup one after an other like this.
+This glitch shows both misalignment and parts of two pages. This problem has to do with atomicity. The CRTC starting address is a 16-bits value but the \cw{out} instruction can only write 8-bits at a time. If the pages are setup one after an other like this.
 \par
 \begin{figure}[H]
  \centering
@@ -602,7 +607,7 @@ In VRAM, Page 1 is at 0x0000, page 2 at 0x3E80 and page 3 at 0x7000. Instructing
 \lstinputlisting[language={[x86masm]Assembler}]{code/pageflip_error.c}
 \end{minipage}
 \par
-How do you update atomically a 2 bytes value with 1 byte operation? Take a look at how Wolfenstein setup its pages:\\
+How do you update atomically a 2 bytes value with 1 byte operation? Take a look at how Wolfenstein sets up its pages:\\
 \par
 \begin{minipage}{\textwidth}
 \begin{flushright}
@@ -637,7 +642,7 @@ Now page 0 is at 0x0000, page 1 at 0x4100 and page 2 at 0x8200. Moving from any 
 
 
 \subsection{Profound Carnage}
-After the signon screen comes the "rating" screen. There were no official ratings for video games in 1991 since the ESRB\footnote{Entertainment Software Rating Board, the organization in charge of assigning age and content ratings.} would not be established until 1994 in response to criticism of controversial video games featuring excessively violent (a.k.a Doom) or sexual content. The team came up with their own self-proclaimed PC-13: The now legendary "Profound Carnage-13".\\
+After the signon screen comes the "rating" screen. There were no official ratings for video games in 1991 since the ESRB\footnote{Entertainment Software Rating Board, the organization in charge of assigning age and content ratings.} would not be established until 1994 in response to criticisms of excessive violence (a.k.a Doom) or sexual content. The team came up with their own self-proclaimed PC-13: the now legendary "Profound Carnage-13".\\
 \begin{figure}[H]
 \centering
 \fullimage{pg13.png}

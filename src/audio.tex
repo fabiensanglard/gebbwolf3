@@ -1,4 +1,5 @@
-\section{Audio and Heartbeat}
+\section{Audio and Heartbeat} 
+\label{audio_and_heartbeat}
 The audio and heartbeat system runs concurrently with the rest of the program. On an operating system supporting neither processes nor threads this means using interrupts to stop normal execution and perform tasks on the side.\\
 \par
 The idea is to configure the hardware to trigger a hardware interrupt at a regular interval. This interrupt is caught by a system called PIC which transforms it into a software interrupt. The software interrupt ID is used as an offset in a vector to look up a function belonging to the engine. At this point, the CPU is stopped (a.k.a: interrupted) from doing whatever it was doing (likely running the 3D renderer), and it starts running the interrupt handler which is called an ISR\footnote{Interrupt Service Routine}. We now have two systems running in parallel.\\
