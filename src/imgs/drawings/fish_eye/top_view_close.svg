@@ -34,7 +34,7 @@
      id="namedview4"
      showgrid="false"
      inkscape:zoom="1.8551702"
-     inkscape:cx="140.52768"
+     inkscape:cx="46.735747"
      inkscape:cy="212.18038"
      inkscape:window-x="20"
      inkscape:window-y="43"
@@ -198,7 +198,7 @@
                  id="g130" /></g></g><g
              transform="translate(10.991,-226.202)"
              id="g132" /></g></g></g><path
-       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.8;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:0.8,0.8;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.8;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:0.8,2.4;stroke-dashoffset:0;stroke-opacity:1"
        id="path4194"
        transform="scale(1,-1)"
        sodipodi:type="arc"
@@ -208,11 +208,7 @@
        sodipodi:ry="156.07024"
        sodipodi:start="0.75049158"
        sodipodi:end="1.5707963"
-       d="M 171.58892,-178.19619 A 149.11212,156.07024 0 0 1 62.535221,-128.5656 l -4e-6,-156.07023 z" /><path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.80000001px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 62.527954,284.61 63.390409,128.93695"
-       id="path4196"
-       inkscape:connector-curvature="0" /><text
+       d="M 171.58892,-178.19619 A 149.11212,156.07024 0 0 1 62.535221,-128.5656 l -4e-6,-156.07023 z" /><text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:11.19999981px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="49.159908"
@@ -224,4 +220,16 @@
          id="tspan4420"
          x="49.159908"
          y="-194.91472">B</tspan></text>
+<text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.19999981px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="116.31749"
+       y="-214.5498"
+       id="text4418-8"
+       sodipodi:linespacing="125%"
+       transform="scale(1,-1)"><tspan
+         sodipodi:role="line"
+         id="tspan4420-6"
+         x="116.31749"
+         y="-214.5498">B</tspan></text>
 </g></svg>

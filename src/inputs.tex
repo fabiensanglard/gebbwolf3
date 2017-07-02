@@ -1,5 +1,5 @@
-\section{User inputs}
-In an era before Microsoft harnessed all inputs under DirectInput API with Windows 95, developers had to write drivers for each input type they wanted to support. This involved talking directly to the hardware, in the vendor's protocol on a physical port. The keyboard is plugged into a PS/2, the mouse to a serial port (DE9), and the joystick to a game port (DA-15) on the SoundBlaster.
+\section{User Inputs}
+In an era before Microsoft harnessed all inputs under DirectInput API with Windows 95, developers had to write drivers for each input type they wanted to support. This involved talking directly to the hardware in the vendor's protocol on a physical port. The keyboard is plugged into a PS/2, the mouse to a serial port (DE9), and the joystick to a game port (DA-15) on the SoundBlaster.
 
 
 
@@ -65,7 +65,7 @@ AX=8 & Set Vertical Limit & CX=MaxY1 DX=MaxY2\\
 
 
 \subsection{Joystick}
-All interactions with joystick happen over I/O port \cw{0x201}. Two joysticks can be chained together and the state of both of them fits in a byte.\\ 
+All interactions with the joystick happen over I/O port \cw{0x201}. Two joysticks can be chained together and the state of both of them fits in a byte.\\ 
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/joystick.c}
@@ -82,10 +82,10 @@ All interactions with joystick happen over I/O port \cw{0x201}. Two joysticks ca
 0 & Joystick A, X Axis \\
 1 & Joystick A, Y Axis \\
 2 & Joystick B, X Axis \\ 
-3 & Joystick A, Y Axis \\
+3 & Joystick B, Y Axis \\
 4 & Joystick A, Button 1 \\
 5 & Joystick A, Button 2 \\
-6 & Joystick A, Button 1 \\
+6 & Joystick B, Button 1 \\
 7 & Joystick B, Button 2 \\
 \bottomrule
 \end{tabularx}

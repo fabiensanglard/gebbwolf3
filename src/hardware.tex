@@ -103,7 +103,7 @@ The Bus Unit is the only difference between a SX and a DX. The SX has a 16 bit b
 \includegraphics[width=\textwidth]{imgs/drawings/processing_unit.pdf}
 \end{figure}
 \par
-The three units in the execution group form a three stage pipeline: Prefetch, Decode, and Execute. The Prefetch Unit wakes up when the Execution unit is performing but not using the bus and stores instructions in a 16 byte array. The prefetcher is linear and cannot predict the result of a branch. As a result, a jump (\cw{JMP}) instruction triggers a flush of the entire pipeline. Instructions go down the pipeline and are decoded by the Decode Unit: the result of the decode operation is stored in a three elements FIFO where they are picked up by the Execution Unit.\\
+The three units in the execution group form a three stage pipeline: Prefetch, Decode, and Execute. The Prefetch Unit wakes up when the Execution unit is performing but not using the bus and fetches instructions in a 16 byte queue. The prefetcher is linear and cannot predict the result of a branch. As a result, a jump (\cw{JMP}) instruction triggers a flush of the entire pipeline. Instructions go down the pipeline and are decoded by the Decode Unit: the result of the decode operation is stored in a three elements FIFO where they are picked up by the Execution Unit.\\
 \par
 
 \begin{figure}[H]
@@ -288,9 +288,9 @@ This is not a problem when everything is hardwired within an hardware floating p
 \textbf{\underline{Trivia :}} People who really wanted an hardware floating point unit could buy one. In the 90s the only people who could possibly want one would have been scientists (as per Intel understanding of the market). They were marketed as "Math CoProcessor". Performance were average and price was outrageous\footnote{\$200 in 1993 equivalent to \$350 in 2016.}. As a result, sales were mediocre.\\
 \begin{figure}[H]
 \centering
-  \shadowbox{
+  
       \fullimage{BOX_IntelBOX387SX20.jpg}
-  }
+  
 \caption{Intel 1991 ad for a "Math CoProcessor".}
 \label{fig:fp_internals}
 \end{figure}

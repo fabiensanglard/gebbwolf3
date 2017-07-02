@@ -10,12 +10,12 @@ The idea is to configure the hardware to trigger a hardware interrupt at a regul
  \end{figure}
 \par
 \par
- Since interrupts keep triggering constantly from various sources, an ISR must make a choice with what should happen if an IRQ is raised while it is still running. There are two options.  The ISR can decide it needs a "long" time to run and disable other IRQs via the IMR \footnote{Interrupt Mask Register.}. This path introduces the problem of discarding important information such as keyboard or mouse inputs. Alternately, the ISR can decide not to mask other IRQs and do what it is supposed to do as fast as possible, keeping in mind the routine can be stopped (and never resumed.)\\
+ Since interrupts keep triggering constantly from various sources, an ISR must make a choice with what should happen if an IRQ is raised while it is still running. There are two options.  The ISR can decide it needs a "long" time to run and disable other IRQs via the IMR \footnote{Interrupt Mask Register}. This path introduces the problem of discarding important information such as keyboard or mouse inputs. Alternately, the ISR can decide not to mask other IRQs and do what it is supposed to do as fast as possible, keeping in mind the routine can be stopped anywhere (and never resumed.)\\
  \par
- Wolfenstein 3D uses the latter approach and keeps things in its ISR very small and short. To this effect everything in the audio and heartbeat system is written in assembly and avoids "heavy" processing.
+ Wolfenstein 3D uses the latter approach and keeps tasks in its ISR very small and short. To this effect everything in the audio and heartbeat system is written in assembly and avoids "heavy" processing.
 
 \subsection{IRQs and ISRs}
-The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each edge, it decrements its three counters. When a counter hits zero it generates an IRQ. One counter is connected to the buzzer and generates sounds, a second counter is connected to the RAM to automatically perform something called "memory refresh", and the third counter is connected to the PIC.\\
+The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. When a counter hits zero it generates an IRQ. One counter is connected to the buzzer and generates sounds, a second counter is connected to the RAM to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is prefered in caching system.}, and the third counter is connected to the PIC.\\
 \par
 \begin{figure}[H]
 \centering
@@ -45,11 +45,13 @@ The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at
 15 & ATA channel 2  \\
 \bottomrule
 \end{tabularx}
-\caption{IRQs and routines. Notice \#8 which is associated with the RTC Timer. This usually updates the operating system clock.}
+
 \end{figure}
+Above are IRQs and routines. Notice \#8 which is associated with the RTC Timer. This usually updates the operating system clock. Because IRQ\#8 was hijacked, operating system clock was wrong after running a game and remained so until the PC was rebooted.\\
+\par
 Using these two chips and placing its own function at Interrupt Vector Table \#8, the engine can stop its runtime at a regular interval, effectively implementing a subsystem running concurrently with everything else.\\
 \par
-The engine can decide at what frequency to be interrupted, depending on that type of sound/music it needs to play (digitized sounds are much more taxing than music.) As a result, three different ISRs can be found at IVT \#8: 
+The engine can decide at what frequency to be interrupted, depending on the type of sound/music it needs to play (digitized sounds are much more taxing than music.) As a result, three different ISRs can be found at IVT \#8: 
 \begin{enumerate}
 \item \cw{SDL\_t0ExtremeAsmService} when running at 7000Hz, to play digitized (PCM) sound.
 \item \cw{SDL\_t0FastAsmService} when running at 700Hz, to play music and FM sound effects.
@@ -60,7 +62,7 @@ The engine can decide at what frequency to be interrupted, depending on that typ
 
 
 \subsection{PIT and PIC}
-The PIT chip runs at 1.193182 MHz. This sounds like an odd choice from the hardware designers, but has a logical origin. In 1980 when the first IBM PC 5150 was designed, the common oscillator used in television circuitry was running at 14.31818 MHz. As it was mass produced, the TV oscillator was very cheap so utilizing it in the PC drove down the cost of the machine. Engineers built the PC timer around it, dividing the frequency by 3 for the CPU (which is why the Intel ran at 4.7Mhz), and dividing by 4 to 3.57Mhz for the CGA video card. By logically ANDing these signals together, a frequency equivalent to the base frequency divided by 12 was created. This frequency is 1.1931816666 MHz. By 1991, oscillators were much cheaper and could have used any frequency but backward compatibility prevented this.\\
+The PIT chip runs at 1.193182 MHz. This seems like an odd choice from the hardware designers, but has a logical origin. In 1980 when the first IBM PC 5150 was designed, the common oscillator used in television circuitry was running at 14.31818 MHz. As it was mass produced, the TV oscillator was very cheap so utilizing it in the PC drove down cost. Engineers built the PC timer around it, dividing the frequency by 3 for the CPU (which is why the Intel ran at 4.7Mhz), and dividing by 4 to 3.57Mhz for the CGA video card. By logically ANDing these signals together, a frequency equivalent to the base frequency divided by 12 was created. This frequency is 1.1931816666 MHz. By 1991, oscillators were much cheaper and could have used any frequency but backward compatibility prevented this.\\
 \par
 
 
@@ -99,20 +101,20 @@ Every system in the engine uses this variable to pace itself. The renderer will 
 
 
 
-\subsection{Audio system}
+\subsection{Audio System}
 The audio system is complex because of the fragmentation of audio devices it can deal with. The early 90s was a time before Windows 95 harnessed all audio cards under the DirectSound common API. Each development studio had to write their own abstraction layer and id Software was no exception. At a high level, the Sound Manager offers a lean API divided in two categories: one for sounds and one for music.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/sound.h}
 \end{minipage}
 \par
-But in the implementation lays a maze of functions directly accessing the I/O port of four sound outputs: Adlib, SoundBlaster, Buzzer, and Disney Sound Source. All belong to one of the three supported families of sound generators: FM Synthesizer (Frequency Modulation), PCM (Pulse Code Modulation) or PWM (Pulse Width Modulation).\\
+But in the implementation lies a maze of functions directly accessing the I/O port of four sound outputs: Adlib, SoundBlaster, Buzzer, and Disney Sound Source. All belong to one of the three supported families of sound generators: FM Synthesizer (Frequency Modulation), PCM (Pulse Code Modulation) or PWM (Pulse Width Modulation.)\\
 
 
 \subsection{Music}
-Playing music is not too messy since only PCs equipped with a Yamaha YM3812 FM synthesizer can play tracks (a.k.a: with an Adlib or a SoundBlaster inside.) As SoundBlaster made its programming interface compatible with Adlib there is only one code path to both cards. There is not a lot of magic here since this part uses a piece of hardware well designed and dedicated to this specific task. There are a few cool tricks, though.\\
+Playing music is not too messy since only PCs equipped with a Yamaha YM3812 FM synthesizer can play tracks (a.k.a: with an Adlib or a SoundBlaster inside.) As SoundBlaster made its programming interface compatible with Adlib there is only one code path to both cards. There is not a lot of magic here since this uses a piece of well-designed hardware dedicated to this specific task. There are a few cool tricks, though.\\
 \par
-The music system streams data to the sound cards.  Music in the 90s was not in digitalized formats like CD or MP3 nowadays (that would have taken too much storage space and bandwidth.) Instead music is stored as series of notes played on channels together simulating instruments. The format used is close to the notorious MIDI but with a few variations and is called IMF\footnote{Id Music Format}. It is proprietary to id Software and designed with OPL2 in mind (the raw format is exactly what is sent to the Adlib/Soundblaster synthesizer with no transformations.) IMF has a hardcoded playback rate and music notes are played at 700 Hz.\\
+The music system streams data to the sound cards. Music in the 90s was not in digitalized formats like CD or MP3 nowadays (that would have taken too much storage space and bandwidth.) Instead music was stored as series of notes played on channels simulating instruments. The format used is close to the notorious MIDI but with a few variations and is called IMF\footnote{Id Music Format}. It is proprietary to id Software and designed with OPL2 in mind (the raw format is exactly what is sent to the Adlib/Soundblaster synthesizer with no transformations.) IMF has a hardcoded playback rate and music notes are played at 700 Hz.\\
 \par
 Hardware limitations dictated certain aspects of music design. The FM synthesizer (OPL2) has 9 channels (a.k.a instruments) yet the composer, Bobby Prince, was asked to use only channels 1 to 8. This little trick allows for multiplexing music and sound effects on AdLib cards since it leaves channel 0 available at all times (the SoundBlaster plays sound differently.)\\
 
@@ -123,15 +125,15 @@ Hardware limitations dictated certain aspects of music design. The FM synthesize
 \par
 Programming the OPL2 output is esoteric to say the least. AdLib and Creative did publish SDKs but they were expensive.  Documentation was sparse and often cryptic. Today, they are almost impossible to find.\\
 \par
-The OPL2 is made of 9 channels able to emulate an instrument. Each channel is made of two oscillators: a Modulator whose outputs are fed into a Carrier's input. Each channel has individual settings including frequency and envelope (composed of attack rate, decay rate, sustain level, release rate, and vibrato.) Each oscillator can also pick a waveform (these uncanny forms are what gave the YM3812 its recognizable sound.)\\
+The OPL2 is made of 9 channels capable of emulating instruments. Each channel is made of two oscillators: a Modulator whose outputs are fed into a Carrier's input. Each channel has individual settings including frequency and envelope (composed of attack rate, decay rate, sustain level, release rate, and vibrato.) Each oscillator can also pick a waveform (these characteristic forms are what gave the YM3812 its recognizable sound.)\\
 \par
- To control all of these channels, a developer must configure the OPL2's 244 internal registers. These are all accessed via two external ports. One port is for setting the card's internal register and the other is to read/write data to it.\\
+ To control all of these channels, a developer must configure the OPL2's 244 internal registers. These are all accessed via two external I/O ports. One port is for selecting the card's internal register and the other is to read/write data to it.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/audio_ports.c}
 \end{minipage}
 \par
-When the AdLib was released in 1986, developers were instructed to send data "as fast as possible". At 4.77Mhz, a PC was unable to out-pace the Adlib. Yet as CPUs got faster, issues started to arise and the card was unable to keep up and the Programming Guide was amended.\\
+When the AdLib was released in 1986, developers were instructed to send data "as fast as possible". At 4.77Mhz, a PC was unable to out-pace the Adlib. Yet as CPUs got faster, issues started to arise and the card was unable to keep up. The Programming Guide was amended.\\
 \par
 
 \begin{fancyquotes}
@@ -157,7 +159,7 @@ The engine does not know about any of the details of the OPL2. There is zero abs
 \lstinputlisting[language=C,morekeywords={longword}]{code/adlib_message.c}
 \end{minipage}
 \par
-The \cw{reg} byte is sent to port \cw{0x388}, the \cw{data} byte is sent to \cw{0x389} and the \cw{delay} 2 bytes is used to tell how much time to wait before sending the next register/data to the card. The stream is hard-coded at 700Hz and the delay is expressed in this unit: a value of 700 means to wait 1000ms before sending another command. Whenever there is music playing the engine runs at no less than 700Hz (it can run at 7000Hz if it is also playing digitized sound but that results in no-ops for music playback.) A value of zero means the next message should be sent immediately.\\
+The \cw{reg} byte is sent to port \cw{0x388}, the \cw{data} byte is sent to \cw{0x389}, and the \cw{delay} 2 bytes are used to tell how much time to wait before sending the next register/data to the card. The stream is hard-coded at 700Hz and the delay is expressed in this unit: a value of 700 means to wait 1000ms before sending another command. Whenever there is music playing the engine runs at no less than 700Hz (it can run at 7000Hz if it is also playing digitized sound but that results in no-ops for music playback.) A value of zero means the next message should be sent immediately.\\
 \par
 Overall, music is simple to execute because almost everything has been pre-processed via IMF. Everytime the audio system wakes up, it checks if music packets should be sent, sends them, and moves on to the sound effects.
 
@@ -170,7 +172,7 @@ Overall, music is simple to execute because almost everything has been pre-proce
 
 
 
-\section{Sound effects}
+\section{Sound Effects}
 Sound effects are where things become complicated. None of the cards use the same format and audio configurations are numerous. The sound settings screen illustrates how complex this is.
 \par
 \begin{figure}[H]
@@ -178,21 +180,21 @@ Sound effects are where things become complicated. None of the cards use the sam
  \fullimage{audio/audio_settings.png}
  \end{figure}
 \par
-Sounds are stored in three formats. Once for PC Speaker, once for AdLib, and once for SoundBlaster/Disney Sound Source in the \cw{AudioT} archive created by Muse. Sounds are segregated by format but always stored in the same order. This way a sound can be accessed in three formats by using \cw{STARTPCSOUNDS} + \cw{sound\_ID} or \cw{STARTADLIBSOUNDS} + \cw{sound\_ID}\\
+Sounds are stored in three formats. Once for PC Speaker, once for AdLib, and once for SoundBlaster/Disney Sound Source in the \cw{AudioT} archive created by Muse. Sounds are segregated by format but always stored in the same order. This way a sound can be accessed in three formats by using \cw{STARTPCSOUNDS} + \cw{sound\_ID} or \cw{STARTADLIBSOUNDS} + \cw{sound\_ID}.\\
 
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/muse_header.c}
 \end{minipage}
 \par
-Strangely, only PC speaker and AdLib sounds are stored in the \cw{AUDIOT.*} files, the digitized sounds are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used. Nobody can remember why.\\
+Strangely, only PC speaker and AdLib sounds are stored in the \cw{AUDIOT.*} files, the digitized sounds are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used. Despite questioning the authors, it seems nobody can remember why.\\
 
 \par
 
 
 
 \subsection{Sound effects: AdLib}
-AdLib only has a FM synthesizer, with sounds played on its Channel 1. Sounds are played the same way as music (via IMF) as previously described.
+AdLib only has a FM synthesizer, with sounds played on its Channel 0. Sounds are played the same way as music (via IMF) as previously described.
 
 
 
@@ -236,19 +238,7 @@ Since the SoundBlaster also supports 7000Hz PCM, it uses the same sound effects 
 \subsection{SoundBlaster Pro system: Stereo PCM}
 \par
 
-On a "high-end" SoundBlaster Pro, the Mixer described on page \pageref{sbmixerpage} is used to simulate 3D sounds. The source of the sound is first rotated with the same formula seen on page \pageref{rotatematrix}.\\
-% \par
-% \begin{figure}[H]
-% \centering
-%  \includegraphics[width=\textwidth]{imgs/drawings/audio_y_rotate.png}
-%  \end{figure}
-%  \par
-%  \begin{figure}[H]
-% \centering
-%  \includegraphics[width=\textwidth]{imgs/drawings/audio_x_rotate.png}
-%  \end{figure}
-% \par
-The player's position is used to generate two attenuation values (between 0 and 15) which are then packed in a byte and sent to the mixer.\\
+On a "high-end" SoundBlaster Pro, the Mixer described on page \pageref{sbmixerpage} is used to simulate 3D sounds. The source of the sound is first rotated with the same formula seen on page \pageref{rotatematrix}. The player's position is used to generate two attenuation values (between 0 and 15) which are then packed in a byte and sent to the mixer. The difference of volumes tricks the player into perceiving the sound origin anywhere within the 180 degrees facing her.\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/setposition.c}
@@ -268,7 +258,7 @@ See \cw{SDL\_SBPlaySeg} and the ISR \cw{SDL\_SBService}
 
  
 \subsection{PC Speaker: PWM}
-The hardware chapter described a problem for sound effects: the default PC speaker can only generate square waves, resulting in long beeps which are not acceptable for gaming.\\
+The hardware chapter described a problem for sound effects: the default PC speaker could only generate square waves, resulting in long beeps which are not acceptable for gaming.\\
 
 \par
  \begin{fancyquotes}
@@ -342,7 +332,7 @@ Notice how \cw{6b} (\cw{10110110}) is sent to the PIC Command register (\cw{pcTA
 \lstinputlisting[language={[x86masm]Assembler}]{code/pwm_code.asm}
 \end{minipage}
 \par
-While the end result was not great, it was better than a beep\footnote{Lucas Art however obtained surprisingly good results for their game Monkey Island. See the video "LGR - Evolution of PC Audio - As Told by Secret of Monkey Island", https://www.youtube.com/watch?v=a324ykKV-7Y.}.\\
+While the end result was not great, it was better than a beep\footnote{LucasArts obtained surprisingly good results for their game Monkey Island. See the video "LGR - Evolution of PC Audio - As Told by Secret of Monkey Island", https://www.youtube.com/watch?v=a324ykKV-7Y.}.\\
 \par
 
 \bu{Hidden feature :} The source code features an audio code path that was never allowed to ship. It can play digitized sound via the PC Speaker.\\
@@ -352,8 +342,8 @@ While the end result was not great, it was better than a beep\footnote{Lucas Art
 \lstinputlisting[language=C]{code/sound_fork.c}
 \end{minipage}
 \par
-Notice the \cw{SDL\_PCPlaySample} path allowing PCM to be played on the buzzer. This codepath was never enabled in shipping product.
-\footnote{You can hear the difference on youtube: "Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects" at https://www.youtube.com/watch?v=1BtlsjJRnFU}. We may speculate it was a matter of overheard but the cost would have been the same as the Disney Sound Source playback. Questioning the authors of the game did not shed light on this mystery.\\
+Notice the \cw{SDL\_PCPlaySample} path allowing PCM to be played on the buzzer. This codepath was never enabled in shipping product
+\footnote{You can hear the difference on youtube: "Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects" at https://www.youtube.com/watch?v=1BtlsjJRnFU}. We may speculate it was a matter of overhead but the cost would have been the same as the Disney Sound Source playback. Questioning the authors of the game did not shed light on this mystery.\\
 \par
 
 

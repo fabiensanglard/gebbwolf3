@@ -19,6 +19,7 @@ We sent this demo to Nintendo of America, they in turn sent it to Kyoto to the m
 \par
 This episode was enough to convince them they had not only the talent to feed their ambitions, but also the teamwork and work ethic to potentially go all the way. In February 1991 four Softdisk employees took the leap of faith and founded their own company: "id Software"\footnote{For ample details, read "Masters of Doom" by David Kushner.}. 
 
+ 
  \begin{figure}[H]
 \centering  
 \begin{tabularx}{\textwidth}{ X  X  X  }
@@ -33,6 +34,7 @@ This episode was enough to convince them they had not only the talent to feed th
 \end{tabularx}
 \caption{id Software founding members.}\label{fig:Id Software team}
 \end{figure}
+
 They immediately used the technology developed for "Mario 3 PC" to release their own titles and build their own intellectual property. Wasting no time, the team shipped no less than three titles annually.
 \begin{itemize}
     \item Commander Keen Episode 1,2 and 3: Invasion of the Vorticons (December 14th, 1990)
@@ -85,18 +87,18 @@ Jason was part of id at the start, but we parted ways during Wolf development.
  
 \begin{figure}[H]
 \centering
-  \shadowbox{
+  
       \fullimage{idTeam_team_pants.png}
-  }  
+    
 \caption{The team as it appears in Spear of Destiny, in a secret screen created by John Romero.}
 \label{fig:id_team_1993}
 \end{figure}
  
 \begin{figure}[H]
 \centering
-  \shadowbox{
+  
       \fullimage{id_team_with_pants.jpg}
-  }  
+    
 \caption{They were in fact wearing pants.}
 \label{fig:id_team_1993}
 \end{figure}
@@ -172,7 +174,7 @@ John Carmack took care of the runtime code. John Romero programmed many of the t
 \\
 \begin{figure}[H]
 \centering
-  \shadowbox{\fullimage{development.png}}  
+  \fullimage{development.png}
 \caption{Borland C++ 3.1 editor}
 \end{figure}
 
@@ -185,20 +187,17 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA modes that \cw{Mode 13h} and \cw{Mode 4h} (see figure on page \pageref{fig:vga_modes})  don't have the same starting RAM address. This allows for a trick where two graphics cards are plugged into the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally. This setup allows a developer to debug the game engine with breakpoints.\\
-\par
+You may have noticed in the listing of VGA modes that \cw{Mode 13h} and \cw{Mode 4h} (see figure on page \pageref{fig:vga_modes})  don't have the same starting RAM address. This allows for a trick where two graphics cards are plugged into the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally. This setup allows a developer to debug the game engine with breakpoints.
 \begin{figure}[H]
   \centering
       \scaledimage{1}{wolf_screen1.png}
-
 \end{figure}
 
-Above, Monitor 1 with Borland Turbo Debugger 386. Next, Monitor 2 running the game.
+Above, the Monitor 1 in monochrome showing Borland Turbo Debugger 386. Next, the Monitor 2 running the game normally.
 
 \begin{figure}[H]
-\centering
-      \scaledimage{1}{wolf_screen2.png}
-
+  \centering
+    \scaledimage{1}{wolf_screen2.png}
 \end{figure}
 
 
@@ -278,7 +277,7 @@ After the graphic assets were generated, a tool (IGRAB-ED) packed all ILBMs toge
  \lstinputlisting[language=C]{code/assets_usage.c}\par
  \end{minipage}
 \par
-\textbf{\underline{Trivia :}} This system led to issues when the source code was released. The \cw{.h} header files provided did not match the asset files from the shareware or early versions of Wolfenstein 3D. The headers released were from Spear of Destiny. You can see the kind of graphic mess this led to in the article "Let's compile like it is 1992" on \cw{fabiensanglard.net}.\\
+\textbf{\underline{Trivia :}} This system led to issues when the source code was released. The \cw{.h} header files provided did not match the asset files from the shareware or early versions of Wolfenstein 3D. The headers released were from Spear of Destiny. You can see the kind of graphic mess this led to in the article "Let's compile like it's 1992" on \cw{fabiensanglard.net}.\\
 
 
 
@@ -366,6 +365,7 @@ Maps were created using an in-house editor called TED5, short for Tile EDitor. T
 
   \begin{figure}[H]
 \centering
+
  \fullimage{Fill_2.png}
  \end{figure}
 
@@ -426,7 +426,9 @@ anywhere.\\
 As mentioned in the hardware section, audio hardware was highly fragmented. id decided to support all four sound cards and the default PC speaker, which meant generating assets multiple times for each and packing them together with an in-house tool called MUSE into an AUDIOT archive (an id software proprietary format):\\
 \begin{figure}[H]
 \centering
- \fullimage{muse.png}
+
+   \fullimage{muse.png}
+ 
  \end{figure}
  \par
  Three sets of the same audio effect shipped with the game:
@@ -458,7 +460,6 @@ To rough out compositions, I used Cakewalk ("CW"). I had been using it for sever
 \begin{figure}[H]
 \centering
       \scaledimage{1}{music_editor.png}
-
 \caption{Sequencer Plus Gold ("SPG") by Voyetra.}
 \end{figure}
 

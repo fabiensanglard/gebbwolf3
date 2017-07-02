@@ -1,18 +1,18 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
 
-The software chapter described how tightly coupled the engine was to the PC hardware. The architecture of the VGA,  the audio systems, or even a simple trick like the Linear Feedback Shift Register proved sometimes impossible to replicate with machines 100 times more powerful than a 386. This is in contrast to Doom, which was created with portability as a core part of the development process.\\
+The software chapter described how tightly coupled the engine was to the PC hardware. The architecture of the VGA, audio systems, or even a simple trick like the Linear Feedback Shift Register proved sometimes impossible to replicate with machines 100 times more powerful than a 386. This is in contrast to Doom, which was created with portability as a core part of the development process.\\
 \par
 Except for Wolf4SDL (and Chocolate Wolfenstein 3D derived from it) no port was ever able to perfectly replicate the original PC DOS experience. 
 
 
 \section{Super Nintendo}
-Released in the United States in March 1994, the port to Super Nintendo was done during the development of Doom. id Software originally intended to subcontract the port but the guy in charge failed to deliver.\\
+Released in the United States in March 1994, the port to Super Nintendo was done during the development of Doom. id Software originally intended to subcontract the port but the programmer in charge failed to deliver.\\
 \par
  \begin{fancyquotes}
 Disaster Struck!\\
 \par
-We all had to stop working on Doom. The Super Nintendo version that we had gotten a guy to work on was not finished. And Imagineer was not pleased. It had been since the summertime so it had been about nine months and they hadn't head anything from us. That guy was working on the port and we could not get ahold of the guy. It was a nightmare situation. We could not get it done with somebody else. So, basically, we stopped working on Doom and ported Wolfenstein to the Super Nintendo. The whole team jumped on it. It tooks us like three weeks to just blast out the port. And that is including all rats in there and green blood.\\
+We all had to stop working on Doom. The Super Nintendo version that we had gotten a guy to work on was not finished. And Imagineer was not pleased. It had been since the summertime so it had been about nine months and they hadn't head anything from us. That guy was working on the port and we could not get ahold of the guy. It was a nightmare situation. We could not get it done with somebody else. So, basically, we stopped working on Doom and ported Wolfenstein to the Super Nintendo. The whole team jumped on it. It took us like three weeks to just blast out the port. And that is including all rats in there and green blood.\\
 \par
 \textbf{John Romero - Programmer}
 \end{fancyquotes}
@@ -40,10 +40,10 @@ The solution was to sacrifice performance for implementation simplicity.  Instea
 \begin{figure}[H]
 \centering
  \fullimage{wolf3d_snes.png}
- \caption{Extremely low resolution during 3D scene: 125x125! (But the HUB and weapon are higher resolution which helps a little.)}
+ 
  \end{figure}
  \par
-
+The NES used an extremely low resolution in 3D scenes: 125x125! (But the HUB and weapon are higher resolution which helps a little.)
 
 
 
@@ -54,10 +54,10 @@ The solution was to sacrifice performance for implementation simplicity.  Instea
 
 
 \section{Jaguar}
-The Jaguar port was released in 1994 and was the only other port (along with SNES) made by id Software. It was the only port able to reach 60 frames per seconds and was unique in having graphics at a resolution far superior to the PC release, and bilinear filtering. It also introduced two new weapons: the Flamethrower and Rocket Launcher.\\
+The Jaguar port was released in 1994 and was the only other port (along with SNES) made by id Software. It was the only port able to reach 60 frames per seconds and was unique in having graphics at a resolution far superior to the PC release and bilinear filtering. It also introduced two new weapons: the Flamethrower and Rocket Launcher.\\
 \par
 
-The console was a mix of powerful components with a severe bottleneck: 
+The console was a mix of powerful components and a severe bottleneck: 
 \par
 \begin{fancyquotes}
 The memory, bus, bliter and video processor were 64 bits wide, but the processors (68k and two custom risc processors) were 32 bit.\\
@@ -68,7 +68,7 @@ It could make better use of the 64 bit bus with Z buffered, shaded triangles, bu
 \\
 It offered a usefull color space option that allowed you to do lighting effects based on a single channel, instead of RGB.\\
 \\
-The video compositing engine was the most innovative part of the console. All of the characters in Wolf3D were done with just the back end scalar instead of bliting. Still, the experience with the limitations and hard failure cases of that gave me good ammunition to rail against microsoft's (thankfully aborted) talisman project.\\
+The video compositing engine was the most innovative part of the console. All of the characters in Wolf3D were done with just the back end scalar instead of bliting. Still, the experience with the limitations and hard failure cases of that gave me good ammunition to rail against Microsoft's (thankfully aborted) talisman project.\\
 \\
 The little risc engines were decent processors. I was surprised that they didn't use off the shelf designs, but they basically worked ok. They had some design hazards (write after write) that didn't get fixed, but the only thing truly wrong with them was that they had scratchpad memory instead of caches, and couldn't execute code from main memory. I had to chunk the DOOM renderer into nine sequentially loaded overlays to get it working (with hindsight, I would have done it differently in about three...).\\
 \\
@@ -84,7 +84,7 @@ If the Jaguar had dumped the 68k and offered a dynamic cache on the risc process
 \par
 \begin{figure}[H]
 \centering
- \scaledimage{0.8}{jaguar_port_cover.jpg}
+ \fullimage{jaguar_port_cover.jpg}
 \end{figure}
 \par
 \begin{figure}[H]
@@ -92,7 +92,7 @@ If the Jaguar had dumped the 68k and offered a dynamic cache on the risc process
  \fullimage{jaguar_port_gatling.png}
 \end{figure}
 \par
-Notice the 4:3 aspect ratio mandated by 1992 universal TV dimensions. The machine gun sprite was not the one from wolf3D PC but the one from Doom.\\
+Notice the 4:3 aspect ratio mandated by 1992 TV dimensions. The machine gun sprite was not the one from Wolf3D PC but the one from Doom.\\
 
 \begin{fancyquotes}
 Jaguar wolf ran at 30 fps.  In some places it could do 60, which was my first experience with 60 fps 3D graphics, but it was rare and you felt let down when it dropped to 30, so I forced it.\\
@@ -105,8 +105,9 @@ Jaguar wolf ran at 30 fps.  In some places it could do 60, which was my first ex
 \begin{figure}[H]
 \centering
  \fullimage{jaguar_port_flamethrower.png}
+ \caption{A new weapon was introduced: flamethrower.}
 \end{figure}
-A new weapon was introduced: flamethrower.
+
 
 
 
@@ -120,11 +121,13 @@ Wolfenstein 3D was ported by John Carmack himself to iOS. The source code was re
  \par
  The most notorious improvement is bilinear filtering, thanks to hardware accelerated rendering. Bilinear filtering is not for everybody. Some people complained the enemies were "blurry" and wanted to see the pixels. Following are the release notes of Wolfenstein3D iOS on March 25, 2009.
 
-\subsection{iPhone development notes}
+\subsection{Notes}
 
 By John Carmack, Technical Director, Id Software\\
 \par
 
+\subsubsection{iPhone Development Notes}
+\par
 I had been frustrated for over a year with the fact that we didn't have any iPhone development projects going internally at Id.  I love my iPhone, and I think the App Store is an extremely important model for the software business.  Unfortunately, things have conspired against us being out early on the platform.\\
 \par
 
@@ -160,7 +163,7 @@ It was nice and simple to download, extract data from a commercial copy of Wolfe
 I sent an email to the Wolf 3D Redux project maintainer to see if he might be interested in working on an iPhone project with us, but it had been over a year since the last update, and he must have moved on to other things.  I thought about it a bit, and decided that I would go ahead and do the project myself.  The "big projects" at Id are always top priority, but the systems programming work in Rage is largely completed, and the team hasn't been gated on me for anything in a while.  There is going to be memory and framerate optimization  work going on until it ships, but I decided that I could spend a couple weeks away from Rage to work on the iPhone exclusively.  Cass continued to help with iPhone system issues, I drafted Eric Will to create the few new art assets, and Christian Antkow did the audio work, but this was the first time I had taken full responsibility for an entire product in a very long time.\\
 \par
 
-\subsection{Design notes}
+\subsubsection{Design Notes}
 
 The big question was how "classic" should we leave the game?  I have bought various incarnations of Super Mario Bros on at least four Nintendo platforms, so I think there is something to be said for the classics, but there were so many options for improvement.  The walls and sprites in the game were originally all 64 x 64 x 8 bit color, and the sound effects were either 8khz / 8 bit mono or (sometimes truly awful) FM synth sounds.  Changing these would be trivial from a coding standpoint.  In the end, I decided to leave the game media pretty much unchanged, but tweak the game play a little bit, and build a new user framework around the core play experience.  This decision was made a lot easier by the fact that we were right around the 10 meg over-the-air app download limit with the converted media.  This would probably be the only Id project to ever be within hailing distance of that mark, so we should try to fit it in.\\
 \par
@@ -224,7 +227,7 @@ When I was first thinking about the project I sort of assumed that we wouldn't b
 The game is definitely simplistic by modern standards, but it still has its moments.  Getting the drop on a brown shirt just as he is pulling his pistol from the holster.  Making an SS do the "twitchy dance" with your machine gun.  Rounding a corner and unloading your weapon on ... a potted plant.  Simplistic plays well on the iPhone.\\
 \par
 
-\subsection{Programming notes}
+\subsubsection{Programming Notes}
 Cass and I got the game running on the iPhone very quickly, but I was a little disappointed that various issues around the graphics driver, the input processing, and the process scheduling meant that doing a locked-at-60-hz game on the iPhone wasn't really possible.  I hope to take these up with Apple at some point in the future, but it meant that Wolf would be a roughly two tick game.  It is only "roughly" because there is no swapinterval support, and the timer scheduling has a lot of variability in it.  It doesn't seem to matter all that much, the play is still smooth and fun, but I would have liked to at least contrast it with the perfect limit case.\\
 \par
 
@@ -288,8 +291,7 @@ In the end, I decided to stick with the Redux codebase, but I got a lot more fre
 Of course, someone else is welcome to do that.  The full source code for the commercial app is available on the web site.  There was a little thought given to the fact that if I had reverted to the virgin source, the project wouldn't be required to be under the GPL.  Wolf and the app store presents a sort of unique situation - a user can't just compile the code and choose not to pay for the app, because most users aren't registered developers, and the data isn't readily available, but there is actually some level of commercial risk in the fast-moving iPhone development community.  It will not be hard to take the code that is already fun to play, pull a bunch of fun things off the net out of various projects people have done with the code over the years, dust off some old map editors, and load up with some modern quality art and sound.\\
 \par
 
-Everyone is perfectly within their rights to go do that, and they can aggressively try to bury the original game if they want.  However, I think there is actually a pretty good opportunity for cooperation.  If anyone makes a quality product and links to the original Wolf app, we can start having links to "wolf derived" or "wolf related" projects.\\
-That should turn out to be a win for everyone.\\
+Everyone is perfectly within their rights to go do that, and they can aggressively try to bury the original game if they want.  However, I think there is actually a pretty good opportunity for cooperation.  If anyone makes a quality product and links to the original Wolf app, we can start having links to "wolf derived" or "wolf related" projects. That should turn out to be a win for everyone.\\
 \par
 
 I'm going back to Rage for a while, but I do expect Classic Doom to come fairly soon for the iPhone.\\

@@ -16,4 +16,5 @@
 0111     |    7
 0011     |    3
 0001     |    1 -> CYCLE
+
 Sequence of 15 numbers before cycling.
