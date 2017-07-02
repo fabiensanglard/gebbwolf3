@@ -31,7 +31,7 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
   
   In 1991 there were 56 million PCs in USA \footnote{"Computers". Collier's Encyclopedia. Vol. 7, 1992: 114, 129.}. The performance of these machines were so overwhelmingly dominated by the CPU that a PC was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had a 80386 or equivalent, it was called a "386". If it had an Intel 80286, it was a "286".\\
 \subsection{Overview}
-  The ubiquitous CPU manufacturer was Intel with its line of x86 microprocessors\footnote{73\% of PC sold in 1989 featured an Intel CPU according to Intel Corporation Annual Report.}. Machines based on the 16 bits 80286 processor did not sell well but their successors with the 80386 introduced in 1985 were immensely successful\footnote{An estimated 3.74 million 386 based systems were sold in 1990. Source: Dataquest PC Magazine February 1992.}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
+  The ubiquitous CPU manufacturer was Intel with its line of x86 microprocessors\footnote{73\% of PC sold in 1989 featured an Intel CPU according to Intel Corporation Annual Report.}. Machines based on the 16-bit 80286 processor did not sell well but their successors with the 80386 introduced in 1985 were immensely successful\footnote{An estimated 3.74 million 386 based systems were sold in 1990. Source: Dataquest PC Magazine February 1992.}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
 \par
 
 
@@ -76,7 +76,7 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
  \par
   \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 MIPS.\\
   \par
- Intel built two versions of the 386: The 386-SX and 386-DX. They are identical processors yet the DX version is almost twice as powerful as the SX (on the chart the \cw{386 SX 33Mhz} and the \cw{386 DX 33Mhz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM being twice as wide on the DX (32 bits vs 16 bits). Despite its inferiority, the SX sold well because it was cheaper and a lot of people had no idea what a "bus" was, they just wanted "a 386".\\
+ Intel built two versions of the 386: The 386-SX and 386-DX. They are identical processors yet the DX version is almost twice as powerful as the SX (on the chart the \cw{386 SX 33Mhz} and the \cw{386 DX 33Mhz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM being twice as wide on the DX (32-bit vs 16-bit). Despite its inferiority, the SX sold well because it was cheaper and a lot of people had no idea what a "bus" was, they just wanted "a 386".\\
 
 
 
@@ -1016,7 +1016,7 @@ The rest of the bus connecting to everything that is not the RAM can be of two k
 \item 8-bit wide at 4.77 MHz  for 19.1 Mbit/s
 \item 16-bit wide at 8.33MHz for 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates}.
 \end{itemize}
-Of course it is also backward compatible and an 8 bits ISA card can be plugged into a 16 bits ISA bus.\\
+Of course it is also backward compatible and an 8-bit ISA card can be plugged into a 16-bit ISA bus.\\
 \par
 \begin{figure}[H]
 \centering
@@ -1031,9 +1031,9 @@ Of course it is also backward compatible and an 8 bits ISA card can be plugged i
 \end{figure}
 
 \par
- In practice, due to packet overhead and interrupts, the effective bandwidth of the bus is divided by two. As a result, a PC equipped with an 8-bits ISA VGA card can push 19.1Mbits/s/2 = 1.5MB/s. In Mode 13h, since a frame is 320x200 = 64,000 bytes, the theoretical maximum framerate with a CPU taking 0ms to render a frame is 1,500,000 / 64,000 = 23 frames per seconds.\\
+ In practice, due to packet overhead and interrupts, the effective bandwidth of the bus is divided by two. As a result, a PC equipped with an 8-bit ISA VGA card can push 19.1Mbits/s/2 = 1.5MB/s. In Mode 13h, since a frame is 320x200 = 64,000 bytes, the theoretical maximum framerate with a CPU taking 0ms to render a frame is 1,500,000 / 64,000 = 23 frames per seconds.\\
  \par
- On a 16 bits VGA card, 33,400,000 bits per seconds gives 33,400,000/8/64000 = 65 frames per seconds.\\
+ On a 16-bit VGA card, 33,400,000 bits per seconds gives 33,400,000/8/64000 = 65 frames per seconds.\\
  \par
  If you factor in other things which had to transit on the bus such as palette, keyboard interrupt, mouse inputs, and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand how important it was to limit data transfer and why few softwares of the era could max out the VGA's 70 frame per seconds\footnote{Specialized demos could reach 70 fps on VGA by careful management of unchanged regions or using planar writes for the 4x speedup.}.
 
