@@ -15,15 +15,16 @@ Disaster Struck!\\
 We all had to stop working on Doom. The Super Nintendo version that we had gotten a guy to work on was not finished. And Imagineer was not pleased. It had been since the summertime so it had been about nine months and they hadn't head anything from us. That guy was working on the port and we could not get ahold of the guy. It was a nightmare situation. We could not get it done with somebody else. So, basically, we stopped working on Doom and ported Wolfenstein to the Super Nintendo. The whole team jumped on it. It took us like three weeks to just blast out the port. And that is including all rats in there and green blood.\\
 \par
 \textbf{John Romero - Programmer}
-\end{fancyquotes}
-
+\end{fancyquotes}\\
+\par
 \par
 \begin{figure}[H]
 \centering
  \fullimage{wolf3d_snes_box.jpg}
  \end{figure}
  \par
-
+The box is as sober as the content of the cartridge. In order to comply with Nintendo's "Game Content Guidelines", id had to drastically alter the graphics of the game and remove blood, dogs\footnote{They were replaced with rats.} and all World War II German era references. Things were also interesting from a technological standing point:\\
+\par
 
 \begin{fancyquotes}
     When I ported Wolf to the SNES, the ray casting performance cost was too much, so I had to make a new wall span renderer.  Learning about BSP trees allowed me  to much more accurately resolve the culling challenges, and it worked out ok, leading the way to the Doom renderer.\\
@@ -33,8 +34,9 @@ Many years later, I made a very similar programming tradeoff for the mobile BREW
 The solution was to sacrifice performance for implementation simplicity.  Instead of trying to fill in just the empty pixels around the walls with floor / ceiling textures, I completely textured the entire screen with floor and ceiling textures before drawing the walls on top of them.  With floor / ceiling symmetry and fixed texture sizes, it was pretty fast even with per-pixel tile map lookup, but most importantly it was rock solid, crack free, and completed in the window of time I had allotted to it.\\
 \\
 \textbf{John Carmack - Programmer}
-\end{fancyquotes}
-
+\end{fancyquotes}\\
+\par
+Switching the core algorithm from raycasting to BSP sorted wall span rasterization was not the only trick John Carmack had to use to get the game to run on Super NES. You may remember from page \pageref{sprite_engine_ref} that console graphics are based on sprite engines, which are orthogonal to Wolfenstein 3D's requirements for a framebuffer. The solution to this problem was to use the SNES Mode 7\footnote{The same Mode 7 used for Super Mario Kart and F-Zero} where one background layer made of tiles 14x12 simulates a 112x96 framebuffer which is scaled up 2x to 224x160 thanks to the Mode 7 transformation matrix. The SNES PPU\footnote{Pixel Processing Unit} sprite engine is used to draw the weapon and the status bar with 32x32 tiles.\\
 
 \par
 \begin{figure}[H]
@@ -43,7 +45,7 @@ The solution was to sacrifice performance for implementation simplicity.  Instea
  
  \end{figure}
  \par
-The NES used an extremely low resolution in 3D scenes: 125x125! (But the HUB and weapon are higher resolution which helps a little.)
+On the screenshot above, the scaling is quite visible. The resolution is 224x192 with the 3D scene tiles scaled 2x from 112x80 to 224x160. The status bar/weapon has a high resolution thanks to non-scaled 32x32 tiles.
 
 
 
@@ -54,7 +56,7 @@ The NES used an extremely low resolution in 3D scenes: 125x125! (But the HUB and
 
 
 \section{Jaguar}
-The Jaguar port was released in 1994 and was the only other port (along with SNES) made by id Software. It was the only port able to reach 60 frames per seconds and was unique in having graphics at a resolution far superior to the PC release and bilinear filtering. It also introduced two new weapons: the Flamethrower and Rocket Launcher.\\
+The Jaguar port was released in 1994 and was the only other port (along with SNES) made by id Software. It was the only port able to reach 60 frames per seconds and ran at 240p resolution (320x240) with bilinear filtering allowing pleasant magnification. It also introduced two new weapons: the Flamethrower and Rocket Launcher.\\
 \par
 
 The console was a mix of powerful components and a severe bottleneck: 
@@ -92,7 +94,7 @@ If the Jaguar had dumped the 68k and offered a dynamic cache on the risc process
  \fullimage{jaguar_port_gatling.png}
 \end{figure}
 \par
-Notice the 4:3 aspect ratio mandated by 1992 TV dimensions. The machine gun sprite was not the one from Wolf3D PC but the one from Doom.\\
+Notice the 4:3 aspect ratio mandated by NTSC standard. The machine gun sprite was not the one from the original Wolf3D, it was borrowed from Doom.\\
 
 \begin{fancyquotes}
 Jaguar wolf ran at 30 fps.  In some places it could do 60, which was my first experience with 60 fps 3D graphics, but it was rare and you felt let down when it dropped to 30, so I forced it.\\
