@@ -1525,22 +1525,20 @@ Visible tile tracking is done in the simplest way with a 64x64 boolean array ind
  \lstinputlisting[language=C]{code/clear_vis_wold3d.c}
  \end{minipage}
  \par
- Note that because register is 2 bytes wide, an array of 64x64=4096 bytes can be zeroed in 2048 iterations.\\
- \par
-The ray caster (\codeword{AsmRefresh}) writes \cw{true} in the visible tile array as the ray progresses towards a wall.\\
+The ray caster (\codeword{AsmRefresh}) writes \cw{true} in the \cw{spotvis} array as the ray progresses towards a wall. The array is used to select only visible objects:\\
 \par
-\begin{minipage}{\textwidth}
-  \lstinputlisting[language={[x86masm]Assembler}]{code/mark_vis_wold3d.asm}
-\end{minipage}
-\par 
+% \begin{minipage}{\textwidth}
+%   \lstinputlisting[language={[x86masm]Assembler}]{code/mark_vis_wold3d.asm}
+% \end{minipage}
+% \par 
 
-While the way the visible tile array is used is not the most subtle part of the engine (it runs in $\mathcal{O}(n^2)$ time), it works well due to the low number of sprites. All sprites on the map are tested for visibility with \cw{spotvis}, then their height is calculated. They are all added to an array unsorted. A final double loop draws all sprites from far to near (using sprite height to determine distance on each iteration.)\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/build_vis_list.c}
  \end{minipage}
  \par
- 
+
+While the way the visible tile array is used is not the most subtle part of the engine (it runs in $\mathcal{O}(n^2)$ time), it works well due to the low number of sprites. All sprites on the map are tested for visibility with \cw{spotvis}, then their height is calculated. They are all added to an array unsorted. A final double loop draws all sprites from far to near (using sprite height to determine distance on each iteration.)\\ 
 
 
 
@@ -1643,9 +1641,7 @@ The combination of the compiled scalers getting more efficient at higher magnifi
 Sprite rendition benefits from the same optimization we saw in walls (compiled scalers and deferred rendering.) However, since sprites introduce transparency the techniques are slightly adjusted.
 
 \subsubsection{Compiled Scalers}
-Visible sprite column rendition is also done with the compiled scalers, but the scalers cannot be used directly. A compiled scaler draws its speed from its absence of parameters. It is an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and write/scale a predetermined number of pixels. For example, compiled scaler 112 always reads 64 pixels of texture and magnifies it to 134 pixels on the screen. Transparency is not handled at all, used as is the scalers would draw transparent pixels in pink.\\
-\par
-To solve this problem, prites are stored in a special way that allows tweaked compiled scalers to skip transparency.\\
+Visible sprite column rendition is also done with the compiled scalers, but the scalers cannot be used directly. A compiled scaler draws its speed from its absence of parameters. It is an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and write/scale a predetermined number of pixels. For example, compiled scaler 112 always reads 64 pixels of texture and magnifies it to 134 pixels on the screen. Transparency is not handled at all, used as is the scalers would draw transparent pixels in pink. To solve this problem, prites are stored in a special way that allows tweaked compiled scalers to skip transparency.\\
 \par
 A sprite is stored as an array of 64 entries. Each entry is a series of "commands" forming a column. A command features:
 \begin{enumerate}

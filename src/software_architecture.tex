@@ -221,7 +221,7 @@ The engine does not rely on \cw{malloc} to manage conventional memory, as this c
 A block can be marked with attributes:
 \begin{itemize}
 \item \cw{LOCKBIT} : This block of RAM cannot be moved during compaction.
-\item \cw{PURGEBITS} : Four levels available, 0= unpurgable, 1= purgable, 2= ???, 3= purge first.
+\item \cw{PURGEBITS} : Four levels available, 0= unpurgable, 1= purgable, 2= not used, 3= purge first.
 \end{itemize}
 
 The memory manager starts by allocating all available RAM via \cw{malloc}/\cw{farmalloc} and creates a \cw{LOCKED} block of size 1KiB at the end. The linked list uses two pointers: \cw{HEAD} and \cw{ROVER} which point to the second to last block.

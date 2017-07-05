@@ -10,10 +10,9 @@ void DrawScaleds (void) {
 	int numvisable=0;
 	visptr = &vislist[0];
 
-	// Add all static object to visptr, increase numvisable
-	// Add all moving object to visptr, increase numvisable
+	// Use spotvis[] to add objects to visptr. Increase numvisable
 
-    // O(n^2) loop
+    // draw from back to front
 	for (i = 0; i<numvisable; i++){
 		least = 32000;
 		for (visstep=&vislist[0] ; visstep<visptr ; visstep++){
@@ -23,7 +22,7 @@ void DrawScaleds (void) {
 				farthest = visstep;
 			}
 		}
-		ScaleShape(farthest->viewx,farthest->shapenum,farthest->viewheight);
+		ScaleShape(farthest->x,farthest->id,farthest->height); 
 		farthest->viewheight = 32000;
 	}
 

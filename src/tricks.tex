@@ -65,9 +65,7 @@ Below are a series of screenshots to illustrate fizzling. During the transition,
   \scaledimage{.9}{fizzlefade/boss/screenshot_130.png}\\
 \end{minipage}
 
-To implement this effect, a naive approach would have been to use the pseudo random generator \cw{US\_RndT} and keep track of which pixels had been fizzled. However, this would make the fade non-deterministic with regard to duration and would also waste CPU cycles since the same pixel coordinates (X,Y) could come up several times.\\
-\par
- There is a faster and more elegant way to implement a pseudo-random value generator. The code responsible for this effect can be found in \cw{id\_vh.cpp}, in the function \cw{FizzleFade}. At first, it is not obvious how it works.\\
+To implement this effect, a naive approach would have been to use the pseudo random generator \cw{US\_RndT} and keep track of which pixels had been fizzled. However, this would make the fade non-deterministic with regard to duration and would also waste CPU cycles since the same pixel coordinates (X,Y) could come up several times. There is a faster and more elegant way to implement a pseudo-random value generator. The code responsible for this effect can be found in \cw{id\_vh.cpp}, in the function \cw{FizzleFade}. At first, it is not obvious how it works.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/fizzlefade.c}
