@@ -1684,7 +1684,7 @@ The idea is to prevent a scaler from consuming 64 texels by patching the x86 ins
 \par
 There are 64 patch locations per scaler (one for each length of pixels from 0 to 63, stored in \cw{codeofs[]}), which allows for writing a \cw{RETF} instruction causing an early return. For each command in a sprite column, the engine looks up how many texels the command payload contains and where to patch the scaler, then saves the intruction at this location and overwrites it with a \cw{RETF}. After the scaler returns (and the command payload has been rendered), the scaler is unpatched.\\
 \par
-In the assembly optimized code, note how the engine knows where to patch the code thanks to a \cw{BX} register which points to \cw{codeofs}.
+In the assembly optimized code, note how the engine knows where to patch the code thanks to a \cw{BX} register which points to \cw{codeofs}.\\
 \par
 \begin{minipage}{\textwidth}
   \lstinputlisting[language={[x86masm]Assembler}]{code/self_modifying.asm}
