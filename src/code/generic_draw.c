@@ -1,12 +1,12 @@
-void scaleTextureToHeight(int height, void* src, void* dst)
-{
-  // Variables here ...
-  for (int cursor=0 ; cursor<height ; cursor++) {
-  	// Calculations for minify or magnify
-  	if (shouldWritePixel) {
-  	  fixed_t texture_offset = ... * curor;
-  	  fixed_t dst_offset = ...;
-  	  dst[dst_offset>>3] = src[texture_offset>>3];
-  	}
+void scaleTextureToHeight (int height , void * src , void * dst ){
+  fixed_t src_cursor = 0;  // 24:8 format
+  fixed_t step = FixedDiv(64, height);
+  while (height > 0) {
+    if (dst_not_clipped(dest_cursor)) {
+      dst[dest_cursor] = src [ src_cursor >> 8];
+    }
+    src_cursor += step;
+    height--;
+    dest_cursor++;
   }
 }

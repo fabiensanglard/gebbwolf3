@@ -1,6 +1,6 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
-To study the IBM PC it is easier to first break it down in small parts. Five sub-systems form a pipepline: Inputs, CPU, RAM, Video, and Audio.\\
+To study the IBM PC it is easier to first break it down in small parts. Five sub-systems form a pipeline: Inputs, CPU, RAM, Video, and Audio.\\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/fun_pipeline.pdf}
@@ -31,7 +31,7 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
   
   In 1991 there were 56 million PCs in USA \footnote{"Computers". Collier's Encyclopedia. Vol. 7, 1992: 114, 129.}. The performance of these machines were so overwhelmingly dominated by the CPU that a PC was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had a 80386 or equivalent, it was called a "386". If it had an Intel 80286, it was a "286".\\
 \subsection{Overview}
-  The ubiquitous CPU manufacturer was Intel with its line of x86 microprocessors\footnote{73\% of PC sold in 1989 featured an Intel CPU according to Intel Corporation Annual Report.}. Machines based on the 16-bit 80286 processor did not sell well but their successors with the 80386 introduced in 1985 were immensely successful\footnote{An estimated 3.74 million 386 based systems were sold in 1990. Source: Dataquest PC Magazine February 1992.}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
+  The ubiquitous CPU manufacturer was Intel with its line of x86 microprocessors\footnote{73\% of PC sold in 1989 featured an Intel CPU according to Intel Corporation Annual Report.}. Machines based on the 16-bit 80286 processor did not sell well but their successors with the 80386 introduced in 1985 were immensely successful\footnote{An estimated 3.74 million 386 based systems were sold in 1990 according to Dataquest in PC Magazine February 1992.}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
 \par
 
 
@@ -70,7 +70,7 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
  \par
   % Latex footnote I HATE YOU !!!!!!
  \addtocounter{footnote}{-1}
-  \footnotetext{Source: "Roy Longbottom's PC Benchmark Collection: http://www.roylongbottom.org.uk/mips.htm\#anchorIntel2".}
+  \footnotetext{Roy Longbottom's PC Benchmark Collection: http://www.roylongbottom.org.uk/mips.htm\#anchorIntel2.}
    \stepcounter{footnote}
   \footnotetext{Million Instructions Per Second.}
  \par
@@ -85,7 +85,7 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
 \par
 
 \subsection{The Intel 80386}
-The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagship P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel}. Two choices in the design of the 386 contributed to its success. First, the designers decided to listen to the programmers feedback and dropped the idea to use a new instruction set. As a result the 386 is fully backward compatibile with the 286. Second, they managed to add a 32 bit operating mode which solves many of the memory addressing issues of the 286.\\
+The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagship P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel}. Two choices in the design of the 386 contributed to its success. First, the designers decided to listen to the programmers feedback and dropped the idea to use a new instruction set. As a result the 386 is fully backward compatible with the 286. Second, they managed to add a 32 bit operating mode which solves many of the memory addressing issues of the 286.\\
 \par
 \textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View. New York: McGraw-Hil} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "software poison".\\
 \par
@@ -156,9 +156,9 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
 \caption{386 instructions cost\protect\footnotemark}
 \end{figure}
 \addtocounter{footnote}{-1}
-\footnotetext{Not all multiplications are equal. The 80386 uses an early-out multiply algorithm. The actual number of clocks depends on the position of the most significant bit in the optimizing multiplier}
+\footnotetext{Not all multiplications are equal. The 80386 uses an early-out multiply algorithm. The actual number of clocks depends on the position of the most significant bit in the optimizing multiplier.}
 \stepcounter{footnote}
-\footnotetext{Source:INTEL 80386 PROGRAMMER'S REFERENCE MANUAL 1986}
+\footnotetext{Intel 80386 programmer's reference manual - 1986.}
 
 
 
@@ -168,7 +168,7 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
   
    All that CPU power was not necessarily useful for programming a game. In order to perform the trigonometric computations for 3D effects, the engine has to keep track of the fractional part of each operation. This may not look like an issue since the C programming language has a type (\codeword{float}) precisely for that purpose. But in practice it is a problem, and to understand it we need to understand how \codeword{float} works.\\
 \par
- As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{What every Computer Scientist should know about Floating-Point}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is to program a 3D engine. In the C language, \codeword{float}s are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
+ As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{"What every Computer Scientist should know about Floating-Point".}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is to program a 3D engine. In the C language, \codeword{float}s are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
   \item 1 bit S for the sign
   \item 8 bits E for the exponent
@@ -301,7 +301,7 @@ This is not a problem when everything is hardwired within an hardware floating p
 
 
 \par
-A possible solution to the lack of a hardware floating point unit would have been to multiply an integer by 100 or 1000 to perform fractional operation and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes a minimum of 6-9 cycles and a divide (\cw{div}) is even worse with 22-25 cycles depending if the operands are RAM or register\footnote{Source: http://zsmith.co/intel\_i.html\#imul}.\\ 
+A possible solution to the lack of a hardware floating point unit would have been to multiply an integer by 100 or 1000 to perform fractional operation and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes a minimum of 6-9 cycles and a divide (\cw{div}) is even worse with 22-25 cycles depending if the operands are RAM or register\footnote{ZSmith.com instructions at http://zsmith.co/intel\_i.html\#imul}.\\ 
 \par
 As a result, a game engine designer was stuck in an awkward situation with two half solutions to his problem. Integers which were fast but not accurate enough and Floats which were accurate but not fast enough.\\
 \par
@@ -455,7 +455,7 @@ With this system, pointer arithmetic must also receive careful consideration. A 
 
   \subsection{Extended Memory}
 
-The 20 bit address bus of Real mode limits the addressable RAM to 1MB. Machines of 1992 came equipped with more, typically 2MiB and even sometimes 4MiB for the most fortunate customers. This memory located beyond the addressable space is called "Extended Memory". The workaround at the time to access these resources was to install specialized drivers\footnote{See CONFIG.SYS in the appendice.}.\\
+The 20 bit address bus of Real mode limits the addressable RAM to 1MB. Machines of 1992 came equipped with more, typically 2MiB and even sometimes 4MiB for the most fortunate customers. This memory located beyond the addressable space is called "Extended Memory". The workaround at the time to access these resources was to install specialized drivers\footnote{See CONFIG.SYS in the Appendice.}.\\
 \par
 Unfortunately extended memory access was not standardized. Users could load either of the drivers provided with DOS:
 \begin{itemize}
@@ -465,8 +465,7 @@ Unfortunately extended memory access was not standardized. Users could load eith
 
 Or they could have no idea they had to install a driver, load nothing at startup, and not use any of the RAM beyond 1MB. This use case was a big issue. Many customers could not understand why despite installing (extremely expensive\footnote{In 1992, 4MiB of RAM cost \$149 which adjusted to inflation would be \$256 in 2016.}) megabytes of RAM on their machine, the game they just purchased would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (see Appendix "\nameref{chap:barrier640}") along with the game to make it clear it was not their fault.\\
 \par
-How are these drivers working? After all, how does one access RAM outside of the addressable space? On the 386 the driver switched the CPU into protected mode, performed whatever was asked, and switched the CPU back to Real mode. On the 286, there was no way to switch back to Real mode\footnote{The first hack to do the impossible put a magical value into a special memory location to prevent the BIOS from reinitializing the computer after a reset, and then caused a reset through the i8042 keyboard controller which would externally reset the CPU. Other techniques involved generating a triple fault (faulting in a fault handler, usually by invalidating the IDTR and causing an interrupt). Using the triple fault was much faster. Going through the keyboard controller took almost a millisecond but the triple fault performed in a hundred microseconds} but there was an undocumented \cw{LOADALL} instruction which allowed manipulate of an hidden register offsetting all RAM access.
-\footnote{"HIMEM.SYS, unreal mode, and LOADALL": http://www.os2museum.com/wp/himem-sys-unreal-mode-and-loadall/}
+How are these drivers working? After all, how does one access RAM outside of the addressable space? On the 386 the driver switched the CPU into protected mode, performed whatever was asked, and switched the CPU back to Real mode. On the 286, there was originally no way to switch back to Real mode\footnote{The first hack to perform the impossible did it with a special value written to a special memory location preventing the BIOS from reinitializing the computer after a reset, and then caused a reset through the i8042 keyboard controller. Other techniques involved generating a triple fault (faulting in a fault handler by invalidating the IDTR and causing an interrupt). Using the triple fault was faster since the keyboard controller took almost a millisecond but the triple fault performed in a hundred microseconds}. Eventually a method surfaced using the undocumented \cw{LOADALL} instruction controlling the hidden registers offsetting all RAM access\footnote{"HIMEM.SYS, unreal mode, and LOADALL" - http://www.os2museum.com/wp/himem-sys-unreal-mode-and-loadall/}.
 
 \begin{figure}[H]
 \centering
@@ -566,7 +565,7 @@ In the photo on the right : John Carmack in 1996 working on an InterView 28hd96 
 \end{minipage}
 
 \par
-The main issue in this system is that CRTs are analogic systems while computers are digital. An interface is needed between the two and it came as a series of chipsets called "Adapters". 
+The main issue in this system is that CRTs are analog systems while computers are digital. An interface is needed between the two and it came as a series of chipsets called "Adapters". 
 
   \subsection{History of Video Adapters}
 
@@ -663,7 +662,7 @@ Four memory banks grant enough throughput to reach high resolutions at 70Hz. The
  \end{fancyquotes}
  \\
 \par
-The first problem with this design is that it is unintuitive. There is no linear framebuffer and figuring out which byte correspondes to which pixel on screen is difficult.\\
+The first problem with this design is that it is unintuitive. There is no linear framebuffer and figuring out which byte corresponds to which pixel on screen is difficult.\\
 \par
  This type of architecture is called "planar" - to write four pixels next to each other on a line on the screen, you have to write one byte in each bank. Each of these banks are mapped at the same UMA memory address. This layout is better explained with a drawing.\\
 \par

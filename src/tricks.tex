@@ -98,11 +98,11 @@ Various arrangements of taps will produce different series. In the case of this 
 \end{minipage}
 \par
 \par
-Wolfenstein 3D  uses a 17 bits Maximum-Length LFSR with two taps to generate a serie of pseudo-random values. Of these 17 bits, on each iteration, 9 are used to generate a Y coordinate and 8 for a X coordinate. The corresponding pixel on screen is turned red/blue.\\
+Wolfenstein 3D  uses a 17 bits Maximum-Length LFSR with two taps to generate a series of pseudo-random values. Of these 17 bits, on each iteration, 9 are used to generate a Y coordinate and 8 for a X coordinate. The corresponding pixel on screen is turned red/blue.\\
 \par
 \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/fibonacci.pdf} \end{figure}
 \par
-The Fibonacci representation helps to understand the general idea. But it is not how a LFSR is usually implemented in software. The reason is that it scales linearely with the number of taps. With four taps, you need three sequencial XOR operations:
+The Fibonacci representation helps to understand the general idea. But it is not how a LFSR is usually implemented in software. The reason is that it scales linearly with the number of taps. With four taps, you need three sequential XOR operations:
 \par
 \begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/fibonacci_hard.pdf} \end{figure}
 \par
@@ -170,7 +170,7 @@ The random number generator saves the last index in \cw{rndindex}. Upon request 
 \lstinputlisting[ language={[x86masm]Assembler}]{code/US_RndT.asm}
 \end{minipage}
 
-This pseudo random series of 256 values could have been generated with an 8 bits Maximun length LFSR (8,6,5,4). My assumption is that LFSR literature was hard to find at the time and finding the correct tap for a maximum length register of 16 bits was not worth the effort.\\
+This pseudo random series of 256 values could have been generated with an 8 bits Maximum length LFSR (8,6,5,4). My assumption is that LFSR literature was hard to find at the time and finding the correct tap for a maximum length register of 16 bits was not worth the effort.\\
 
 
 

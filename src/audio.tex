@@ -15,7 +15,7 @@ The idea is to configure the hardware to trigger a hardware interrupt at a regul
  Wolfenstein 3D uses the latter approach and keeps tasks in its ISR very small and short. To this effect everything in the audio and heartbeat system is written in assembly and avoids "heavy" processing.
 
 \subsection{IRQs and ISRs}
-The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. When a counter hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU}. One counter is connected to the buzzer and generates sounds, a second counter is connected to the RAM to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is prefered in caching system.}, and the third counter is connected to the PIC.\\
+The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. When a counter hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU}. One counter is connected to the buzzer and generates sounds, a second counter is connected to the RAM to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in caching system.}, and the third counter is connected to the PIC.\\
 \par
 \begin{figure}[H]
 \centering
@@ -161,7 +161,7 @@ The engine does not know about any of the details of the OPL2. There is zero abs
 \par
 The \cw{reg} byte is sent to port \cw{0x388}, the \cw{data} byte is sent to \cw{0x389}, and the \cw{delay} 2 bytes are used to tell how much time to wait before sending the next register/data to the card. The stream is hard-coded at 700Hz and the delay is expressed in this unit: a value of 700 means to wait 1000ms before sending another command. Whenever there is music playing the engine runs at no less than 700Hz (it can run at 7000Hz if it is also playing digitized sound but that results in no-ops for music playback.) A value of zero means the next message should be sent immediately.\\
 \par
-Overall, music is simple to execute because almost everything has been pre-processed via IMF. Everytime the audio system wakes up, it checks if music packets should be sent, sends them, and moves on to the sound effects.
+Overall, music is simple to execute because almost everything has been pre-processed via IMF. Every time the audio system wakes up, it checks if music packets should be sent, sends them, and moves on to the sound effects.
 
 
 
@@ -268,7 +268,7 @@ The hardware chapter described a problem for sound effects: the default PC speak
  \end{fancyquotes}
 \par
   
-The idea is to approximate a signal using square waves. It is simpler to understand when the signal is a simple sinusoide:
+The idea is to approximate a signal using square waves. It is simpler to understand when the signal is a simple sinusoid:
 \par
 \begin{figure}[H]
 \centering
