@@ -107,15 +107,15 @@ On the game controller side the pin carrying the current are connected to monost
 \includegraphics[width=\textwidth]{imgs/drawings/joystick_gamecontroller.pdf}
 \end{figure}
 \par
-On the CPU side the idea is to empty the capacitor and measure how long it took to re-charge. It is done in three steps:
+On the CPU side retrieving the stick position is a three steps process:
 
-\begin{itemize}
- \item Write \circled{W} any value to I/O port \cw{201h}. This will discharge the vibrators.
+\begin{enumerate}
+ \item Write \circled{W} any value to I/O port \cw{201h}. This will discharge all capacitors.
  \item Initialize a counter to zero and read \circled{R} from \cw{201h}. At first all bit 0-4 will be equal to zero.
- \item Loop forever (or when counter == 0xFFFF as safety measure). Save at which loop count a bit flipped to 1.
-\end{itemize}
+ \item Loop forever (or until counter == 0xFFFF as safety measure) increase counter on each iteration. Save the counter value for each bit when they are flipped to 1.
+\end{enumerate}
 \par
-On a 286 CPU the values for each axis can range from 7 to 900 depending on the stick/capacitor position. On a 386 CPU which will run loops faster these value would be smaller. Hence these absolute value can only be translated to a stick position if they are compared to the min and max value.\\
+On a 286 CPU the counter value can range from 7 to 900 depending on the stick/capacitor position. On a 386 CPU which will run loops faster these value would be smaller. Hence these absolute value measured can only be translated to a stick position if they are compared to a min and a max.\\
 \par Which explains why joysticks have to be calibrated. For the flight simulators of the 90s where accurate position was needed, the player would be asked to put the joystick in upper-left position (to set the potentiometers on both axis to minimum resistance) and press a button to read the "loop count". Repeat the operation at lower right position and you know what are the min and max "loop count" for this joystick/CPU combination.\\
 \par
 \begin{figure}[H]
