@@ -37,23 +37,31 @@
 
 
     \chapter*{Acknowledgment}
+      \addcontentsline{toc}{chapter}{Acknowledgment}
       \subfile{acknowledgment}
+
+
+    \chapter*{Foreword}
+      \addcontentsline{toc}{chapter}{Foreword}
+      \subfile{foreword}
 
     \cleardoublepage % Make toc appear on right side.
 
     \setcounter{secnumdepth}{3} % toc is 2 level deep.
     
+    
+    
+    
     \tableofcontents
     
     \pagebreak
 
-    \chapter*{Foreword}
-      \subfile{foreword}
 
     \chapter*{Prologue}
+      \addcontentsline{toc}{chapter}{Prologue}
       \subfile{preface}
 
-    \addcontentsline{toc}{subsection}{Preface}
+
     \chapter{Introduction}
       \subfile{intro}
     \chapter{Hardware}
