@@ -1,6 +1,7 @@
 
 \documentclass[book.tex]{subfiles}
 \begin{document}
+
 In 1990 a small company based in Shreveport, Louisiana was doing well on the shareware market. As a video game subscription service, Softdisk produced and mailed new games every month to its members. Business was good but some of its employees had other ambitions. They thought they had the skills to make it big and they wanted to prove it.\\
 \par
 They had created a new way to program side scrolling. They called the technology "adaptive tile refresh" and it enabled hardware scrolling on a PC capable of rivaling a NES. In early 1990 they worked non-stop over a weekend to reimplement Super Mario 3 on a PC and demonstrate their skills to Nintendo. The team was successful in building a clone of Mario but unfortunately, "Ideas from the Deep" as they called themselves failed to convince Nintendo to give them a contract. As impressed as they were, the Japanese firm wanted the Mario series to remain exclusive to Nintendo consoles.\\
@@ -68,7 +69,8 @@ In November 1991, the team was free from any obligations to SoftDisk. Their next
    Jason Blochowiak\protect\footnotemark & ?? &   Programming\\
      \toprule
 \end{tabularx}
-\caption{id Software hires/contractors.}\label{fig:Id Software hires}
+%\caption{id Software hires/contractors.}
+\label{fig:Id Software hires}
 \end{figure}
 \addtocounter{footnote}{-2}
 \footnotetext{Jay and Kevin were recruited on April 1st, 1992 but were still given credits for participating in the game development.}
@@ -90,10 +92,12 @@ Jason was part of id at the start, but we parted ways during Wolf development.
   
       \fullimage{idTeam_team_pants.png}
     
-\caption{The team as it appears in Spear of Destiny, in a secret screen created by John Romero.}
+
 \label{fig:id_team_1993}
 \end{figure}
- 
+\par
+The team as it appears in Spear of Destiny, in an Easter Egg created by John Romero. To view this screen, the player had to on in the Change View menu, hold down I and D on the keyboard, and press Escape.
+
 \begin{figure}[H]
 \centering
   
@@ -103,22 +107,31 @@ Jason was part of id at the start, but we parted ways during Wolf development.
 \label{fig:id_team_1993}
 \end{figure}
 
+\section{Organization}
 
-Development took seven months (November 1991 to May 1992) during which id Software was located in Madison, WI. They relocated in August 1991 from Shreveport following Tom and Jason's rose-tinted school memories of the area.
+In September 1991, following Tom and Jason's rose-tinted school memories of the area, the team had relocated from Shreveport, LA to Madison, WI. They established the studio office in a two stories brick building at 2622 in The Pines complex on High Ridge Trail. They all lived in walking distance of the office except for John Carmack who, since he did not care, inherited of the second floor of the building.\\
+\par
+The development of Wolfenstein 3D started in November 1991. As temperature fell and snow dumped from the sky, the team kept itself increasingly busy and barely left the office. Development lasted for seven months and Wolfenstein 3D was released in May 1992.
+
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/map/usa-id-software.eps}
  \end{figure}
 
 
+\par
+
+During these seven months, the organization of the team was pretty much standard for a game studio of this era: four guys crammed in one room which dictated a fast pace and strong sense of camaraderie (and a lot of noise disturbance given John Romero and Tom Hall's type of interaction.)\\
+\par On the map (next page) you can see on the upper floor the SNES where countless games of F-Zero were played and the Dungeons \& Dragons area extensively mentioned in "Masters of Doom". To have a team member (John Carmack) with his apartment directly above the studio was not out of the ordinary\footnote{ "90 Hours A Week And Loving It!" by Andy Hertzfeld.}.\\
+\par
+The team's space was setup as follows.
 
 
 
 
 
 
-\section{Organization}
-The organization of the team was pretty much standard for a game studio of this era: four guys crammed in one room which dictated a fast pace and strong sense of camaraderie (and a lot of noise disturbance given John Romero and Tom Hall's type of interaction.) On the map (next page) you can see on the upper floor the SNES where countless games of F-Zero were played and the Dungeons \& Dragons area extensively mentioned in "Masters of Doom". To have a team member (John Carmack) with his apartment directly above the studio was not out of the ordinary\footnote{ "90 Hours A Week And Loving It!" by Andy Hertzfeld.}. The team's space was setup as follows.
+
 \par
 \begin{figure}[H]
   \centering
@@ -187,7 +200,7 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA modes that \cw{Mode 13h} and \cw{Mode 4h} (see figure on page \pageref{fig:vga_modes})  don't have the same starting RAM address. This allows for a trick where two graphics cards are plugged into the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally. This setup allows a developer to debug the game engine with breakpoints.
+You may have noticed in the listing of VGA modes that mode \cw{13h} and mode \cw{4h} (see figure on page \pageref{fig:vga_modes})  don't have the same starting RAM address. This allows for a trick where two graphics cards are plugged into the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally. This setup allows a developer to debug the game engine with breakpoints.
 \begin{figure}[H]
   \centering
       \scaledimage{1}{wolf_screen1.png}
@@ -211,7 +224,7 @@ Above, the Monitor 1 in monochrome showing Borland Turbo Debugger 386. Next, the
 
 \section{Graphic Assets}
 
-All graphic assets were produced by Adrian Carmack\footnote{Kevin Cloud did a few textures and also worked on the design and layout of the Wolfenstein 3D hint book.}. All of the work was done with Deluxe Paint (from Electronic Arts) and saved in LBM files (Deluxe Paint format.) 
+All graphic assets were produced by Adrian Carmack\footnote{Kevin Cloud did a few textures and also worked on the design and layout of the Wolfenstein 3D hint book.}. All of the work was done with Deluxe Paint (from Electronic Arts) and saved in ILBM\footnote{InterLeaved BitMap.} files (Deluxe Paint proprietary format.) 
 
 \begin{figure}[H]
   \centering
@@ -233,14 +246,14 @@ The palette coordinates are horizontally from \cw{0x00} to \cw{0x0F} and vertica
 All assets were hand drawn with a mouse. Since the VGA stretched the framebuffer when displaying it on the screen, Adrian had to be careful to draw at the same resolution as the game would run (320x200).\\
 \par
 \begin{fancyquotes}
-Adrian and Kevin both worked directly in Deluxe Paint, we didn’t have any scanning tools at the time. We didn't have any scanning tools at the time.\\
+Adrian and Kevin both worked directly in Deluxe Paint, we didn't have any scanning tools at the time.\\
 \\
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
 The graphic assets are divided in two categories:
 \begin{itemize}
-\item 2D Menu items shipping with the game in \cw{VGAXXXX} archive
+\item 2D Menu items shipping with the game in \cw{VGADATA}, \cw{VGAHEAD} and, \cw{VGADICT} archive
 \item 3D Action phase items (walls and sprites) shipping in the \cw{VSWAP} archive
 \end{itemize}
 
@@ -283,7 +296,7 @@ After the graphic assets were generated, a tool (IGRAB-ED) packed all ILBMs toge
 
 
 \begin{minipage}{0.7\textwidth}
-"The Official Hint Manual for Wolfenstein 3D" published in 1992 contains many drawings from Tom Hall and shows many behind the scene sketches made by Tom Hall and pixelarted by the graphic team.\\
+"The Official Hint Manual for Wolfenstein 3D"\protect\footnotemark published in 1992 contains many drawings from Tom Hall and shows many behind the scene sketches made by Tom Hall and pixelarted by the graphic team.\\
 \par
  \begin{fancyquotes}
 When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a sketch for Adrian Carmack. Below are some of Tom's early designs for the title screen. The third sketch was chosen.\\
@@ -299,12 +312,14 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
    \begin{figure}[H]
 \centering
  \fullimage{sprites/tom_hall_sketch_intro_screen_genesis.png}
+ \par
+ \scaledimage{.8}{sprites/woldf3d.png}
  \end{figure}
  \par
-   \begin{figure}[H]
-\centering
- \scaledimage{.7}{sprites/woldf3d.png}
-\end{figure} 
+   
+
+ 
+
 
 \footnotetext{The manual was entirely designed on a NeXT ColorStation. It was the only usage of NeXT for Wolfenstein 3D (id purchased it in December 1991).}
 
@@ -395,7 +410,7 @@ After talking with Romero and Tom, Scott learned that it was taking the group on
 \par
 Everybody worked a little bit on the map but it was mostly the creation of John Romero and Tom Hall.\\
 \par
- \textbf{\underline{Trivia :}} The source code of TED5 was released several years later. Among the source code made of \cw{.C} and \cw{.H} was a mysterious \codeword{\_TOM.PIC}. It turned out to be an adult caricature of Tom Hall made by Adrian Carmack. The explanation was provided later by John Romero in 2002:\\
+ \textbf{\underline{Trivia :}} The source code of TED5 was released several years later. Among the source code made of \cw{.C} and \cw{.H} was a mysterious \codeword{\_TOM.PIC}\footnote{Intentionally not reproduced here.}. It turned out to be an adult caricature of Tom Hall made by Adrian Carmack. The explanation was provided later by John Romero in 2002:\\
 \par
  \begin{fancyquotes}
    "Hahahaha! Wow, I forgot all about that picture. I can't believe it's 
@@ -404,7 +419,7 @@ in the TED5 source files! It's basically a pic that Adrian drew of Tom
 \par 
 It's because Tom and Adrian used to share a worktable together and Tom 
 would always bump the table while Adrian was drawing graphics with the 
-mouse and Tom would say, "Sorry!" That picture never appears in Ted5 
+mouse and Tom would say, "Sorry!" That picture never appears in TED5 
 anywhere.\\
    \\
 \textbf{John Romero - Programmer}
@@ -439,7 +454,7 @@ As mentioned in the hardware section, audio hardware was highly fragmented. id d
 \end{enumerate}
 
 \par
-All voices were recorded by John Romero and Tom Hall, faking German accents the best they could\footnote{Masters of Doom by David Kushner}.
+All voices were recorded by John Romero and Tom Hall, faking German accents the best they could\footnote{Masters of Doom by David Kushner.}.
 
 
 

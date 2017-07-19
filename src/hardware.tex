@@ -85,9 +85,9 @@ Overall, the pipeline generates a lot of friction since manufacturers had not em
 \par
 
 \subsection{The Intel 80386}
-The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagship P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel}. Two choices in the design of the 386 contributed to its success. First, the designers decided to listen to the programmers feedback and dropped the idea to use a new instruction set. As a result the 386 is fully backward compatible with the 286. Second, they managed to add a 32 bit operating mode which solves many of the memory addressing issues of the 286.\\
+The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagship P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel.}. Two choices in the design of the 386 contributed to its success. First, the designers decided to listen to the programmers feedback and dropped the idea to use a new instruction set. As a result the 386 is fully backward compatible with the 286. Second, they managed to add a 32 bit operating mode which solves many of the memory addressing issues of the 286.\\
 \par
-\textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View. New York: McGraw-Hil} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "software poison".\\
+\textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View.} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "software poison".\\
 \par
 The 80386 relies on three systems and a three stage instruction pipeline.\\
 \par
@@ -168,7 +168,7 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
   
    All that CPU power was not necessarily useful for programming a game. In order to perform the trigonometric computations for 3D effects, the engine has to keep track of the fractional part of each operation. This may not look like an issue since the C programming language has a type (\codeword{float}) precisely for that purpose. But in practice it is a problem, and to understand it we need to understand how \codeword{float} works.\\
 \par
- As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{"What every Computer Scientist should know about Floating-Point".}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is to program a 3D engine. In the C language, \codeword{float}s are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
+ As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{"What every Computer Scientist should know about Floating-Point" by David Goldbert.}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is to program a 3D engine. In the C language, \codeword{float}s are 32 bits container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
   \item 1 bit S for the sign
   \item 8 bits E for the exponent
@@ -288,20 +288,20 @@ This is not a problem when everything is hardwired within an hardware floating p
 \par
 
 
-\textbf{\underline{Trivia :}} People who really wanted an hardware floating point unit could buy one. In the 90s the only people who could possibly want one would have been scientists (as per Intel understanding of the market). They were marketed as "Math CoProcessor". Performance were average and price was outrageous\footnote{\$200 in 1993 equivalent to \$350 in 2016.}. As a result, sales were mediocre.\\
+\textbf{\underline{Trivia :}} People who really wanted an hardware floating point unit could buy one. In the 90s the only people who could possibly want one would have been scientists (as per Intel understanding of the market). The i387 chips were marketed as "Math CoProcessor". Performance were average and price was outrageous\footnote{\$200 in 1993 equivalent to \$350 in 2016.}. As a result, sales were mediocre.\\
 \begin{figure}[H]
 \centering
   
       \fullimage{BOX_IntelBOX387SX20.jpg}
   
-\caption{Intel 1991 ad for a "Math CoProcessor".}
+\caption{Intel 1991 ad for a "Math CoProcessor" i387.}
 \label{fig:fp_internals}
 \end{figure}
 
 
 
 \par
-A possible solution to the lack of a hardware floating point unit would have been to multiply an integer by 100 or 1000 to perform fractional operation and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes a minimum of 6-9 cycles and a divide (\cw{div}) is even worse with 22-25 cycles depending if the operands are RAM or register\footnote{ZSmith.com instructions at http://zsmith.co/intel\_i.html\#imul}.\\ 
+A possible solution to the lack of a hardware floating point unit would have been to multiply an integer by 100 or 1000 to perform fractional operation and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes 12 to 25 cycles and a divide (\cw{div}) is even worse with 27 cycles\footnote{ZSmith.com instructions at http://zsmith.co/intel\_i.html\#imul .}.\\ 
 \par
 As a result, a game engine designer was stuck in an awkward situation with two half solutions to his problem. Integers which were fast but not accurate enough and Floats which were accurate but not fast enough.\\
 \par
@@ -331,7 +331,7 @@ As a result, a game engine designer was stuck in an awkward situation with two h
 \section{RAM}
 The first CPUs in the Intel x86 family were designed in 1976. At a time when RAM was very expensive, the 8080 and 8086 had 16 bit registers with a 20 bit wide address bus capable of addressing 1MiB of RAM. It is difficult to stress how big 1MiB of RAM was in the 70s but as an example the Apple II and the Commodore 64 both shipped with 64KiB which was enough to write and run amazing things. Sixteen bit registers and 20 bit address bus were plenty even though programming was difficult and required combining two registers to build a pointer.\\
 \par
-By 1986, hardware had gotten cheaper and Intel made a departure from the old architecture with its 286 and 386. These new CPUs could be put in what is called "Protected Mode" featuring a 24 bits wide address bus for up to 16 MiB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. The 386 also had 32 bit registers in Protected Mode. To make sure old programs could still run, both processors could be put in "Read Mode" which replicates how the Intel 8080 and 8086 operated: 16 bits registers, 20 bits address bus giving 1MiB addressable RAM with segmented addressing.\\
+By 1986, hardware had gotten cheaper and Intel made a departure from the old architecture with its 286 and 386. These new CPUs could be put in what is called "Protected Mode" featuring a 24 bits wide address bus for up to 16 MiB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. The 386 also had 32 bit registers in Protected Mode. To make sure old programs could still run, both processors could be put in "Real mode" which replicates how the Intel 8080 and 8086 operated: 16 bits registers, 20 bits address bus giving 1MiB addressable RAM with segmented addressing.\\
 \par
 For compatibility reasons all PCs have to start in Real mode. You may assume that programmers of the 90s promptly switched the CPU to Protected Mode to unleash the full potential of the machines and ditch the 20-year-old Real mode. Unfortunately, there was a major obstacle: the operating system MS-DOS by Microsoft Corporation.
   
@@ -342,7 +342,7 @@ For compatibility reasons all PCs have to start in Real mode. You may assume tha
 
 
   \subsection{DOS Limitations}
-  Microsoft Corporation highly valued the applications running on their operating systems. As a business priority, they were adamant to never break anything with a new system\footnote{"Tales of Application Compatibility", Old New Thing by Raymond Chen}.  Since many applications were written during the 80s on machines having only Real-Mode, DOS 5.0 kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the de-facto operating system delivered with every machine sold prevented programmers from using the machine at its full potential. Developers were forced to ignore all the features of a 1992 CPU and instead use it like a very fast Intel 8086 CPU from 1976. They were thus limited to the following characteristics: \\
+  Microsoft Corporation highly valued the applications running on their operating systems. As a business priority, they were adamant to never break anything with a new system\footnote{"Tales of Application Compatibility", Old New Thing by Raymond Chen.}.  Since many applications were written during the 80s on machines having only Real mode, DOS 5.0\footnote{Released in June 1991.} kept running that way and as a result its routines and system calls were incompatible with Protected Mode. This created an awkward situation where the de-facto operating system delivered with every machine sold prevented programmers from using the machine at its full potential. Developers were forced to ignore all the features of a 1992 CPU and instead use it like a very fast Intel 8086 CPU from 1976. They were thus limited to the following characteristics: \\
 \begin{itemize}
 \item ALU
 \item 15 registers:
@@ -411,7 +411,7 @@ There are two kinds of pointers: \cw{near} and \cw{far}. A \cw{near} pointer is 
 That may not sound too bad, but in practice this segmented addressing leads to many issues.
 The least problematic is about the language. Since C was invented on a flat memory machine, it had to be augmented by PCs compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macro are provided, respectively \codeword{FP\_SEG} and \codeword{FP\_OFF}. Of course \cw{libc} is also "different": \cw{malloc} returns a \cw{near} pointer and therefore can only allocate up to 64kB. To get more than 64K, \cw{farmalloc} is needed.\\
 \par
-The larger issue is that two pointers referring to the same address can fail an equality test. In this model, the 1MiB of RAM is divided in 65536 paragraphs by the segment pointer. A paragraph is 16 bytes but an offset can be up to 65536 which results in many overlaps. It is easy to understand with the following examples.\\
+The larger issue is that two pointers referring to the same address can fail an equality test. In this model, the 1MiB of RAM is divided in 65536 paragraphs by the segment pointer. A paragraph is 16 bytes but an offset can be up to 65536 bytes which results in many overlaps. It is easy to understand with the following examples.\\
 \par
 Pointer A defined as:\\
 \par
@@ -455,7 +455,7 @@ With this system, pointer arithmetic must also receive careful consideration. A 
 
   \subsection{Extended Memory}
 
-The 20 bit address bus of Real mode limits the addressable RAM to 1MB. Machines of 1992 came equipped with more, typically 2MiB and even sometimes 4MiB for the most fortunate customers. This memory located beyond the addressable space is called "Extended Memory". The workaround at the time to access these resources was to install specialized drivers\footnote{See CONFIG.SYS in the Appendice.}.\\
+The 20 bit address bus of Real mode limits the addressable RAM to 1MiB. Machines of 1992 came equipped with more, typically 2MiB and even sometimes 4MiB for the most fortunate customers. This memory located beyond the addressable space is called "Extended Memory". The workaround at the time to access these resources was to install specialized drivers\footnote{See CONFIG.SYS in the Appendice.}.\\
 \par
 Unfortunately extended memory access was not standardized. Users could load either of the drivers provided with DOS:
 \begin{itemize}
@@ -465,7 +465,7 @@ Unfortunately extended memory access was not standardized. Users could load eith
 
 Or they could have no idea they had to install a driver, load nothing at startup, and not use any of the RAM beyond 1MB. This use case was a big issue. Many customers could not understand why despite installing (extremely expensive\footnote{In 1992, 4MiB of RAM cost \$149 which adjusted to inflation would be \$256 in 2016.}) megabytes of RAM on their machine, the game they just purchased would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (see Appendix "\nameref{chap:barrier640}") along with the game to make it clear it was not their fault.\\
 \par
-How are these drivers working? After all, how does one access RAM outside of the addressable space? On a 386 the driver switched the CPU into protected mode, performed whatever was asked, and switched the CPU back to Real mode. On a 286, there was originally no way to switch back to Real mode\footnote{The first hack to perform the impossible did it with a special value written to a special memory location preventing the BIOS from reinitializing the computer after a reset, and then caused a reset through the i8042 keyboard controller. Other techniques involved generating a triple fault (faulting in a fault handler by invalidating the IDTR and causing an interrupt). Using the triple fault was faster since the keyboard controller took almost a millisecond but the triple fault performed in a hundred microseconds} but eventually a method surfaced, using the undocumented \cw{LOADALL} instruction to control hidden registers offsetting all RAM access\footnote{"HIMEM.SYS, unreal mode, and LOADALL" - http://www.os2museum.com/wp/himem-sys-unreal-mode-and-loadall/}.
+How are these drivers working? After all, how does one access RAM outside of the addressable space? On a 386 the driver switched the CPU into Protected mode, performed whatever was asked, and switched the CPU back to Real mode. On a 286, there was originally no way to switch back to Real mode\footnote{The first hack to perform the impossible did it with a special value written to a special memory location preventing the BIOS from reinitializing the computer after a reset, and then caused a reset through the i8042 keyboard controller. Other techniques involved generating a triple fault (faulting in a fault handler by invalidating the IDTR and causing an interrupt). Using the triple fault was faster since the keyboard controller took almost a millisecond but the triple fault performed in a hundred microseconds.} but eventually a method surfaced, using the undocumented \cw{LOADALL} instruction to control hidden registers offsetting all RAM access\footnote{"HIMEM.SYS, Unreal mode, and LOADALL" - http://www.os2museum.com/wp/himem-sys-unreal-mode-and-loadall/ .}.
 
 \begin{figure}[H]
 \centering
@@ -480,7 +480,7 @@ How are these drivers working? After all, how does one access RAM outside of the
 
 \subsubsection{EMS API}
 
-The EMS driver opens a window beyond the addressable RAM, as shown on page \pageref{fig:ems_xms_layout}. The idea revolves around memory mapping. The driver allows for manipulating four units of 16KiB called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, a frame can be swapped into the page frame.\\
+The EMS driver opens a window beyond the addressable RAM, as shown on page \pageref{fig:ems_xms_layout}. The idea revolves around memory mapping. The driver allows for manipulating four units of 16KiB called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, a page can be swapped into the page frame.\\
 \par
 
 
@@ -520,7 +520,7 @@ And:\\
 
 
 \par
-\bu{Trivia :} 640KiB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745kB, which obviously doesn't fit in Conventional Memory. The trick is to use a technique of "overlays" pages where only a few overlays are loaded when the game starts. When the CPU is about to reach the end of an overlay, special instructions (inserted by the compiler) load the next overlays from HDD and setup a \cw{jmp} instruction for the CPU to follow.. The technique can be seen as an exercise of graph paging similar to how Gromit feeds rails to the ongoing train he is sitting on in "The Wrong Trousers".
+\bu{Trivia :} 640KiB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745kB, which obviously doesn't fit in Conventional Memory. The trick is to use a technique of "overlays" pages where only a few overlays are loaded when the game starts. When the CPU is about to reach the end of an overlay, special instructions (inserted by the compiler) load the next overlays from HDD and setup a \cw{jmp} instruction for the CPU to follow. The technique can be seen as an exercise of graph paging similar to how Gromit places rails in front of an ongoing miniature train a he is sitting on top of it in "The Wrong Trousers".
 
 
 
@@ -550,9 +550,9 @@ PCs were connected to CRT monitors: big, heavy, small diagonal, cathod-ray based
 \end{figure}
 
 \begin{minipage}{.4\textwidth}
-\textbf{\underline{Trivia :}} How big and heavy could a CRT be? The InterView 28hd96 by Integraph weighed 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).\\
+\textbf{\underline{Trivia :}} How big and heavy could a CRT be? The InterView 28hd96 by Integraph had a 28" diagonal allowing a resolution of 1920x1080 at a time where most monitors displayed 640x480. It weighed 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).\\
 \par
-In the photo on the right : John Carmack in 1996 working on an InterView 28hd96 while programming Quake 2 using Visual Studio C++.\\
+In the photo on the right : John Carmack in 1996 working on an 28hd96 while programming Quake 2 using Visual Studio C++.\\
 \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
@@ -607,14 +607,14 @@ Each iteration added new features and by 1991 the ubiquitous graphic system was 
   \fullimage{hardware/suntra_trident_tvga8800br.png} 
 \end{figure}
 \par
-Above, a VGA card Trident 8800 (8 bits ISA). Courtesy of \cw{vgamuseum.info}. Notice the eight chip of 32 KiB (for a total of 256KiB) on the right of the card where the framebuffers are stored.
+Above, a VGA card Trident 8800 (8 bits ISA). Courtesy of \cw{vgamuseum.info}. Notice the eight chip of 32 KiB (for a total of 256KiB) on the left of the card where the framebuffers are stored.
 \par
 \begin{figure}[H] 
   \centering 
   \fullimage{hardware/diamond_stealth_vram_revb2.png} 
   \caption{A VGA card Diamond Stealth (16 bits ISA). Courtesy of \cw{vgamuseum.info}.}
 \end{figure}
-\bu{Trivia :} There was no GPU market back then. Since all video cards "only" had to be VGA compatible with 256KiB of RAM, most people just bought the cheapest thing available. Note however that some cards had an 8 bits ISA bus connector (like the Trident) and some had an ISA 16 bits connector like the Diamond, making the Diamond transfer data twice as fast.\\
+\bu{Trivia :} There was no GPU market back then. Since all video cards "only" had to be VGA compatible with 256KiB of RAM, many just bought the cheapest thing available. Note however that some cards had an 8 bits ISA bus connector (like the Trident) and some had an ISA 16 bits connector like the Diamond, making the Diamond transfer data twice as fast.\\
 \par
 
 
@@ -627,7 +627,7 @@ VGA can be summarized as three major systems with input, storage, and output sys
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlling how the VGA RAM is accessed (the CPU-VRAM interface)
 \item The framebuffer (the VRAM) made of not one memory bank of 256KiB but four memory banks of 64KB
-\item The CRTC Controller and the DAC\footnote{Digital To Analog Converter} taking care of converting the palette indexed framebuffer to RGB and then to analogic signal (interface VRAM-CRT)
+\item The CRTC Controller and the DAC\footnote{Digital To Analog Converter.} taking care of converting the palette indexed framebuffer to RGB and then to analogic signal (interface VRAM-CRT)
 \end{itemize}
 
 The most surprising part of the architecture is obviously the framebuffer. Why have four small fragmented banks instead of one big linear one?\\
@@ -723,7 +723,7 @@ The BIOS can be called to configure the VGA as follows.
 
 
  \subsection{VGA Programming: Memory mapping}
-To write to the VRAM the 1MiB address space maps 64KiB starting as indicated in the Mode table. In mode 13h for example, the VRAM is mapped from 0xA0000 to 0xAFFFF. The first question that may pop in your mind is "How to access 256KiB of RAM with only 64KiB of address space?" The answer is "bank switching". Write and Read operations are routed based on a mask register indicating which bank should be read or written to.\\
+To write to the VRAM, the RAM's 1MiB address space maps 64KiB starting as indicated in the Mode table. In mode 13h for example, the VRAM is mapped from 0xA0000 to 0xAFFFF. The first question that may pop in your mind is "How to access 256KiB of RAM with only 64KiB of address space?" The answer is "bank switching". Write and Read operations are routed based on a mask register indicating which bank should be read or written to.\\
 \par
  \begin{figure}[H]
 \centering
@@ -804,7 +804,7 @@ The side effect of this convenience mechanism is that 75\% of the RAM is wasted 
   Mode 13h looks a bit better than 12h but is in fact also terrible for games or even static images:\\
   \begin{itemize}
 \item With Chain-4 all the RAM address space is used and there is no way to have a double buffer.
-\item Since the resolution is 320x200, the aspect ratio (1.6) does not fit the monitor (which is 1.333). As a result the framebuffer stored in the VRAM is stretched when transfered to the CRT. It may seem like a small distortion but can be quite problematic. An example with a circle in the framebuffer displaying as an ellipse on the screen speaks for itself.
+\item Since the resolution is 320x200, the aspect ratio (1.6) does not match the monitor (which is 1.333). As a result the framebuffer stored in the VRAM is stretched when transfered to the CRT. It may seem like a small distortion but can be quite problematic. An example with a circle in the framebuffer displaying as an ellipse on the screen speaks for itself.
 \end{itemize}
 
 \begin{figure}[H]
@@ -839,7 +839,7 @@ In this example the CPU has finished writing the framebuffer (on the left) and t
 \includegraphics[width=\textwidth]{imgs/drawings/doublebuffer_after.eps}
 \end{figure}
 \par
-Bu if the CPU is fast enough (faster than 70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here. The next frame was drawn with the circle moved to the right. The electron beam did not know that and kept on scanning the framebuffer. The result on screen is now a composite of two frames. It looks like two frames were torn and tapped back together. Hence the name "tearing".\\
+But if the CPU is fast enough (faster than 70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here. The next frame was drawn with the circle moved to the right. The electron beam did not know that and kept on scanning the framebuffer. The result on screen is now a composite of two frames. It looks like two frames were torn and tapped back together. Hence the name "tearing".\\
 \par
 With two buffers (a.k.a double buffering) the CPU can start writing in the second framebuffer without messing with the framebuffer being scanned to the screen\footnote{Now the CPU speed is capped by the CRT refresh rate. Triple buffering can solve this at the price of frame latency.}. No more tearing!
 
@@ -903,17 +903,17 @@ Although adoption was growing (Creative would go on to sell one million SoundBla
   \begin{figure}[H] 
     \centering 
     \scaledimage{.8}{hardware/adlib.png} 
-    \caption{An Adlib sound card. Notice the YM3812 chip and the 8 bits ISA connector.}
+    \caption{An Adlib sound card. Notice the big YM3812 chip and the 8 bits ISA connector.}
   \end{figure}
    
 \par
-\bu{Trivia :} Canadian companies, and especially those from Quebec, were preponderant on the PC market in the early 90s due to their technological prowess. Ad Lib manufactured Sound Card, Matrox made a killing with its Millenium Graphic Card, and Watcom sold the best DOS C compiler\footnote{Watcom compiler was so good id would use it to compile Doom.}. ATI\footnote{History would repeat itself in the late 90s in the field of Graphic Cards: Nvidia vs ATI} would later emerge as a major GPU innovator in the 2000s.\\
+\bu{Trivia :} Canadian companies, and especially those from Quebec, were preponderant on the PC market in the early 90s due to their technological prowess. Ad Lib manufactured Sound Card, Matrox made a killing with its Millenium Graphic Card, and Watcom sold the best DOS C compiler\footnote{Watcom compiler was so good id would use it to compile Doom.}. ATI\footnote{History would repeat itself in the late 90s in the field of Graphic Cards: Nvidia vs ATI.} would later emerge as a major GPU innovator in the 2000s.\\
   
   
 
 
   \subsection{Sound Blaster}
-  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative. It was a smart product which was clearly targeting AdLib's dominant position. Not only was it equipped with the same OPL2 chip, providing 100\% compatibility with AdLib music playback, but it was also technologically superior with a DSP\footnote{An Intel MCS-51 "Digital Sound Processor", not "Digital Signal Processor"}  allowing PCM playback (digitized sounds) at 8 bits per sample and up to 22.05Hz sampling rate. The card also came with a DA-15 port allowing joystick connection. Most importantly, the SoundBlaster was \$90 cheaper than the AdLib.\\ 
+  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative. It was a smart product which was clearly targeting AdLib's dominant position. Not only was it equipped with the same OPL2 chip, providing 100\% compatibility with AdLib music playback, but it was also technologically superior with a DSP\footnote{An Intel MCS-51 "Digital Sound Processor", not "Digital Signal Processor".}  allowing PCM playback (digitized sounds) at 8 bits per sample and up to 22.05Hz sampling rate. The card also came with a DA-15 port allowing joystick connection. Most importantly, the SoundBlaster was \$90 cheaper than the AdLib.\\ 
 \par
 
 \begin{figure}[H] 
@@ -1011,12 +1011,12 @@ Finally, a SoundBlaster sound card connected via the ISA bus provided a new port
 Although developers had no control over them, it is still worth mentioning how these components were connected to each other.\\ 
 \par
 
-The ISA\footnote{Industry Standard Architecture} bus connects the CPU to all devices, including RAM. It was already 10 years old in 1991 but still used universally in PCs. The data path to the RAM is either 16 bits wide for 286 and 386SX or 32 bits on 386DX based machines. It runs at the same frequency as the CPU.\\
+The ISA\footnote{Industry Standard Architecture.} bus connects the CPU to all devices, including RAM. It was already 10 years old in 1991 but still used universally in PCs. The data path to the RAM is either 16 bits wide for 286 and 386SX or 32 bits on 386DX based machines. It runs at the same frequency as the CPU.\\
 \par
 The rest of the bus connecting to everything that is not the RAM can be of two kinds:
 \begin{itemize}
 \item 8-bit wide at 4.77 MHz  for 19.1 Mbit/s
-\item 16-bit wide at 8.33MHz for 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates}.
+\item 16-bit wide at 8.33MHz for 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates .}.
 \end{itemize}
 Of course it is also backward compatible and an 8-bit ISA card can be plugged into a 16-bit ISA bus.\\
 \par
