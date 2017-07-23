@@ -56,7 +56,7 @@ This is a pretty standard design for an engine from the early 90s. However, it h
  \caption{The second frame rendered faster during the replay. No inputs are available for the player. Replay is now out of sync.}
  \end{figure}
 \par
-To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulates events at fixed times. This hack resulted in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX.)\\
+To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulates events at fixed interval (\cw{DEMOTICK} = 4)\footnote{70/4 = 17.5, the machine used to record the demo ran at 17 fps. Probably a high end 386.}. This hack resulted in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX.)\\
 \par
 In 1993, the Doom engine would solve this issue by simulating the world at fixed intervals.\\
 \par
@@ -196,7 +196,13 @@ The longer the distance the ray traveled, the shorter the column is drawn on scr
 
 
 \subsection{3D setup}
-Before starting to draw frames, the 3D renderer sets up the VRAM with static elements. The 3D view is not fullscreen but contained in a HUD\footnote{Heads-Up Display}.
+Before starting to draw frames, the 3D renderer sets up the VRAM with static elements forming the HUD\footnote{Heads-Up Display.}: The green background, the blue status bar and all labels "LEVEL", "SCORE", "LIVES", "HEALTH", and "AMMO".\\
+\par
+ \begin{fancyquotes}
+   Wolfenstein was the last Id game that still had the concept of score and lives.  We were still in a quarter-eating-arcade-game design mode. With Doom, you finally got to just keep playing as long as you wanted, which was a bit radical at the time!
+ \bigskip \\
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
 \begin{figure}[H]
   \centering
  \fullimage{hud_empty.png}
@@ -204,17 +210,17 @@ Before starting to draw frames, the 3D renderer sets up the VRAM with static ele
 This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine draws the 3D view in the reserved white canvas in the center. Small portions at the bottom of the HUD are updated: Level, Score, Lives, Status, Health, Ammo, and Current Weapon receive special treatment via another VGA trick in order to speed up rendition.\\
 \par
 
-The hardware chapter described Mode 12h, which despite being unfit for games still has an interesting characteristic. Mode 12h is a 16 color mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operations are one byte wide, it is not hard to imagine the difficulty in plotting a single pixel without changing the others stored in the same byte. One would have to do four read, four xor, and four writes. Since the designers of the VGA were not complete sadists, they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
+The hardware chapter described Mode \cw{12h}, which despite being unfit for games still has an interesting characteristic. Mode \cw{12h} is a 16 color mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operations are one byte wide, it is not hard to imagine the difficulty in plotting a single pixel without changing the others stored in the same byte. One would have to do four read, four xor, and four writes. Since the designers of the VGA were not complete sadists, they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
 \par
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/latches.pdf}
  \end{figure}
-With this architecture, each time the VRAM is read, the latch from the corresponding bank is loaded with the read value. Each time a value is written to the VRAM, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmers to plot a pixel easily with one read, one ALU setup, and one write instead of four reads, 4 xors and 4 writes.\\
+With this architecture, each time the VRAM is read \circled{R}, the latch from the corresponding bank is loaded with the read value. Each time a value is written to the VRAM \circled{W}, it can be composited by the ALU using the latched value and the written value. This design allowed mode 12h programmers to plot a pixel easily with one read, one ALU setup, and one write instead of four reads, 4 xors, and 4 writes.\\
 \par
-Mode Y does not need latches to operate since values are stored in bytes, and banks can be updated individually thanks to the mask. However, tinkerers\footnote{Michael Abrash Graphic Programming Black Book: Chapter 48 -- Mode X Marks the Latch} found that these latches are still active in  Mode-Y. By getting a little creative, the circuitry can be re-purposed. The ALU in front of each bank can be setup to use only the latch for writing. With such a setup, upon doing one read, four latches are populated at once and four bytes in the bank are written with only one write to the RAM. This system allows transfer from VRAM to VRAM 4 bytes at a time.\\
+Mode Y does not need latches to operate since values are stored in bytes, and banks can be updated individually thanks to the mask. However, tinkerers\footnote{Michael Abrash Graphic Programming Black Book: Chapter 48 -- Mode X Marks the Latch.} found that these latches are still active in  Mode-Y. By getting a little creative, the circuitry can be re-purposed. The ALU in front of each bank can be setup to use only the latch for writing. With such a setup, upon doing one read, four latches are populated at once and four bytes in the bank are written with only one write to the RAM. This system allows transfer from VRAM to VRAM 4 bytes at a time.\\
 \par
-To take full advantage of this optimization, the 3D renderer uploads images to the VRAM above the fourth page. In total, the 43 sprites used to update the HUD are loaded in the asset page when the engine starts up.\\
+To take full advantage of this optimization, the 3D renderer uploads images to the VRAM above the third page. In total, the 43 sprites used to update the HUD are loaded in the asset page when the engine starts up.\\
 
 \begin{minipage}{.245\textwidth}
      \fullimage{latched/91.png}
@@ -382,7 +388,7 @@ To take full advantage of this optimization, the 3D renderer uploads images to t
      \fullimage{latched/134.png}
   \end{minipage}\
 
-\bu{Trick :} Images are stored woven. All bytes for bank 0, then all bytes for bank 1, and so on. This clever way to store data allows a bank to be loaded very fast with one single \cw{memcpy} (four \cw{memcpy} per image.)\\
+\bu{Trick :} Images are stored woven. All bytes for bank 0, then all bytes for bank 1, and so on. This clever way to store data allows a bank to be loaded very fast with one \cw{memcpy} per bank (four \cw{memcpy} per image.)\\
 \par
 All these assets account for 48*24*4 (weapons sprites) + 14*8*16 (numerals and keys sprites) + 24*24*32 (faces sprites) + 224 * 48 (paused + psyched) = 34816 bytes. There are therefore 27648 unused bytes in the fourth VGA page.\\
 \par
@@ -398,13 +404,9 @@ While it is faster to copy four pixels in one read and one write, this trick doe
 \lstinputlisting[language=C]{code/StatusDrawPic.c}
 \end{minipage}
 \par
-This optimization still brings a 30\% overall speed increase.
+This optimization still brings a 30\% overall speed increase.\\
 \par
- \begin{fancyquotes}
-   Wolfenstein was the last Id game that still had the concept of score and lives.  We were still in a quarter-eating-arcade-game design mode. With Doom, you finally got to just keep playing as long as you wanted, which was a bit radical at the time!
- \bigskip \\
-\textbf{John Carmack - Programmer}
- \end{fancyquotes}
+
 
 
 
@@ -594,19 +596,19 @@ In the source code, all fixed point variables are 32 bits wide and use a special
  \lstinputlisting[language=C]{code/fixed.c}
  \end{minipage}
 \par
-But not all \cw{fixed} are the same. Some are \cw{16:16}, some are \cw{24:8}. As a result some operations can be implemented differently. The multiplication for example can be either as follows.\\
-\par
-\begin{minipage}{\textwidth}
- \lstinputlisting[language=C]{code/fixed_mul.c}
- \end{minipage}
-\par
-Or it can be more complex due to a type of tweaked \cw{fixed} used for raycasting, where the leftmost bit stores the sign via two's complement representation.\\
+Not all \cw{fixed} are the same. Some are \cw{16:16}, some are \cw{24:8} and operations such as multiplication can be implemented differently. It can be fairly complicated for tweaked \cw{fixed} where the leftmost bit stores the sign..\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords={asm,fixed}]{code/FixedByFrac.c}
  \end{minipage}
 \par
+And much easier when the engines knows two \cw{fixed} are the same sign:\\
 
+\par
+\begin{minipage}{\textwidth}
+ \lstinputlisting[language=C]{code/fixed_mul.c}
+ \end{minipage}
+\par
 
  \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game consoles manufactured in the 90s and later did not feature floating point units as a design choice to reduce production cost and maximize CPU pipeline throughout. Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples.
  
@@ -680,7 +682,7 @@ In a world with some constraints the problem becomes much simpler. If a map is m
  \caption{Raycasting with a grid.}
 \end{figure}
 \par
-These constraints enable a variant of the DDA algorithm\footnote{Digital differential analyzer} which is a fast and accurate way to detect where a ray hits a wall on the map.
+These constraints enable a variant of the DDA algorithm\footnote{Digital differential analyzer.} which is a fast and accurate way to detect where a ray hits a wall on the map.
 \par
 \begin{fancyquotes}
 \par
@@ -765,7 +767,7 @@ With maps being quick and easy to draw, a contest was planned. Players who found
 Behind a forest of push walls (white squares) and angry bosses (blue circles), the player finally encounters the enigmatic sign (the red triangle.)
 
 \begin{minipage}{.5\textwidth}
-However, as players reverse engineered the map format and cheat sites emerged, the sign was replaced with a skeleton with all games shipped during 1992.\\
+However, as players reverse engineered the map format and cheat sites emerged, the context was called of and the sign replaced with a skeleton in all games shipped in 1992.\\
 \par
 In the previous map, notice there are no push walls leading to the red triangle; the room is sealed.\\
  \end{minipage}
@@ -1178,7 +1180,7 @@ As the photoshoped pink line shows, each column of pixels for a wall is centered
 \end{minipage}
 
 \par
-This would involves a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} always cause a pipeline flush}, a fixed point accumulator, and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible function allows \cw{scaleTextureToHeight} to accept any height from \cw{0} to \cw{INT\_MAX}.\\
+This would involves a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} always cause a pipeline flush.}, a fixed point accumulator, and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible function allows \cw{scaleTextureToHeight} to accept any height from \cw{0} to \cw{INT\_MAX}.\\
 \par
  But there is a faster way to do this which involves the usual RAM vs CPU tradeoff. In this case we can invest a little bit of RAM to gain a lot of CPU time.\\
  \par 
@@ -1188,7 +1190,7 @@ This would involves a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} 
 \lstinputlisting[language=C]{code/hardcoded_draw.c}
 \end{minipage}
 
- The engine generates machine code at runtime; it happens in \cw{BuildCompScale}.\\
+ The engine generates machine code at runtime when it starts; it happens in \cw{BuildCompScale}.\\
  
 \par
 \begin{minipage}{\textwidth}
@@ -1294,7 +1296,7 @@ With these in mind, here are a few examples using the following layout where the
  \end{figure}
 
 
- Drawing two columns (under pixel 0 and 1) can be done with only one pass using a vga mask set to 3 to write in banks 0 and 1.\\
+ Drawing two columns (under pixel 0 and 1) can be done with only one pass using a VGA mask set to 3 to write in banks 0 and 1.\\
  \par
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pass_0_1.c}
@@ -1351,7 +1353,7 @@ A better case where two passes with mask set to 15 then 3 allows drawing 6 colum
 
 
 
-To visualize real cases, the engine has been modified to draw columns of pixels which were written "for free" thanks to the VGA mask manipulation in pink. We can see the performance improvement is significant, with 50\% of write operations avoided.
+To visualize real cases gain, the engine has been modified to draw columns of pixels which were written "for free" thanks to the VGA mask manipulation in pink. We can see the performance improvement is significant, with 50\% of write operations avoided.
 
 \begin{minipage}{\textwidth}
  \centering
@@ -1641,13 +1643,13 @@ The combination of the compiled scalers getting more efficient at higher magnifi
 Sprite rendition benefits from the same optimization we saw in walls (compiled scalers and deferred rendering.) However, since sprites introduce transparency the techniques are slightly adjusted.
 
 \subsubsection{Compiled Scalers}
-Visible sprite column rendition is also done with the compiled scalers, but the scalers cannot be used directly. A compiled scaler draws its speed from its absence of parameters. It is an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and write/scale a predetermined number of pixels. For example, compiled scaler 112 always reads 64 pixels of texture and magnifies it to 134 pixels on the screen. Transparency is not handled at all, used as is the scalers would draw transparent pixels in pink. To solve this problem, sprites are stored in a special way that allows tweaked compiled scalers to skip transparency.\\
+Visible sprite column rendition is also done with the compiled scalers, but the scalers cannot be used directly. A compiled scaler draws its speed from its absence of parameters. It is an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and write/scale a predetermined number of pixels. For example, compiled scaler \#112 always reads 64 pixels of texture and magnifies it to 134 pixels on the screen. Transparency is not handled at all, used as is the scalers would draw transparent pixels in pink. To solve this problem, sprites are stored in a special way that allows tweaked compiled scalers to skip transparency.\\
 \par
 A sprite is stored as an array of 64 entries. Each entry is a series of "commands" forming a column. A command features:
 \begin{enumerate}
  \item A vertical offset.
  \item A vertical length.
- \item A payload.
+ \item A payload of texels.
  \end{enumerate}
 \par
 The last command in a column is marked with an offset of \cw{0x00}.\\
@@ -1828,15 +1830,14 @@ Above, a map generated by TED5. Below is the same map preprocessed for audio pro
  \includegraphics[width=.5\textwidth]{imgs/drawings/soud_propagation/areaconnect.pdf}
 \end{figure}
 \par
-At runtime, the engine maintains a matrix of portals. Each time a door is opened or closed, the array \cw{areaconnect} is updated. 
-
+At runtime the engine maintains a matrix of portals. Each time a door is opened or closed, the array \cw{areaconnect[][]} is updated and \cw{areabyplayer[]} array is populated recursively starting with \cw{areabyplayer[player.tile] = 1}. If player is in area 4 and open the door to 3, \cw{areabyplayer[]} will look as follow.
 \par
 \begin{figure}[H]
  \centering
  \includegraphics[width=.5\textwidth]{imgs/drawings/soud_propagation/areabyplayer.pdf}
 \end{figure}
 \par
-Determining if an enemy in area X can hear the player is achieved with a lookup in \cw{areabyplayer[X]}. In the source code:\\
+Determining if an enemy in area X can hear the player is achieved with an unexpensive lookup in \cw{areabyplayer[X]}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/num_areas.c}

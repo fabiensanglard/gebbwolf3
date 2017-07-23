@@ -45,7 +45,7 @@ Switching the core algorithm from raycasting to BSP sorted wall span rasterizati
  
  \end{figure}
  \par
-On the screenshot above, the scaling is quite visible. The resolution is 224x192 with the 3D scene tiles scaled 2x from 112x80 to 224x160. The status bar/weapon has a high resolution thanks to non-scaled 32x32 tiles.
+On the screenshot above, the scaling is quite visible. The SNES resolution is 224x192 with the 3D scene tiles scaled 2x from 112x80 to 224x160. The status bar/weapon has a high resolution thanks to non-scaled 32x32 tiles.
 
 
 
@@ -59,7 +59,7 @@ On the screenshot above, the scaling is quite visible. The resolution is 224x192
 The Jaguar port was released in 1994 and was the only other port (along with SNES) made by id Software. It was the only port able to reach 60 frames per seconds and ran at 240p resolution (320x240) with bilinear filtering allowing pleasant magnification. It also introduced two new weapons: the Flamethrower and Rocket Launcher.\\
 \par
 
-The console was a mix of powerful components and a severe bottleneck: 
+The console was a mix of powerful components and a severe bottlenecks as described by John Carack on \cw{slashdot.com} in March 2000. 
 \par
 \begin{fancyquotes}
 The memory, bus, bliter and video processor were 64 bits wide, but the processors (68k and two custom risc processors) were 32 bit.\\
@@ -114,15 +114,17 @@ Jaguar wolf ran at 30 fps.  In some places it could do 60, which was my first ex
 
 
 \section{iPhone}
-Wolfenstein 3D was ported by John Carmack himself to iOS. The source code was released on the same day it was published on the Apple appstore.
+Wolfenstein 3D was ported by John Carmack himself to iOS. The source code was released on the same day it was published on the Apple appstore.\\
+\par
+The most notorious improvement is bilinear filtering, thanks to hardware accelerated rendering. Bilinear filtering is not for everybody. Some people complained the enemies were "blurry" and wanted to see the pixels. Following are the release notes of Wolfenstein3D iOS on March 25, 2009.
+
     \par
 \begin{figure}[H]
 \centering
  \fullimage{wolf_ios2.png}
  \end{figure}
  \par
- The most notorious improvement is bilinear filtering, thanks to hardware accelerated rendering. Bilinear filtering is not for everybody. Some people complained the enemies were "blurry" and wanted to see the pixels. Following are the release notes of Wolfenstein3D iOS on March 25, 2009.
-
+ 
 \subsection{Notes}
 
 By John Carmack, Technical Director, Id Software\\

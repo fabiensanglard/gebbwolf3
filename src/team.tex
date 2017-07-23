@@ -326,7 +326,7 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
 \footnotetext{The manual was entirely designed on a NeXT ColorStation. It was the only usage of NeXT for Wolfenstein 3D (id purchased it in December 1991).}
 
 
-
+\ref{hitler_drawing}
 \begin{figure}[H]
 \centering    
      \fullimage{sprites/tom_hall_sketch_adolf.png}
@@ -486,13 +486,13 @@ To rough out compositions, I used Cakewalk ("CW"). I had been using it for sever
  \includegraphics[width=\textwidth]{imgs/drawings/music_pipelione.pdf}
  \caption{Music pipeline as described by Bobby Prince.}
 \end{figure}
-The OPL format is also called IMF\footnote{Id software Music File}. As it supports only the YM3812, it is tailored for the chip with zero abstraction layer. It consists of a stream of machine language commands with associated delays. The stream pilots the nine channels in the OPL2. A channel is able to simulate an instrument and play notes thanks to two oscillators, one playing the role of a modulator and the other the role of a carrier. There are many other ways to control a channel such as envelope, frequency or octave. The way a channel is programmed is described in detail in the "Software" chapter.
+What goes in the \cw{AUDIOT} archive is a music format called IMF\footnote{Id software Music File.}. As it supports only the YM3812, it is tailored for the chip with zero abstraction layer. It consists of a stream of machine language commands with associated delays\footnote{IMF format is explained in detail on page \pageref{IMF_explanation}}. The stream pilots the nine channels in the OPL2. A channel is able to simulate an instrument and play notes thanks to two oscillators, one playing the role of a modulator and the other the role of a carrier. There are many other ways to control a channel such as envelope, frequency or octave. The way a channel is programmed is described in detail in the "Audio" section, page \pageref{IMF_explanation}.
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/channel.pdf}
 \end{figure}
 \par
-\bu{Trivia :}  The YM3812's unmistakable sonority is due to its peculiar set of waveform transformers (they are right after the output of each oscillator in the drawing.) Four waveforms are available on the OPL2.
+\bu{Trivia :}  The YM3812's unmistakable sonority is due to its peculiar set of waveform transformers (they are right after the output of each oscillator in the drawing.) Four waveforms are available on the OPL2: Sin \circled{1}, Abs-sin\circled{2}, Pulse-sin \circled{3}, and Half-sin \circled{4}.
 \par
 \begin{figure}[H]
 \centering
@@ -500,7 +500,7 @@ The OPL format is also called IMF\footnote{Id software Music File}. As it suppor
 \end{figure}
 
 
-\bu{Trivia :} In Episode 3 the music playing features a hidden Morse coded message. "To Big Bad Wolf. De Little Red Riding Hood. Eliminate Hitler. Imperative. Complete mission within 24 hours. Out." The end boss of this episode indeed is Hitler in a Mech suit (see hint drawing.)
+\bu{Trivia :} In Episode 3 the music playing features a hidden Morse coded message. "To Big Bad Wolf. De Little Red Riding Hood. Eliminate Hitler. Imperative. Complete mission within 24 hours. Out." The end boss of this episode indeed is Hitler in a Mech suit (see hint manual drawing on page \pageref{hitler_drawing}.)
 
 
 
@@ -530,7 +530,7 @@ The OPL format is also called IMF\footnote{Id software Music File}. As it suppor
 
 
 \section{Distribution}
-At 4am on May 5th, 1992 the first episode of the game was uploaded to Massachusetts via Software Creations BBS\footnote{Bulletin Board Systems where server allowing users to connect via a console and upload/download programs} server. Wolfenstein 3D was distributed as a shareware; the game engine and the first episode were given for free and encouraged to be copied and distributed to a maximum number of people. To receive the five other episodes each player had to pay \$50 to id Software.\\
+At 4am on May 5th, 1992 the first episode of the game was uploaded to Massachusetts via Software Creations BBS\footnote{Bulletin Board Systems where server allowing users to connect via a console and upload/download programs.} server. Wolfenstein 3D was distributed as a shareware; the game engine and the first episode were given for free and encouraged to be copied and distributed to a maximum number of people. To receive the five other episodes each player had to pay \$50 to id Software.\\
 \par
 \begin{figure}[H]
 \centering
@@ -582,13 +582,13 @@ The game shipped as follows:\\
 \item SOD: Spear of Destiny.
 \end{itemize}
  
-\textbf{\underline{Trivia :}} The engine is very tiny and only uses 94KiB in total. But with 64KiB dedicated to the \cw{Signon} screen (and 768B for the palette), the engine is in fact only 29KB.\\
+\textbf{\underline{Trivia :}} The engine is very tiny and only uses 94KiB in total. But with 64KiB dedicated to the \cw{Signon} screen (and 768B for the palette), the engine is in fact only 29KiB.\\
 \par
 \begin{figure}[H]
 \centering
 \scaledimage{0.7}{disk.png}\\
 \end{figure}
 \par
-Above, a 3\nicefrac{1}{2}-inch floppy widely used to share and redistribute the game. The upper left hole allows the disk reader to recognize if the disk is a low capacity (full = 720 KiB) or a high capacity (hole = 1.44 MiB.) The upper right hole features a sliding tab which when obstructing the hole forbids writing to the disk, making it read-only. Once inserted in the floppy disk reader, the metallic part slides to the right to expose the magnetic disk.\\
+On the previous page, a 3\nicefrac{1}{2}-inch floppy widely used to share and redistribute the game. The upper left hole allows the disk reader to recognize if the disk is a low capacity (full = 720 KiB) or a high capacity (hole = 1.44 MiB.) The upper right hole features a sliding tab which when obstructing the hole forbids writing to the disk, making it read-only. Once inserted in the floppy disk reader, the metallic part slides to the right to expose the magnetic disk.\\
 \par
 \textbf{\underline{Trivia :}} Some people (including the author) saved money by drilling a hole in their 720 KiB certified floppy disk to have them recognized as 1.44 MiB, it worked!

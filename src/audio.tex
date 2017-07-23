@@ -15,7 +15,7 @@ The idea is to configure the hardware to trigger a hardware interrupt at a regul
  Wolfenstein 3D uses the latter approach and keeps tasks in its ISR very small and short. To this effect everything in the audio and heartbeat system is written in assembly and avoids "heavy" processing.
 
 \subsection{IRQs and ISRs}
-The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. When a counter hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU}. One counter is connected to the buzzer and generates sounds, a second counter is connected to the RAM to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in caching system.}, and the third counter is connected to the PIC.\\
+The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. When a counter hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU.}. One counter is connected to the buzzer and generates sounds, a second counter is connected to the RAM to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in caching system.}, and the third counter is connected to the PIC.\\
 \par
 \begin{figure}[H]
 \centering
@@ -30,7 +30,7 @@ The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at
 \centering
 \begin{tabularx}{\textwidth}{ X X  }
   \toprule
-  \textbf{IRQ} & \textbf{Type} \\ \bottomrule
+  \textbf{INT} & \textbf{Type} \\ \bottomrule
 0 & System timer \\
 1 & Keyboard controller \\
 3 & Serial port COM2 \\ 
@@ -47,7 +47,7 @@ The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at
 \end{tabularx}
 
 \end{figure}
-Above are IRQs and routines. Notice \#8 which is associated with the RTC Timer. This usually updates the operating system clock. Because IRQ\#8 was hijacked, operating system clock was wrong after running a game and remained so until the PC was rebooted.\\
+Above are INTs and associated routines. Notice \#8 which is associated with the RTC Timer. This usually updates the operating system clock. Because IRQ\#8 was hijacked, operating system clock was wrong after running a game and remained so until the PC was rebooted.\\
 \par
 Using these two chips and placing its own function at Interrupt Vector Table \#8, the engine can stop its runtime at a regular interval, effectively implementing a subsystem running concurrently with everything else.\\
 \par
@@ -122,6 +122,7 @@ Hardware limitations dictated certain aspects of music design. The FM synthesize
 
 
 \subsubsection{OPL2/YM3812 Programming}
+\ref{IMF_explanation}
 \par
 Programming the OPL2 output is esoteric to say the least. AdLib and Creative did publish SDKs but they were expensive.  Documentation was sparse and often cryptic. Today, they are almost impossible to find.\\
 \par
@@ -143,7 +144,7 @@ After writing to the register port, you must wait twelve cycles before sending t
  \bigskip \\
  \end{fancyquotes}
 \\
-\footnotetext{http://www.oldskool.org/guides/oldonnew/sound}
+\footnotetext{http://www.oldskool.org/guides/oldonnew/sound .}
 \par
 Later, reliable specs were published.\\
 \par
@@ -335,15 +336,14 @@ Notice how \cw{6b} (\cw{10110110}) is sent to the PIC Command register (\cw{pcTA
 While the end result was not great, it was better than a beep\footnote{LucasArts obtained surprisingly good results for their game Monkey Island. See the video "LGR - Evolution of PC Audio - As Told by Secret of Monkey Island", https://www.youtube.com/watch?v=a324ykKV-7Y.}.\\
 \par
 
-\bu{Hidden feature :} The source code features an audio code path that was never allowed to ship. It can play digitized sound via the PC Speaker.\\
+\bu{Hidden feature :} The source code features an audio code path which plays PCM digitized sound via the PC Speaker.\\
 
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/sound_fork.c}
 \end{minipage}
 \par
-Notice the \cw{SDL\_PCPlaySample} path allowing PCM to be played on the buzzer. This codepath was never enabled in shipping product
-\footnote{You can hear the difference on youtube: "Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects" at https://www.youtube.com/watch?v=1BtlsjJRnFU}. We may speculate it was a matter of overhead but the cost would have been the same as the Disney Sound Source playback. Questioning the authors of the game did not shed light on this mystery.\\
+Notice the \cw{SDL\_PCPlaySample} path allowing PCM to be played on the buzzer. This codepath shipped but was never enabled\footnote{You can still hear it thanks to youtube: "Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects" at https://www.youtube.com/watch?v=1BtlsjJRnFU .}. We may speculate it was a matter of overhead but the cost would have been the same as the Disney Sound Source playback. Questioning the authors of the game did not shed light on this mystery.\\
 \par
 
 
