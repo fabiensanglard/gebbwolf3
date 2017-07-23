@@ -79,7 +79,7 @@ The PIT chip runs at 1.193182 MHz. This seems like an odd choice from the hardwa
 
 
 \subsection{Heartbeats}
-Each time the interrupt system triggers, it runs another small (yet paramount) system before taking care of audio requests. The sole goal of this heartbeat system is to maintain a 64 bits variable: \cw{TimeCount}.\\
+Each time the interrupt system triggers, it runs another small (yet paramount) system before taking care of audio requests. The sole goal of this heartbeat system is to maintain a 64 bit variable: \cw{TimeCount}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/timecount.c}
@@ -209,7 +209,7 @@ AdLib only has a FM synthesizer, with sounds played on its Channel 0. Sounds are
 
 
 \subsection{Disney Sound Source system: PCM}
-The Disney Sound Source is simple to program\footnote{The Programmer's Guide to the Disney Sound Source is a whopping 2 pages!} because it can do only one thing. It plays PCM audio in format 8 bits at 7000Hz on a single channel. That's it -- nothing more, nothing less. As soon as it is plugged in the parallel port, its 8 bits DAC will read from an internal 16 bytes deep FIFO and turn them into sound via its integrated loud speaker.\\ 
+The Disney Sound Source is simple to program\footnote{The Programmer's Guide to the Disney Sound Source is a whopping 2 pages!} because it can do only one thing. It plays PCM audio in format 8 bits at 7000Hz on a single channel. That's it -- nothing more, nothing less. As soon as it is plugged in the parallel port, its 8 bit DAC will read from an internal 16 bytes deep FIFO and turn them into sound via its integrated loud speaker.\\ 
 \par
 Every time the audio system wakes, it reads the DAC status to check if the FIFO is full. If it is not, the engine pushes as many bits as possible until the FIFO is full and returns. When the FIFO empties, the Disney Sound Source stops making noise.\\
 \par
@@ -326,7 +326,7 @@ Notice how \cw{6b} (\cw{10110110}) is sent to the PIC Command register (\cw{pcTA
 	\item \cw{10} = Target Counter 2.
  	\item \cw{11} = High \& low byte of counter updated.
 	\item \cw{011} = Square Wave Generator.
-	\item \cw{0} = 16 bits mode.
+	\item \cw{0} = 16 bit mode.
 \end{itemize}
 \par
 \begin{minipage}{\textwidth}

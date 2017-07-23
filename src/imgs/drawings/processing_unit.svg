@@ -214,7 +214,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.2918919"
-     inkscape:cx="347.40438"
+     inkscape:cx="213.49225"
      inkscape:cy="819.03766"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -354,14 +354,14 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="150.16319"
-       y="273.52957"
+       x="164.16319"
+       y="271.52957"
        id="text5043"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan5045"
-         x="150.16319"
-         y="273.52957">16 BYTES</tspan></text>
+         x="164.16319"
+         y="271.52957">16 BYTES</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleOutL)"
        d="m 88.372385,177.35383 0,20.66577"
@@ -397,13 +397,13 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="322.00836"
-       y="274.43335"
+       y="270.43335"
        id="text6324"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan6326"
          x="322.00836"
-         y="274.43335">FIFO</tspan></text>
+         y="270.43335">FIFO</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker6336);stroke-miterlimit:4;stroke-dasharray:none"
        d="m 427.98698,207.02807 0,-95.16384 184.35764,0 0,18.2506"

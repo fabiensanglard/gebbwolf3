@@ -418,7 +418,7 @@ This optimization still brings a 30\% overall speed increase.\\
 
 
 \subsection{Clearing the Screen}
-At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. To create this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. Since values are written 16 bits at a time, it can write 8 pixels at a time.\\ 
+At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. To create this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. Since values are written 16 bit at a time, it can write 8 pixels at a time.\\ 
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
@@ -483,7 +483,7 @@ Fixed Point allows for keeping track of fractions while still using the integer 
 \begin{figure}[H]
  \centering
   \input{imgs/drawings/fp.tex}
- \caption{Fixed point layout 8:8 (8-bits for the integer part and 8 bits for the fractional part).} \label{fig:mips}
+ \caption{Fixed point layout 8:8 (8 bits for the integer part and 8 bits for the fractional part).} \label{fig:mips}
 \end{figure}
 
 The same sequence of bits \emph{0010010010010010} with different powers of two...
@@ -550,7 +550,7 @@ The beauty of fixed point is that addition and subtraction work exactly like int
 
 The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONNAL\_PART}. In the game, the player position is \cw{16:16}. The grid location is one shift operation away \cw{player->x $\gg$ 16}.\\
 \par
-Performing multiplication and division are special cases. There are two ways to do this: either multiply two 32 bits into 64 bits (and drop the upper and lower 16 bits) or drop the precision of both fixed points and then multiply them into 32 bits. Both methods involve accepting a loss of data via overflow or underflow. Let's take the example of $98.7539 * 1.5$.
+Performing multiplication and division are special cases. There are two ways to do this: either multiply two 32 bit into 64 bit (and drop the upper and lower 16 bits) or drop the precision of both fixed points and then multiply them into 32 bits. Both methods involve accepting a loss of data via overflow or underflow. Let's take the example of $98.7539 * 1.5$.
 
 
 \par
@@ -590,7 +590,7 @@ $128 + 16 + 4 + 0.125 = 148.125 $\\
 \par
 Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bit disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8.)\\
 \par
-In the source code, all fixed point variables are 32 bits wide and use a special \cw{typedef}.\\
+In the source code, all fixed point variables are 32 bit wide and use a special \cw{typedef}.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed.c}
@@ -1788,7 +1788,7 @@ The enemies in Wolf felt different based on the decision to close distance to th
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
 \par
-All types of enemies (including bosses) have their own state machine. They often share actions (e.g: \cw{T\_Stand} and \cw{T\_Path}) but also occasionally have their own.\\
+All types of enemies (including bosses) have their own state machine. They often share actions (e.g. \cw{T\_Stand} and \cw{T\_Path}) but also occasionally have their own.\\
 \par
 What makes enemies interesting is how they trigger from standing to aggressive via \cw{T\_Stand}. They have three ways to detect the player:
 \begin{itemize}
