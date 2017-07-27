@@ -455,7 +455,7 @@ With this system, pointer arithmetic must also receive careful consideration. A 
 
   \subsection{Extended Memory}
 
-The 20 bit address bus of Real mode limits the addressable RAM to 1MiB. Machines of 1992 came equipped with more, typically 2MiB and even sometimes 4MiB for the most fortunate customers. This memory located beyond the addressable space is called "Extended Memory". The workaround at the time to access these resources was to install specialized drivers\footnote{See CONFIG.SYS in the Appendice.}.\\
+The 20 bit address bus of Real mode limits the addressable RAM to 1MiB. Machines of 1992 came equipped with more, typically 2MiB and even sometimes 4MiB for the most fortunate customers. This memory located beyond the addressable space is called "Extended Memory". The workaround at the time to access these resources was to install specialized drivers\footnote{See CONFIG.SYS in the Appendices.}.\\
 \par
 Unfortunately extended memory access was not standardized. Users could load either of the drivers provided with DOS:
 \begin{itemize}
@@ -540,7 +540,7 @@ And:\\
 
 \section{Video}
 
-PCs were connected to CRT monitors: big, heavy, small diagonal, cathod-ray based, curved-surface screens. Most had a 14" diagonal with a 4:3 aspect ratio. To give you an idea of the size, Figure below shows a comparison between a 14" CRT from 1992 and a 23" LCD display from 2014.\\
+PCs were connected to CRT monitors: big, heavy, small diagonal, cathod-ray based, curved-surface screens. Most had a 14" diagonal with a 4:3 aspect ratio. To give you an idea of the size, Figure below shows a comparison between a 14" CRT from 1992 and a 30" LCD display from 2014.\\
 
 \begin{figure}[H]
 \centering
@@ -607,12 +607,12 @@ Each iteration added new features and by 1991 the ubiquitous graphic system was 
   \fullimage{hardware/suntra_trident_tvga8800br.png} 
 \end{figure}
 \par
-Above, a VGA card Trident 8800 (8 bit ISA). Courtesy of \cw{vgamuseum.info}. Notice the eight chip of 32 KiB (for a total of 256KiB) on the left of the card where the framebuffers are stored.
+Above, the VGA card Trident 8800 (8 bit ISA). Courtesy of \cw{vgamuseum.info}. Notice the eight chips of 32 KiB (for a total of 256KiB) on the left of the card where the framebuffers are stored.
 \par
 \begin{figure}[H] 
   \centering 
   \fullimage{hardware/diamond_stealth_vram_revb2.png} 
-  \caption{A VGA card Diamond Stealth (16 bit ISA). Courtesy of \cw{vgamuseum.info}.}
+  \caption{The VGA card Diamond Stealth (16 bit ISA). Courtesy of \cw{vgamuseum.info}.}
 \end{figure}
 \bu{Trivia :} There was no GPU market back then. Since all video cards "only" had to be VGA compatible with 256KiB of RAM, many just bought the cheapest thing available. Note however that some cards had an 8 bit ISA bus connector (like the Trident) and some had an ISA 16 bit connector like the Diamond, making the Diamond transfer data twice as fast.\\
 \par
@@ -627,16 +627,16 @@ VGA can be summarized as three major systems with input, storage, and output sys
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlling how the VGA RAM is accessed (the CPU-VRAM interface)
 \item The framebuffer (the VRAM) made of not one memory bank of 256KiB but four memory banks of 64KB
-\item The CRTC Controller and the DAC\footnote{Digital To Analog Converter.} taking care of converting the palette indexed framebuffer to RGB and then to analogic signal (interface VRAM-CRT)
+\item The CRTC Controller and the DAC\footnote{Digital to Analog Converter.} taking care of converting the palette indexed framebuffer to RGB and then to analog signal (interface VRAM-CRT)
 \end{itemize}
 
 The most surprising part of the architecture is obviously the framebuffer. Why have four small fragmented banks instead of one big linear one?\\
 \par
 The first part of the explanation comes from backward compatibility. The version before VGA, EGA, had only 64KiB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KB.\\
 \par
-The real reason was RAM latency and the need for a minimum bandwidth. A CRT running at 70Hz and displaying 640x480 in 16 colors needs a pixel every 1/(640*480*70)th of a second. At this resolution, one pixel is encoded on 4 bits. Each nibble is translated to a 666 RGB color by the DAC. That encoding divides bandwidth by six, but you still need one byte every 91 nano-seconds.\\
+The real reason was RAM latency and the need for a minimum bandwidth. A CRT running at 70Hz and displaying 640x480 in 16 colors needs a pixel every 1/(640*480*70)th of a second. At this resolution, one pixel is encoded with 4 bits. Each nibble is translated to a 666 RGB color by the DAC. That encoding divides bandwidth by six, but you still need one byte every 91 nano-seconds.\\
 \par
- Unfortunately, RAM access latency was 200ns - not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz, so the DAC would starve. If latency could not be reduced, the throughput could still be improved by reading from four banks at the time. Reading in parallel gave an amortized RAM latency of 200/4 = 50ns, which was fast enough.\\
+ Unfortunately, RAM access latency was 200ns - not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz, so the DAC would starve. If latency could not be reduced, the throughput could still be improved by reading from four banks at a time. Reading in parallel gave an amortized RAM latency of 200/4 = 50ns, which was fast enough.\\
 \par
 Keep in mind that this architecture reduced the penalty of read operations, but plotting a pixel in the framebuffer with a write operation was still slow. Writing to the VRAM as little as possible was very important in order to maintain a decent framerate. 
 
@@ -766,7 +766,7 @@ The only good thing about this mode is that it has square pixels. The 640x480 as
 
  
   \subsection{VGA Programming: Mode 13h}
-  Mode 13h is far more appealing since it offers a lower resolution of 320x200 with 256 colors at 70Hz. It also has the advantage of faking linear buffer. A special chip called Chain-4 uses the lower 2 bit of the RAM address to automatically program the mask and route the operation to the appropriate VRAM bank. This convenience mechanism was originally added because Mode 13h was meant to display static images and a linear address space made it easy for developers to copy from RAM to VRAM.\\
+  Mode 13h is far more appealing since it offers a lower resolution of 320x200 with 256 colors at 70Hz. It also has the advantage of faking linear buffer. A special chip called Chain-4 uses the lower 2 bit of the RAM address to automatically program the mask and route the operation to the appropriate VRAM bank. This convenience mechanism was originally added because Mode \cw{13h} was meant to display static images and a linear address space made it easy for developers to copy from RAM to VRAM.\\
   \par
  \begin{figure}[H]
 \centering
@@ -789,7 +789,7 @@ When writing or reading a value V at address K in RAM, the Chain-4 breaks the ad
 The side effect of this convenience mechanism is that 75\% of the RAM is wasted (since only 14 bits are usable for offset).\\
 
    \subsubsection{Setup}
-  To setup the VGA in Mode 13h using the BIOS is incredibly easy:\\
+  To setup the VGA in Mode \cw{13h} using the BIOS is incredibly easy:\\
   \par
   \lstinputlisting[ language={[x86masm]Assembler}]{code/vga_mode13.asm}
   
@@ -801,7 +801,7 @@ The side effect of this convenience mechanism is that 75\% of the RAM is wasted 
   \end{minipage}
   \label{clearvga}
   \par
-  Mode 13h looks a bit better than 12h but is in fact also terrible for games or even static images:\\
+  Mode \cw{13h} looks a bit better than \cw{12h} but is in fact also terrible for games or even static images:\\
   \begin{itemize}
 \item With Chain-4 all the RAM address space is used and there is no way to have a double buffer.
 \item Since the resolution is 320x200, the aspect ratio (1.6) does not match the monitor (which is 1.333). As a result the framebuffer stored in the VRAM is stretched when transfered to the CRT. It may seem like a small distortion but can be quite problematic. An example with a circle in the framebuffer displaying as an ellipse on the screen speaks for itself.
@@ -998,7 +998,7 @@ Finally, a SoundBlaster sound card connected via the ISA bus provided a new port
 \label{fig:gamePort}
 \end{figure}
 
-\bu{Trivia :} The CRT monitor was connected to the VGA card via a DE15 port. More than 20 years later manufacturers are still trying to get ride of the "VGA port" as it is now commmonly called. It looked a lot like a serial port and newcomvers often damaged it by forcing a mouse into it.
+\bu{Trivia :} The CRT monitor was connected to the VGA card via a DE15 port. More than 20 years later manufacturers are still trying to get ride of the "VGA port" as it is now commonly called. It looked a lot like a serial port and newcomers often damaged it by forcing a mouse into it.
  \begin{figure}[H]
 \centering
 \includegraphics[width=0.14\textwidth]{imgs/drawings/DE15_VGA.eps}
