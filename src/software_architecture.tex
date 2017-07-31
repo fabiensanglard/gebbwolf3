@@ -111,7 +111,7 @@ The three systems communicate via shared memory. The renderer writes music and s
 
 
 \subsection{Unrolled Loop}
-With the big picture in mind, we can dive into the code and unroll the main loop starting in \cw{int main()}. The two renderers are regular loops but due to limitations explained later, the sound system is interrupt driven and therefore out of \cw{main}. Because of the Real Mode, C types don't mean what people would expect from a 32 bit architecture.
+With the big picture in mind, we can dive into the code and unroll the main loop starting in \cw{int main()}. The two renderers are regular loops but due to limitations explained later, the sound system is interrupt driven and therefore out of \cw{main}. Because of the real mode, C types don't mean what people would expect from a 32 bit architecture.
 \begin{itemize}
 \item \cw{int} and \cw{word} are 16 bits.
 \item \cw{long} and \cw{dword} are 32 bits.
@@ -123,7 +123,7 @@ The first thing the program does it check the assets available via \cw{CheckForE
 \lstinputlisting[language=C]{code/unrolled_loop_main.c}
 \end{minipage}
 \par
-Since the target machine ran in Real Mode, the code was compiled using 16 bit instructions only. For operations on \cw{long} (32 bit) Borland used their own math library. In \cw{Patch386} Wolfenstein 3D detects if the CPU is a 386 and replaces Bordland's integral division with instructions using 32 bit registers \cw{eax} and \cw{edx}.\\
+Since the target machine ran in real mode, the code was compiled using 16 bit instructions only. For operations on \cw{long} (32 bit) Borland used their own math library. In \cw{Patch386} Wolfenstein 3D detects if the CPU is a 386 and replaces Bordland's integral division with instructions using 32 bit registers \cw{eax} and \cw{edx}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}]{code/integral_div.asm}
@@ -360,7 +360,7 @@ The cache manager is a small but critical component, as it loads and decompresse
  \par
 \bu{Note:} All resources are compressed. In the case of maps and audio, compression is hard-coded in the engine. For graphics, however, a third file (\cw{DICT}) contains the compression dictionary to decompress each asset. The Cache Manager handles decompression transparently.\\
 \par
-\bu{Trivia :} Is there a typo in the filename \cw{AUDIOHED.WL} ? Correct spelling would be \cw{AUDIOHEAD.WL1}. Where is the \cw{A}? This is in fact a limitation of the operating system. DOS only allows 8.3 filename (at most eight characters followed by a dot, then at most three characters for the extension.)
+\bu{Trivia :} Is there a typo in the filename \cw{AUDIOHED.WL} ? Correct spelling would be \texttt{\justify AUDIOHEAD.WL1}. Where is the \cw{A}? This is in fact a limitation of the operating system. DOS only allows 8.3 filename (at most eight characters followed by a dot, then at most three characters for the extension.)
 
 
 

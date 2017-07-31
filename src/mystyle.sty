@@ -42,11 +42,11 @@
 % Create space filters images with bilinear sampling which messes up the small sprites 
 % to compensate I added a path to use 300dpi assets which are nearest upsampled sprites.
 
-%\newcommand{\fullimage}[1]{\includegraphics[width=\textwidth]{screenshots/#1} }
-%\newcommand{\scaledimage}[2]{\includegraphics[width=#1\textwidth]{screenshots/#2} }
+\newcommand{\fullimage}[1]{\includegraphics[width=\textwidth]{screenshots/#1} }
+\newcommand{\scaledimage}[2]{\includegraphics[width=#1\textwidth]{screenshots/#2} }
 
-\newcommand{\fullimage}[1]{\includegraphics[width=\textwidth]{screenshots_300dpi/#1} }
-\newcommand{\scaledimage}[2]{\includegraphics[width=#1\textwidth]{screenshots_300dpi/#2} }
+%\newcommand{\fullimage}[1]{\includegraphics[width=\textwidth]{screenshots_300dpi/#1} }
+%\newcommand{\scaledimage}[2]{\includegraphics[width=#1\textwidth]{screenshots_300dpi/#2} }
 
 % Allow to include urls in pdf
 \usepackage[pdftex]{hyperref}
@@ -252,3 +252,13 @@ middleextra={\draw[dashed,line width=1pt,xshift=1pt] (O) -- (P|-O);\draw[dashed,
 % Make caption text bold and italic:
 %\usepackage[format=plain, labelfont={bf,it}, textfont=it]{caption}
 \usepackage[format=plain, labelfont={bf,it}]{caption}
+
+% Magic trick from https://tex.stackexchange.com/questions/299/how-to-get-long-texttt-sections-to-break
+% LaTEX I hate you so much. I despise you. Die. You POS.
+\newcommand*\justify{%
+  \fontdimen2\font=0.4em% interword space
+  \fontdimen3\font=0.2em% interword stretch
+  \fontdimen4\font=0.1em% interword shrink
+  \fontdimen7\font=0.1em% extra space
+  \hyphenchar\font=`\-% allowing hyphenation
+}

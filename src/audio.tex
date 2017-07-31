@@ -194,7 +194,7 @@ Strangely, only PC speaker and AdLib sounds are stored in the \cw{AUDIOT.*} file
 
 
 
-\subsection{Sound effects: AdLib}
+\subsection{Sound Effects: AdLib}
 AdLib only has a FM synthesizer, with sounds played on its Channel 0. Sounds are played the same way as music (via IMF) as previously described.
 
 
@@ -208,7 +208,7 @@ AdLib only has a FM synthesizer, with sounds played on its Channel 0. Sounds are
 
 
 
-\subsection{Disney Sound Source system: PCM}
+\subsection{Disney Sound Source System: PCM}
 The Disney Sound Source is simple to program\footnote{The Programmer's Guide to the Disney Sound Source is a whopping 2 pages!} because it can do only one thing. It plays PCM audio in format 8 bits at 7000Hz on a single channel. That's it -- nothing more, nothing less. As soon as it is plugged in the parallel port, its 8 bit DAC will read from an internal 16 bytes deep FIFO and turn them into sound via its integrated loud speaker.\\ 
 \par
 Every time the audio system wakes, it reads the DAC status to check if the FIFO is full. If it is not, the engine pushes as many bits as possible until the FIFO is full and returns. When the FIFO empties, the Disney Sound Source stops making noise.\\
@@ -224,7 +224,7 @@ Every time the audio system wakes, it reads the DAC status to check if the FIFO 
 
 
 \par
-\subsection{SoundBlaster system: PCM}
+\subsection{SoundBlaster System: PCM}
 Since the SoundBlaster also supports 7000Hz PCM, it uses the same sound effects files as the Disney Sound Source. However, it also features a DSP which is DMA capable. As a result, the CPU does not have to waste cycles transferring data. The audio system only has to ensure it is running at 7000Hz and pointing the DMA to the right memory address each time it crosses the end of a 16K segment via a DMA routine callback.
 \par
 
@@ -236,7 +236,7 @@ Since the SoundBlaster also supports 7000Hz PCM, it uses the same sound effects 
 
 
 \par
-\subsection{SoundBlaster Pro system: Stereo PCM}
+\subsection{SoundBlaster Pro System: Stereo PCM}
 \par
 
 On a "high-end" SoundBlaster Pro, the Mixer described on page \pageref{sbmixerpage} is used to simulate 3D sounds. The source of the sound is first rotated with the same formula seen on page \pageref{rotatematrix}. The player's position is used to generate two attenuation values (between 0 and 15) which are then packed in a byte and sent to the mixer. The difference of volumes tricks the player into perceiving the sound origin anywhere within the 180 degrees facing her.\\
