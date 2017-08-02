@@ -108,13 +108,13 @@ The audio system is complex because of the fragmentation of audio devices it can
 \lstinputlisting[language=C,morekeywords={longword}]{code/sound.h}
 \end{minipage}
 \par
-But in the implementation lies a maze of functions directly accessing the I/O port of four sound outputs: Adlib, SoundBlaster, Buzzer, and Disney Sound Source. All belong to one of the three supported families of sound generators: FM Synthesizer (Frequency Modulation), PCM (Pulse Code Modulation) or PWM (Pulse Width Modulation.)\\
+But in the implementation lies a maze of functions directly accessing the I/O port of four sound outputs: AdLib, SoundBlaster, Buzzer, and Disney Sound Source. All belong to one of the three supported families of sound generators: FM Synthesizer (Frequency Modulation), PCM (Pulse Code Modulation) or PWM (Pulse Width Modulation.)\\
 
 
 \subsection{Music}
-Playing music is not too messy since only PCs equipped with a Yamaha YM3812 FM synthesizer can play tracks (a.k.a: with an Adlib or a SoundBlaster inside.) As SoundBlaster made its programming interface compatible with Adlib there is only one code path to both cards. There is not a lot of magic here since this uses a piece of well-designed hardware dedicated to this specific task. There are a few cool tricks, though.\\
+Playing music is not too messy since only PCs equipped with a Yamaha YM3812 FM synthesizer can play tracks (a.k.a: with an AdLib or a SoundBlaster inside.) As SoundBlaster made its programming interface compatible with AdLib there is only one code path to both cards. There is not a lot of magic here since this uses a piece of well-designed hardware dedicated to this specific task. There are a few cool tricks, though.\\
 \par
-The music system streams data to the sound cards. Music in the 90s was not in digitalized formats like CD or MP3 nowadays (that would have taken too much storage space and bandwidth.) Instead music was stored as series of notes played on channels simulating instruments. The format used is close to the notorious MIDI but with a few variations and is called IMF\footnote{Id Music Format}. It is proprietary to id Software and designed with OPL2 in mind (the raw format is exactly what is sent to the Adlib/Soundblaster synthesizer with no transformations.) IMF has a hardcoded playback rate and music notes are played at 700 Hz.\\
+The music system streams data to the sound cards. Music in the 90s was not in digitalized formats like CD or MP3 nowadays (that would have taken too much storage space and bandwidth.) Instead music was stored as series of notes played on channels simulating instruments. The format used is close to the notorious MIDI but with a few variations and is called IMF\footnote{Id Music Format}. It is proprietary to id Software and designed with OPL2 in mind (the raw format is exactly what is sent to the AdLib/Soundblaster synthesizer with no transformations.) IMF has a hardcoded playback rate and music notes are played at 700 Hz.\\
 \par
 Hardware limitations dictated certain aspects of music design. The FM synthesizer (OPL2) has 9 channels (a.k.a instruments) yet the composer, Bobby Prince, was asked to use only channels 1 to 8. This little trick allows for multiplexing music and sound effects on AdLib cards since it leaves channel 0 available at all times (the SoundBlaster plays sound differently.)\\
 
@@ -134,7 +134,7 @@ The OPL2 is made of 9 channels capable of emulating instruments. Each channel is
 \lstinputlisting[language=C,morekeywords={longword}]{code/audio_ports.c}
 \end{minipage}
 \par
-When the AdLib was released in 1986, developers were instructed to send data "as fast as possible". At 4.77Mhz, a PC was unable to out-pace the Adlib. Yet as CPUs got faster, issues started to arise and the card was unable to keep up. The Programming Guide was amended.\\
+When the AdLib was released in 1986, developers were instructed to send data "as fast as possible". At 4.77Mhz, a PC was unable to out-pace the AdLib. Yet as CPUs got faster, issues started to arise and the card was unable to keep up. The Programming Guide was amended.\\
 \par
 
 \begin{fancyquotes}

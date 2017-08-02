@@ -31,7 +31,7 @@ Overall, a lot of friction was present since manufacturers had not embraced the 
   
   In 1991 there were 56 million PCs in the USA \footnote{"Computers". Collier's Encyclopedia. Vol. 7, 1992: 114, 129.}. The performance of these machines was so overwhelmingly determined by the CPU that a PC was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had an Intel 80386 or equivalent, it was called a "386". If it had an Intel 80286, it was a "286".\\
 \subsection{Overview}
-  The predominant CPU manufacturer was Intel with its line of x86 microprocessors\footnote{73\% of PCs sold in 1989 featured an Intel CPU according to Intel Corporation's Annual Report.}. Machines based on the 16-bit 80286 processor did not sell well but their successors with the 80386 introduced in 1985 were immensely successful\footnote{An estimated 3.74 million 386 based systems were sold in 1990 according to Dataquest in PC Magazine February 1992.}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
+  The predominant CPU manufacturer was Intel with its line of x86 microprocessors\footnote{73\% of PCs sold in 1989 featured an Intel CPU according to Intel Corporation's Annual Report.}. Machines based on the 16 bit 80286 processor did not sell well but their successors with the 80386 introduced in 1985 were immensely successful\footnote{An estimated 3.74 million 386 based systems were sold in 1990 according to Dataquest in PC Magazine February 1992.}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
 \par
 
 
@@ -125,11 +125,11 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
 \item Arithmetic Logic Unit performing \cw{add}, \cw{sub}, \cw{mul} et cetera.
 \item 16 registers:
 \begin{itemize}
-  \item 32-bit General Purpose Registers: EAX, EBX, ECX, EDX
-  \item 32-bit Index Registers: ESI, EDI, EBP, ESP
-  \item 16-bit Segment Registers: CS, DS, ES, FS, GS, SS
-  \item 16-bit Status Register
-  \item 32-bit Program Counter: EIP
+  \item 32 bit General Purpose Registers: EAX, EBX, ECX, EDX
+  \item 32 bit Index Registers: ESI, EDI, EBP, ESP
+  \item 16 bit Segment Registers: CS, DS, ES, FS, GS, SS
+  \item 16 bit Status Register
+  \item 32 bit Program Counter: EIP
 \end{itemize}
 \item A 32 bit address bus for up to 4GB of flat addressable RAM
 \item Memory Paging Unit
@@ -348,11 +348,11 @@ For compatibility reasons all PCs have to start in real mode. You may assume tha
 \item ALU
 \item 15 registers:
 \begin{itemize}
-  \item 16-bit General Purpose Registers: AX, BX, CX, DX
-  \item 16-bit Index Registers: SI, DI, BP, SP
-  \item 16-bit Program Counter: IP
-  \item 16-bit Segment Registers: CS, DS, ES, FS, GS, SS
-  \item 16-bit Status Register
+  \item 16 bit General Purpose Registers: AX, BX, CX, DX
+  \item 16 bit Index Registers: SI, DI, BP, SP
+  \item 16 bit Program Counter: IP
+  \item 16 bit Segment Registers: CS, DS, ES, FS, GS, SS
+  \item 16 bit Status Register
 \end{itemize}
 \item Up to 1MiB of RAM
 \end{itemize}
@@ -849,7 +849,7 @@ In this example the CPU has finished writing the framebuffer (on the left) and t
 \includegraphics[width=\textwidth]{imgs/drawings/doublebuffer_after.eps}
 \end{figure}
 \par
-But if the CPU is fast enough (faster than 70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here. The next frame was drawn with the circle moved to the right. The electron beam did not know that and kept on scanning the framebuffer. The result on screen is now a composite of two frames. It looks like two frames were torn and tapped back together. Hence the name "tearing".\\
+If the CPU is faster than the frequency of the CRT (70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here. The next frame was drawn with the circle moved to the right. The electron beam did not know that and kept on scanning the framebuffer. The result on screen is now a composite of two frames. It looks like two frames were torn and tapped back together. Hence the name "tearing".\\
 \par
 With two buffers (a.k.a double buffering) the CPU can start writing in the second framebuffer without messing with the framebuffer being scanned to the screen\footnote{Now the CPU speed is capped by the CRT refresh rate. Triple buffering can solve this at the price of frame latency.}. No more tearing!
 
@@ -869,7 +869,7 @@ With two buffers (a.k.a double buffering) the CPU can start writing in the secon
 
 
 \section{Audio}
-A PC came equipped with a beeper, commonly known as a "PC Speaker". This is a silver dollar sized buzzer capable of generating a square wave via 2 levels of output.\\
+PCs came equipped with a silver-dollar-sized beeper commonly known as a "PC Speaker" ,capable of generating a square wave via 2 levels of output.\\
 \par
  \begin{figure}[H]
 \centering
@@ -878,7 +878,7 @@ A PC came equipped with a beeper, commonly known as a "PC Speaker". This is a si
 \end{figure}
 
 \par
- To this day, it is the first output device to be activated during the boot process. The purpose of this primitive loudspeaker is to signal hardware problems with beep codes. It was intended to remain silent after a successful boot.\\
+ To this day, the PC speaker is the first output device to be activated during the boot process. The purpose of this primitive loudspeaker is to signal hardware problems with beep codes. It was intended to remain silent after a successful boot.\\
 \par
 \begin{tabularx}{\textwidth}{l l}
 \textbf{Beep Code} & \textbf{Meaning}  \\ \hline
@@ -894,10 +894,10 @@ Continuous Hi-Lo Beeps           & CPU Overheating \\ \hline
 \end{tabularx}\\
 \bigskip
 \par
-Needless to say, square waves are not useful for producing anything pleasant. Some people had started to see a market and companies began manufacturing what were known as "sound cards". You could buy these separately and insert them into one of the ISA slots of the machine. These cards could be connected to real audio speakers via 3.5mm jacks and tremendously improved sound capabilities. In 1991, there were four cards on the market:\\
+However, square waves are not useful for producing anything pleasant. Some people had started to see a market and companies began manufacturing what were known as "sound cards". Users could buy these separately and insert them into one of the machine ISA slots. These cards could be connected to real audio speakers via 3.5mm jacks and tremendously improved sound capabilities. In 1991, there were four cards on the market:\\
 \par
 \begin{itemize}
-\item Adlib music card
+\item AdLib music card
 \item SoundBlaster 1.0
 \item SoundBlaster Pro
 \item Disney Sound Source
@@ -907,23 +907,23 @@ Although adoption was growing (Creative would go on to sell one million SoundBla
 
 
   \subsection{AdLib}
-  AdLib's music card was first on the market. The company was founded in 1988 by Martin Prevel, a former professor of music from Quebec. After an initial struggle to get game developers to use their card (the SDK was \$300), Adlib managed to convince Taito, Velocity, and Sierra On-Line to support their hardware. Sierra in particular did much to increase adoption with King's Quest IV selling close to 3 million copies. Soon after, all games supported the "music card".\\
+  AdLib's music card was first on the market. The company was founded in 1988 by Martin Prevel, a former professor of music from Quebec. After an initial struggle to get game developers to use their card (the SDK was \$300), AdLib managed to convince Taito, Velocity, and Sierra On-Line to support their hardware. Sierra in particular did much to increase adoption with King's Quest IV selling close to 3 million copies. Soon after, all games supported the "music card".\\
   \par
    Equipped with a Yamaha YM3812, also known as the OPL2, the card can produce 9 channels of sound, each capable of simulating an instrument. Based on FM synthesizing, the channels were limited but allowed for pleasant music.\\
   \begin{figure}[H] 
     \centering 
     \scaledimage{.8}{hardware/adlib.png} 
-    \caption{An Adlib sound card. Notice the big YM3812 chip and the 8 bit ISA connector.}
+    \caption{An AdLib sound card. Notice the big YM3812 chip and the 8 bit ISA connector.}
   \end{figure}
    
 \par
-\bu{Trivia :} Canadian companies, and especially those from Quebec, were preponderant on the PC market in the early 90s due to their technological prowess. Ad Lib manufactured Sound Card, Matrox made a killing with its Millenium Graphic Card, and Watcom sold the best DOS C compiler\footnote{Watcom compiler was so good id would use it to compile Doom.}. ATI\footnote{History would repeat itself in the late 90s in the field of Graphic Cards: Nvidia vs ATI.} would later emerge as a major GPU innovator in the 2000s.\\
+\bu{Trivia :} Canadian companies, and especially those from Quebec, were prevalent in the early 90s due to their technological prowess. AdLib manufactured Sound Card, Matrox made a killing with its Millenium Graphic Card, and Watcom sold the best DOS C compiler\footnote{Watcom's compiler was so good id would use it to compile Doom.}. ATI\footnote{History would repeat itself in the late 90s in the field of graphic cards: Nvidia vs ATI.} would later emerge as a major GPU innovator in the 2000s.\\
   
   
 
 
   \subsection{Sound Blaster}
-  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative. It was a smart product which was clearly targeting AdLib's dominant position. Not only was it equipped with the same OPL2 chip, providing 100\% compatibility with AdLib music playback, but it was also technologically superior with a DSP\footnote{An Intel MCS-51 "Digital Sound Processor", not "Digital Signal Processor".}  allowing PCM playback (digitized sounds) at 8 bits per sample and up to 22.05Hz sampling rate. The card also came with a DA-15 port allowing joystick connection. Most importantly, the SoundBlaster was \$90 cheaper than the AdLib.\\ 
+  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative. It was a smart product which was clearly targeting AdLib's dominant position. Not only was it equipped with the same OPL2 chip, providing 100\% compatibility with AdLib music playback, but it was also technologically superior with a DSP\footnote{An Intel MCS-51 "Digital Sound Processor", not "Digital Signal Processor".}  allowing PCM playback (digitized sounds) at 8 bits per sample and up to 22.05kHz sampling rate. The card also came with a DA-15 port allowing joystick connection. Most importantly, the SoundBlaster was \$90 cheaper than the AdLib.\\ 
 \par
 
 \begin{figure}[H] 
@@ -934,7 +934,7 @@ Although adoption was growing (Creative would go on to sell one million SoundBla
 \par
 The above picture is the CT1350B model. Notice the OPL2 chip (labeled FM1312), the big CT1336 bus interface (labeled "CREATIVE") on the center left, the CT1351 DSP on the upper left, and the 8 bit ISA bus connector.\\
 \par
-  \bu{Trivia :} The numerous qualities of the card over the Adlib made the Sound Blaster the de-facto standard shortly after its release and eventually brought Adlib to bankruptcy\footnote{The reign of the Sound Blaster came to an end with Windows 95, which standardized the programming interface at application level and eliminated the importance of compatibility with Sound Blaster}.
+  \bu{Trivia :} The numerous advantages of the Sound Blaster card over the AdLib made it the de-facto standard shortly after its release and eventually brought AdLib to bankruptcy\footnote{The reign of the Sound Blaster came to an end with Windows 95, which standardized the programming interface at application level and eliminated the importance of compatibility with Sound Blaster}.
 
 
 
@@ -949,13 +949,13 @@ The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but added 
 \end{figure}
 The model above is a CT1330A. Notice the double FM1312 chip in the center. The two big chips in the upper left are the DSP (CT1341) and the Mixer. Below, labeled "Creative" is the big CT1316 bus interface.\\
 \par
-\bu{Trivia :} The card appears to have a 16 bit ISA bus connector (check the difference with the Sound Blaster 1.0.) However it does not have 'fingers' for data transfer on the higher "AT" portion of the bus connector. It uses the 16-bit extension to the ISA bus to provide the user with an additional choice for an IRQ (10) and DMA (0) channel only found on the 16-bit portion of the edge connector.\\
+\bu{Trivia :} The card appears to have a 16 bit ISA bus connector (check the difference with the Sound Blaster 1.0.) However it does not have 'fingers' for data transfer on the higher "AT" portion of the bus connector. It uses the 16 bit extension to the ISA bus to provide the user with an additional choice for an IRQ (10) and DMA (0) channel only found on the 16 bit portion of the edge connector.\\
 \par
 \bu{Trivia :} Notice on the very left of the card in black there is an IDE Data interface to connect a CD-ROM. That was the only way to connect a CD-ROM to a PC back then.
 
 
   \subsection{Disney Sound Source}
-  Debuting in 1990, Disney sold a marvelous piece of audio hardware. Plugged into the printer port (parallel port) of the PC, a 8 bit DAC based on the "Covox Speech Thing" was connected to a speaker box. It was incredibly easy to setup, simple to program (it could only play one type of PCM and had no FM synthesizer) and very cheap compared to the other audio solutions (\$14). It would have made programmers and customers happy if not for a serious issue due to the bandwidth of the port (150 kbit/s) which limited the PCM sampling rate to 7000Hz.  This was still enough to produce pleasant sounds, but fell short when compared to the 22Hz or even 44Khz of a Sound Blaster Pro.
+  In 1990, Disney began selling the sound source. Plugged into the printer port (parallel port) of the PC, a 8 bit DAC based on the "Covox Speech Thing" was connected to a speaker box. It was incredibly easy to setup, simple to program (it could only play one type of PCM and had no FM synthesizer), and very cheap compared to the other audio solutions (\$14.) It would have made programmers and customers happy if not for a serious issue due to the bandwidth of the port (150 kbit/s) which limited the PCM sampling rate to 7kHz.  This was still enough to produce pleasant sounds, but fell short when compared to the 22kHz or even 44kHz of a Sound Blaster Pro.
   \par
   \begin{figure}[H] 
     \centering 
@@ -973,7 +973,7 @@ The model above is a CT1330A. Notice the double FM1312 chip in the center. The t
 \section{Inputs}
 At a time before the ubiquitous USB, inputs were a mess with no less than four ports, all programmed differently.\\
 
-The parallel port (DB-25) was on every computer and usually used to connect matrix printers (loud thing that printed with needles). The parallel port was multipurpose and the Disney Sound Source could be plugged into it.\\
+The parallel port (DB-25) was on every computer and usually used to connect matrix printers (loud things that printed with needles). The parallel port was multipurpose and the Disney Sound Source could be plugged into it.\\
 \par
  \begin{figure}[H]
 \centering
@@ -1023,19 +1023,19 @@ Although developers had no control over them, it is still worth mentioning how t
 
 The ISA\footnote{Industry Standard Architecture.} bus connects the CPU to all devices, including RAM. It was already 10 years old in 1991 but still used universally in PCs. The data path to the RAM is either 16 bit wide for 286 and 386SX or 32 bit on 386DX based machines. It runs at the same frequency as the CPU.\\
 \par
-The rest of the bus connecting to everything that is not the RAM can be of two kinds:
+The rest of the bus connecting to everything that is not the RAM can be either:
 \begin{itemize}
-\item 8-bit wide at 4.77 MHz  for 19.1 Mbit/s
-\item 16-bit wide at 8.33MHz for 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates .}.
+\item 8 bit wide at 4.77 MHz  for 19.1 Mbit/s
+\item 16 bit wide at 8.33MHz for 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates .}.
 \end{itemize}
-Of course it is also backward compatible and an 8-bit ISA card can be plugged into a 16-bit ISA bus.\\
+Of course it is also backward compatible and an 8 bit ISA card can be plugged into a 16 bit ISA bus.\\
 \par
 \begin{figure}[H]
 \centering
       \includegraphics[width=\textwidth]{imgs/drawings/bus.pdf}
 \end{figure}
 \par
-\bu{Trivia :} On ISA all devices are connected to the bus at all times and listen on the bus address lane. Each device features an "address decoder" to detect if it should reply to a bus request. This is how the VGA RAM is "mapped" in RAM. The VGA card "address decoder"  filters out everything that is not within \cw{A0000h} and \cw{AFFFFh}. Accordingly the RAM disregards any request that is within the range [\cw{A0000h} - \cw{AFFFFh}].\\
+\bu{Trivia :} On ISA all devices are connected to the bus at all times and listen on the bus address lane. Each device features an "address decoder" to detect if it should reply to a bus request. This is how the VGA RAM is "mapped" in RAM. The VGA card "address decoder"  filters out everything that is not within \cw{A0000h} and \cw{AFFFFh}. Accordingly, the RAM disregards any request that is within the range [\cw{A0000h} - \cw{AFFFFh}].\\
 \par
  \begin{figure}[H]
 \centering
@@ -1043,17 +1043,17 @@ Of course it is also backward compatible and an 8-bit ISA card can be plugged in
 \end{figure}
 
 \par
- In practice, due to packet overhead and interrupts, the effective bandwidth of the bus is divided by two. As a result, a PC equipped with an 8-bit ISA VGA card can push 19.1Mbits/s/2 = 1.5MB/s. In mode \cw{13h}, since a frame is 320x200 = 64,000 bytes, the theoretical maximum framerate with a CPU taking 0ms to render a frame is 1,500,000 / 64,000 = 23 frames per seconds.\\
+ In practice the effective bandwidth of the bus is divided by two due to packet overhead and interrupts. As a result, a PC equipped with an 8 bit ISA VGA card can push 19.1Mbits/s/2/8 = 1.1MB/s. In mode \cw{13h}, since a frame is 320x200 = 64,000 bytes, the theoretical maximum framerate with a CPU taking 0ms to render a frame is 1,100,000 / 64,000 = 17 frames per seconds.\\
  \par
  On a 16 bit VGA card, 33,400,000 bits per seconds gives 33,400,000/8/64000 = 65 frames per seconds.\\
  \par
- If you factor in other things which had to transit on the bus such as palette, keyboard interrupt, mouse inputs, and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand how important it was to limit data transfer and why few softwares of the era could max out the VGA's 70 frame per seconds\footnote{Specialized demos could reach 70 fps on VGA by careful management of unchanged regions or using planar writes for the 4x speedup.}.
+ If you factor in other things which had to transit on the bus such as palette, keyboard interrupt, mouse inputs, and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand how important it was to limit data transfer and why few softwares of the era could max out the VGA's 70 frames per seconds\footnote{Specialized demos could reach 70 fps on VGA by careful management of unchanged regions or using planar writes for the 4x speedup.}.
 
 
 \section{Summary}
-To say a PC was difficult to program for games would be an understatement. It was a nightmare. The CPU was good at doing the wrong thing, the best graphic interface allowed neither double buffering nor square pixels, the memory model only allowed 1 standard MB with an address composed of two separate 16-bit registers, and the \cw{near}/\cw{far} pointers forbade using standard C. Last but not least, the default sound system could only produce square waves and the people who did have a sound card installed could have any of the three major brands.\\
+To say a PC was difficult to program for games would be an understatement. It was a nightmare. The CPU was good at doing the wrong thing, the best graphic interface allowed neither double buffering nor square pixels, the memory model only allowed 1 standard MiB with an address composed of two separate 16 bit registers, and the \cw{near}/\cw{far} pointers forbade using standard C. Last but not least, the default sound system could only produce square waves and the people who did have a sound card installed could have any of the three major brands.\\
 \par
-Yet despite all these unfavorable conditions, teams of developers gathered to tame the beast and unleash its power to gamers. One of them called themselves id Software\footnote{They originally called themselves Ideas From the Deep but then decided to shorten it to simply id, which stands for "in demand," and is pronounced as in "did" or "kid." The name also had another meaning which is referring to id, the part of the brain that behaves by the pleasure principle in Freudian psychology.}.
+Yet despite all these unfavorable conditions, teams of developers gathered to tame the beast and unleash its power to gamers. One of these called themselves id Software\footnote{They originally called themselves Ideas From the Deep but then decided to shorten it to simply id, which stands for "in demand," and is pronounced as in "did" or "kid." The name also refers to id, the part of the brain that behaves by the pleasure principle in Freudian psychology.}.
 \end{document}
 
 
