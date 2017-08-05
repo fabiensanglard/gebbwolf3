@@ -25,7 +25,7 @@ Once downloaded and decompressed, the archive \codeword{woldsrc.zip} contains an
 \end{minipage}
 
 \par
- The code is 90\% in C with assembly\footnote{All the assembly in Wolf3D is done with TASM (a.k.a Turbo Assembler by Borland.) It uses Intel notation where the destination is before the source: \cw{instr} \cw{dest} \cw{source}.} for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code is not a meaningful metric against a single codebase but excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Google's Chrome browser is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
+ The code is 90\% in C with assembly\footnote{All the assembly in Wolf3D is done with TASM (a.k.a Turbo Assembler by Borland.) It uses Intel notation where the destination is before the source: \cw{instr} \cw{dest} \cw{source}.} for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code (SLOC) is not a meaningful metric against a single codebase but excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Google's Chrome browser is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
 \par
 \begin{figure}[H]
 \centering
@@ -70,9 +70,9 @@ It's "COLUMN", you dumb FUCK!\\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
  
-The archive contains more than just source code, it also features:
+The archive contains more than just source code; it also features:
 \begin{itemize}
-\item \codeword{GOODSTUF.TXT:} Two emails from fans (and ex-POW and a Microsoft employee) demonstrating the success of the game.
+\item \codeword{GOODSTUF.TXT:} Two emails from fans (an ex-POW and a Microsoft employee) demonstrating the success of the game.
 \item \codeword{SIGNON.OBJ:} The startup screen showing the system characteristics (RAM, EMS, XMS, Joystick, SoundCards) was linked in the binary. This weird design choice is explained later.
 \item \codeword{GAMEPAL.OBJ:} Game palette. Hardcoded and linked in the executable for the same reason as \cw{SIGNON.OBJ}.
 \item \codeword{README:} How to build. You can also find a complete tutorial in "Let's compile like it's 1992" on \cw{fabiensanglard.net}.
@@ -89,7 +89,7 @@ The archive contains more than just source code, it also features:
 The game engine is divided in three blocks:
 \begin{itemize}
 \item 2D menu engine which lets the user configure the game.
-\item 3D game renderer where the player spends most of her time.
+\item 3D game renderer where the user spends most of her time.
 \item Sound system which runs concurrently with either the 2D or 3D renderer. 
 \end{itemize}
 The three systems communicate via shared memory. The renderer writes music and sound requests to the RAM (also making sure the assets are ready.) These requests are read by the sound "loop". The sound system also writes to the RAM for the renderers since it is in charge of the heartbeat of the whole engine. The renderers update the world according to the wall-time tracked by \cw{TimeCount} variable.
@@ -97,6 +97,7 @@ The three systems communicate via shared memory. The renderer writes music and s
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/three_systems.pdf}
+ \caption{Game engine three main systems.}
  \end{figure}
  \par
 
@@ -111,19 +112,19 @@ The three systems communicate via shared memory. The renderer writes music and s
 
 
 \subsection{Unrolled Loop}
-With the big picture in mind, we can dive into the code and unroll the main loop starting in \cw{int main()}. The two renderers are regular loops but due to limitations explained later, the sound system is interrupt driven and therefore out of \cw{main}. Because of the real mode, C types don't mean what people would expect from a 32 bit architecture.
+With the big picture in mind, we can dive into the code and unroll the main loop starting in \cw{int main()}. The two renderers are regular loops but due to limitations explained later, the sound system is interrupt driven and therefore out of \cw{main}. Because of real mode, C types don't mean what people would expect from a 32 bit architecture.
 \begin{itemize}
-\item \cw{int} and \cw{word} are 16 bits.
-\item \cw{long} and \cw{dword} are 32 bits.
+\item \cw{int} and \cw{word} are 16 bit.
+\item \cw{long} and \cw{dword} are 32 bit.
 \end{itemize}
 \par
-The first thing the program does it check the assets available via \cw{CheckForEpisodes()}.\\
+The first thing the program does is check the assets available via \cw{CheckForEpisodes()}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_main.c}
 \end{minipage}
 \par
-Since the target machine ran in real mode, the code was compiled using 16 bit instructions only. For operations on \cw{long} (32 bit) Borland used their own math library. In \cw{Patch386} Wolfenstein 3D detects if the CPU is a 386 and replaces Bordland's integral division with instructions using 32 bit registers \cw{eax} and \cw{edx}.\\
+Since the target machine ran in real mode, the code was compiled using 16 bit instructions only. For operations on \cw{long} (32 bit), Borland used its own math library. In \cw{Patch386} Wolfenstein 3D detects if the CPU is a 386 and replaces Bordland's integral division with instructions using 32 bit registers \cw{eax} and \cw{edx}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}]{code/integral_div.asm}
@@ -135,23 +136,23 @@ In \cw{InitGame}, the engine starts up and brings up all the managers.\\
 \lstinputlisting[language=C]{code/unrolled_loop_init.c}
 \end{minipage}
 \par
-Then comes the core loop, where 2D renderer and 3D renderer are called forever.\\
+Then comes the core loop, where the 2D renderer and 3D renderer are called forever.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_demoloop.c}
 \end{minipage}
 \par
-\cw{PlayLoop} contains the 3D renderer. It is pretty standard with get inputs, update world, render world approach.\\
+\cw{PlayLoop} contains the 3D renderer. It is pretty standard with get inputs, update world, and render world approach.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/unrolled_loop_playloop.c}
 \end{minipage}
 \par
-The sound system is started via the Sound Manager in \cw{SDL\_SetTimerSpeed}. While there is a famous game development library called Simple DirectMedia Layer (SDL), the prefix \cw{SDL\_} has nothing to do with it. It stands for SounD Low level. (SDL did not even exist in 1991.)\\
+The sound system is started via the Sound Manager in \cw{SDL\_SetTimerSpeed}. While there is a famous game development library called Simple DirectMedia Layer (SDL), the prefix \cw{SDL\_} has nothing to do with it. It stands for SounD Low level. (Simple DirectMedia Layer did not even exist in 1991.)\\
 \par
-The reason for interrupts is extensively explained in \ref{audio_and_heartbeat} "\nameref{audio_and_heartbeat}". In short, with an OS supporting neither process nor thread, it was the only way to have something execute concurrently with the rest of the engine.\\
+The reason for interrupts is extensively explained in Chapter \ref{audio_and_heartbeat} "\nameref{audio_and_heartbeat}". In short, with an OS supporting neither process nor thread, it was the only way to have something execute concurrently with the rest of the engine.\\
 \par
-An ISR\footnote{Interrupt Service Routine.} is installed in the Interrupt Vector Table to respond to the interrupt. Note how the ISR can be called at frequencies of 140Hz, 700Hz, or even 7000Hz depending on the needs of the sound system driven.\\
+An ISR\footnote{Interrupt Service Routine.} is installed in the Interrupt Vector Table to respond to the interrupt. Note how the ISR can be called at frequencies of 140Hz, 700Hz, or even 7000Hz depending on the needs of the sound system.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/soundsystem_interrupt.c}
@@ -180,6 +181,7 @@ The source code is structured in two layers. WL\_* files are high-level layers r
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/layers.pdf} 
+\caption{Wolfenstein 3D source code layers.}
  \end{figure}
  \par
 There are seven managers in total:\\

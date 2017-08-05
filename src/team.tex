@@ -109,9 +109,9 @@ Above is the team as shown in Spear of Destiny, in an Easter Egg created by John
 
 \section{Organization}
 
-In September 1991, following Tom and Jason's rose-tinted school memories of the area, the team had relocated from Shreveport, LA to Madison, WI. They established the studio office in a two stories brick building at 2622 in The Pines complex on High Ridge Trail. They all lived in walking distance of the office except for John Carmack who, since he did not care, inherited of the second floor of the building.\\
+In September 1991, following Tom and Jason's high-school memories of the area, the team relocated from Shreveport, LA to Madison, WI. They established their office in a two story brick building at 2622 in The Pines complex on High Ridge Trail. They all lived in walking distance of the office except for John Carmack who, since he did not care, inhabited of the second floor of the building.\\
 \par
-The development of Wolfenstein 3D started in November 1991. As temperature fell and snow dumped from the sky, the team kept itself increasingly busy and barely left the office. Development lasted for seven months and Wolfenstein 3D was released in May 1992.
+The development of Wolfenstein 3D started in November 1991. As temperatures fell and snow dumped from the sky, the team kept itself increasingly busy and barely left the office. Development lasted seven months and Wolfenstein 3D was released in May 1992.
 
 \begin{figure}[H]
 \centering
@@ -121,7 +121,7 @@ The development of Wolfenstein 3D started in November 1991. As temperature fell 
 
 \par
 
-During these seven months, the organization of the team was pretty much standard for a game studio of this era: four guys crammed in one room which dictated a fast pace and strong sense of camaraderie (and a lot of noise disturbance given John Romero and Tom Hall's type of interaction.)\\
+During these seven months, the organization of the team was pretty much standard for a game studio of this era: four guys crammed in one room, dictating a fast pace and strong sense of camaraderie (and a lot of noise disturbance given John Romero and Tom Hall's type of interaction.)\\
 \par On the map (next page) you can see on the upper floor the SNES where countless games of F-Zero were played and the Dungeons \& Dragons area extensively mentioned in "Masters of Doom". To have a team member (John Carmack) with his apartment directly above the studio was not out of the ordinary\footnote{ "90 Hours A Week And Loving It!" by Andy Hertzfeld.}.\\
 \par
 The team's space was setup as follows.
@@ -183,7 +183,7 @@ We started with floppy data transfer, but we had a Novell network on coax Ethern
 
 Development and compilation was done with Borland C++ 3.1 (but the language used was C) which ran in VGA mode 3 offering a screen 80 characters wide and 25 characters tall.\\
 \par
-John Carmack took care of the runtime code. John Romero programmed many of the tools (TED map editor, Graphic assets packers, Muse sound packer). Jason Blochowiak wrote important subsystems of the game (Input manager, Page Manager, Sound Manager, User Manager.)\\
+John Carmack took care of the runtime code. John Romero programmed many of the tools (TED5 map editor, IGRAB-ED graphic assets packers, MUSE sound packer). Jason Blochowiak wrote important subsystems of the game (Input manager, Page manager, Sound manager, User manager.)\\
 \\
 \begin{figure}[H]
 \centering
@@ -200,11 +200,11 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA modes that mode \cw{13h} and mode \cw{4h} (see figure on page \pageref{fig:vga_modes})  don't have the same starting RAM address. This allows for a trick where two graphics cards are plugged into the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally. This setup allows a developer to debug the game engine with breakpoints.
+You may have noticed in the listing of VGA modes that mode \cw{13h} and mode \cw{4h} (see figure \ref{vga-modes-available} on page \pageref{fig:vga_modes})  don't have the same starting RAM address. This allows for a trick where two graphics cards are plugged into the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally. This setup allows a developer to debug the game engine with breakpoints.
 \begin{figure}[H]
   \centering
       \scaledimage{1}{wolf_screen1.png}
-      \caption{The Monitor 1 in monochrome showing Borland Turbo Debugger 386.}
+      \caption{Monitor 1 connected to MDA card showing Borland Turbo Debugger 386.}
 \end{figure}
 
 
@@ -212,7 +212,7 @@ You may have noticed in the listing of VGA modes that mode \cw{13h} and mode \cw
 \begin{figure}[H]
   \centering
     \scaledimage{1}{wolf_screen2.png}
-    \caption{The Monitor 2 running the game normally.}
+    \caption{Monitor 2 connected to VGA card running the game normally.}
 \end{figure}
 
 
@@ -236,13 +236,13 @@ All graphic assets were produced by Adrian Carmack\footnote{Kevin Cloud did a fe
 
 
 \par
-Since the VGA is palette based (colors were not specified via 24-bit RGB but via indices pointing to a 256 color table) the creative process was difficult. The artist had to first make the key decision of which colors would go in the palette\footnote{Some games like "Monkey Island" used multiple palettes depending on the section of the game. id Software went for a simpler solution with one palette for the whole game.}, then draw everything with only those colors.\\
+Since the VGA is palette based (colors were not specified via 24-bit RGB but via indices pointing to a 256 color table) the creative process was difficult. Adrian had to first make the key decision of which colors would go in the palette\footnote{Some games like "Monkey Island" used multiple palettes depending on the section of the game. id Software went for a simpler solution with one palette for the whole game.}, then draw everything with only those colors.\\
 \begin{figure}[H]
   \centering
 \fullimage{palette.png}
- \caption{Wolfenstein 3D palette: Everything in the game is drawn using these 256 colors.}
+ \caption{Wolfenstein 3D palette. Everything in the game is drawn using these 256 colors.}
 \end{figure}
-The palette coordinates are horizontally from \cw{0x00} to \cw{0x0F} and vertically from \cw{0x00} to \cw{0xF0}. The horizontal blue gradient at the bottom starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is a special color deemed transparent by the engine and always skipped during rendition.\\
+The palette coordinates are \cw{0x00} to \cw{0x0F} horizontally and \cw{0x00} to \cw{0xF0} vertically. The horizontal blue gradient at the bottom starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is a special color deemed transparent by the engine and always skipped during rendition.\\
 \par
 
 All assets were hand drawn with a mouse. Since the VGA stretched the framebuffer when displaying it on the screen, Adrian had to be careful to draw at the same resolution as the game would run (320x200).\\
@@ -253,7 +253,7 @@ Adrian and Kevin both worked directly in Deluxe Paint, we didn't have any scanni
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-The graphic assets are divided in two categories:
+G raphic assets are divided in two categories:
 \begin{itemize}
 \item 2D Menu items shipping with the game in \cw{VGADATA}, \cw{VGAHEAD} and, \cw{VGADICT} archive
 \item 3D Action phase items (walls and sprites) shipping in the \cw{VSWAP} archive
@@ -279,6 +279,7 @@ After the graphic assets were generated, a tool (IGRAB-ED) packed all ILBMs toge
 \centering
  \includegraphics[width=.9\textwidth]{imgs/drawings/drawing_plain.eps}
  \caption{Asset creation pipeline for 2D Menu items}
+ \label{asset-creation-pipeline}
 \end{figure}
 \par
 \begin{minipage}{\textwidth}
@@ -298,7 +299,7 @@ After the graphic assets were generated, a tool (IGRAB-ED) packed all ILBMs toge
 
 
 \begin{minipage}{0.7\textwidth}
-"The Official Hint Manual for Wolfenstein 3D"\protect\footnotemark published in 1992 contains many drawings from Tom Hall and shows many behind the scene sketches made by Tom Hall and pixelarted by the graphic team.\\
+"The Official Hint Manual for Wolfenstein 3D" published in 1992 contains many drawings from Tom Hall and shows many behind the scene sketches made by Tom Hall and pixelarted by the graphic team.\\
 \par
  \begin{fancyquotes}
 When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a sketch for Adrian Carmack. Below are some of Tom's early designs for the title screen. The third sketch was chosen.\\
@@ -315,7 +316,7 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
 \centering
  \fullimage{sprites/tom_hall_sketch_intro_screen_genesis.png}
  \par
- \scaledimage{.8}{sprites/woldf3d.png}
+ \scaledimage{.85}{sprites/woldf3d.png}
  \end{figure}
  \par
    
@@ -323,7 +324,7 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
  
 
 
-\footnotetext{The manual was entirely designed on a NeXT ColorStation. It was the only usage of NeXT for Wolfenstein 3D (id purchased it in December 1991).}
+
 
 
 \label{hitler_drawing}
@@ -358,7 +359,7 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
 
 
 \par 
-The hint manual also contains several photos of the team back in the day; it is worth a read for context.
+The hint manual also contains several photos of the team back in the day; it is worth a read for context\footnote{The manual was designed on a NeXT ColorStation. It was its the only thing it was used for on Wolfenstein 3D (id purchased it in December 1991). NeXT series of workstations would become a key element of the production pipeline on Doom in 1992.}
 
 
 
@@ -373,7 +374,7 @@ The hint manual also contains several photos of the team back in the day; it is 
 
 
 \section{Maps}
-Maps were created using an in-house editor called TED5, short for Tile EDitor. TED was not created specially for Wolf 3D, but was originally made for the Commander Keen series and improved over the years. It was a versatile tool since it allowed for creating maps of both side scroller games and top-down games like Rescue Rover and Wolf 3D. TED5 does not stand-alone; in order to start, it needs an asset archive and the  associated header (as described in the graphic asset workflow.) This way, texture IDs are directly encoded in the map.\\
+Maps were created using an in-house editor called TED5, short for Tile EDitor. TED5 was not created specially for Wolf 3D, but was originally made for the Commander Keen series and improved over the years. It was a versatile tool since it allowed for creating maps of both side scroller games and top-down games like Rescue Rover and Wolf 3D. TED5 does not stand-alone; in order to start, it needs an asset archive and the  associated header (as described in the graphic asset workflow Figure \ref{asset-creation-pipeline} on page \pageref{asset-creation-pipeline}.) This way, texture IDs are directly encoded in the map.\\
 
  \begin{figure}[H]
 \centering
@@ -390,17 +391,17 @@ Maps were created using an in-house editor called TED5, short for Tile EDitor. T
  \begin{figure}[H]
 \centering
  \fullimage{ted5_scrolling_map.png}
- \caption{TED used for Commander Keen - side scroller.} 
+ \caption{TED5 used for Commander Keen - side scroller.} 
  \end{figure}
 
-TED allows placement of tiles on layers called "planes". This layered approach proved powerful and versatile. In Commander Keep, layers are used for background tiles, which the hero can stand on, generating bonuses and so on. For Wolfenstein 3D, two layers are used: one for walls, and one to place bonuses and enemies.\\
+TED5 allows placement of tiles on layers called "planes". This layered approach proved powerful and versatile. In Commander Keen, layers are used for background, tiles which the hero can stand on, generating bonuses and so on. For Wolfenstein 3D, two layers are used: one for walls, and one to place bonuses and enemies on.\\
 \begin{figure}[H]
 \centering
  \fullimage{TED.png}
- \caption{TED used for top view level design in Rescue Rover.} 
+ \caption{TED5 used for top view level design in Rescue Rover.} 
  \end{figure}
 
-Reusing TED5 was a double win. Not only did it save tool development time, but ramp-up time was reduced as all team members had been using it for years. TED5 was so good at doing the job that it allowed designers to make a level within minutes.\\
+Reusing TED5 was a double win. Not only did it save tool development time, but ramp-up time was also reduced as all team members had been using it for years. TED5 was so good at doing the job that it allowed designers to make a level within minutes.\\
 \par
 
  \begin{fancyquotes}
@@ -410,7 +411,7 @@ After talking with Romero and Tom, Scott learned that it was taking the group on
  \end{fancyquotes}\\
 
 \par
-Everybody worked a little bit on the map but it was mostly the creation of John Romero and Tom Hall.\\
+While everybody worked a little bit on the map, it was mostly the creation of John Romero and Tom Hall.\\
 \par
  \textbf{\underline{Trivia :}} The source code of TED5 was released several years later. Among the source code made of \cw{.C} and \cw{.H} was a mysterious \codeword{\_TOM.PIC}\footnote{Intentionally not reproduced here.}. It turned out to be an adult caricature of Tom Hall made by Adrian Carmack. The explanation was provided later by John Romero in 2002:\\
 \par
@@ -440,15 +441,15 @@ anywhere.\\
 \section{Audio}
 
 \subsection{Sounds}
-As mentioned in the hardware section, audio hardware was highly fragmented. id decided to support all four sound cards and the default PC speaker, which meant generating assets multiple times for each and packing them together with an in-house tool called MUSE into an AUDIOT archive (an id software proprietary format):\\
+As mentioned in Chapter \ref{hardware-audio}, audio hardware was highly fragmented. id decided to support all four sound cards and the default PC speaker, which meant generating assets multiple times for each and packing them together with an in-house tool called MUSE into an AUDIOT archive (an id software proprietary format):\\
 \begin{figure}[H]
 \centering
 
    \fullimage{muse.png}
- 
+  \caption{MUSE splash screen.}
  \end{figure}
  \par
- Three sets of the same audio effect shipped with the game:
+ Three sets of each audio effect shipped with the game:
 \begin{enumerate}
 \item For PC Speaker
 \item For AdLib
@@ -456,7 +457,7 @@ As mentioned in the hardware section, audio hardware was highly fragmented. id d
 \end{enumerate}
 
 \par
-All voices were recorded by John Romero and Tom Hall, faking German accents the best they could\footnote{Masters of Doom by David Kushner.}.
+All voices were recorded by John Romero and Tom Hall faking German accents the best they could\footnote{Masters of Doom by David Kushner.}.
 
 
 
@@ -486,10 +487,11 @@ To rough out compositions, I used Cakewalk ("CW"). I had been using it for sever
  \includegraphics[width=\textwidth]{imgs/drawings/music_pipelione.pdf}
  \caption{Music pipeline as described by Bobby Prince.}
 \end{figure}
-What goes in the \cw{AUDIOT} archive is a music format called IMF\footnote{Id software Music File.}. As it supports only the YM3812, it is tailored for the chip with zero abstraction layer. It consists of a stream of machine language commands with associated delays\footnote{IMF format is explained in detail on page \pageref{IMF_explanation}}. The stream pilots the nine channels in the OPL2. A channel is able to simulate an instrument and play notes thanks to two oscillators, one playing the role of a modulator and the other the role of a carrier. There are many other ways to control a channel such as envelope, frequency or octave. The way a channel is programmed is described in detail in the "Audio" section, page \pageref{IMF_explanation}.
+What goes in the \cw{AUDIOT} archive is a music format called IMF\footnote{Id software Music File.}. As it supports only the YM3812, it is tailored for the chip with zero abstraction layer. It consists of a stream of machine language commands with associated delays\footnote{IMF format is explained in detail on page \pageref{IMF_explanation}}. The stream pilots the nine channels in the OPL2. A channel is able to simulate an instrument and play notes thanks to two oscillators, one playing the role of a modulator and the other the role of a carrier. There are many other ways to control a channel such as envelope, frequency or octave. The way a channel is programmed is described in detail in Section \ref{IMF_explanation}, "\nameref{IMF_explanation}" on page \pageref{IMF_explanation}.
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/channel.pdf}
+ \caption{Architecture of a YM3812 channel.}
 \end{figure}
 \par
 \bu{Trivia :}  The YM3812's unmistakable sonority is due to its peculiar set of waveform transformers (they are right after the output of each oscillator in the drawing.) Four waveforms are available on the OPL2: Sin \circled{1}, Abs-sin\circled{2}, Pulse-sin \circled{3}, and Half-sin \circled{4}.
@@ -497,10 +499,11 @@ What goes in the \cw{AUDIOT} archive is a music format called IMF\footnote{Id so
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/wave_transform.pdf}
+ \caption{The four waveform transforms available.}
 \end{figure}
 
 
-\bu{Trivia :} In Episode 3 the music playing features a hidden Morse coded message. "To Big Bad Wolf. De Little Red Riding Hood. Eliminate Hitler. Imperative. Complete mission within 24 hours. Out." The end boss of this episode indeed is Hitler in a Mech suit (see hint manual drawing on page \pageref{hitler_drawing}.)
+\bu{Trivia :} In Episode 3 the music playing features a hidden Morse code message. "To Big Bad Wolf. De Little Red Riding Hood. Eliminate Hitler. Imperative. Complete mission within 24 hours. Out." The end boss of this episode is indeed Hitler in a Mech suit (see hint manual drawing on page \pageref{hitler_drawing}.)
 
 
 
@@ -530,7 +533,7 @@ What goes in the \cw{AUDIOT} archive is a music format called IMF\footnote{Id so
 
 
 \section{Distribution}
-At 4am on May 5th, 1992 the first episode of the game was uploaded to Massachusetts via Software Creations BBS\footnote{Bulletin Board Systems where server allowing users to connect via a console and upload/download programs.} server. Wolfenstein 3D was distributed as a shareware; the game engine and the first episode were given for free and encouraged to be copied and distributed to a maximum number of people. To receive the five other episodes each player had to pay \$50 to id Software.\\
+At 4am on May 5th, 1992 the first episode of the game was uploaded to Massachusetts via Software Creations BBS\footnote{Bulletin Board Systems where server allows users to connect via a console and upload/download programs.} server. Wolfenstein 3D was distributed as shareware; the game engine and first episode were given for free and encouraged to be copied and distributed to a maximum number of people. To receive the five other episodes, each player had to pay \$50 to id Software.\\
 \par
 \begin{figure}[H]
 \centering
@@ -540,7 +543,7 @@ At 4am on May 5th, 1992 the first episode of the game was uploaded to Massachuse
 
 \end{document}
 \par
-In order to maximize income, it was therefore paramount to make the game easy to copy and redistribute. In 1991, Internet was still in its infancy and the best medium was the 3\nicefrac{1}{2}-inch floppy disk. Particular attention was given to the total size of the game so it would fit on one disk. All assets combined accounted for 1,204KiB but everything was compressed to 645KiB (a 3\nicefrac{1}{2}-inch floppy can store 720KB.) The full six episodes fit on two disks. Spear of Destiny would fit on three disks.
+In order to maximize income, it was therefore paramount to make the game easy to copy and redistribute. In 1991, Internet was still in its infancy and the best medium was the 3\nicefrac{1}{2}-inch floppy disk. Particular attention was given to the total size of the game so it would fit on one disk. All assets combined accounted for 1,204KiB but everything was compressed to 645KiB (a 3\nicefrac{1}{2}-inch floppy can store 720KiB.) The full six episodes fit on two disks. Spear of Destiny would fit on three disks.
 The game shipped as follows:\\
 \par
  \begin{figure}[H]
@@ -551,8 +554,8 @@ The game shipped as follows:\\
   \par
  The files can be divided in five parts:
  \begin{itemize}
- \item WOLF3D.EXE: The Game engine.
- \item VSWAP.WL1: Contains all the assets (sprites, textures, digitized sound) needed during 3D action phases.
+ \item WOLF3D.EXE: Game engine.
+ \item VSWAP.WL1: Contains all the assets (sprites, textures, digitized sounds) needed during 3D action phases.
  \item Music files used during both 3D and 2D phases:
      \begin{itemize}
      \item AUDIOHED.WL1 : Index to payload in \cw{AUDIOT} file.
@@ -563,19 +566,19 @@ The game shipped as follows:\\
      \item MAPHEAD.WL1 : Index into \cw{GAMEMAPS} file.
       \item GAMEMAPS.WL1 : Compressed Map payloads.
       \end{itemize}
-\item Pictures used during 2D menus phase:
+\item Pictures used during 2D menu phase:
     \begin{itemize} 
     \item VGAHEAD.WL1 : Index into \cw{VGAGRAPH} file.
-    \item VGADICT.WL1 : Huffman-tree to decompress each the picture.
+    \item VGADICT.WL1 : Huffman-tree to decompress each picture.
     \item VGAGRAPH.WL1 : Compressed pics lumped together.
      \end{itemize}
 \end{itemize}
  \par
 
-\textbf{\underline{Trivia :}} The file extension did have a meaning: 
+\textbf{\underline{Trivia :}} The file extensions did have meaning: 
 \begin{itemize}
 \item WL1: Shareware.
-\item WL3: Early three-episode full version (never released).
+\item WL3: Early three-episode full version (never released.)
 \item WL6: Six-episode full version.
 \item WJ1: Japanese shareware.
 \item WJ6: Japanese full version.
@@ -589,6 +592,6 @@ The game shipped as follows:\\
 \scaledimage{0.7}{disk.png}\\
 \end{figure}
 \par
-On the previous page, a 3\nicefrac{1}{2}-inch floppy widely used to share and redistribute the game. The upper left hole allows the disk reader to recognize if the disk is a low capacity (full = 720 KiB) or a high capacity (hole = 1.44 MiB.) The upper right hole features a sliding tab which when obstructing the hole forbids writing to the disk, making it read-only. Once inserted in the floppy disk reader, the metallic part slides to the right to expose the magnetic disk.\\
+On the previous page is an image of a 3\nicefrac{1}{2}-inch floppy widely used to share and redistribute the game. The upper left hole allows the disk reader to recognize if the disk is a low capacity (full = 720 KiB) or a high capacity (hole = 1.44 MiB version.) The upper right hole features a sliding tab which when closed forbids writing to the disk, making it read-only. Once inserted in the floppy disk reader, the large metallic tab slides to the right to expose the magnetic disk.\\
 \par
-\textbf{\underline{Trivia :}} Some people (including the author) saved money by drilling a hole in their 720 KiB certified floppy disk to have them recognized as 1.44 MiB, it worked!
+\textbf{\underline{Trivia :}} Some people (including the author) saved money by drilling holes in their 720 KiB certified floppy disks to have them recognized as 1.44 MiB. It worked!
