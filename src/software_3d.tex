@@ -8,7 +8,7 @@ After the player is done setting up the game via the 2D renderer, it comes time 
   \end{equation*}
 \end{figure}
 \par
-Even for a complex scene involving multiple door and rooms, this method can deliver fast intersection calculations.
+Even for a complex scene involving multiple doors and rooms, this method can deliver fast intersection calculations.
 \par
 \begin{figure}[H]
 \centering
@@ -196,7 +196,7 @@ The longer the distance the ray traveled, the shorter the column is drawn on scr
 
 
 \subsection{3D Setup}
-Before starting to draw frames, the 3D renderer sets up the VRAM with static elements forming the HUD\footnote{Heads-Up Display.}: The green background, the blue status bar and all labels "LEVEL", "SCORE", "LIVES", "HEALTH", and "AMMO".\\
+Before starting to draw frames, the 3D renderer sets up the VRAM with static elements forming the HUD\footnote{Heads-Up Display.}: the green background, the blue status bar, and all labels ("LEVEL", "SCORE", "LIVES", "HEALTH", and "AMMO".)\\
 \par
  \begin{fancyquotes}
    Wolfenstein was the last Id game that still had the concept of score and lives.  We were still in a quarter-eating-arcade-game design mode. With Doom, you finally got to just keep playing as long as you wanted, which was a bit radical at the time!
@@ -215,6 +215,7 @@ The hardware chapter described Mode \cw{12h}, which despite being unfit for game
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/latches.pdf}
+ \caption{Latches memorize read operation from each bank. The memorized value can be used for later writes.}
  \end{figure}
 With this architecture, each time the VRAM is read \circled{R}, the latch from the corresponding bank is loaded with the read value. Each time a value is written to the VRAM \circled{W}, it can be composited by the ALU using the latched value and the written value. This design allowed mode \cw{12h} programmers to plot a pixel easily with one read, one ALU setup, and one write instead of four reads, 4 xors, and 4 writes.\\
 \par
@@ -393,7 +394,7 @@ To take full advantage of this optimization, the 3D renderer uploads images to t
 
 \bu{Trick :} Images are stored woven. All bytes for bank 0, then all bytes for bank 1, and so on. This clever way to store data allows a bank to be loaded very fast with one \cw{memcpy} per bank (four \cw{memcpy} per image.)\\
 \par
-All these assets account for 48*24*4 (weapons sprites) + 14*8*16 (numerals and keys sprites) + 24*24*32 (faces sprites) + 224 * 48 (paused + psyched) = 34816 bytes. There are therefore 27648 unused bytes in the fourth VGA page.\\
+All these assets account for 48*24*4 (weapons sprites) + 14*8*16 (numeral and key sprites) + 24*24*32 (face sprites) + 224 * 48 (paused + psyched) = 34,816 bytes. There are therefore 35,324 unused bytes in the fourth VGA page.\\
 \par
 For this trick to work, image sources and destinations have to be aligned on four bytes horizontally in screen space. If you take a look at the location of each element on screen you can see that elements are aligned on four pixels horizontally but there is no such constraint vertically.
 \begin{figure}[H]
@@ -401,13 +402,13 @@ For this trick to work, image sources and destinations have to be aligned on fou
  \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
 \end{figure}
 
-While it is faster to copy four pixels in one read and one write, this trick does not provide a full 400\% speed increase as all writes have to be done in all three screen pages. This is obvious when looking at the routine for updating the status (hero's face).\\
+While it is faster to copy four pixels in one read and one write, this trick does not provide a full 400\% speed increase as all writes have to be done in all three screen pages. This is obvious when looking at the routine for updating the status (hero's face.)\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/StatusDrawPic.c}
 \end{minipage}
 \par
-This optimization still brings a 30\% overall speed increase.\\
+This optimization still results in a 30\% overall speed increase.\\
 \par
 
 
@@ -421,13 +422,13 @@ This optimization still brings a 30\% overall speed increase.\\
 
 
 \subsection{Clearing the Screen}
-At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. To create this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. Since values are written 16 bit at a time, it can write 8 pixels at a time.\\ 
+At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. To create this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. Since values are written 16 bits at a time, it can write 8 pixels at a time.\\ 
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
  \end{minipage}
 \par
-Clearing the 3D canvas made of 304*152 = 46208 pixels requires only 46208/8 = 5776 write operations.\\
+Clearing the 3D canvas made of 304*152 = 46,208 pixels requires only 46,208/8 = 5,776 write operations.\\
 \par
 Colors for the floor and the ceiling do not come from map data files. The ground is always the same color (\cw{0x19}) and ceiling colors are hardcoded in the engine on a per level basis.\\
 \par
@@ -457,7 +458,7 @@ Following are ceiling colors \cw{0x1D}, \cw{0xBF}, \cw{0x4E} and \cw{0x8D}.\\
 
 \subsection{Solving the CPU Problem}
 
-In the hardware chapter describing CPU capabilities, the reader was left with a problem: the machine cannot perform floating point operations quickly enough. This is a pretty big deal for a 3D engine given all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed point arithmetic".
+In the Chapter \ref{chapter_hardware}: \pageref{chapter_hardware} describing CPU capabilities, the reader was left with a problem: the machine cannot perform floating point operations quickly enough. This is a pretty big issue for a 3D engine given all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed point arithmetic".
 
 
 
@@ -551,9 +552,9 @@ The beauty of fixed point is that addition and subtraction work exactly like int
    \caption{1.5 >> 1 = 0.75} 
 \end{figure}
 
-The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONNAL\_PART}. In the game, the player position is \cw{16:16}. The grid location is one shift operation away \cw{player->x $\gg$ 16}.\\
+The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONAL\_PART}. In the game, the player's position is \cw{16:16}. The grid location is one shift operation away \cw{player->x $\gg$ 16}.\\
 \par
-Performing multiplication and division are special cases. There are two ways to do this: either multiply two 32 bit into 64 bit (and drop the upper and lower 16 bits) or drop the precision of both fixed points and then multiply them into 32 bits. Both methods involve accepting a loss of data via overflow or underflow. Let's take the example of $98.7539 * 1.5$.
+Performing multiplication and division are special cases. There are two ways to do this: either multiply two 32 bits into 64 bits (and drop the upper and lower 16 bits) or drop the precision of both fixed points and then multiply them into 32 bits. Both methods involve accepting a loss of data via overflow or underflow. Let's take the example of $98.7539 * 1.5$.
 
 
 \par
@@ -591,21 +592,21 @@ Finally multiply them together:
 \end{figure} 
 $128 + 16 + 4 + 0.125 = 148.125 $\\
 \par
-Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bit disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8.)\\
+Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bits disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8.)\\
 \par
-In the source code, all fixed point variables are 32 bit wide and use a special \cw{typedef}.\\
+In the source code, all fixed point variables are 32 bits wide and use a special \cw{typedef}.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed.c}
  \end{minipage}
 \par
-Not all \cw{fixed} are the same. Some are \cw{16:16}, some are \cw{24:8} and operations such as multiplication can be implemented differently. It can be fairly complicated for tweaked \cw{fixed} where the leftmost bit stores the sign..\\
+Not all \cw{fixed} are the same. Some are \cw{16:16}, some are \cw{24:8} and operations such as multiplication can be implemented differently. It can be fairly complicated for tweaked \cw{fixed} where the leftmost bit stores the sign:\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords={asm,fixed}]{code/FixedByFrac.c}
  \end{minipage}
 \par
-And much easier when the engines knows two \cw{fixed} are the same sign:\\
+And much easier when the engine knows two \cw{fixed} are the same sign:\\
 
 \par
 \begin{minipage}{\textwidth}
@@ -613,7 +614,7 @@ And much easier when the engines knows two \cw{fixed} are the same sign:\\
  \end{minipage}
 \par
 
- \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game consoles manufactured in the 90s and later did not feature floating point units as a design choice to reduce production cost and maximize CPU pipeline throughout. Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples.
+ \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game consoles manufactured in the 90s and later did not feature floating point units in order to reduce production cost and maximize CPU pipeline throughout. Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples.
  
 
  
@@ -658,7 +659,7 @@ In contrast, VSD is an open-ended problem, and there are dozens of approaches cu
 \textbf{Michael Abrash - Programmer}
  \end{fancyquotes}
  \par
-VSD is not only complicated to get done right, it is also hard to get done fast. It is easy to understand with a small example where objects are free form with no alignment, as follows.
+VSD is not only complicated to do right, it is also hard to do fast. It is easy to understand with a small example where objects are free form with no alignment, as follows.
 
 \par
 \begin{figure}[H]

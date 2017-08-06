@@ -204,7 +204,7 @@ The WL\_ stuff was written specifically for Wolf3D while the ID\_ managers were 
 \caption{Architecture with engine and sub-systems (in white) connected to I/O (in gray.)}
 \label{fig:architecture}
 \end{figure}
-Next to the hard drives (HDD) you can see the assets packed as described in the Team chapter.
+Next to the hard drives (HDD) you can see the assets packed as described in Chapter \ref{chapter_team} Team.
 
 
 
@@ -231,6 +231,7 @@ The memory manager starts by allocating all available RAM via \cw{malloc}/\cw{fa
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/mm_start.pdf}
+ \caption{Initial memory manager state.}
  \end{figure}
  \par
  The engine interacts with the Memory Manager by requesting RAM (\cw{MM\_GetPtr}) and freeing RAM (\cw{MM\_FreePtr}). To allocate memory, the manager searches for "holes" between blocks. This can take up to three passes of increasing complexity:
@@ -321,13 +322,13 @@ In order to minimize the cost of page misses, the engine preloads the page cache
  \par
 The precaching mechanism is not particularly clever: it loads as many pages from the swap file as possible. It doesn't try to look at what is actually used in the level but instead loads assets in the order they are stored in \cw{VSWAP} file on the HDD. On a machine with low memory (less than 1MB), the eviction policy (LRU) stabilizes the cache after a few minutes in a level.\\
 \par
-This design has a small yet annoying flaw. On a low memory machine, a cache miss will occur when the player opens the last door of a level and is about to find himself confronted with the heavy power final boss. This enemy that has never been seen before, and therefore is not in the cache of the Page Manager. This incurs the worst possible case of cache miss: a long access to the hard-drive is required and results in a lag, often leading to an undeserved (and humiliating) death.\\
+This design has a small yet annoying flaw. On a low memory machine, a cache miss will occur when the player opens the last door of a level and is about to find herself confronted with the heavy-power final boss. This enemy has never been seen before, and therefore is not in the cache of the Page Manager. This incurs the worst possible case of cache miss: a long access to the hard-drive is required, leading to lag and often resulting in an undeserved (and humiliating) death.\\
 \par
-The size of the swap file varies depending on the version of the game you play: \cw{VSWAP.WL1} (shareware) is 742KiB while \cw{VSWAP.WL6} (full version) is 1,500KB. In both cases a machine with 2MiB of RAM on top of the factory issued 1MiB is enough to have all assets loaded during precaching.\\
+The size of the swap file varies depending on the version of the game being played: \cw{VSWAP.WL1} (shareware) is 742KiB while \cw{VSWAP.WL6} (full version) is 1,500KiB. In both cases a machine with 2MiB of RAM on top of the factory issued 1MiB is enough to have all assets loaded during precaching.\\
 \par
-\bu{Trashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, "trashing" occurs. The HDD is put to heavy contribution, and framerate drops. Trashing can happen if too many different resources are visible on the screen. In order to help designers balance their creativity with the needs for a decent framerate, the engine detects trashing and flashes the screen border red when running in dev-mode.\\
+\bu{Trashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, "trashing" occurs. The HDD is put to heavy contribution, and framerate drops. Trashing can happen if too many different resources are visible on the screen. In order to help designers balance their creativity with the need for a decent framerate, the engine detects trashing and flashes the screen border red when running in dev-mode.\\
 \par
-\bu{Sounds are special:} Because sound cards are fed via a system of interrupt, the sound manager cannot recover from a page miss. Therefore, all sound resources are loaded first (they are located at the start of \cw{SWAP.WL1}) and only in Conventional memory.
+\bu{Sounds are special:} Because sound cards are fed via a system of interrupts, the sound manager cannot recover from a page miss. Therefore, all sound resources are loaded first (they are located at the start of \cw{SWAP.WL1}) and only in conventional memory.
 
 
 
@@ -353,7 +354,7 @@ The video manager features two parts:
 
 
 \subsection{Cache Manager (CA)}
-The cache manager is a small but critical component, as it loads and decompresses maps, 2D graphics, and music stored on the filesystem and makes them available in RAM. Assets of each kind are stored in two files. A header file contains the offset to allow translation from asset ID to byte offset in the data file.\\
+The cache manager is a small but critical component. It loads and decompresses maps, 2D graphics, and music stored on the filesystem and makes them available in RAM. Assets of each kind are stored in two files. A header file contains the offset to allow translation from asset ID to byte offset in the data file.\\
  \par
 \begin{figure}[H]
 \centering
@@ -362,7 +363,7 @@ The cache manager is a small but critical component, as it loads and decompresse
  \par
 \bu{Note:} All resources are compressed. In the case of maps and audio, compression is hard-coded in the engine. For graphics, however, a third file (\cw{DICT}) contains the compression dictionary to decompress each asset. The Cache Manager handles decompression transparently.\\
 \par
-\bu{Trivia :} Is there a typo in the filename \cw{AUDIOHED.WL} ? Correct spelling would be \texttt{\justify AUDIOHEAD.WL1}. Where is the \cw{A}? This is in fact a limitation of the operating system. DOS only allows 8.3 filename (at most eight characters followed by a dot, then at most three characters for the extension.)
+\bu{Trivia :} Is there a typo in the filename \cw{AUDIOHED.WL} ? The correct spelling would be \texttt{\justify AUDIOHEAD.WL1}. Where is the \cw{A}? This is in fact a limitation of the operating system. DOS only allows 8.3 filename (at most eight characters followed by a dot, then at most three characters for the extension.)
 
 
 
@@ -402,6 +403,7 @@ The Sound Manager abstracts interaction with all four sound systems supported: P
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/sound_manager_architecture.pdf}
+ \caption{Sound system architecture.}
  \end{figure}
  \par
 The sound manager is described extensively in the "Sound and Music" section.
@@ -423,7 +425,7 @@ The sound manager is described extensively in the "Sound and Music" section.
 
 
 \subsection{Input Manager (IN)}
-Abstracts interactions with joystick, keyboard and mouse. Features a lot of boring boilerplate code to deal with PS/2, Serial and DA-15 ports, with each using their own I/O addresses.
+The Input manager abstracts interactions with joystick, keyboard, and mouse. It features a lot of boring boilerplate code to deal with PS/2, Serial, and DA-15 ports, with each using their own I/O addresses.
 
 
 
@@ -441,23 +443,24 @@ Abstracts interactions with joystick, keyboard and mouse. Features a lot of bori
 
 
 \section{Startup}
-As the game engine starts, it must deal with difficulties shown in the hardware section. This is where things become really interesting.
+As the game engine starts, it must deal with the difficulties described in the hardware section. This is where things become really interesting.
 
 
 
 
 
 \subsection{Signon}
-The first (mild) issue to deal with was the heterogeneous ecosystem of PCs on the market. With different drivers loaded and different sound cards, the engine has to figure out how much RAM is installed and whether or not it will be able to run. If not, it has to let the user know what the problem is. That was important as id Software was a small team, without the resources to help every unhappy customer troubleshoot his issues.\\
+The first (mild) issue to deal with was the heterogeneous ecosystem of PCs on the market. With different drivers loaded and different sound cards, the engine has to figure out how much RAM is installed and whether or not it will be able to run. If not, it has to let the user know what the problem is. That was important as id Software was a small team, without the resources to help every unhappy customer troubleshoot issues.\\
 \par
 That is what the "signon" screen is for: self diagnostics. 
 \par
 \begin{figure}[H]
 \centering
 \fullimage{signon.png}
+\caption{Signon screen.}
 \end{figure}
 \par
-Besides showing recognized devices such as mouse, joystick, and sound cards, the signon screen's most important metric here is labeled "MAIN". Due to the architecture described in the first chapter, a DOS program has only 640KiB of RAM available. Each driver loaded by the user takes away from these 640KB. If too much is used to the point where DOS cannot load the executable in RAM, the user will see the following error message:\\
+Besides showing recognized devices such as mouse, joystick, and sound cards, the signon screen's most important metric is labeled "MAIN". Due to the architecture described in Chapter \ref{chapter_hardware} \nameref{chapter_hardware}, a DOS program has only 640KiB of RAM available. Each driver loaded by the user takes away from these 640KiB. If DOS cannot load the executable in RAM, the user will see the following error message:\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/OutOfMemory.txt}
@@ -470,7 +473,7 @@ At the time signon is displayed, the only loaded manager is the Memory Manager. 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/signonscreen.c}
 \end{minipage}
-After that screen, the \cw{introscn} variable (using 320x200 bytes = 64KB) is unloaded from RAM to make more room for runtime.\\
+After that screen, the \cw{introscn} variable (using 320x200 bytes = 64,000 bytes) is unloaded from RAM to make more room for runtime.\\
 \par
 
 
@@ -493,13 +496,14 @@ After that screen, the \cw{introscn} variable (using 320x200 bytes = 64KB) is un
 
 
 \subsection{Solving the VGA Problem}
-The Hardware chapter describing the video system left us with an unresolved issue: all the VGA modes lack double buffering capability.\\
+Chapter \ref{chapter_harware} \nameref{chapter_harware} left us with an unresolved issue: all the VGA modes lack double buffering capability.\\
 \par
  The most appealing mode (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. The Chain-4 chipset in the VGA circuitry automatically maps the RAM starting at \cw{A0000h} to the four VRAM banks. 
  \par
  \begin{figure}[H]
 \centering
       \includegraphics[width=\textwidth]{imgs/drawings/mode_13h.pdf}
+      \caption{Chain-4 chipset between RAM and VRAM routes I/Os operations.}
 \end{figure}
 
 This mapping system is also called "chaining". Because 2 bits out of the address are used to route a write/read operation to a bank, only 14 bits are used for the actual offset in the bank. Since 14 bits can only address 16384 values, this system results in 75\% of VRAM left unusable.\\
@@ -507,14 +511,15 @@ This mapping system is also called "chaining". Because 2 bits out of the address
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/vga_layout/wasted_vga_ram.pdf}
+  \caption{Chain-4 fakes one continuous VRAM bank but wastes 75\% of the VRAM.}
  \end{figure}
 
  \par
- The waste is really the fault of the Chain-4 chip. It turns out it is possible to disable this. The technique was popularized by Michael Abrash in Dr. Dobb's Journal of July 1991. In his article he described what he coined the Mode-X. An undocumented sequence of operations disabling Chain-4 allows for a resolution of 320x240 square pixels (since the ratio is 4:3) and full access to the 256K of RAM.\\
+ The waste is really the fault of the Chain-4 chip. However it turns out it is possible to disable this. The technique was popularized by Michael Abrash in Dr. Dobb's Journal of July 1991. In his article he described what he coined Mode-X. An undocumented sequence of operations disabling Chain-4 allows for a resolution of 320x240 square pixels (since the ratio is 4:3) and full access to the 256KiB of RAM.\\
  \par
  Wolfenstein 3D does things slightly differently. It disables Chain-4 but keeps resolution at 320x200. This mode was coined Mode-Y many years later. \\
  \par
- There are two reasons the team did not use 320x240 square pixels. Despite its advantage for artists, a screen using Mode-Y is 320x200 = 64000 pixels, which represents 17\% fewer pixels compared to Mode-X with 320x240 = 76800 pixels. The engine already struggled to reach an acceptable framerate, so Mode-X was simply too many pixels per frame. And it would not even have been that great for artists either since all tools (Deluxe Paint) ran in Mode 13h which has non-square pixels. That would have created an awkward pipeline where Adrian assets would have been created and rendered at different resolutions.
+ There are two reasons the team did not use 320x240 square pixels. Despite its advantage for artists, a screen using Mode-Y is 320x200 = 64,000 pixels, which represents 17\% fewer pixels compared to Mode-X with 320x240 = 76,800 pixels. The engine already struggled to reach an acceptable framerate, so Mode-X was simply too many pixels per frame. It would have also been inconvenient to artists since Deluxe Paint ran in Mode 13h which has non-square pixels. This would have created an awkward pipeline where assets would have been created and rendered at different resolutions.
  \par
  \par
   \begin{minipage}{\textwidth}
@@ -530,12 +535,12 @@ The magic happens in function \cw{VL\_DePlaneVGA} where VGA registers are manipu
 \end{minipage}
 
  \par
- The VGA registers of the Sequence Controller and CRT Controller are setup to divide the VRAM into four parts.
+ The VGA registers of the Sequence Controller and CRT Controller are setup to divide the 256KiB VRAM into four parts.
  \begin{itemize}\label{SetupPages}
- \item 64K for Framebuffer 0
- \item 64K for Framebuffer 1
- \item 64K for Framebuffer 2
- \item 64K for Graphic assets
+ \item 64,000 bytes for Framebuffer 0
+ \item 64,000 bytes for Framebuffer 1
+ \item 64,000 bytes for Framebuffer 2
+ \item 70,140 bytes for Graphic assets
 \end{itemize}
 \par
 \begin{figure}[H]
@@ -543,7 +548,7 @@ The magic happens in function \cw{VL\_DePlaneVGA} where VGA registers are manipu
  \includegraphics[width=\textwidth]{imgs/drawings/vga_layout/vga_ram_architecture.pdf}
  \end{figure}
 \par
-But the engine is not done yet. Tweaking Mode 13h into Mode-Y solves one big problem but introduces two smaller ones: one about speed and one about correctness.\\
+But the engine is not done yet. Tweaking Mode \cw{13h} into Mode-Y solves one big problem but introduces two smaller ones: one regarding speed and one regarding correctness.\\
 \par
 Let's look at speed first. With Chain-4 out of the picture the developer is now in charge of selecting the bank to write to. This can easily be done with a simple function.\\
 \par
@@ -571,10 +576,10 @@ The solution is to change how we draw to the screen. Instead of going top to bot
 \par
 This code can run without issue at 70 frames per second since just 200 slow \cw{outp} instructions are used.\\
 \par
-This speed consideration has a fundamental impact on the engine: to draw anything fast with the VGA, it has to be drawn vertically. Everything in the engine is drawn this way: walls, sprites, menus. The ramifications of this hardware constraint are felt all the way down to how assets are stored in RAM (rotated 90 degrees and woven to match the VGA banks layout). This is described in detail in section \ref{drawingSprites} "\nameref{drawingSprites}".\\
+This speed consideration has a fundamental impact on the engine: to draw anything fast with the VGA, it has to be drawn vertically. Everything in the engine is drawn this way: walls, sprites, menus. The ramifications of this hardware constraint are felt all the way down to how assets are stored in RAM: rotated 90 degrees and woven to match the VGA bank layout. This is described in detail in section \ref{drawingSprites} "\nameref{drawingSprites}".\\
 
 \par
-The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3, and then goes back to page 1. This solves tearing and allows the engine to never block on vsync since it always has a valid framebuffer to draw to. Changing page is done by instructing the CRT Controller that it should scan a framebuffer at a different offset after the next vsync.\\
+The second issue introduced by Mode-Y is about correctness. With three pages available, the engine draws in page 1, then page 2, then page 3, and then goes back to page 1. This solves tearing and allows the engine to never block on vsync since it always has a valid framebuffer to draw to. Changing pages is done by instructing the CRT Controller that it should scan a framebuffer at a different offset after the next vsync.\\
 \par
 The CRT Controller scan offset is a 16 bit value which is updated with a little bit of assembly writing to a VGA register: first the high byte and then the low byte. The code would look as follows.\\
 \par
@@ -608,7 +613,7 @@ In VRAM, Page 1 is at 0x0000, page 2 at 0x3E80 and page 3 at 0x7000. Instructing
 \lstinputlisting[language={[x86masm]Assembler}]{code/pageflip_error.c}
 \end{minipage}
 \par
-How do you update atomically a 2 bytes value with 1 byte operation? Take a look at how Wolfenstein sets up its pages:\\
+How do you update atomically a 2 byte value with a 1 byte operation? Take a look at how Wolfenstein sets up its pages:\\
 \par
 \begin{minipage}{\textwidth}
 \begin{flushright}
@@ -623,6 +628,7 @@ Notice how it uses a value of 208 for the height of a framebuffer.  At first, th
 \begin{figure}[H]
  \centering
  \includegraphics[width=\textwidth]{imgs/drawings/triple_pages_trick_padding.pdf}
+ \caption{This program has been rated PC "Profound Carnage" - 13.}
 \end{figure}
 \par
 
