@@ -670,11 +670,11 @@ VSD is not only complicated to do right, it is also hard to do fast. It is easy 
 
 In a world with no constraints, it is difficult to find the intersection of a ray with an object.\\
 \par
-In the example above, a valid approach would be to iterate over all objects in the world and perform ray marching, which consists of checking whether a ray intersects objects at a regular interval. But this is very CPU intensive and even with fixed point that would not be fast enough. No to mention some objects could slip between the steps, which would make VSD inaccurate.
+In the example above, a valid approach would be to iterate over all objects in the world and perform ray marching, which consists of checking if a ray intersects objects at a regular interval. However, this is very CPU intensive and would not be fast enough with fixed point. Not to mention some objects could slip between the regular intervals, making VSD inaccurate.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/unaligned.pdf}
- \caption{Ray Marching in action.}
+ \caption{Ray marching in action.}
 \end{figure}
 
 
@@ -686,11 +686,11 @@ In a world with some constraints the problem becomes much simpler. If a map is m
  \caption{Raycasting with a grid.}
 \end{figure}
 \par
-These constraints enable a variant of the DDA algorithm\footnote{Digital differential analyzer.} which is a fast and accurate way to detect where a ray hits a wall on the map.
+These constraints enable a variant of the DDA algorithm\footnote{Digital differential analyzer.}, which is a fast and accurate way to detect where a ray hits a wall on the map.
 \par
 \begin{fancyquotes}
 \par
-Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacombs 3D.  C3D (and Hovertank 3D before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn't really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel "rock solid".
+Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacomb 3D.  C3D (and Hovertank 3D before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn't really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel "rock solid".
  \bigskip \\
 There was a clear performance cost to it - doing 320 traces through a tile map and treating each column independently is much slower than looping through a few long wall segments.  However, the resulting code was small and very regular compared to the hairball of my wall span renderers, and it did deliver the rock-solid feel I wanted.
  \bigskip \\
@@ -768,10 +768,10 @@ With maps being quick and easy to draw, a contest was planned. Players who found
 \end{figure}
 
 \par
-Behind a forest of push walls (white squares) and angry bosses (blue circles), the player finally encounters the enigmatic sign (the red triangle.)
+Behind a forest of push walls (white squares) and angry bosses (blue circles), the player finally encounters an enigmatic sign (the red triangle.)
 
 \begin{minipage}{.5\textwidth}
-However, as players reverse engineered the map format and cheat sites emerged, the context was called of and the sign replaced with a skeleton in all games shipped in 1992.\\
+However, as players reverse engineered the map format and cheat sites emerged, the contest was called off. The sign was replaced with a skeleton in all games shipped in 1992.\\
 \par
 In the previous map, notice there are no push walls leading to the red triangle; the room is sealed.\\
  \end{minipage}
@@ -808,7 +808,7 @@ Basically, "Aardwolf" and the letters mean nothing now.\\
 \end{fancyquotes}
 \par
 \bigskip
-\bu{Trivia :} What is Aardwolf? A maned striped mammal (Proteles cristatus) of southern and eastern Africa that resembles the related hyenas and feeds chiefly on carrion and insects. It was the mascot of Id, appearing on Tom's Gotta Lists and the Commander Keen 6 Hint Sheet.\\
+\bu{Trivia :} What is Aardwolf? A maned striped mammal (Proteles cristatus) of southern and eastern Africa that resembles the related hyenas and feeds chiefly on carrion and insects. It was the mascot of id, appearing on Tom's Gotta Lists and the Commander Keen 6 Hint Sheet.\\
 \par
 
  \begin{fancyquotes}
@@ -838,7 +838,7 @@ The reason for "aardwolf" was that it was the first image file in the NeXT dicti
  
  
 \subsubsection{Raycasting: DDA Algorithm}
-The DDA intersection algorithm is implemented in a fully handcrafted 740 lines of assembly routine: \cw{AsmRefresh}. It is represented here in pseudo-C for readability. It consists of two while loops (one each for vertical and horizontal intersections) ping-ponging with each other via goto. It is highly unorthodox and super efficient.\\
+The DDA intersection algorithm is implemented in a fully-handcrafted 740 lines of assembly routine: \cw{AsmRefresh}. It is represented here in pseudo-C for readability. It consists of two while loops (one each for vertical and horizontal intersections) ping-ponging with each other via goto. It is highly unorthodox and super efficient.\\
 \par
 
 
@@ -846,13 +846,14 @@ The DDA intersection algorithm is implemented in a fully handcrafted 740 lines o
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/flipflop.c}
 \end{minipage}
-This implementation results in many \cw{jmp} instructions. These would kill the icache and empty the pipeline on a modern CPU. But on a an architecture with a small pipeline and no icache such as the 386 it is not a frame killer.\\
+This implementation results in many \cw{jmp} instructions. These would kill the icache and empty the pipeline on a modern CPU. But on an architecture with a small pipeline and no i-cache such as the 386 it is not a frame killer.\\
 \par
-This part of the code relies heavily on unit circle principles. Because we need to know how much to go vertically when advancing on the X axis and how much to go horizontally when advancing on the Y axis, the \cw{tan} function is especially useful. This is easier to understand with the unit circle drawn (circle radius $r$ is equal to 1).
+This part of the code relies heavily on unit circle principles. As we need to know how much to go vertically when advancing on the X axis and how much to go horizontally when advancing on the Y axis, the \cw{tan} function is especially useful. This is easier to understand with the unit circle drawn (circle radius $r$ is equal to 1.)
 \label{unit_circle}
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/unit_circle.tex}
+ \caption{Unit circle.}
 \end{figure}
 \par
 When advancing 1 on the X axis, the ray moves up $tan(\theta)$ on the Y axis. The reciprocal is calculated as follows: move 1 on Y axis, move $tan(90-\theta)$ on X axis. To accelerate \cw{cos}, \cw{sin} and \cw{tan} calculations, the engine uses lookup table. See \ref{cossintable} "\nameref{cossintable}" on page \pageref{cossintable}.
@@ -877,7 +878,7 @@ When advancing 1 on the X axis, the ray moves up $tan(\theta)$ on the Y axis. Th
 
 
 \subsubsection{High School Math}
-Before proceeding to the next section (describing what is done with the distance from the player to the wall), here is a short reminder on high school math which forms the foundation of most calculations in the engine: SOH-CAH-TOA.\\
+Before proceeding to the next section (describing what is done with the distance from the player to the wall), here is a short refresher on a piece of high school math which forms the foundation of most calculations in the engine: SOH-CAH-TOA.\\
 \par
  \begin{fancyquotes}
   I'm no super mathematician-- I learned high school math well enough to solve real world problems with it.\\
@@ -890,6 +891,7 @@ Before proceeding to the next section (describing what is done with the distance
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/soh-cah-toa.tex}
+ \caption{SOH-CAH-TOA mnemonics.}
 \end{figure}
 
 
@@ -933,7 +935,7 @@ $ d = \sqrt{dx^2 + dy^2}$
  }
   \end{equation*}
 \end{figure}
-But instead the code looks like it is doing: 
+Instead the code looks like it is doing: 
 \begin{figure}[H]
   \centering
   \begin{equation*}
@@ -971,7 +973,8 @@ In this drawing the player is located at \cw{viewpoint} with a view angle \begin
 
     \begin{minipage}{.4\textwidth}
     This visual artifact happens because the straight distance from the player to the wall is not constant. Walls are further away on the side of the screen and therefore represented smaller.\\
-    To demonstrate the fish eye distortion, here are three screenshots from a modified version of the engine. It was altered to use distance \cw{d} instead of "something else" to calculate column heights. At first from a distance of 32 feet, the distortion is barely noticeable.\\
+    \par
+    To demonstrate the fish eye distortion, here are three screenshots from a modified version of the engine. It was altered to use direct distance \cw{d} instead of "something else" to calculate column heights. At first from a distance of 32 feet, the distortion is barely noticeable.\\
      \end{minipage}
     \begin{minipage}{.6\textwidth}
     \begin{figure}[H]
@@ -994,7 +997,7 @@ In this drawing the player is located at \cw{viewpoint} with a view angle \begin
 \begin{minipage}{.4\textwidth}
 From a distance of 24 feet, the distortion cannot be ignored and the problem is clear.\\
 \par
-Note that even though the player is getting closer to the wall, the ratio of A to B remain the same. Only the absolute difference in pixels height when the column is rendered on screen is increasing.
+Note that even though the player is getting closer to the wall, the ratio of A to B remain the same. Only the absolute difference in pixel height when the column is rendered on screen is increasing.
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
@@ -1019,7 +1022,7 @@ Note that even though the player is getting closer to the wall, the ratio of A t
 \begin{minipage}{.4\textwidth}
 At 12 feet, the distortion is straight up unpleasant with a claustrophobic touch.\\
 \par
-To avoid this distortion and produce a more pleasant rendition, what must be used is not the direct distance \cw{d} but \cw{d} projected on the camera plane (perpendicular to the view direction (\cw{z})).
+To avoid this distortion and produce a more pleasant rendition, what must be used is not the direct distance \cw{d} but distance projected on the camera plane (perpendicular to the view direction (\cw{z})).
  \end{minipage}
 \begin{minipage}{.6\textwidth}
  \begin{figure}[H]
@@ -1037,7 +1040,7 @@ To avoid this distortion and produce a more pleasant rendition, what must be use
 
  \input{imgs/drawings/fish_eye/d_vs_z.tex}
 \label{fig:Raycasting2}
- 
+ \caption{Direct distance \cw{d} and projected distance \cw{z}.}
 \end{figure}
 
 This projection (z) is mathematically hard to calculate in one go (especially with fixed point.) The trick is to break it down into two components and use the mnemonic SOH-CAH-TOA.\\
@@ -1046,7 +1049,7 @@ This projection (z) is mathematically hard to calculate in one go (especially wi
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/fish_eye/correct_way.tex}
- 
+ \caption{Projected distance \cw{z} it calculated via two sub-components.}
 \end{figure}
 Using CAH gives $A = dx * \cos(\alpha)$ and SOH gives $B = dy * \sin(\alpha) $.\\
 \par
@@ -1111,12 +1114,13 @@ For people who like equations, the overall operation can be seen as the multipli
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
+ \caption{Translating from map space to player space involves a rotation and also a translation of coordinates.}
  \end{figure}
 
 
 I personally find the graphic explanation with SOH-CAH-TOA clearer.\\
 \par
-This correction is enough to give pleasant straight lines for the walls. To demonstrate the difference, here are a few screenshots showing two versions of the same scene next to each other. First uncorrected (with fisheye) and then with projected distance instead of direct distance.\\
+This correction is enough to give pleasant straight lines for the walls. To demonstrate the difference, here are a few screenshots showing two versions of the same scene next to each other. First uncorrected (with fisheye) and then with projected distance \cw{z} instead of direct distance \cw{d}.\\
 
  \begin{minipage}{\textwidth}
  
@@ -1153,7 +1157,7 @@ This correction is enough to give pleasant straight lines for the walls. To demo
 \subsection{Drawing Walls}
 With column height calculated, all that remains is to draw a column of textured pixels.\\
 \par
-That may sound easy but is in fact difficult on a CPU with as little power as a 386. To scale a column of 64 texels on the screen centered vertically is expensive. It turns out if you want to do it fast enough you need a few optimizations. This is where Wolfenstein 3D leaves other 3D engines of the era in the dust. The secret to its speed lies in:
+That may sound easy but is in fact difficult on a CPU with as little power as a 386. Scaling a column of 64 texels is expensive. It turns out you need a few optimizations to do it fast enough. This is where Wolfenstein 3D leaves other 3D engines of the era in the dust. The secret to its speed lies in:
 \begin{itemize}
 \item Compiled scalers
 \item Deferred column rendering
@@ -1168,7 +1172,7 @@ That may sound easy but is in fact difficult on a CPU with as little power as a 
 
 
 \subsubsection{Compiled Scalers}
-All columns of pixels representing the walls are centered vertically and either magnified or minified. The goal is to scale as quickly as possible a column of 64 texels to any height ranging from 2 pixels to the max 3D canvas height (152 pixels.)\\
+All columns of pixels representing the walls are centered vertically and either magnified or minified. The goal is to scale a column of 64 texels to any height ranging from 2 pixels to the max 3D canvas height (152 pixels); as quickly as possible.\\
 \par
  \begin{figure}[H]
 \centering
@@ -1184,9 +1188,9 @@ As the photoshoped pink line shows, each column of pixels for a wall is centered
 \end{minipage}
 
 \par
-This would involves a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} always cause a pipeline flush.}, a fixed point accumulator, and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible function allows \cw{scaleTextureToHeight} to accept any height from \cw{0} to \cw{INT\_MAX}.\\
+This would involve a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} always cause a pipeline flush.}, a fixed point accumulator, and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible function allows \cw{scaleTextureToHeight} to accept any height from \cw{0} to \cw{INT\_MAX}.\\
 \par
- But there is a faster way to do this which involves the usual RAM vs CPU tradeoff. In this case we can invest a little bit of RAM to gain a lot of CPU time.\\
+ There is a faster way to do this which involves the usual RAM vs CPU tradeoff. In this case we can invest a little bit of RAM to gain a lot of CPU time.\\
  \par 
  The idea is to remove the genericity of the scaler and instead generate hard-coded functions.\\
 \par
@@ -1194,18 +1198,21 @@ This would involves a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} 
 \lstinputlisting[language=C]{code/hardcoded_draw.c}
 \end{minipage}
 
- The engine generates machine code at runtime when it starts; it happens in \cw{BuildCompScale}.\\
+ The engine generates machine code at runtime when it starts; this happens in \cw{BuildCompScale}.\\
  
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/compscale.c}
 \end{minipage}
 \par
-Given a height, \cw{BuildCompScale} generates x86 instructions in the out variable \cw{code}. As a result, instead of having one generic function accepting any height,  Wolfenstein has 256 functions with hard-coded height. Hard-coding the height allows for unrolling the loop and reducing overhead.\\
+Given a height, \cw{BuildCompScale} generates x86 instructions in the out variable \cw{code}. As a result, instead of having one generic function accepting any height,  Wolfenstein has 256 functions with hard-coded heights. Hard-coding the height allows for unrolling the loop and reducing overhead.\\
 \par
-With this optimization, minifying a column of 64 texels to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 128 pixels takes 705 (64*11+1) instructions. A precompiled scaler function has a fixed cost of 7 instructions per pixel when minifying and $3+4*scaling\_factor$ instructions per pixel when magnifying. It doesn't get any faster than that.\\
+With this optimization, minifying a column of 64 texels to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 128 pixels takes 705 (64*11+1) instructions. A precompiled scaler function has a fixed cost of 7 instructions per pixel when minifying and $3+4*scalingFactor$ instructions per pixel when magnifying. It doesn't get any faster than that.\\
 \par
-What is the RAM cost incurred by precompiling and caching these scalers? When rendering to its maximum dimension in the 3D canvas, the engine generates all scalers of even height from 2 to 512\footnote{512 is taller than the height of the 3D canvas (which is 152). But the engine needs to render sprites magnified to the point sprites are clipped vertically.}. That's 255 scalers totalizing 178,479 bytes of generated instructions. That cost was deemed too high. To save RAM, past size 76 only every other even size is generated (2,4,6,..,72,74,76) and (78,82,86,...,504,508,512). This trick generates only 136 scalers for a total instructions size of 83,160 bytes.\\
+What is the RAM cost incurred by precompiling and caching these scalers? When rendering to its maximum dimension in the 3D canvas, the engine generates all scalers of even height from 2 to 512\footnote{512 is taller than the height of the 3D canvas (which is 152). However, the engine needs to render sprites magnified to the point sprites are clipped vertically.}. That's 255 scalers totalizing 178,479 bytes of generated instructions. This cost was deemed too high.\\
+\par 
+To save RAM, past size 76 only every other even size is generated (2,4,6,..,72,74,76) and (78,82,86,...,504,508,512). This trick generates only 136 scalers for a total instruction size of 83,160 bytes.\\
+\par
 Skipping compiled scaler generation involves using the wrong scaler when one is not available and introduces small visual artifacts, but they are barely noticeable.\\
 \par
 Notice that scalers are generated at startup but if the 3D canvas' dimensions are changed they have to be re-generated. This is what happens after a resize while the "thinking" screen is showing.
@@ -1236,17 +1243,17 @@ Instead, the engine buffers what to draw as follows.\\
 \end{minipage}
 
 \par
-This buffering is done because the renderer allows itself to cheat a little when two rays are deemed similar enough. If consecutive rays share characteristics, they are grouped together and drawn at the same height, regardless of their exact distance from the player's point of view. This process introduces a little distortion but unlocks a formidable speed up: the engine can write multiple columns on the screen, up to eight pixels in 3 writes.\\
+This buffering is done because the renderer allows itself to cheat a little when two rays are deemed similar enough. If consecutive rays share characteristics, they are grouped together and drawn at the same height, regardless of their exact distance from the player's point of view. This process introduces a little distortion but unlocks a formidable speed increase: the engine can write multiple columns on the screen, up to eight pixels in 3 writes.\\
 \par
 Rays are similar if they hit the same wall and result in the same \cw{v} horizontal texture coordinate. In short, this optimization leverages wall magnification.\\
 \par
-The best case for this trick is shown in the following screenshots. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiples pixels horizontally. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
+The best case for this trick is shown in the following screenshots. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiple pixels horizontally. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
 \begin{figure}[H]
  \centering
  \fullimage{post_optimization_1_show.png}
 \end{figure}
 
-This trick is only possible because of an interesting property of the VGA bank layout. If you take a look on page \pageref{vga_layout}, you see a 3D view with its associated bank storage underneath. Each bank looks like a compressed version of the screen because they store every fourth column, 80 columns to be exact. Bank 0 stores column 0, column 4, column 8, and so on. Bank 1 stores column 1, column 5, column 9 and so on. Column 0 and Column 1 are at the same address in bank 0 and bank 1.
+This trick is only possible because of an interesting property of the VGA bank layout. If you take a look on page \pageref{vga_layout}, you see a 3D view with its associated bank storage underneath. Each bank looks like a compressed version of the screen because it stores every fourth column, 80 columns to be exact. Bank 0 stores column 0, column 4, column 8, and so on. Bank 1 stores column 1, column 5, column 9 and so on. Column 0 and Column 1 are at the same address in bank 0 and bank 1.
  \par
   \begin{minipage}{\textwidth}
  
@@ -1297,6 +1304,7 @@ With these in mind, here are a few examples using the following layout where the
 \begin{figure}[H]
 \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation1.pdf}
+ \caption{All following examples are based on this VRAM/Screen layout.}
  \end{figure}
 
 
@@ -1378,7 +1386,8 @@ To visualize real cases gain, the engine has been modified to draw columns of pi
  \scaledimage{0.9}{post_optimization_2_pink_show.png}
 \end{minipage}
 This technique helps solve for scenarios where a large number of pixels have to be written due to the size of the wall. It only really shines when a lot of magnification occurs. For walls far away (minified) this technique doesn't help at all, but this matters less as small walls are cheap to render.\\
-
+\par
+\bu{Trivia :} Generating code at runtime may sound like an outdated technology. However, it was used as recently as 2016 when Android emulator used PixelFlinger to render the entire GUI.
 
 
 
@@ -1408,12 +1417,8 @@ At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall 
   \begin{figure}[H]
 \centering
  \fullimage{baked_lights_wood.png}
+ \caption{Light and Dark wood textures.}
  \end{figure}
-\par
-%   \begin{figure}[H]
-% \centering
-%  \fullimage{baked_lights_stone.png}
-%  \end{figure}
 \par
 
 \begin{minipage}{\textwidth}
@@ -1456,6 +1461,7 @@ Upon hitting a "DOOR" tile, the raycaster consults the \cw{doorposition} array. 
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/door_test.pdf}
+ \caption{A ray traversing a partially opened door.}
 \end{figure}
 \par
 Testing if a ray is stopped by a door or not costs almost nothing:\\
@@ -1501,17 +1507,17 @@ Push walls are also implemented via the raycaster. Like doors, these moving wall
 
 \subsection{Drawing Sprites}
 \label{drawingSprites}
-Once walls are drawn, it is time to render sprites such as enemies, items (ammos, weapons), and decorations (lamps, table, etc.) This is a three step operation.
+Once walls are drawn, it is time to render sprites such as enemies, items (ammo, weapons), and decorations (lamps, table, etc.) This is a three step operation.
  \begin{enumerate}
-  \item Find which sprites are visible.
-  \item Determine which part of the sprite is visible (not hidden by a wall).
+  \item Identify which sprites are visible.
+  \item Determine which part of the sprite is visible (not hidden by a wall.)
   \item Draw what is visible.
  \end{enumerate}
 
 
 
 \subsubsection{Visible Sprite Determination}
-Building a list of visible sprites is done indirectly by leveraging information gathered by the raycaster. This relies on the assumption that visible sprites are on visible tiles. The raycaster marks all tiles visited by each ray while they travel the map looking for walls.\\
+Building a list of visible sprites is done indirectly by leveraging information gathered by the raycaster. This relies on the assumption that visible sprites are on visible tiles. The raycaster marks all tiles visited by each ray while it travels the map looking for walls.\\
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/marked_out_room.pdf}
@@ -1709,7 +1715,7 @@ The same deferred drawing technique we saw for walls is also used for sprites, a
 \end{figure}
 In this scene, the 64x64 guard sprite is magnified 2.2 times. By zooming in, we see that each column is repeated at least twice and sometimes three times. It is a perfect optimization case for VGA mask manipulation.\\
 \par
-A modified version of the engine (drawing in pink columns which were "free") is again used to demonstrate.  In this case most columns were drawn only once. Magnification was a totally free operation despite more than twice the number of texels written to the screen.\\
+A modified version of the engine (which draws "free" columns in pink) is again used to demonstrate.  In this case most columns were drawn only once. Magnification was a totally free operation despite more than twice the number of texels written to the screen.\\
 
 \par
 \begin{figure}[H]
@@ -1751,7 +1757,7 @@ To simulate enemies, some objects are allowed to "think" and take actions like f
 
 
 
-Actors are programmed via state machine. They can be aggressive, sneaky, or dumb (rockets for instance.) To model their behavior, all enemies have an associated state:
+Actors are programmed via a state machine. They can be aggressive, sneaky, or dumb (rockets for instance.) To model their behavior, all enemies have an associated state:
 \begin{itemize}
 \item Standing
 \item Attack
@@ -1763,7 +1769,7 @@ Actors are programmed via state machine. They can be aggressive, sneaky, or dumb
 \item Special Boss
 \end{itemize}
 
-Each state has associated \cw{think} and \cw{action} method pointers. There is also a \cw{next} pointer to indicate which state the actor should transit to when the current state is completed.\\
+Each state has associated \cw{think} and \cw{action} method pointers. There is also a \cw{next} pointer to indicate which state the actor should transition to when the current state is completed.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/statetype.c}
@@ -1778,7 +1784,7 @@ A guard in standing position always stays in the same state (\cw{next} points to
 \lstinputlisting[language=C,style=mystyle,basicstyle=\small,morekeywords={statetype, NULL, true, false}]{code/s_grdstand.c}
 \end{minipage}
 \par
-Some state chains are more complex, for example with chasing:\\
+Some state chains are more complex, as with chasing:\\
 
 \par
 \begin{minipage}{\textwidth}
@@ -1800,7 +1806,7 @@ What makes enemies interesting is how they trigger from standing to aggressive v
 \item Sight
 \item Noise
 \end{itemize}
-By far the most important stimuli and what makes the player feel like the A.I is smart is reaction to noise.
+By far the most important stimuli and, what makes the player feel like the A.I is "smart", is reaction to noise.
 
 
 
@@ -1814,16 +1820,15 @@ Early on the game teaches the player that enemies react to gunfire and seek out 
 \par
 \begin{figure}[H]
  \centering
- \includegraphics[width=.75\textwidth]{imgs/drawings/sound_area/map.pdf}
- %\caption{The map as it is generated with TED5.}
+ \includegraphics[width=.73\textwidth]{imgs/drawings/sound_area/map.pdf}
+ 
 \end{figure}
-\par
-Above, a map generated by TED5. Below is the same map preprocessed for audio propagation. Each block belongs to an area.
+
 \par
 \begin{figure}[H]
  \centering
- \includegraphics[width=.75\textwidth]{imgs/drawings/sound_area/area.pdf}
- %\caption{The same map after is has been pre-processed for audio propogation. }
+ \includegraphics[width=.73\textwidth]{imgs/drawings/sound_area/area.pdf}
+ \caption{A map generated by TED5 before and after preprocessing for audio propagation. After processing each block must belong to an area.}
 \end{figure}
 \par
 
@@ -1841,7 +1846,7 @@ At runtime the engine maintains a matrix of portals. Each time a door is opened 
  \includegraphics[width=.5\textwidth]{imgs/drawings/soud_propagation/areabyplayer.pdf}
 \end{figure}
 \par
-Determining if an enemy in area X can hear the player is achieved with an unexpensive lookup in \cw{areabyplayer[X]}.\\
+Determining if an enemy in area X can hear the player is achieved with an inexpensive lookup in \cw{areabyplayer[X]}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/num_areas.c}
@@ -1857,7 +1862,7 @@ Determining if an enemy in area X can hear the player is achieved with an unexpe
 
 
 \subsubsection{Sound Non-propagation}
-Perfect sound propagation is a simplistic model. When a gun is fired, all enemies which can hear it will shout "Achtung!" (Attention!) and converge toward the origin of the sound. This would get old pretty fast, though. To make gameplay spicier, the designers introduced a little hack that goes a long way in making AI appear smarter than it is.
+Perfect sound propagation is a simplistic model. When a gun is fired, all enemies which can hear it will shout "Achtung!" (Attention!) and converge toward the origin of the sound. This would get old pretty fast, though. To make gameplay spicier, the designers introduced a little hack that goes a long way in making the AI appear smarter than it is.
 
 
 \par
@@ -1910,9 +1915,8 @@ Perfect sound propagation is a simplistic model. When a gun is fired, all enemie
 \bu{Trivia :} The ambush behavior is explained in the Hint Book as follows:\\
 \par
 \begin{fancyquotes}
-Each enemy is given specific orders which dictate his actions once he knows of your presence. Some are ordered to immediately attack, while others are trained to act only upon visual contact.
- \bigskip \\
-\bigskip \\
+Each enemy is given specific orders which dictate his actions once he knows of your presence. Some are ordered to immediately attack, while others are trained to act only upon visual contact.\\
+\par
 \textbf{Kevin Cloud. The Official Hint Manual for Wolfenstein 3D}
  \end{fancyquotes}
 \par

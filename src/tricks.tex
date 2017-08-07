@@ -17,6 +17,7 @@ This section describes random tricks used to speed up rendition. They range from
 \begin{figure}[H]
  \centering
   \includegraphics[width=\textwidth]{imgs/drawings/cos_sin_table.pdf}
+  \caption{In grey the 90 \cw{sin} values duplicated at the end of the array to complete the \cw{cos} lookup table.}
 \end{figure}
 
 
@@ -74,18 +75,18 @@ To implement this effect, a naive approach would have been to use the pseudo ran
 This code be read as:\\
 \begin{itemize}
 \item Initialize \cw{rndval} to 1.
-\item Break it down in 8 + 7 bits: use 8 bits to generate a X coordinate and 7 bits for a Y coordinate. Turn this pixel to red.
+\item Break it down in 8 + 9 bits: use 8 bits to generate a Y coordinate and 9 bits for a X coordinate. Turn this pixel to red.
 \item Subject \cw{rndval} to a soup of XORing.
 \item When \cw{rndval} value is somehow back to 1: Stop.
 \end{itemize}        
-This feels like dark magic. How is \cw{rndval} supposed to return to value 1? That technique is called Linear Feedback Shift Register. The idea is to use one register to store a state, generate the next state, and also generate a value. To get the next value, you do a right shift. Since the rightmost bit disappears, a new one to the left is needed. To generate this new bit, the register uses "taps" which are bit offsets used to XOR together values and generate the new bit value. A Fibonnaci representation shows a simple LFSR with two taps.\\
+This feels like dark magic. How is \cw{rndval} supposed to return to value 1? Via a technique is called Linear Feedback Shift Register. The idea is to use one register to store a state, generate the next state, and also generate a value. To get the next value, you do a right shift. Since the rightmost bit disappears, a new one to the left is needed. To generate this new bit, the register uses "taps" which are bit offsets used to XOR together values and generate the new bit value. A Fibonnaci representation shows a simple LFSR with two taps.\\
 \par
 
 \begin{figure}[H]
  \centering
   \includegraphics[width=.4\textwidth]{imgs/drawings/4bits_lfsr.pdf}
 \end{figure}
-This register is able to generate 6 values before it cycles back to it original state. The following listing shows all of them.\\
+The register depicted above is able to generate 6 values before it cycles back to its original state. The following listing shows all of them.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting{code/lfsr.txt}
@@ -98,17 +99,27 @@ Various arrangements of taps will produce different series. In the case of this 
 \end{minipage}
 \par
 \par
-Wolfenstein 3D  uses a 17 bit Maximum-Length LFSR with two taps to generate a series of pseudo-random values. Of these 17 bits, on each iteration, 9 are used to generate a Y coordinate and 8 for a X coordinate. The corresponding pixel on screen is turned red/blue.\\
+Wolfenstein 3D  uses a 17 bit Maximum-Length LFSR with two taps to generate a series of pseudo-random values. Of these 17 bits, on each iteration, 9 are used to generate a X coordinate and 8 for a Y coordinate. The corresponding pixel on screen is turned red/blue.\\
 \par
-\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/fibonacci.pdf} \end{figure}
+\begin{figure}[H] 
+   \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/fibonacci.pdf} 
+   \caption{17 bit Maximun-LFSR (Fibonacci representation).}
+   \label{wolf_lfsr_fibo}
+\end{figure}
 \par
 The Fibonacci representation helps to understand the general idea. But it is not how a LFSR is usually implemented in software. The reason is that it scales linearly with the number of taps. With four taps, you need three sequential XOR operations:
 \par
-\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/fibonacci_hard.pdf} \end{figure}
+\begin{figure}[H] 
+    \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/fibonacci_hard.pdf} 
+    \caption{Four taps on a 17 bit register; each XOR requires an instruction.}
+\end{figure}
 \par
-There is an alternate way to represent a LFSR called "Galois", which is the way Wolfenstein 3D implements its LFSR and writes 320x200=64000 pixels exactly once with a deterministic duration.
+There is an alternate way to represent a LFSR called "Galois", which allows one XOR operatons regardless of how many taps are involved. It is the way Wolfenstein 3D implements its LFSR and writes 320x200=64000 pixels exactly once with a deterministic duration.
 \par
-\begin{figure}[H] \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/galois.pdf} \end{figure}
+\begin{figure}[H] 
+    \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/galois.pdf} 
+    \caption{Galois representation allows for one XOR operation regardless of the number of taps. This configuration is equivalent to figure \ref{wolf_lfsr_fibo}.}
+\end{figure}
       
 \bu{Note :} Because the effect works by plotting pixels individually, it was hard to replicate when developers tried to port the game to hardware accelerated GPU. None of the ports managed to replicate the fizzlefade except Wolf4SDL, which even found maximum-length LFSR taps configuration to reach resolution higher than 320x200.\\
 \par
@@ -124,7 +135,7 @@ There is an alternate way to represent a LFSR called "Galois", which is the way 
 
 
 \subsection{Palette}
-Even though it limited the graphic capabilities of the game, the palette system can be turned into a strength. It is easy to fade the screen to white (when picking up an item), red (when taking damage), or black (for transition between 2D menus.) It only takes 256*3 = 768 bytes and 768 out instructions to modify the full screen.
+Even though it limited the graphic capabilities of the game, the palette system can be turned into a strength. It is easy to fade the screen to white (when picking up an item), red (when taking damage), or black (when transitioning between 2D menus.) It only takes 256*3 = 768 bytes and 768 out instructions to modify the full screen.
 \begin{figure}[H]
   \centering
  \fullimage{palette_damage.png}
@@ -144,7 +155,7 @@ A fast path is provided (which ironically only works if the CPU is as slow at th
 
 
 \section{Pseudo Random Generator}
-Random numbers are necessary for many things during runtime. For example, to calculate if an enemy is able to hit the player based on its accuracy. This is achieved with a precalculated pseudo-random series of 256 elements. The last random value is also the index of the next value.\\
+Random numbers are necessary for many things during runtime, such as calculating if an enemy is able to hit the player based on its accuracy. This is achieved with a precalculated pseudo-random series of 256 elements. The last random value is also the index of the next value.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}, style=mystyle,basicstyle=\small]{code/rndtable.asm}
@@ -170,7 +181,7 @@ The random number generator saves the last index in \cw{rndindex}. Upon request 
 \lstinputlisting[ language={[x86masm]Assembler}]{code/US_RndT.asm}
 \end{minipage}
 
-This pseudo random series of 256 values could have been generated with an 8 bit Maximum length LFSR (8,6,5,4). My assumption is that LFSR literature was hard to find at the time and finding the correct tap for a maximum length register of 16 bit was not worth the effort.\\
+This pseudo random series of 256 values could have been generated with an 8 bit Maximum length LFSR (8,6,5,4). My assumption is that LFSR literature was hard to find at the time and finding the correct tap for a 16 bit maximum length register was not worth the effort.\\
 
 
 
