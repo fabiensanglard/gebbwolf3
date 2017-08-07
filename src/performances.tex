@@ -1,6 +1,9 @@
 \section{Performance}
-With all the tricks and optimizations described, how well did the game run on most machines? DOSBox allows for emulating an old CPU and gives the following figures\footnote{The original Wolfenstein3D did not show the frame rate. An altered version of the engine from http://thandor.net/article/10 featuring framerate running on DOSBOX was used to get these numbers. DOSBOX settings were chosen with 1000 cycles = 1 MIPS (confirmed with MIPS.COM DOS executable.)}:
+With all the tricks and optimizations described, how well did the game run on most machines? DOSBox allows for emulating an old CPU and gives the numbers\footnote{The original Wolfenstein3D did not show the frame rate. A modified version of the engine from http://thandor.net/article/10 featuring framerate running on DOSBOX was used to get these numbers. DOSBOX settings were chosen with 1000 cycles = 1 MIPS (confirmed with MIPS.COM DOS executable.)} in Figure \ref{perf_summary}.\\
+\par
 
+To compensate for power differences, the engine can reduce the 3D canvas to lower the number of rays cast and the number of pixels to render. The maximum is 304 rays resulting in 46208 pixels to render (304*152) and the minimum is 64 rays resulting in 2432 pixels to render (64*38).\\
+\par
 \begin{figure}[H]
 \centering
 \begin{tabularx}{\textwidth}{ X X X }
@@ -14,16 +17,16 @@ With all the tricks and optimizations described, how well did the game run on mo
  386DX & 40 & 60 \\ \bottomrule
 \end{tabularx}
 \caption{Average fps per machine.}
+\label{perf_summary}
 \end{figure}
 
-To compensate for power differences, the engine can reduce the 3D canvas to lower the number of rays cast and the number of pixels to render. The maximum is 304 rays resulting in 46208 pixels to render (304*152) and the minimum is 64 rays resulting in 2432 pixels to render (64*38).\\
 
   \begin{figure}[H]
 \centering
  \fullimage{adjust_view/fps16.png}
  \end{figure}
  \par
- In the screenshot above the game is running in max view: 304 rays, resolution of 304x152. The DOSBox simulating a 386SX-16Mhz achieves 16 frames per second.
+ In the screenshot above the game is running at maximum resolution: 304 rays, resolution of 304x152. The DOSBox simulating a 386SX-16Mhz achieves 16 frames per second.
 
    \begin{figure}[H]
 \centering
@@ -40,7 +43,7 @@ To compensate for power differences, the engine can reduce the 3D canvas to lowe
  \par
  In the previous two screenshots the framerate improves as 3D canvas size is reduced. 224 rays and a resolution of 224x112 raises the rate to 20 fps. 64 rays and a resolution of 64x38 brings it up to 52 fps.\\
  \par
-\bu{Trivia :} In 1994, 3D Realms published Rise Of the Triad (a.k.a ROTT), directed by Tom Hall. The game uses a highly-modified\footnote{Allowing stairs and jumps.} Wolfenstein 3D engine and also features the same window size adjustment system. True to the humor found in early 90s video games, it features an Easter egg teasing the player to buy a 486 when the lowest setting is chosen.
+\bu{Trivia :} In 1994, 3D Realms published Rise Of the Triad (a.k.a ROTT), directed by Tom Hall. The game uses a highly-modified\footnote{Textured floors and ceiling, different wall heights, stairs, trampolines, and even jumps.} Wolfenstein 3D engine and also features the same window size adjustment system. True to the humor found in early 90s video games, it features an Easter egg teasing the player to buy a 486 when the lowest setting is chosen.
     \begin{figure}[H]
 \centering
  \fullimage{adjust_view/rott.png}
