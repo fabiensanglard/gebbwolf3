@@ -1,6 +1,6 @@
 void DemoLoop() {
     StartCPMusic(INTROSONG);
-    PG13(); // Show Profund Carnage screen
+    PG13(); // Show Profound Carnage screen
     while (1) {
         CA_CacheScreen (TITLEPIC);
         CA_CacheScreen (CREDITSPIC);

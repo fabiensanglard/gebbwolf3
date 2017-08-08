@@ -79,7 +79,7 @@ This code be read as:\\
 \item Subject \cw{rndval} to a soup of XORing.
 \item When \cw{rndval} value is somehow back to 1: Stop.
 \end{itemize}        
-This feels like dark magic. How is \cw{rndval} supposed to return to value 1? Via a technique is called Linear Feedback Shift Register. The idea is to use one register to store a state, generate the next state, and also generate a value. To get the next value, you do a right shift. Since the rightmost bit disappears, a new one to the left is needed. To generate this new bit, the register uses "taps" which are bit offsets used to XOR together values and generate the new bit value. A Fibonnaci representation shows a simple LFSR with two taps.\\
+This feels like dark magic. How is \cw{rndval} supposed to return to value 1? Via a technique is called Linear Feedback Shift Register. The idea is to use one register to store a state, generate the next state, and also generate a value. To get the next value, you do a right shift. Since the rightmost bit disappears, a new one to the left is needed. To generate this new bit, the register uses "taps" which are bit offsets used to XOR together values and generate the new bit value. A Fibonacci representation shows a simple LFSR with two taps.\\
 \par
 
 \begin{figure}[H]
@@ -114,7 +114,7 @@ The Fibonacci representation helps to understand the general idea. But it is not
     \caption{Four taps on a 17 bit register; each XOR requires an instruction.}
 \end{figure}
 \par
-There is an alternate way to represent a LFSR called "Galois", which allows one XOR operatons regardless of how many taps are involved. It is the way Wolfenstein 3D implements its LFSR and writes 320x200=64000 pixels exactly once with a deterministic duration.
+There is an alternate way to represent a LFSR called "Galois", which allows one XOR operations regardless of how many taps are involved. It is the way Wolfenstein 3D implements its LFSR and writes 320x200=64000 pixels exactly once with a deterministic duration.
 \par
 \begin{figure}[H] 
     \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/galois.pdf} 

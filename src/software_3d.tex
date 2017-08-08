@@ -58,7 +58,7 @@ This is a pretty standard design for an engine from the early 90s. However, it h
 \par
 To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulates events at fixed interval (\cw{DEMOTICK} = 4)\footnote{70/4 = 17.5, the machine used to record the demo ran at 17 fps. Probably a high end 386.}. This hack resulted in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX.)\\
 \par
-In 1993, the Doom engine would solve this issue by simulating the world at fixed intervals.\\
+In 1993, the Doom engine would solve this issue by simulating the world at fixed intervals\footnote{Doom run at a fixed rate of 35 fps.}.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed_game_loop.c}
@@ -1110,7 +1110,9 @@ For people who like equations, the overall operation can be seen as the multipli
     }
   \end{equation*}
 \end{figure}
-
+\par
+I personally find the graphic explanation with SOH-CAH-TOA clearer.\\
+\par
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
@@ -1118,7 +1120,7 @@ For people who like equations, the overall operation can be seen as the multipli
  \end{figure}
 
 
-I personally find the graphic explanation with SOH-CAH-TOA clearer.\\
+
 \par
 This correction is enough to give pleasant straight lines for the walls. To demonstrate the difference, here are a few screenshots showing two versions of the same scene next to each other. First uncorrected (with fisheye) and then with projected distance \cw{z} instead of direct distance \cw{d}.\\
 
@@ -1852,7 +1854,7 @@ Determining if an enemy in area X can hear the player is achieved with an inexpe
 \lstinputlisting[language=C]{code/num_areas.c}
 \end{minipage}
 \par
-\cw{NUMAREAS = 37} seems like a random value. It was likely obtained empirically with the developers bumping it up every time they designed a map which crashed the engine.\\
+%\cw{NUMAREAS = 37} seems like a random value. It was likely obtained empirically with the developers bumping it up every time they designed a map which crashed the engine.\\
 \par
 
 
