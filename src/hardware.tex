@@ -488,7 +488,7 @@ The EMS driver opens a window beyond the addressable RAM, as shown on page \page
 
 
 \subsubsection{XMS API}
-The XMS driver works\footnote{eXtended Memory Specification (XMS) July 19, 1988.} like \cw{malloc}, providing operations such as allocate, free, realloc and the most important one move which allows copying from extended RAM to conventional RAM.
+The XMS driver works\footnote{eXtended Memory Specification (XMS) July 19, 1988.} like \cw{malloc}, providing operations such as \cw{allocate}, \cw{free}, \cw{realloc} and the most important one \cw{move} which allows copying from extended RAM to conventional RAM.
 
 
 
@@ -638,9 +638,9 @@ The most surprising part of the architecture is obviously the framebuffer. Why h
 \par
 Part of the explanation comes from backward compatibility. EGA, the predecessor of VGA had only 64KiB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KiB.\\
 \par
-The more significant reason was RAM latency and the need for minimum bandwidth. A CRT running at 70Hz and displaying 640x480 in 16 colors needs a pixel every $\frac{1}{640*480*70}$th of a second. At this resolution, one pixel is encoded with 4 bits. Each nibble is translated to a 666 RGB color by the DAC. That encoding divides bandwidth by six, but still requires one byte every 91 nano-seconds.\\
+The more significant reason was RAM latency and the need for minimum bandwidth. A CRT running at 70Hz and displaying 640x480 in 16 colors needs a pixel every $\frac{1}{640*480*70}$th of a second. At this resolution, one pixel is encoded with 4 bits. Each nibble is translated to a 666 RGB color by the DAC. That encoding divides bandwidth by $4.5$, but still requires one byte every 93 nano-seconds.\\
 \par
- Unfortunately, RAM access latency was 200ns - not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168} to refresh the screen at 70hz, so the DAC would starve. If latency could not be reduced, the throughput could still be improved by reading from four banks at a time. Reading in parallel gave an amortized RAM latency of 200/4 = 50ns, which was fast enough.\\
+ Unfortunately, RAM access latency was 200ns - not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168.} to refresh the screen at 70hz, so the DAC would starve. If latency could not be reduced, the throughput could still be improved by reading from four banks at a time. Reading in parallel gave an amortized RAM latency of 200/4 = 50ns, which was fast enough.\\
 \par
 Keep in mind that this architecture reduced the penalty of read operations, but plotting a pixel in the framebuffer with a write operation was still slow. Writing to the VRAM as little as possible was crucial to maintaining a decent framerate. 
 
@@ -668,13 +668,13 @@ Four memory banks grant enough throughput to reach high resolutions at 70Hz. The
 \par
 The first problem with this design is that it is unintuitive. There is no linear framebuffer and figuring out which byte corresponds to which pixel on screen is difficult.\\
 \par
- This type of architecture is called "planar" - to write four pixels next to each other on a line on the screen requires writing one byte in each bank. Each of these banks is mapped to the same UMA memory address. This layout is better explained with a drawing.\\
+ This type of architecture is called "planar". In mode 13h, where one pixel is encoded on one byte, to write four pixels next to each other on a line on the screen requires writing one byte in each bank. Each of these banks is mapped to the same UMA memory address. This layout is better explained with a drawing.\\
 \par
 \begin{figure}[H]
 \centering
 \includegraphics[width=.6\textwidth]{imgs/drawings/vga_ram_screen_layout.eps}
 \label{fig:vga_arch}
-\caption{How bank layout appears on screen.}
+\caption{VGA mode 13h, How bank layout appears on screen.}
 \end{figure}
 
  

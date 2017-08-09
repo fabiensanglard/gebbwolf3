@@ -1,4 +1,4 @@
-void CheckKeys (void) {}
+void CheckKeys (void) {
   if (Paused) {
     ...
     LatchDrawPic (20-4,80-2*8,PAUSEDPIC);

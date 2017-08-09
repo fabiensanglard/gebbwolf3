@@ -109,7 +109,7 @@ Above is the team as shown in Spear of Destiny, in an Easter Egg created by John
 
 \section{Organization}
 
-In September 1991, following Tom and Jason's high-school memories of the area, the team relocated from Shreveport, LA to Madison, WI. They established their office in a two story brick building at 2622 in The Pines complex on High Ridge Trail. They all lived in walking distance of the office except for John Carmack who, since he did not care, inhabited of the second floor of the building.\\
+In September 1991, following Tom and Jason's high-school memories of the area, the team relocated from Shreveport, LA to Madison, WI. They established their office in a two story brick building at 2622 in The Pines complex on High Ridge Trail. They all lived in walking distance of the office except for John Carmack who, since he did not care, inherited of the second floor of the building.\\
 \par
 The development of Wolfenstein 3D started in November 1991. As temperatures fell and snow dumped from the sky, the team kept itself increasingly busy and barely left the office. Development lasted seven months and Wolfenstein 3D was released in May 1992.
 
@@ -200,13 +200,14 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-You may have noticed in the listing of VGA modes that mode \cw{13h} and mode \cw{4h} (see figure \ref{vga-modes-available} on page \pageref{fig:vga_modes})  don't have the same starting RAM address. This allows for a trick where two graphics cards are plugged into the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally. This setup allows a developer to debug the game engine with breakpoints.
+You may have noticed in the listing of VGA modes that mode \cw{13h} and mode \cw{3h} (see Figure \ref{vga-modes-available}, p\pageref{fig:vga_modes})  don't have the same starting RAM address. This allows for a trick where two graphics cards are plugged into the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally.
 \begin{figure}[H]
   \centering
       \scaledimage{1}{wolf_screen1.png}
       \caption{Monitor 1 connected to MDA card showing Borland Turbo Debugger 386.}
 \end{figure}
-
+\par
+ This setup allows a developer to debug the game engine with breakpoints.
 
 
 \begin{figure}[H]
@@ -253,9 +254,9 @@ Adrian and Kevin both worked directly in Deluxe Paint, we didn't have any scanni
 \textbf{John Carmack - Programmer}
 \end{fancyquotes}
 \\
-G raphic assets are divided in two categories:
+Graphic assets are divided in two categories:
 \begin{itemize}
-\item 2D Menu items shipping with the game in \cw{VGADATA}, \cw{VGAHEAD} and, \cw{VGADICT} archive
+\item 2D Menu items shipping with the game in \cw{VGADATA}, \cw{VGAHEAD} and, \cw{VGADICT}
 \item 3D Action phase items (walls and sprites) shipping in the \cw{VSWAP} archive
 \end{itemize}
 
@@ -286,8 +287,8 @@ After the graphic assets were generated, a tool (IGRAB-ED) packed all ILBMs toge
  \lstinputlisting[language=C]{code/assets_header.c}\par
  \end{minipage}
  
- In the engine code, asset usage is "hardcoded" via an enum. This enum is an offset into the 
- \cw{HEAD} table which gives an offset in the \cw{DATA} archive. Thanks to this indirection layer, assets could be regenerated and reordered at will with no modification in the source code.\\
+ In the engine code, asset usage is hardcoded via an enum. This enum is an offset into the 
+ \cw{HEAD} table which gives an offset in the \cw{DATA} archive. With this indirection layer, assets could be regenerated and reordered at will with no modification in the source code.\\
  \par
  \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/assets_usage.c}\par
@@ -359,7 +360,7 @@ When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a s
 
 
 \par 
-The hint manual also contains several photos of the team back in the day; it is worth a read for context\footnote{The manual was designed on a NeXT ColorStation. It was its the only thing it was used for on Wolfenstein 3D (id purchased it in December 1991). NeXT series of workstations would become a key element of the production pipeline on Doom in 1992.}
+The hint manual also contains several photos of the team back in the day; it is worth a read for context\footnote{The manual was designed on a NeXT ColorStation. It was its the only thing it was used for on Wolfenstein 3D (id purchased it in December 1991). NeXT series of workstations later became a key element of the production pipeline on Doom in 1992.}
 
 
 
