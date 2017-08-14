@@ -55,11 +55,13 @@ Above are INTs and associated routines. Notice \#8 which is associated with the 
 \par
 Using these two chips and placing its own function at Interrupt Vector Table (IVT) \#8, the engine can stop its runtime at a regular interval, effectively implementing a subsystem running concurrently with everything else.\\
 \par
-The engine can decide at what frequency to be interrupted, depending on the type of sound/music it needs to play (digitized sounds are much more taxing than music.) As a result, three different ISRs can be found at IVT \#8: 
+The engine can decide at what frequency to be interrupted, depending on the type of sound/music it needs to play and what devices will be used. As a result, three different ISRs can be found at IVT \#8: 
 \begin{enumerate}
-\item \cw{SDL\_t0ExtremeAsmService} when running at 7000Hz, to play digitized (PCM) sound.
-\item \cw{SDL\_t0FastAsmService} when running at 700Hz, to play music and FM sound effects.
-\item \cw{SDL\_t0SlowAsmService} when running at 140Hz, to play sound effects on the beeper via PWM.
+\item \cw{SDL\_t0SlowAsmService} when running at 140Hz, to play sound effects on the beeper via PWM and PCM audio effects on SoundBlaster.
+\item \cw{SDL\_t0FastAsmService} when running at 700Hz, to play FM music, FM sound effects on AdLib, and PCM audio effects on Disney Sound Source.
+\item \cw{SDL\_t0ExtremeAsmService} when running at 7000Hz, to play PCM sound in an alternate way. This mode was never enabled in shipping products, see page \pageref{pcs_pcm} for a detailed explanation.
+
+
 \end{enumerate}
 \par
 
@@ -167,7 +169,7 @@ The engine does not know about any of the details of the OPL2. There is zero abs
 \lstinputlisting[language=C,morekeywords={longword}]{code/adlib_message.c}
 \end{minipage}
 \par
-The \cw{reg} byte is sent to port \cw{0x388}, the \cw{data} byte is sent to \cw{0x389}, and the \cw{delay} 2 bytes are used to tell how much time to wait before sending the next register/data to the card. The stream is hard-coded at 700Hz and the delay is expressed in this unit: a value of 700 means to wait 1000ms before sending another command. Whenever there is music playing the engine runs at no less than 700Hz (it can run at 7000Hz if it is also playing digitized sound but that results in no-ops for music playback.) A value of zero means the next message should be sent immediately.\\
+The \cw{reg} byte is sent to port \cw{0x388}, the \cw{data} byte is sent to \cw{0x389}, and the \cw{delay} 2 bytes are used to tell how much time to wait before sending the next register/data to the card. The stream is hard-coded at 700Hz and the delay is expressed in this unit: a value of 700 means to wait 1000ms before sending another command. Whenever there is music playing the engine runs at no less than 700Hz. A value of zero means the next message should be sent immediately.\\
 \par
 Overall, music is simple to execute because almost everything has been pre-processed via IMF. Every time the audio system wakes up, it checks if music packets should be sent, sends them, and moves on to the sound effects.
 
@@ -216,9 +218,10 @@ AdLib only has a FM synthesizer, with sounds played on its Channel 0. Sounds are
 
 
 \subsection{Disney Sound Source System: PCM}
+
 The Disney Sound Source is simple to program\footnote{The Programmer's Guide to the Disney Sound Source is a whopping 2 pages!} because it can do only one thing. It plays PCM audio in format 8 bits at 7000Hz on a single channel. That's it -- nothing more, nothing less. As soon as it is plugged in the parallel port, its 8 bit DAC will read from an internal 16 byte deep FIFO and turn them into sound via its integrated loud speaker.\\ 
 \par
-Every time the audio system wakes, it reads the DAC status to check if the FIFO is full. If it is not, the engine pushes as many bits as possible until the FIFO is full and returns. When the FIFO empties, the Disney Sound Source stops making noise.\\
+Even though the sampling rate is 7000Hz, the sound system needs not to run at such a high frequency. The 16 byte buffer allows to run at 700Hz and send a batch of 9-10 bytes every iterations. Every time the audio system wakes, it reads the DAC status to check how many bytes have been consumed in the FIFO. The engine pushes as many bytes as possible until the FIFO is full and returns. When the FIFO empties, the Disney Sound Source stops making noise.\\
 \par
 
 
@@ -232,7 +235,7 @@ Every time the audio system wakes, it reads the DAC status to check if the FIFO 
 
 \par
 \subsection{SoundBlaster System: PCM}
-Since the SoundBlaster also supports 7000Hz PCM, it uses the same sound effects files as the Disney Sound Source. However, it also features a DSP which is DMA capable. As a result, the CPU does not have to waste cycles transferring data. The audio system only has to ensure it is running at 7000Hz and pointing the DMA to the right memory address each time it crosses the end of a 16K segment via a DMA routine callback.
+Since the SoundBlaster also supports 7000Hz PCM, it uses the same sound effects files as the Disney Sound Source. However, it also features a DSP which is DMA capable. As a result, the CPU does not have to waste cycles transferring data. The audio system has little to do and call allow itself to run in "slow" mode at 140Hz. It wakes up to point the DMA to the right memory address each time it crosses the end of a 16K segment via a DMA routine callback.
 \par
 
 
@@ -343,17 +346,49 @@ Notice how \cw{6b} (\cw{10110110}) is sent to the PIC Command register (\cw{pcTA
 While the end result was not great, it was better than a beep\footnote{LucasArts obtained surprisingly good results for their game Monkey Island. See the video "LGR - Evolution of PC Audio - As Told by Secret of Monkey Island", https://www.youtube.com/watch?v=a324ykKV-7Y.}.\\
 \par
 
-\bu{Hidden feature :} The source code features an audio code path which plays PCM digitized sound via the PC Speaker.\\
+
+
+
+
+
+
+
+
+
+
+\subsection{PC Speaker: PCM}
+\label{pcs_pcm}
+The source code features an audio code path which plays PCM digitized sound via the PC Speaker. The function \cw{SDL\_PlayDigiSegment} has a switch to route playback. Notice the branch leading to \cw{SDL\_PCPlaySample} allowing PCM to be played on the buzzer.  \\
 
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/sound_fork.c}
 \end{minipage}
 \par
-Notice the \cw{SDL\_PCPlaySample} path allowing PCM to be played on the buzzer. This codepath shipped but was never enabled\footnote{You can still hear it thanks to YouTube: "Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects" at https://www.youtube.com/watch?v=1BtlsjJRnFU .}. We may speculate it was a matter of overhead but the cost would have been the same as the Disney Sound Source playback. Questioning the authors of the game did not shed light on this mystery.\\
+This codepath shipped but was never enabled. According to John Carmack overhead was too much a problem. Jim Leonard provided a more in depth explanation:\\
+
+\par
+ \begin{fancyquotes}
+ PCM playback over the PC speaker was likely cut because it would require SDL\_t0ExtremeAsmService. The Disney Sound Source had a 16 byte buffer but the PC Speaker had no such thing, the only way to feed it fast enough is to run the interrupt audio system at 7000 Hz.\\
+ \par
+  High-end 386s could handle this, but this was nearly unsustainable on the 286. Sending data to the parallel port does not take a lot of time -- but interrupt overhead does, and 7000 Hz on a 12 MHz 286 would definitely have been noticeable.\\
+ \par
+ Running at a frequency this high would have caused the game to freeze on slower machines while the sample played through the speaker.\\
+\par
+ Jim Leonard
+\end{fancyquotes}
+\par
+Even if it never ran in production it is still interesting to look inside this function to find out how it manages to fit 8 bit samples into a 1 bit DAC. In the following listing we see that \cw{SDL\_t0ExtremeAsmService} simply takes an 8 bit value and convert it to \cw{00} or \cw{10} to drive bit 1 in I/O port \cw{61h}. When bit 1 is set to 1, the beeper will go in position high and when set to 0, it will go to position low.\\
+
+\par
+\begin{minipage}{\textwidth}
+  \lstinputlisting[language={[x86masm]Assembler}]{code/pcm_on_speaker.asm}
+\end{minipage}
 \par
 
 
+
+The result sounds surprising good for a 1 bit DAC. If you are curious you can hear it thanks to a passionate YouTuber called Dafe Allen who recompiled the engine with PCM playback enabled\footnote{"Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects": "https://www.youtube.com/watch?v=1BtlsjJRnFU".}.
 
 
 
