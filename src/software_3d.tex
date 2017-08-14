@@ -19,7 +19,7 @@ Even for a complex scene involving multiple doors and rooms, this method can del
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_door.png}
- \caption{Rendition of the 320 column of pixels (with texturing.)} 
+ \caption{Rendition of the 320 column of pixels (with texturing).} 
 \end{figure} 
 
 
@@ -56,7 +56,7 @@ This is a pretty standard design for an engine from the early 90s. However, it h
  \caption{The second frame rendered faster during the replay. No inputs are available for the player. Replay is now out of sync.}
  \end{figure}
 \par
-To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulates events at fixed interval (\cw{DEMOTICK} = 4)\footnote{70/4 = 17.5, the machine used to record the demo ran at 17 fps. Probably a high end 386.}. This hack resulted in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX.)\\
+To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulates events at fixed interval (\cw{DEMOTICK} = 4)\footnote{70/4 = 17.5, the machine used to record the demo ran at 17 fps. Probably a high end 386.}. This hack resulted in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
 \par
 In 1993, the Doom engine would solve this issue by simulating the world at fixed intervals\footnote{Doom run at a fixed rate of 35 fps.}.\\
 \par
@@ -89,9 +89,9 @@ This design decouples the renderer from the world updates. Timeslices are always
 \subsection{Life of a 3D Frame}
 Five stages are involved in drawing a 3D scene:\\
 \begin{enumerate}
- \item Clear the framebuffer by drawing the floor and the ceiling (both solid colors.)
+ \item Clear the framebuffer by drawing the floor and the ceiling (both solid colors).
  \item For each column of pixels on screen, cast a ray from the player to the nearest wall. Draw a textured column of pixels with height inversely proportional to the distance.
- \item Draw the sprites (enemies, lamps, barrels.)
+ \item Draw the sprites (enemies, lamps, barrels).
  \item Draw the weapon\footnote{A modern 3D engine would render the weapon first and leverage the depth buffer to save fillrate. In that era, however, memory access was so slow it was faster to accept a bit of overdraw.}.	
  \item Flip buffers: instruct CRT Controller to use the framebuffer just composed on next vsync.
 \end{enumerate}
@@ -196,7 +196,7 @@ The longer the distance the ray traveled, the shorter the column is drawn on scr
 
 
 \subsection{3D Setup}
-Before starting to draw frames, the 3D renderer sets up the VRAM with static elements forming the HUD\footnote{Heads-Up Display.}: the green background, the blue status bar, and all labels ("LEVEL", "SCORE", "LIVES", "HEALTH", and "AMMO".)\\
+Before starting to draw frames, the 3D renderer sets up the VRAM with static elements forming the HUD\footnote{Heads-Up Display.}: the green background, the blue status bar, and all labels ("LEVEL", "SCORE", "LIVES", "HEALTH", and "AMMO").\\
 \par
  \begin{fancyquotes}
    Wolfenstein was the last Id game that still had the concept of score and lives.  We were still in a quarter-eating-arcade-game design mode. With Doom, you finally got to just keep playing as long as you wanted, which was a bit radical at the time!
@@ -392,7 +392,7 @@ To take full advantage of this optimization, the 3D renderer uploads images to t
      \fullimage{latched/134.png}
   \end{minipage}\
 
-\bu{Trick :} Images are stored woven. All bytes for bank 0, then all bytes for bank 1, and so on. This clever way to store data allows a bank to be loaded very fast with one \cw{memcpy} per bank (four \cw{memcpy} per image.)\\
+\bu{Trick :} Images are stored woven. All bytes for bank 0, then all bytes for bank 1, and so on. This clever way to store data allows a bank to be loaded very fast with one \cw{memcpy} per bank (four \cw{memcpy} per image).\\
 \par
 All these assets account for 48*24*4 (weapons sprites) + 14*8*16 (numeral and key sprites) + 24*24*32 (face sprites) + 224 * 48 (paused + psyched) = 34,816 bytes. There are therefore 35,324 unused bytes in the fourth VGA page.\\
 \par
@@ -402,7 +402,7 @@ For this trick to work, image sources and destinations have to be aligned on fou
  \includegraphics[width=\textwidth]{imgs/drawings/hud.pdf}
 \end{figure}
 
-While it is faster to copy four pixels in one read and one write, this trick does not provide a full 400\% speed increase as all writes have to be done in all three screen pages. This is obvious when looking at the routine for updating the status (hero's face.)\\
+While it is faster to copy four pixels in one read and one write, this trick does not provide a full 400\% speed increase as all writes have to be done in all three screen pages. This is obvious when looking at the routine for updating the status (hero's face).\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/StatusDrawPic.c}
@@ -592,7 +592,7 @@ Finally multiply them together:
 \end{figure} 
 $128 + 16 + 4 + 0.125 = 148.125 $\\
 \par
-Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bits disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8.)\\
+Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bits disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8).\\
 \par
 In the source code, all fixed point variables are 32 bits wide and use a special \cw{typedef}.\\
 \par
@@ -650,7 +650,7 @@ Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point varia
 Drawing the walls is all about determining what is visible, what is not, and what is in front of what. Michael Abrash's view on the topic tells it all:\\
 \par
 \begin{fancyquotes}
-I want to talk about what is, in my book, the toughest 3-D problem of all, visible surface determination (drawing the proper surface at each pixel), and its close relative, culling (discarding non-visible polygons as quickly as possible, a way of accelerating visible surface determination.) In the interests of brevity, I'll use the abbreviation VSD to mean both visible surface determination and culling from now on.
+I want to talk about what is, in my book, the toughest 3-D problem of all, visible surface determination (drawing the proper surface at each pixel), and its close relative, culling (discarding non-visible polygons as quickly as possible, a way of accelerating visible surface determination). In the interests of brevity, I'll use the abbreviation VSD to mean both visible surface determination and culling from now on.
  \bigskip \\
 Why do I think VSD is the toughest 3-D challenge? Although rasterization issues such as texture mapping are fascinating and important, they are tasks of relatively finite scope, and are being moved into hardware as 3-D accelerators appear; also, they only scale with increases in screen resolution, which are relatively modest.
  \bigskip \\
@@ -759,7 +759,7 @@ Note that $ystep$ and $xstep$ are simple lookups into the \cw{tan} array since $
 
 
 \subsubsection{Call Apogee}
-With maps being quick and easy to draw, a contest was planned. Players who found a special item in a particularly difficult to access place in the game were instructed to call the publisher (Apogee.) The maze is located in Episode 2, Map 8.\\
+With maps being quick and easy to draw, a contest was planned. Players who found a special item in a particularly difficult to access place in the game were instructed to call the publisher (Apogee). The maze is located in Episode 2, Map 8.\\
 \par
 \begin{figure}[H]
   \centering
@@ -768,7 +768,7 @@ With maps being quick and easy to draw, a contest was planned. Players who found
 \end{figure}
 
 \par
-Behind a forest of push walls (white squares) and angry bosses (blue circles), the player finally encounters an enigmatic sign (the red triangle.)
+Behind a forest of push walls (white squares) and angry bosses (blue circles), the player finally encounters an enigmatic sign (the red triangle).
 
 \begin{minipage}{.5\textwidth}
 However, as players reverse engineered the map format and cheat sites emerged, the contest was called off. The sign was replaced with a skeleton in all games shipped in 1992.\\
@@ -848,7 +848,7 @@ The DDA intersection algorithm is implemented in a fully-handcrafted 740 lines o
 \end{minipage}
 This implementation results in many \cw{jmp} instructions. These would kill the icache and empty the pipeline on a modern CPU. But on an architecture with a small pipeline and no i-cache such as the 386 it is not a frame killer.\\
 \par
-This part of the code relies heavily on unit circle principles. As we need to know how much to go vertically when advancing on the X axis and how much to go horizontally when advancing on the Y axis, the \cw{tan} function is especially useful. This is easier to understand with the unit circle drawn (circle radius $r$ is equal to 1.)
+This part of the code relies heavily on unit circle principles. As we need to know how much to go vertically when advancing on the X axis and how much to go horizontally when advancing on the Y axis, the \cw{tan} function is especially useful. This is easier to understand with the unit circle drawn (circle radius $r$ is equal to 1).
 \label{unit_circle}
 \begin{figure}[H]
 \centering
@@ -1043,7 +1043,7 @@ To avoid this distortion and produce a more pleasant rendition, what must be use
  \caption{Direct distance \cw{d} and projected distance \cw{z}.}
 \end{figure}
 
-This projection (z) is mathematically hard to calculate in one go (especially with fixed point.) The trick is to break it down into two components and use the mnemonic SOH-CAH-TOA.\\
+This projection (z) is mathematically hard to calculate in one go (especially with fixed point). The trick is to break it down into two components and use the mnemonic SOH-CAH-TOA.\\
 
 
 \begin{figure}[H]
@@ -1509,10 +1509,10 @@ Push walls are also implemented via the raycaster. Like doors, these moving wall
 
 \subsection{Drawing Sprites}
 \label{drawingSprites}
-Once walls are drawn, it is time to render sprites such as enemies, items (ammo, weapons), and decorations (lamps, table, etc.) This is a three step operation.
+Once walls are drawn, it is time to render sprites such as enemies, items (ammo, weapons), and decorations (lamps, table, etc). This is a three step operation.
  \begin{enumerate}
   \item Identify which sprites are visible.
-  \item Determine which part of the sprite is visible (not hidden by a wall.)
+  \item Determine which part of the sprite is visible (not hidden by a wall).
   \item Draw what is visible.
  \end{enumerate}
 
@@ -1552,7 +1552,7 @@ The ray caster (\codeword{AsmRefresh}) writes \cw{true} in the \cw{spotvis} arra
  \end{minipage}
  \par
 
-While the way the visible tile array is used is not the most subtle part of the engine (it runs in $\mathcal{O}(n^2)$ time), it works well due to the low number of sprites. All sprites on the map are tested for visibility with \cw{spotvis}, then their height is calculated. They are all added to an array unsorted. A final double loop draws all sprites from far to near (using sprite height to determine distance on each iteration.)\\ 
+While the way the visible tile array is used is not the most subtle part of the engine (it runs in $\mathcal{O}(n^2)$ time), it works well due to the low number of sprites. All sprites on the map are tested for visibility with \cw{spotvis}, then their height is calculated. They are all added to an array unsorted. A final double loop draws all sprites from far to near (using sprite height to determine distance on each iteration).\\ 
 
 
 
@@ -1652,7 +1652,7 @@ The combination of the compiled scalers getting more efficient at higher magnifi
 
 
 \subsubsection{Drawing Things}
-Sprite rendition benefits from the same optimization we saw in walls (compiled scalers and deferred rendering.) However, since sprites introduce transparency the techniques are slightly adjusted.
+Sprite rendition benefits from the same optimization we saw in walls (compiled scalers and deferred rendering). However, since sprites introduce transparency the techniques are slightly adjusted.
 
 \subsubsection{Compiled Scalers}
 Visible sprite column rendition is also done with the compiled scalers, but the scalers cannot be used directly. A compiled scaler draws its speed from its absence of parameters. It is an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and write/scale a predetermined number of pixels. For example, compiled scaler \#112 always reads 64 pixels of texture and magnifies it to 134 pixels on the screen. Transparency is not handled at all, used as is the scalers would draw transparent pixels in pink. To solve this problem, sprites are stored in a special way that allows tweaked compiled scalers to skip transparency.\\
@@ -1735,7 +1735,7 @@ A modified version of the engine (which draws "free" columns in pink) is again u
 
 
 \subsection{Drawing Weapons}
-Drawing the weapon at the bottom of the canvas is straight forward. It uses the same type of rendition for sprites but with clipping disabled (in the function \cw{ScaleShape}.) The same compiled scaler and deferred rendition tricks are used.
+Drawing the weapon at the bottom of the canvas is straight forward. It uses the same type of rendition for sprites but with clipping disabled (in the function \cw{ScaleShape}). The same compiled scaler and deferred rendition tricks are used.
 
 
 
@@ -1759,7 +1759,7 @@ To simulate enemies, some objects are allowed to "think" and take actions like f
 
 
 
-Actors are programmed via a state machine. They can be aggressive, sneaky, or dumb (rockets for instance.) To model their behavior, all enemies have an associated state:
+Actors are programmed via a state machine. They can be aggressive, sneaky, or dumb (rockets for instance). To model their behavior, all enemies have an associated state:
 \begin{itemize}
 \item Standing
 \item Attack
@@ -1878,7 +1878,7 @@ Perfect sound propagation is a simplistic model. When a gun is fired, all enemie
 
   \begin{minipage}{0.6\textwidth}
   There is a perfect example early on in the game in map E1M1.\\
-  \par At this point, the player has learned that enemies will react to gunfire and move toward its origin. Upon entering this room and dispatching the guard, she naturally assumes this is a safe place -- a bounded area where no other enemies can be encountered (otherwise they would have shown up or at least shouted by now.)
+  \par At this point, the player has learned that enemies will react to gunfire and move toward its origin. Upon entering this room and dispatching the guard, she naturally assumes this is a safe place -- a bounded area where no other enemies can be encountered (otherwise they would have shown up or at least shouted by now).
   \end{minipage}
   \begin{minipage}{0.4\textwidth}
   \begin{flushright}
@@ -1928,7 +1928,7 @@ Each enemy is given specific orders which dictate his actions once he knows of y
 \subsubsection{Patrolling}
 In "path" mode, an agent simulates patrolling. There is no path finding; this is all done via waypoints which change the direction of the agent. After stepping on a "change direction" tile, the agent keeps on walking straight until it hits a wall. All waypoints are manually placed by the map designer with TED5.\\ 
 \par
-The waypoint system was used in other creative ways, like in E1M1 to simulate the agitation of German shepherds (marked a "D".) A detailed view of the right wings of the map from page \pageref{mape1m1} shows no less than eight waypoints making the dogs run in circles and zigzag.\\
+The waypoint system was used in other creative ways, like in E1M1 to simulate the agitation of German shepherds (marked a "D"). A detailed view of the right wings of the map from page \pageref{mape1m1} shows no less than eight waypoints making the dogs run in circles and zigzag.\\
 \par
 \begin{figure}[H]
  \centering

@@ -33,7 +33,7 @@ While most screen transitions are done with a fade to black (by shifting the pal
 	\item When dying
 	\item When killing a boss
 \end{itemize}
-Below are a series of screenshots to illustrate fizzling. During the transition, each pixel on the screen is turned to red (when dying) or blue (when dispatching a boss.) Each pixel is written only once and seemingly at random. 
+Below are a series of screenshots to illustrate fizzling. During the transition, each pixel on the screen is turned to red (when dying) or blue (when dispatching a boss). Each pixel is written only once and seemingly at random. 
 
 
 
@@ -92,7 +92,7 @@ The register depicted above is able to generate 6 values before it cycles back t
 \lstinputlisting{code/lfsr.txt}
 \end{minipage}
 \par
-Various arrangements of taps will produce different series. In the case of this four bit register, the maximum number of values in a series is 16-1 = 15 (zero cannot be reached.) This can be achieved with taps on bits 0 and 1. This is called a "Maximum-Length" LFSR.\\
+Various arrangements of taps will produce different series. In the case of this four bit register, the maximum number of values in a series is 16-1 = 15 (zero cannot be reached). This can be achieved with taps on bits 0 and 1. This is called a "Maximum-Length" LFSR.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting{code/maximum_lfsr.txt}
@@ -123,7 +123,7 @@ There is an alternate way to represent a LFSR called "Galois", which allows one 
       
 \bu{Note :} Because the effect works by plotting pixels individually, it was hard to replicate when developers tried to port the game to hardware accelerated GPU. None of the ports managed to replicate the fizzlefade except Wolf4SDL, which even found maximum-length LFSR taps configuration to reach resolution higher than 320x200.\\
 \par
-\bu{Note :} The tap configuration on 17 bits generates 131072 values before cycling. Since 320x200=64000, it could have been implemented with a 16 bit Maximum-length register with taps on 16,15,13 and 4 (in "Galois" notation.)
+\bu{Note :} The tap configuration on 17 bits generates 131072 values before cycling. Since 320x200=64000, it could have been implemented with a 16 bit Maximum-length register with taps on 16,15,13 and 4 (in "Galois" notation).
 
 
 
@@ -135,7 +135,7 @@ There is an alternate way to represent a LFSR called "Galois", which allows one 
 
 
 \subsection{Palette}
-Even though it limited the graphic capabilities of the game, the palette system can be turned into a strength. It is easy to fade the screen to white (when picking up an item), red (when taking damage), or black (when transitioning between 2D menus.) It only takes 256*3 = 768 bytes and 768 out instructions to modify the full screen.
+Even though it limited the graphic capabilities of the game, the palette system can be turned into a strength. It is easy to fade the screen to white (when picking up an item), red (when taking damage), or black (when transitioning between 2D menus). It only takes 256*3 = 768 bytes and 768 out instructions to modify the full screen.
 \begin{figure}[H]
   \centering
  \fullimage{palette_damage.png}

@@ -608,14 +608,14 @@ Each iteration added new features and by 1991 the predominant graphic system was
 \begin{figure}[H] 
   \centering 
   \fullimage{hardware/suntra_trident_tvga8800br.png} 
-  \caption{ VGA card Trident 8800 (8 bit ISA.) Courtesy of \cw{vgamuseum.info}. Notice the eight chips on the left of the card forming the VRAM where the framebuffers are stored\protect\footnotemark.}
+  \caption{ VGA card Trident 8800 (8 bit ISA). Courtesy of \cw{vgamuseum.info}. Notice the eight chips on the left of the card forming the VRAM where the framebuffers are stored\protect\footnotemark.}
 \end{figure}
 \footnotetext{This Trident TVGA8800BR is actually more than VGA capable since its eight V53C464P80L chips can store 64KiB each, accounting for a total of 512KiB VRAM. Cards featuring more than 256KiB were called Super-VGA but this is another story altogether.}
 \par
 \begin{figure}[H] 
   \centering 
   \fullimage{hardware/diamond_stealth_vram_revb2.png} 
-  \caption{The VGA card Diamond Stealth (16 bit ISA.) Courtesy of \cw{vgamuseum.info}.}
+  \caption{The VGA card Diamond Stealth (16 bit ISA). Courtesy of \cw{vgamuseum.info}.}
 \end{figure}
 
 \bu{Trivia :} There was no GPU market back then. Since all video cards "only" had to be VGA compatible with 256KiB of RAM, many just bought the cheapest thing available. Note however that some cards had an 8 bit ISA bus connector (like the Trident) and some had a 16 bit ISA connector like the Diamond, making the Diamond transfer data twice as fast.\\
@@ -794,7 +794,7 @@ When writing or reading a value V at address K in RAM, the Chain-4 breaks the ad
       \caption{}
 \end{figure}
 \par
-The side effect of this convenience mechanism is that 75\% of the RAM is wasted (since only 14 bits are usable for offset.)\\
+The side effect of this convenience mechanism is that 75\% of the RAM is wasted (since only 14 bits are usable for offset).\\
 
 
 
@@ -839,7 +839,7 @@ The side effect of this convenience mechanism is that 75\% of the RAM is wasted 
 
 
 \subsection{The Importance of Double Buffering}
-Double buffering has been mentioned often while describing the hardware, but so far we have not reviewed why it is paramount to achieving smooth animation. With only one buffer the software has to work at exactly the frequency of the CRT (70Hz.) Otherwise a phenomenon known as "tearing" appears. Let's take the example of an animation rendering a circle moving from the left to the right:
+Double buffering has been mentioned often while describing the hardware, but so far we have not reviewed why it is paramount to achieving smooth animation. With only one buffer the software has to work at exactly the frequency of the CRT (70Hz). Otherwise a phenomenon known as "tearing" appears. Let's take the example of an animation rendering a circle moving from the left to the right:
 \par
 \begin{figure}[H]
 \centering
@@ -946,7 +946,7 @@ The above picture is the CT1350B model. Notice the OPL2 chip (labeled FM1312), t
 
 
   \subsection{Sound Blaster Pro}
-The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but added support for stereo 22.05 kHz playback and 44.1 kHz in mono. It also added a "mixer" to blend audio sources (mic, line in, and CD) and choose the attenuation level of left and right outputs. Stereo was achieved with a pair of YM3812 chips (one for each audio channel.)\\\label{sbmixerpage}
+The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but added support for stereo 22.05 kHz playback and 44.1 kHz in mono. It also added a "mixer" to blend audio sources (mic, line in, and CD) and choose the attenuation level of left and right outputs. Stereo was achieved with a pair of YM3812 chips (one for each audio channel).\\\label{sbmixerpage}
 \begin{figure}[H] 
   \centering 
   \fullimage{hardware/sbpro.png} 
@@ -954,13 +954,13 @@ The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but added 
 \end{figure}
 The model above is a CT1330A. Notice the double FM1312 chip in the center. The two big chips in the upper left are the DSP (CT1341) and the Mixer. Below, labeled "Creative" is the big CT1316 bus interface.\\
 \par
-\bu{Trivia :} The card appears to have a 16 bit ISA bus connector (check the difference with the Sound Blaster 1.0.) However it does not have 'fingers' for data transfer on the higher "AT" portion of the bus connector. It uses the 16 bit extension to the ISA bus to provide the user with an additional choice for an IRQ (10) and DMA (0) channel only found on the 16 bit portion of the edge connector.\\
+\bu{Trivia :} The card appears to have a 16 bit ISA bus connector (check the difference with the Sound Blaster 1.0). However it does not have 'fingers' for data transfer on the higher "AT" portion of the bus connector. It uses the 16 bit extension to the ISA bus to provide the user with an additional choice for an IRQ (10) and DMA (0) channel only found on the 16 bit portion of the edge connector.\\
 \par
 \bu{Trivia :} Notice on the very left of the card in black there is an IDE Data interface to connect a CD-ROM. That was the only way to connect a CD-ROM to a PC back then.
 
 
   \subsection{Disney Sound Source}
-  In 1990, Disney began selling the sound source. Plugged into the printer port (parallel port) of the PC, a 8 bit DAC based on the "Covox Speech Thing" was connected to a speaker box. It was incredibly easy to setup, simple to program (it could only play one type of PCM and had no FM synthesizer), and very cheap compared to the other audio solutions (\$14.) It would have made programmers and customers happy if not for a serious issue due to the bandwidth of the port (150 kbit/s) which limited the PCM sampling rate to 7kHz.  This was still enough to produce pleasant sounds, but fell short when compared to the 22kHz or even 44kHz of a Sound Blaster Pro.
+  In 1990, Disney began selling the sound source. Plugged into the printer port (parallel port) of the PC, a 8 bit DAC based on the "Covox Speech Thing" was connected to a speaker box. It was incredibly easy to setup, simple to program (it could only play one type of PCM and had no FM synthesizer), and very cheap compared to the other audio solutions (\$14). It would have made programmers and customers happy if not for a serious issue due to the bandwidth of the port (150 kbit/s) which limited the PCM sampling rate to 7kHz.  This was still enough to produce pleasant sounds, but fell short when compared to the 22kHz or even 44kHz of a Sound Blaster Pro.
   \par
   \begin{figure}[H] 
     \centering 

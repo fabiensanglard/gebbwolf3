@@ -25,7 +25,7 @@ Once downloaded and decompressed, the archive \codeword{woldsrc.zip} contains an
 \end{minipage}
 
 \par
- The code is 90\% in C with assembly\footnote{All the assembly in Wolf3D is done with TASM (a.k.a Turbo Assembler by Borland.) It uses Intel notation where the destination is before the source: \cw{instr} \cw{dest} \cw{source}.} for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code (SLOC) is not a meaningful metric against a single codebase but excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Google's Chrome browser is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
+ The code is 90\% in C with assembly\footnote{All the assembly in Wolf3D is done with TASM (a.k.a Turbo Assembler by Borland). It uses Intel notation where the destination is before the source: \cw{instr} \cw{dest} \cw{source}.} for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code (SLOC) is not a meaningful metric against a single codebase but excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Google's Chrome browser is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
 \par
 \begin{figure}[H]
 \centering
@@ -92,7 +92,7 @@ The game engine is divided in three blocks:
 \item 3D game renderer where the user spends most of her time.
 \item Sound system which runs concurrently with either the 2D or 3D renderer. 
 \end{itemize}
-The three systems communicate via shared memory. The renderer writes music and sound requests to the RAM (also making sure the assets are ready.) These requests are read by the sound "loop". The sound system also writes to the RAM for the renderers since it is in charge of the heartbeat of the whole engine. The renderers update the world according to the wall-time tracked by \cw{TimeCount} variable.
+The three systems communicate via shared memory. The renderer writes music and sound requests to the RAM (also making sure the assets are ready). These requests are read by the sound "loop". The sound system also writes to the RAM for the renderers since it is in charge of the heartbeat of the whole engine. The renderers update the world according to the wall-time tracked by \cw{TimeCount} variable.
 \par
 \begin{figure}[H]
 \centering
@@ -148,7 +148,7 @@ Then comes the core loop, where the 2D renderer and 3D renderer are called forev
 \lstinputlisting[language=C]{code/unrolled_loop_playloop.c}
 \end{minipage}
 \par
-The sound system is started via the Sound Manager in \cw{SDL\_SetTimerSpeed}. While there is a famous game development library called Simple DirectMedia Layer (SDL), the prefix \cw{SDL\_} has nothing to do with it. It stands for SounD Low level. (Simple DirectMedia Layer did not even exist in 1991.)\\
+The sound system is started via the Sound Manager in \cw{SDL\_SetTimerSpeed}. While there is a famous game development library called Simple DirectMedia Layer (SDL), the prefix \cw{SDL\_} has nothing to do with it. It stands for SounD Low level. (Simple DirectMedia Layer did not even exist in 1991).\\
 \par
 The reason for interrupts is extensively explained in Chapter \ref{audio_and_heartbeat} "\nameref{audio_and_heartbeat}". In short, with an OS supporting neither process nor thread, it was the only way to have something execute concurrently with the rest of the engine.\\
 \par
@@ -201,7 +201,7 @@ The WL\_ stuff was written specifically for Wolf3D while the ID\_ managers were 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/architecture.pdf}
-\caption{Architecture with engine and sub-systems (in white) connected to I/O (in gray.)}
+\caption{Architecture with engine and sub-systems (in white) connected to I/O (in gray).}
 \label{fig:architecture}
 \end{figure}
 Next to the hard drives (HDD) you can see the assets packed as described in Chapter \ref{chapter_team} Team.
@@ -257,7 +257,7 @@ Eventually the free RAM will be exhausted and the first pass will fail.
  \caption{Pass 1 failure: Not enough RAM after the ROVER.}
  \end{figure}
  \par
- If the first pass fails, the second pass looks for a "hole" between the head and the rover. This pass will also purge unused blocks. If for example block B was marked as \cw{PURGEABLE}, it will be deleted and replaced with the new block E. At this point fragmentation starts to appear (like if \cw{malloc} was used.)\\
+ If the first pass fails, the second pass looks for a "hole" between the head and the rover. This pass will also purge unused blocks. If for example block B was marked as \cw{PURGEABLE}, it will be deleted and replaced with the new block E. At this point fragmentation starts to appear (like if \cw{malloc} was used).\\
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/mm_after_head.pdf}
@@ -363,7 +363,7 @@ The cache manager is a small but critical component. It loads and decompresses m
  \par
 \bu{Note:} All resources are compressed. In the case of maps and audio, compression is hard-coded in the engine. For graphics, however, a third file (\cw{DICT}) contains the compression dictionary to decompress each asset. The Cache Manager handles decompression transparently.\\
 \par
-\bu{Trivia :} Is there a typo in the filename \cw{AUDIOHED.WL} ? The correct spelling would be \texttt{\justify AUDIOHEAD.WL1}. Where is the \cw{A}? This is in fact a limitation of the operating system. DOS only allows 8.3 filename (at most eight characters followed by a dot, then at most three characters for the extension.)
+\bu{Trivia :} Is there a typo in the filename \cw{AUDIOHED.WL} ? The correct spelling would be \texttt{\justify AUDIOHEAD.WL1}. Where is the \cw{A}? This is in fact a limitation of the operating system. DOS only allows 8.3 filename (at most eight characters followed by a dot, then at most three characters for the extension).
 
 
 
@@ -398,7 +398,7 @@ and then passes this information to the Video Manager (\cw{VW\_DrawPropString}),
 
 
 \subsection{Sound Manager (SD)}
-The Sound Manager abstracts interaction with all four sound systems supported: PC Speaker, AdLib, Sound Blaster, and SoundSource. It is a beast of its own since it doesn't run inside the engine. Instead it is called via IRQ at a much higher frequency than the engine (the engine runs at a maximum 70Hz, while the sound manager ranges from 140Hz to 7000Hz.) It must run quickly and is therefore not only written in assembly, but its assets are also privileged when it comes to memory allocation. All of its assets are loaded in Conventional memory to avoid a cache miss in the Page Manager.\\
+The Sound Manager abstracts interaction with all four sound systems supported: PC Speaker, AdLib, Sound Blaster, and SoundSource. It is a beast of its own since it doesn't run inside the engine. Instead it is called via IRQ at a much higher frequency than the engine (the engine runs at a maximum 70Hz, while the sound manager ranges from 140Hz to 7000Hz). It must run quickly and is therefore not only written in assembly, but its assets are also privileged when it comes to memory allocation. All of its assets are loaded in Conventional memory to avoid a cache miss in the Page Manager.\\
  \par
 \begin{figure}[H]
 \centering

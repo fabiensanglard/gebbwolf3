@@ -1,5 +1,5 @@
 \section{Performance}
-With all the tricks and optimizations described, how well did the game run on most machines? DOSBox allows for emulating an old CPU and gives the numbers\footnote{The original Wolfenstein3D did not show the frame rate. A modified version of the engine from http://thandor.net/article/10 featuring framerate running on DOSBOX was used to get these numbers. DOSBOX settings were chosen with 1000 cycles = 1 MIPS (confirmed with MIPS.COM DOS executable.)} in Figure \ref{perf_summary}.\\
+With all the tricks and optimizations described, how well did the game run on most machines? DOSBox allows for emulating an old CPU and gives the numbers\footnote{The original Wolfenstein3D did not show the frame rate. A modified version of the engine from http://thandor.net/article/10 featuring framerate running on DOSBOX was used to get these numbers. DOSBOX settings were chosen with 1000 cycles = 1 MIPS (confirmed with MIPS.COM DOS executable).} in Figure \ref{perf_summary}.\\
 \par
 
 To compensate for power differences, the engine can reduce the 3D canvas to lower the number of rays cast and the number of pixels to render. The maximum is 304 rays resulting in 46208 pixels to render (304*152) and the minimum is 64 rays resulting in 2432 pixels to render (64*38).\\

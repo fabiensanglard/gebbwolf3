@@ -30,7 +30,7 @@ A driver has to be loaded at startup for the mouse to be accessible. Beginning w
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/mouse.sys.c}
 \end{minipage}
-The driver takes almost 5KiB of RAM. With the driver loaded all interactions happen with software interrupt \cw{0x33}. The interface works with request issued in register AX and response issued in registers CX, BX and DX. With Borland compiler syntactic sugar it is easy to write with almost no boilerplate (notice direct access to registers thanks to \_AX and co special keywords.)\\
+The driver takes almost 5KiB of RAM. With the driver loaded all interactions happen with software interrupt \cw{0x33}. The interface works with request issued in register AX and response issued in registers CX, BX and DX. With Borland compiler syntactic sugar it is easy to write with almost no boilerplate (notice direct access to registers thanks to \_AX and co special keywords).\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/mouse_request.c}
@@ -101,7 +101,7 @@ The API looks clean at first, with each button associated to a bit indicating wh
 \caption{Two joysticks and the four potentiometers connected to the game port pins.}
 \end{figure}
 \par
-On the joystick side each pin carrying the current is connected to monostable multivibrators (which is a complicated name for a capacitor able to output 1 when it is charged and 0 when it is charging.) The idea is to infer the position of the stick by measuring how long the vibrator takes to charge (a strong current will charge the capacitor faster than a weak current.)\\
+On the joystick side each pin carrying the current is connected to monostable multivibrators (which is a complicated name for a capacitor able to output 1 when it is charged and 0 when it is charging). The idea is to infer the position of the stick by measuring how long the vibrator takes to charge (a strong current will charge the capacitor faster than a weak current).\\
 \par
 \par
 \begin{figure}[H]
