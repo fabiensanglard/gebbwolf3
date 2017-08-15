@@ -92,8 +92,8 @@ All interactions with the joystick happen over I/O port \cw{0x201}. Two joystick
 \caption{Joystick sampling bit and their meaning.}
 \end{figure}
 \par
-The API looks clean at first, with each button associated to a bit indicating whether it is pressed or not. But if you take a closer look you will notice there is only one bit of information per axis, which is not enough to encode the position of a stick. This bit is actually a flag allowing an analog input to be converted into a digital value. To understand better, let's dive into details.\\
-\par On the joystick side, each axis is connected to a 100k$\Omega$ potentiometer. An applied 5V voltage generates a variable current based on the stick position (remember Ohm's law where $I = \frac{V}{R}$).\\ 
+The API looks clean at first, with each button associated with a bit indicating whether it is pressed or not. But if you take a closer look you will notice there is only one bit of information per axis, which is not enough to encode the position of a stick. This bit is actually a flag allowing an analog input to be converted into a digital value. To understand better, let's dive into details.\\
+\par On the joystick side, each axis is connected to a 100k$\Omega$ potentiometer. An applied 5V voltage generates a variable current based on the stick position (from Ohm's law where $I = \frac{V}{R}$).\\ 
 \par
 \begin{figure}[H]
 \centering
@@ -115,12 +115,12 @@ On the CPU side, retrieving the stick position is a three-step process:
 \begin{enumerate}
  \item Write \circled{W} any value to I/O port \cw{201h}. This will discharge all capacitors.
  \item Initialize a counter to zero and read \circled{R} from \cw{201h}. At first all bits 0-4 will be equal to zero.
- \item Loop forever (or until counter == 0xFFFF as a safety measure) increase counter on each iteration. Save the counter value for each bit when they are flipped to 1.
+ \item Loop forever (or until counter == 0xFFFF as a safety measure) increase counter on each iteration. Save the counter value for each bit when it is flipped to 1.
 \end{enumerate}
 \par
 On a 286 CPU the counter value can range from 7 to 900 depending on the stick/capacitor position. On a 386 CPU, which will run loops faster, these value would be higher. Hence the values measured can only be translated to a stick position if they are compared to a min and a max.\\
 \par 
-This explains why joysticks have to be calibrated. For the flight simulators of the 90s where accurate position was needed, the player would be asked to put the joystick in upper-left position (to set the potentiometers on both axis to minimum resistance) and press a button to read the "loop count". Repeat the operation at the lower right position to determine the min and max "loop count" for this joystick/CPU combination.\footnote{The Mark-1 by Thrustmaster and Flightstick Pro by CH were the best flight controller of the 90s. They used they used all bits for one controller, offering a devices with four buttons with the extra two axis serving as a four-way view hat.}\\
+This explains why joysticks have to be calibrated. For the flight simulators of the 90s where accurate position was needed, the player would be asked to put the joystick in upper-left position (to set the potentiometers on both axis to minimum resistance) and press a button to read the "loop count". The player would then repeat the operation at the lower right position so that the system  would know the min and max "loop count" for this joystick/CPU combination.\footnote{The Mark-1 FCS by Thrustmaster and Flightstick Pro by CH were the best flight controller of the 90s. They used they used all bits for one controller, offering a devices with four buttons with the extra two axis serving as a four-way view hat.}\\
 \par
 \begin{figure}[H]
 \centering

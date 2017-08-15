@@ -544,7 +544,7 @@ At this point, if you are puzzled by the CPU and its design you are not alone. O
 
 \section{Video}
 
-PCs were connected to CRT monitors: big, heavy, small diagonal, cathode-ray based, curved-surface screens. Most had a 14" diagonal with a 4:3 aspect ratio. To give you an idea of the size, Figure \ref{fig:lcd_vs_crt} below shows a comparison between a 14" CRT from 1992 and a 30" LCD display from 2014.\\
+PCs were connected to CRT monitors: big, heavy, small diagonal, cathode-ray based, curved-surface screens. Most had a 14" diagonal with a 4:3 aspect ratio. To give you an idea of the size, Figure \ref{fig:lcd_vs_crt} shows a comparison between a 14" CRT from 1992 and a 30" LCD display from 2014.\\
 
 \begin{figure}[H]
 \centering
@@ -608,7 +608,7 @@ Each iteration added new features and by 1991 the predominant graphic system was
 \begin{figure}[H] 
   \centering 
   \fullimage{hardware/suntra_trident_tvga8800br.png} 
-  \caption{ VGA card Trident 8800 (8 bit ISA). Courtesy of \cw{vgamuseum.info}. Notice the eight chips on the left of the card forming the VRAM where the framebuffers are stored\protect\footnotemark.}
+  \caption{The VGA card Trident 8800 (8 bit ISA). Courtesy of \cw{vgamuseum.info}. Notice the eight chips on the left of the card forming the VRAM where the framebuffers are stored\protect\footnotemark.}
 \end{figure}
 \footnotetext{This Trident TVGA8800BR is actually more than VGA capable since its eight V53C464P80L chips can store 64KiB each, accounting for a total of 512KiB VRAM. Cards featuring more than 256KiB were called Super-VGA but this is another story altogether.}
 \par
@@ -772,7 +772,7 @@ The only good thing about this mode is that it has square pixels. The 640x480 as
 
  
   \subsection{VGA Programming: Mode 13h}
-  Mode \cw{13h} is far more appealing since it offers a lower resolution of 320x200 with 256 colors at 70Hz. It also has the advantage of faking linear buffer. A special chip called Chain-4 uses the lower 2 bit of the RAM address to automatically program the mask and route the operation to the appropriate VRAM bank. This convenience mechanism was originally added because mode \cw{13h} was meant to display static images and a linear address space made it easy for developers to copy from RAM to VRAM.\\
+  Mode \cw{13h} is far more appealing since it offers a lower resolution of 320x200 with 256 colors at 70Hz. It also has the advantage of faking linear buffer. A special chip called Chain-4 uses the lower 2 bits of the RAM address to automatically program the mask and route the operation to the appropriate VRAM bank. This convenience mechanism was originally added because mode \cw{13h} was meant to display static images and a linear address space made it easy for developers to copy from RAM to VRAM.\\
   \par
  \begin{figure}[H]
 \centering
@@ -853,7 +853,7 @@ In this example the CPU has finished writing the framebuffer (on the left) and t
 \includegraphics[width=\textwidth]{imgs/drawings/doublebuffer_after.eps}
 \end{figure}
 \par
-If the CPU is faster than the frequency of the CRT (70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here. The next frame was drawn with the circle moved to the right. The electron beam did not know that and kept on scanning the framebuffer. The result on screen is now a composite of two frames. It looks like two frames were torn and tapped back together. Hence the name "tearing".\\
+If the CPU is faster than the frequency of the CRT (70Hz), it can write the framebuffer again, before the scan is completed. This is what happened here. The next frame was drawn with the circle moved to the right. The electron beam did not know that and kept on scanning the framebuffer. The result on screen is now a composite of two frames. It looks like two frames were torn and taped back together. Hence the name "tearing".\\
 \par
 With two buffers (a.k.a double buffering) the CPU can start writing in the second framebuffer without messing with the framebuffer being scanned to the screen\footnote{Now the CPU speed is capped by the CRT refresh rate. Triple buffering can solve this at the price of frame latency.}. No more tearing!
 
@@ -935,9 +935,10 @@ Although adoption was growing (Creative would go on to sell one million SoundBla
   \centering 
   \fullimage{hardware/sb.png} 
   \caption{A SoundBlaster (v1.2). }
+  \label{asb12}
 \end{figure}
 \par
-The above picture is the CT1350B model. Notice the OPL2 chip (labeled FM1312), the big CT1336 bus interface (labeled "CREATIVE") on the center left, the CT1351 DSP on the upper left, and the 8 bit ISA bus connector.\\
+Figure \ref{asb12} is the Sound Blaster model CT1350B. Notice the OPL2 chip (labeled FM1312), the big CT1336 bus interface (labeled "CREATIVE") on the center left, the CT1351 DSP on the upper left, and the 8 bit ISA bus connector.\\
 \par
   \bu{Trivia :} The numerous advantages of the Sound Blaster card over the AdLib made it the de-facto standard shortly after its release and eventually brought AdLib to bankruptcy\footnote{The reign of the Sound Blaster came to an end with Windows 95, which standardized the programming interface at application level and eliminated the importance of compatibility with Sound Blaster}.
 
@@ -1052,7 +1053,7 @@ Of course it is also backward compatible and an 8 bit ISA card can be plugged in
  \par
  On a 16 bit VGA card, 33,400,000 bits per seconds gives 33,400,000/8/64000 = 65 frames per seconds.\\
  \par
- If you factor in other things which had to transit on the bus such as palette, keyboard interrupt, mouse inputs, and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand how important it was to limit data transfer and why few softwares of the era could max out the VGA's 70 frames per seconds\footnote{Specialized demos could reach 70 fps on VGA by careful management of unchanged regions or using planar writes for the 4x speedup.}.
+ If you factor in other things which had to be transported by the bus such as palette, keyboard interrupt, mouse inputs, and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand how important it was to limit data transfer and why few programs of that era could max out the VGA's 70 frames per seconds\footnote{Specialized demos could reach 70 fps on VGA by careful management of unchanged regions or using planar writes for the 4x speedup.}.
 
 
 \section{Summary}

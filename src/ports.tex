@@ -125,12 +125,12 @@ The most notorious improvement is bilinear filtering, thanks to hardware acceler
  \end{figure}
  \par
  
-\subsection{Notes}
+\subsection{iPhone Development Notes}
 
 By John Carmack, Technical Director, Id Software\\
 \par
 
-\subsubsection{iPhone Development Notes}
+
 \par
 I had been frustrated for over a year with the fact that we didn't have any iPhone development projects going internally at Id.  I love my iPhone, and I think the App Store is an extremely important model for the software business.  Unfortunately, things have conspired against us being out early on the platform.\\
 \par
@@ -167,7 +167,7 @@ It was nice and simple to download, extract data from a commercial copy of Wolfe
 I sent an email to the Wolf 3D Redux project maintainer to see if he might be interested in working on an iPhone project with us, but it had been over a year since the last update, and he must have moved on to other things.  I thought about it a bit, and decided that I would go ahead and do the project myself.  The "big projects" at Id are always top priority, but the systems programming work in Rage is largely completed, and the team hasn't been gated on me for anything in a while.  There is going to be memory and framerate optimization  work going on until it ships, but I decided that I could spend a couple weeks away from Rage to work on the iPhone exclusively.  Cass continued to help with iPhone system issues, I drafted Eric Will to create the few new art assets, and Christian Antkow did the audio work, but this was the first time I had taken full responsibility for an entire product in a very long time.\\
 \par
 
-\subsubsection{Design Notes}
+\subsubsection*{Design Notes}
 
 The big question was how "classic" should we leave the game?  I have bought various incarnations of Super Mario Bros on at least four Nintendo platforms, so I think there is something to be said for the classics, but there were so many options for improvement.  The walls and sprites in the game were originally all 64 x 64 x 8 bit color, and the sound effects were either 8khz / 8 bit mono or (sometimes truly awful) FM synth sounds.  Changing these would be trivial from a coding standpoint.  In the end, I decided to leave the game media pretty much unchanged, but tweak the game play a little bit, and build a new user framework around the core play experience.  This decision was made a lot easier by the fact that we were right around the 10 meg over-the-air app download limit with the converted media.  This would probably be the only Id project to ever be within hailing distance of that mark, so we should try to fit it in.\\
 \par
@@ -231,7 +231,7 @@ When I was first thinking about the project I sort of assumed that we wouldn't b
 The game is definitely simplistic by modern standards, but it still has its moments.  Getting the drop on a brown shirt just as he is pulling his pistol from the holster.  Making an SS do the "twitchy dance" with your machine gun.  Rounding a corner and unloading your weapon on ... a potted plant.  Simplistic plays well on the iPhone.\\
 \par
 
-\subsubsection{Programming Notes}
+\subsubsection*{Programming Notes}
 Cass and I got the game running on the iPhone very quickly, but I was a little disappointed that various issues around the graphics driver, the input processing, and the process scheduling meant that doing a locked-at-60-hz game on the iPhone wasn't really possible.  I hope to take these up with Apple at some point in the future, but it meant that Wolf would be a roughly two tick game.  It is only "roughly" because there is no swapinterval support, and the timer scheduling has a lot of variability in it.  It doesn't seem to matter all that much, the play is still smooth and fun, but I would have liked to at least contrast it with the perfect limit case.\\
 \par
 

@@ -11,7 +11,7 @@
 void VL_DePlaneVGA() {  
   // Change how VRAM is written (Disable Chain-4)
   outp(SC_INDEX, MEMORY_MODE);
-  outp(SC_DATA, inp(SC_DATA)&~8)); 
+  outp(SC_DATA, (inp(SC_DATA)&~8)); 
 
   // Clear all four banks since the bios only cleared 
   // the first 16K of each banks when setiing up mode 13h.

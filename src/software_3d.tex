@@ -1,5 +1,5 @@
 \section{Action Phase: 3D Renderer}
-After the player is done setting up the game via the 2D renderer, it comes time for the 3D engine to shine. It is based on a simple yet powerful technology called raycasting. The core idea is to cast a ray for each column of pixels visible on the screen. Based on the distance \cw{d} from the point of view to where the ray hits a wall, a height \cw{h} can be calculated ($X$ is a simple scaling factor):\\
+After the player is done setting up the game via the 2D renderer, it is time for the 3D engine to shine. The 3D renderer is based on a simple yet powerful technology called raycasting. The core idea is to cast a ray for each column of pixels visible on the screen. Based on the distance \cw{d} from the point of view to where the ray hits a wall, a height \cw{h} can be calculated ($X$ is a simple scaling factor):\\
 \par
 \begin{figure}[H]
   \centering
@@ -49,11 +49,11 @@ This is a pretty standard design for an engine from the early 90s. However, it h
  \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.pdf}
  
  \end{figure}
-  At the beginning of each frame, the engine retrieves user inputs and combines them with the duration of the previous frame to update the world. Even if inputs are recorded for each frame, the same game could not be replayed as upon replaying a recorded game the engine would invariably reach a point where no inputs are available because a frame took longer or shorter to render. A simple disk access taking longer could have altered the duration of a frame, resulting in a different world outcome.\\
+  At the beginning of each frame, the engine retrieves user inputs and combines them with the duration of the previous frame to update the world. Even if inputs are recorded for each frame, the same game could not be replayed as upon replaying a recorded game the engine would invariably reach a point where no inputs are available because a frame took more or less time to render. A simple disk access taking longer could have altered the duration of a frame, resulting in a different world outcome.\\
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/replay.pdf}
- \caption{The second frame rendered faster during the replay. No inputs are available for the player. Replay is now out of sync.}
+ \caption{The second frame too longer to be rendered during the replay. No inputs are available for the player. Replay is now out of sync.}
  \end{figure}
 \par
 To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulates events at fixed interval (\cw{DEMOTICK} = 4)\footnote{70/4 = 17.5, the machine used to record the demo ran at 17 fps. Probably a high end 386.}. This hack resulted in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
@@ -520,13 +520,13 @@ The beauty of fixed point is that addition and subtraction work exactly like int
 \begin{figure}[H]
  \centering
    \input{imgs/drawings/1_5.tex}
-  \caption{+ 1.5} 
+  \caption{1.5} 
 \end{figure} 
 
 \begin{figure}[H]
  \centering
    \input{imgs/drawings/36_25.tex}
-  {\caption{= 36.25}}
+  {\caption{34.75 + 1.5= 36.25}}
 \end{figure} 
 \par
  Even right shift trick (divide by power of two) and left shift trick (multiply by power of two) work...\\
@@ -554,7 +554,7 @@ The beauty of fixed point is that addition and subtraction work exactly like int
 
 The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONAL\_PART}. In the game, the player's position is \cw{16:16}. The grid location is one shift operation away \cw{player->x $\gg$ 16}.\\
 \par
-Performing multiplication and division are special cases. There are two ways to do this: either multiply two 32 bits into 64 bits (and drop the upper and lower 16 bits) or drop the precision of both fixed points and then multiply them into 32 bits. Both methods involve accepting a loss of data via overflow or underflow. Let's take the example of $98.7539 * 1.5$.
+Performing multiplication and division are special cases. There are two ways to do this: either multiply two 32 bit values into 64 bits (and drop the upper and lower 16 bits) or drop the precision of both fixed point values and then multiply them into 32 bits. Both methods involve accepting a loss of data via overflow or underflow. Let's take the example of $98.7539 * 1.5$.
 
 
 \par
@@ -567,7 +567,7 @@ Performing multiplication and division are special cases. There are two ways to 
 \begin{figure}[H]
  \centering
    \input{imgs/drawings/1_5.tex}
-   \caption{* 1.5} 
+   \caption{1.5} 
 \end{figure} 
 \par
 First shift both operators by 4 bits to the right:\\
@@ -588,7 +588,7 @@ Finally multiply them together:
 \begin{figure}[H]
  \centering
    \input{imgs/drawings/148_125.tex}
-   \caption{148.125} 
+   \caption{98.7539 * 1.5 = 148.125} 
 \end{figure} 
 $128 + 16 + 4 + 0.125 = 148.125 $\\
 \par
@@ -622,13 +622,13 @@ And much easier when the engine knows two \cw{fixed} are the same sign:\\
 
 
 \subsubsection{Coordinate System}
-With the CPU \cw{float}/\cw{int} problem out of the way, it is almost time to study how a ray is cast. The coordinate system finds its origin in the upper left. A map is a grid of 64 by 64 blocks. 
+With the CPU \cw{float}/\cw{int} problem out of the way, it is time to study how a ray is cast. The coordinate system finds its origin in the upper left. A map is a grid of 64 by 64 blocks. 
 \begin{figure}[H]
   \centering
  \includegraphics[width=.8\textwidth]{imgs/drawings/coo_sys.pdf}
 \end{figure}
 \par
-Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column heights are 29:3. Player position is 16:16. Angles however are \cw{int}s representing 10th of degrees with a range [0, 3600].
+Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column heights are 29:3. Player position is 16:16. Angles however are \cw{int}s representing tenths of degrees with a range [0, 3600].
 
 
 
@@ -656,7 +656,7 @@ Why do I think VSD is the toughest 3-D challenge? Although rasterization issues 
  \bigskip \\
 In contrast, VSD is an open-ended problem, and there are dozens of approaches currently in use. Even more significantly, the performance of VSD, done in an unsophisticated fashion, scales directly with scene complexity, which tends to increase as a square or cube function, so this very rapidly becomes the limiting factor in doing realistic worlds. I expect VSD increasingly to be the dominant issue in realtime PC 3-D over the next few years, as 3-D worlds become increasingly detailed.
  \bigskip \\
-\textbf{Michael Abrash - Programmer}
+\textbf{Michael Abrash - Graphics Programming Black Book}
  \end{fancyquotes}
  \par
 VSD is not only complicated to do right, it is also hard to do fast. It is easy to understand with a small example where objects are free form with no alignment, as follows.
@@ -808,7 +808,7 @@ Basically, "Aardwolf" and the letters mean nothing now.\\
 \end{fancyquotes}
 \par
 \bigskip
-\bu{Trivia :} What is Aardwolf? A maned striped mammal (Proteles cristatus) of southern and eastern Africa that resembles the related hyenas and feeds chiefly on carrion and insects. It was the mascot of id, appearing on Tom's Gotta Lists and the Commander Keen 6 Hint Sheet.\\
+\bu{Trivia :} What is Aardwolf? A maned striped mammal (Proteles cristatus) of southern and eastern Africa that resembles a hyena and feeds chiefly on carrion and insects. It was the mascot of id, appearing on Tom's Gotta Lists and the Commander Keen 6 Hint Sheet.\\
 \par
 
  \begin{fancyquotes}
@@ -997,7 +997,7 @@ In this drawing the player is located at \cw{viewpoint} with a view angle \begin
 \begin{minipage}{.4\textwidth}
 From a distance of 24 feet, the distortion cannot be ignored and the problem is clear.\\
 \par
-Note that even though the player is getting closer to the wall, the ratio of A to B remain the same. Only the absolute difference in pixel height when the column is rendered on screen is increasing.
+Note that even though the player is getting closer to the wall, the ratio of A to B remains the same. Only the absolute difference in pixel height when the column is rendered on screen is increasing.
  \end{minipage}
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
@@ -1015,7 +1015,7 @@ Note that even though the player is getting closer to the wall, the ratio of A t
  \begin{figure}[H]
 \centering
   \fullimage{fish_eye/bad_bad.png}
- \caption{Fish eye effect: AAAAARG} \label{fig:mips}
+ \caption{Fish eye effect: AAAAARGH} \label{fig:mips}
  \end{figure}
  
 
@@ -1181,7 +1181,7 @@ All columns of pixels representing the walls are centered vertically and either 
  \fullimage{scaler_valign.png}
  \end{figure}
 \par
-As the photoshoped pink line shows, each column of pixels for a wall is centered vertically with no offset added. In order to do this, a naive approach would be to use a generic routine looking something like this.\\
+As the photoshopped pink line shows, each column of pixels for a wall is centered vertically with no offset added. In order to do this, a naive approach would be to use a generic routine looking something like this.\\
 
 
 \par
@@ -1194,7 +1194,7 @@ This would involve a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} a
 \par
  There is a faster way to do this which involves the usual RAM vs CPU tradeoff. In this case we can invest a little bit of RAM to gain a lot of CPU time.\\
  \par 
- The idea is to remove the genericity of the scaler and instead generate hard-coded functions.\\
+ The idea is to make the scaler less generic of the scaler and instead generate hard-coded functions.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/hardcoded_draw.c}
@@ -1211,7 +1211,7 @@ Given a height, \cw{BuildCompScale} generates x86 instructions in the out variab
 \par
 With this optimization, minifying a column of 64 texels to a 2 pixel tall column takes 15 instructions. Minifying to 4 pixels take 25 instructions. Magnifying to 128 pixels takes 705 (64*11+1) instructions. A precompiled scaler function has a fixed cost of 7 instructions per pixel when minifying and $3+4*scalingFactor$ instructions per pixel when magnifying. It doesn't get any faster than that.\\
 \par
-What is the RAM cost incurred by precompiling and caching these scalers? When rendering to its maximum dimension in the 3D canvas, the engine generates all scalers of even height from 2 to 512\footnote{512 is taller than the height of the 3D canvas (which is 152). However, the engine needs to render sprites magnified to the point sprites are clipped vertically.}. That's 255 scalers totalizing 178,479 bytes of generated instructions. This cost was deemed too high.\\
+What is the RAM cost incurred by precompiling and caching these scalers? When rendering to its maximum dimension in the 3D canvas, the engine generates all scalers of even height from 2 to 512\footnote{512 is taller than the height of the 3D canvas (which is 152). However, the engine needs to render sprites magnified to the point where sprites are clipped vertically.}. That's 255 scalers totaling 178,479 bytes of generated instructions. This cost was deemed too high.\\
 \par 
 To save RAM, past size 76 only every other even size is generated (2,4,6,..,72,74,76) and (78,82,86,...,504,508,512). This trick generates only 136 scalers for a total instruction size of 83,160 bytes.\\
 \par
@@ -1282,6 +1282,7 @@ The engine will group up to 8 columns together. Because of the VGA alignment it 
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/hardcoded_masks.c}
 \end{minipage}
+\par
 Each \cw{mapmasks} array is used during each pass \cw{X} as:\\
 \par
  VGA\_MASK = \cw{mapmasksX[first\_column\_x\_coordinate\%4][numcolumn - 1]}\\
@@ -1367,7 +1368,7 @@ A better case where two passes with mask set to 15 then 3 allows drawing 6 colum
 
 
 
-To visualize real cases gain, the engine has been modified to draw columns of pixels which were written "for free" thanks to the VGA mask manipulation in pink. We can see the performance improvement is significant, with 50\% of write operations avoided.
+To visualize the performance gain in real cases, the engine has been modified to draw columns of pixels which were written "for free" thanks to the VGA mask manipulation in pink. We can see the performance improvement is significant, with 50\% of write operations avoided.
 
 \begin{minipage}{\textwidth}
  \centering
@@ -1387,7 +1388,8 @@ To visualize real cases gain, the engine has been modified to draw columns of pi
  \vspace*{0.5cm}\\
  \scaledimage{0.9}{post_optimization_2_pink_show.png}
 \end{minipage}
-This technique helps solve for scenarios where a large number of pixels have to be written due to the size of the wall. It only really shines when a lot of magnification occurs. For walls far away (minified) this technique doesn't help at all, but this matters less as small walls are cheap to render.\\
+This technique helps solve for scenarios where a large number of pixels have to be written due to the size of the wall. It only really shines when a lot of magnification occurs. For walls far away (minified) this technique doesn't help at all, but this matters less as small walls are cheap because they have fewer pixels
+to render.\\
 \par
 \bu{Trivia :} Generating code at runtime may sound like an outdated technology. However, it was used as recently as 2016 when Android emulator used PixelFlinger to render the entire GUI.
 
@@ -1412,9 +1414,9 @@ This technique helps solve for scenarios where a large number of pixels have to 
 
 
 \subsubsection{Texturing}
-A subtle but extremely efficient trick used to improve quality of the wall rendition is pre-baked light texturing. Wall texture assets were generated twice by the artists: once lit and once unlit.\\
+A subtle but extremely efficient trick used to improve the quality of the wall rendering is pre-baked light texturing. Wall texture assets were generated twice by the artists: once lit and once unlit.\\
 \par
-At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (looking at the map from above) on the Y axis, the engine uses a lit texture. If the ray hits an horizontal wall (on the X axis), it uses the unlit version of the same texture. The difference is not obvious at first, but with the same scene rendered side by side with and without this effect, the visual difference is striking.\\
+At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (looking at the map from above) on the Y axis, the engine uses a lit texture. If the ray hits an horizontal wall (on the X axis), it uses the unlit version of the same texture. The difference is not obvious at first, but with the same scene rendered side by side with and without this effect, the visual difference is striking, giving the scene more realism because of this directional-light effect.\\
 \par
   \begin{figure}[H]
 \centering
@@ -1628,7 +1630,7 @@ In order to do that, the raycaster keeps tracks of each height calculated for ea
 \lstinputlisting[language=C]{code/wallheight_declaration.c}
 \end{minipage}
 \par
-While raycasting the occlusion array is written to.\\
+The occlusion array is written to during raycasting.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_population.c}
@@ -1652,7 +1654,7 @@ The combination of the compiled scalers getting more efficient at higher magnifi
 
 
 \subsubsection{Drawing Things}
-Sprite rendition benefits from the same optimization we saw in walls (compiled scalers and deferred rendering). However, since sprites introduce transparency the techniques are slightly adjusted.
+Sprite rendering benefits from the same optimization we saw in walls (compiled scalers and deferred rendering). However, since sprites introduce transparency the techniques are slightly adjusted.
 
 \subsubsection{Compiled Scalers}
 Visible sprite column rendition is also done with the compiled scalers, but the scalers cannot be used directly. A compiled scaler draws its speed from its absence of parameters. It is an unrolled loop hardcoded with x86 instructions to read from a texture 64 texels tall and write/scale a predetermined number of pixels. For example, compiled scaler \#112 always reads 64 pixels of texture and magnifies it to 134 pixels on the screen. Transparency is not handled at all, used as is the scalers would draw transparent pixels in pink. To solve this problem, sprites are stored in a special way that allows tweaked compiled scalers to skip transparency.\\
@@ -1735,7 +1737,7 @@ A modified version of the engine (which draws "free" columns in pink) is again u
 
 
 \subsection{Drawing Weapons}
-Drawing the weapon at the bottom of the canvas is straight forward. It uses the same type of rendition for sprites but with clipping disabled (in the function \cw{ScaleShape}). The same compiled scaler and deferred rendition tricks are used.
+Drawing the weapon at the bottom of the canvas is straight forward. It uses the same type of rendering as sprites but with clipping disabled (in the function \cw{ScaleShape}). The same compiled scaler and deferred rendering tricks are used.
 
 
 
@@ -1817,7 +1819,7 @@ By far the most important stimuli and, what makes the player feel like the A.I i
 \subsubsection{Sound Propagation}
 Early on the game teaches the player that enemies react to gunfire and seek out the source. Sound is an essential part of the experience and propagating it realistically in realtime is hard.\\
 \par
- A bloodfill algorithm could have been used but that would have been slow. To speed things up, maps are preprocessed. Each room delimits an area. At runtime the engine maintains a matrix of portals connecting areas and updates it when a door opens or closes. Determining if an enemy can hear the player's gunfire is then a simple lookup in a table.
+ A floodfill algorithm could have been used but that would have been slow. To speed things up, maps are preprocessed. Each room delimits an area. At runtime the engine maintains a matrix of portals connecting areas and updates it when a door opens or closes. Determining if an enemy can hear the player's gunfire is then a simple lookup in a table.
 
 \par
 \begin{figure}[H]

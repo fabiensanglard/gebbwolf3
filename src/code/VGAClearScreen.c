@@ -1,6 +1,6 @@
 void VGAClearScreen (void)
 {
- unsigned ceiling=vgaCeiling[gamestate.episode*10+mapon];
+unsigned ceiling=vgaCeiling[gamestate.episode*10+mapon];
 
 asm	mov	dx,SC_INDEX
 asm	mov	ax,SC_MAPMASK+15*256	// write through all planes

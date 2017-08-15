@@ -1,6 +1,6 @@
 \section{Tricks}
 
-This section describes random tricks used to speed up rendition. They range from simple precomputed cos/sin tables to what I consider one of the most beautiful hacks in the engine: the Linear Feedback Shift Register.
+This section describes random tricks used to speed up rendering. They range from simple precomputed cos/sin tables to what I consider one of the most beautiful hacks in the engine: the Linear Feedback Shift Register.
 
 
 
@@ -141,7 +141,7 @@ Even though it limited the graphic capabilities of the game, the palette system 
  \fullimage{palette_damage.png}
  \caption{The palette RGB colors is altered when taking damage.} \label{fig:palette_damage}
 \end{figure}
-A fast path is provided (which ironically only works if the CPU is as slow at the VGA) to update the palette via one \cw{lobsb} instruction. Otherwise, if not supported, a loop of 768 \cw{outsb} is used.\\
+A fast path is provided (which ironically only works if the CPU is as slow as the VGA processor) to update the palette via one \cw{lobsb} instruction. Otherwise, if not supported, a loop of 768 \cw{outsb} is used.\\
 \par
 \begin{minipage}{\linewidth}
 \lstinputlisting[language=C,morekeywords={asm,byte,far}]{code/vl_setpalette.c}
@@ -155,7 +155,7 @@ A fast path is provided (which ironically only works if the CPU is as slow at th
 
 
 \section{Pseudo Random Generator}
-Random numbers are necessary for many things during runtime, such as calculating if an enemy is able to hit the player based on its accuracy. This is achieved with a precalculated pseudo-random series of 256 elements. The last random value is also the index of the next value.\\
+Random numbers are necessary for many things during runtime, such as calculating whether an enemy is able to hit the player based on its accuracy. This is achieved with a precalculated pseudo-random series of 256 elements. The last random value is also the index of the next value.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}, style=mystyle,basicstyle=\small]{code/rndtable.asm}

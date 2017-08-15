@@ -243,7 +243,7 @@ Since the VGA is palette based (colors were not specified via 24-bit RGB but via
 \fullimage{palette.png}
  \caption{Wolfenstein 3D palette. Everything in the game is drawn using these 256 colors.}
 \end{figure}
-The palette coordinates are \cw{0x00} to \cw{0x0F} horizontally and \cw{0x00} to \cw{0xF0} vertically. The horizontal blue gradient at the bottom starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is a special color deemed transparent by the engine and always skipped during rendition.\\
+The palette coordinates run \cw{0x00} to \cw{0x0F} horizontally and \cw{0x00} to \cw{0xF0} vertically. The horizontal blue gradient at the bottom starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is a special color deemed transparent by the engine and always skipped during rendition.\\
 \par
 
 All assets were hand drawn with a mouse. Since the VGA stretched the framebuffer when displaying it on the screen, Adrian had to be careful to draw at the same resolution as the game would run (320x200).\\
@@ -300,7 +300,7 @@ After the graphic assets were generated, a tool (IGRAB-ED) packed all ILBMs toge
 
 
 \begin{minipage}{0.7\textwidth}
-"The Official Hint Manual for Wolfenstein 3D" published in 1992 contains many drawings from Tom Hall and shows many behind the scene sketches made by Tom Hall and pixelarted by the graphic team.\\
+"The Official Hint Manual for Wolfenstein 3D" published in 1992 explains the creative process. It contains many drawings from Tom Hall and shows many behind the scene sketches made by Tom Hall and pixelarted by the graphic team.\\
 \par
  \begin{fancyquotes}
 When Id's Creative Director, Tom Hall gets an idea for a screen, he provides a sketch for Adrian Carmack. Below are some of Tom's early designs for the title screen. The third sketch was chosen.\\
@@ -375,7 +375,7 @@ The hint manual also contains several photos of the team back in the day; it is 
 
 
 \section{Maps}
-Maps were created using an in-house editor called TED5, short for Tile EDitor. TED5 was not created specially for Wolf 3D, but was originally made for the Commander Keen series and improved over the years. It was a versatile tool since it allowed for creating maps of both side scroller games and top-down games like Rescue Rover and Wolf 3D. TED5 does not stand-alone; in order to start, it needs an asset archive and the  associated header (as described in the graphic asset workflow Figure \ref{asset-creation-pipeline} on page \pageref{asset-creation-pipeline}). This way, texture IDs are directly encoded in the map.\\
+Maps were created using an in-house editor called TED5, short for Tile EDitor. TED5 was not created specially for Wolf 3D, but was originally made for the Commander Keen series and improved over the years. It was a versatile tool since it allowed for creating maps of both side scroller games and top-down games like Rescue Rover and Wolf 3D. TED5 is not stand-alone; in order to start, it needs an asset archive and the  associated header (as described in the graphic asset workflow Figure \ref{asset-creation-pipeline} on page \pageref{asset-creation-pipeline}). This way, texture IDs are directly encoded in the map.\\
 
  \begin{figure}[H]
 \centering
@@ -557,7 +557,7 @@ The game shipped as follows:\\
  \begin{itemize}
  \item WOLF3D.EXE: Game engine.
  \item VSWAP.WL1: Contains all the assets (sprites, textures, digitized sounds) needed during 3D action phases.
- \item Music files used during both 3D and 2D phases:
+ \item Music and sound effect files used during both 3D and 2D phases:
      \begin{itemize}
      \item AUDIOHED.WL1 : Index to payload in \cw{AUDIOT} file.
      \item AUDIOT.WL1: Uncompressed audio data. 

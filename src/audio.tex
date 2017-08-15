@@ -1,6 +1,6 @@
 \section{Audio and Heartbeat} 
 \label{audio_and_heartbeat}
-The audio and heartbeat system runs concurrently with the rest of the program. On an operating system supporting neither processes nor threads this means using interrupts to stop normal execution and perform tasks on the side.\\
+The audio and heartbeat system runs concurrently with the rest of the program. On an operating system supporting neither multi-processes nor threads this means using interrupts to stop normal execution and perform tasks on the side.\\
 \par
 The idea is to configure the hardware to trigger a hardware interrupt at a regular interval. This interrupt is caught by a system called PIC which transforms it into a software interrupt. The software interrupt ID is used as an offset in a vector to look up a function belonging to the engine. At this point, the CPU is stopped (a.k.a: interrupted) from doing whatever it was doing (likely running the 3D renderer), and it starts running the interrupt handler which is called an ISR\footnote{Interrupt Service Routine}. We now have two systems running in parallel.\\
 \par
@@ -18,7 +18,7 @@ The idea is to configure the hardware to trigger a hardware interrupt at a regul
  Wolfenstein 3D uses the latter approach and keeps tasks in its ISR very small and short. To this effect everything in the audio and heartbeat system is written in assembly and avoids "heavy" processing.
 
 \subsection{IRQs and ISRs}
-The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. When a counter hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU.}. One counter is connected to the buzzer and generates sounds, a second counter is connected to the RAM to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in caching system.}, and the third counter is connected to the PIC.\\
+The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. When a counter hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU.}. One counter is connected to the buzzer and generates sounds, a second counter is connected to the RAM to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in the caching system.}, and the third counter is connected to the PIC.\\
 \par
 \begin{figure}[H]
 \centering
@@ -120,7 +120,7 @@ But in the implementation lies a maze of functions directly accessing the I/O po
 \subsection{Music}
 Playing music is not too messy since only PCs equipped with a Yamaha YM3812 FM synthesizer could play tracks (a.k.a: with an AdLib or a SoundBlaster inside). As SoundBlaster made its programming interface compatible with AdLib there is only one code path to both cards. There is not a lot of magic here since this uses a piece of well-designed hardware dedicated to this specific task. There are a few cool tricks, though.\\
 \par
-The music system streams data to the sound cards. Music in the 90s was not in digitalized formats like CD or MP3 nowadays (that would have taken too much storage space and bandwidth). Instead music was stored as series of notes played on channels simulating instruments. The format used is close to the notorious MIDI but with a few variations and is called IMF\footnote{Id Music Format}. It is proprietary to id Software and designed with OPL2 in mind (the raw format is exactly what is sent to the AdLib/Soundblaster synthesizer with no transformations). IMF has a hardcoded playback rate and music notes are played at 700 Hz.\\
+The music system streams data to the sound cards. Music in the 90s was not in digitized formats like today's CD or MP3 formats (that would have taken too much storage space and bandwidth). Instead music was stored as series of notes played on channels simulating instruments. The format used is close to the notorious MIDI but with a few variations and is called IMF\footnote{Id Music Format}. It is proprietary to id Software and designed with OPL2 in mind (the raw format is exactly what is sent to the AdLib/Soundblaster synthesizer with no transformations). IMF has a hardcoded playback rate and music notes are played at 700 Hz.\\
 \par
 Hardware limitations dictated certain aspects of music design. The FM synthesizer (OPL2) has 9 channels (a.k.a instruments) yet the composer, Bobby Prince, was asked to use only channels 1 to 8. This little trick allows for multiplexing music and sound effects on AdLib cards since it leaves channel 0 available at all times (the SoundBlaster plays sound differently).\\
 
@@ -197,14 +197,14 @@ Sounds are stored in three formats. Once for PC Speaker, once for AdLib, and onc
 \lstinputlisting[language=C,morekeywords={longword}]{code/muse_header.c}
 \end{minipage}
 \par
-Strangely, only PC speaker and AdLib sounds are stored in the \cw{AUDIOT.*} files; the digitized sounds are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used. Despite questioning the authors, it seems nobody can remember why.\\
+Strangely, only PC speaker and AdLib sounds are stored in the \cw{AUDIOT.*} files; the digitized sounds are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used. The authors of this code were asked, but it seems nobody can remember why.\\
 
 \par
 
 
 
 \subsection{Sound Effects: AdLib}
-AdLib only has a FM synthesizer, with sounds played on its Channel 0. Sounds are played the same way as music via IMF, as previously described.
+AdLib only has an FM synthesizer, with sounds played on its Channel 0. Sounds are played the same way as music via IMF, as previously described.
 
 
 
@@ -261,8 +261,7 @@ On a "high-end" SoundBlaster Pro, the Mixer described on page \pageref{sbmixerpa
 \lstinputlisting[language=C]{code/soundblasterconf.c}
 \end{minipage}
 \par
-This line defines a variable \cw{BLASTER} which the engine retrieves and parses at runtime with \cw{getenv}. \cw{A} tells what port the card is using. \cw{I} gives away the interrupt vector it is associated with. Finally \cw{D} gives the DMA channel to use for data transfer. For all this to work the sound card had to be configured accordingly via its jumper connectors.
-See \cw{SDL\_SBPlaySeg} and the ISR \cw{SDL\_SBService} 
+This line defines a variable \cw{BLASTER} which the engine retrieves and parses at runtime with \cw{getenv}. \cw{A} tells what port the card is using. \cw{I} gives away the interrupt vector it is associated with. Finally \cw{D} gives the DMA channel to use for data transfer. For all this to work the sound card had to be configured accordingly via its jumper connectors. See \cw{SDL\_SBPlaySeg} and the ISR \cw{SDL\_SBService} in the source code.
 
 
 
@@ -275,7 +274,9 @@ The hardware chapter described a problem for sound effects: the default PC speak
  \begin{fancyquotes}
   The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc)., the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC, thereby enabling approximate playback of PCM audio.\\
   \par
-  This technique is called pulse-width modulation (PWM).
+  This technique is called pulse-width modulation (PWM).\\
+  \par
+  Jim Leonard - oldskool.org
  \end{fancyquotes}
 \par
   
@@ -325,7 +326,7 @@ In the assembly, three I/O ports are accessed:\\
 \lstinputlisting[language=C]{code/pwm_code_header.c}
 \end{minipage}
 \par
-Notice how the $ * 60$ is not calculated. Once again the engine tries to save as much CPU time as possible by using a bit of RAM. The frequency is read from a lookup table \cw{pcSoundLookup}:\\
+Notice how the \cw{* 60} is not calculated. Once again the engine tries to save as much CPU time as possible by using a bit of RAM. The frequency is read from a lookup table \cw{pcSoundLookup}:\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pcSoundLookup.c}
