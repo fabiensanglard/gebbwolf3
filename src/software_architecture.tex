@@ -326,7 +326,7 @@ This design has a small yet annoying flaw. On a low memory machine, a cache miss
 \par
 The size of the swap file varies depending on the version of the game being played: \cw{VSWAP.WL1} (shareware) is 742KiB while \cw{VSWAP.WL6} (full version) is 1,500KiB. In both cases a machine with 2MiB of RAM on top of the factory issued 1MiB is enough to have all assets loaded during precaching.\\
 \par
-\bu{Trashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, "trashing" occurs. The HDD is put to heavy use, and framerate drops. Trashing can happen if too many different resources are visible on the screen. In order to help designers balance their creativity with the need for a decent framerate, the engine detects trashing and flashes the screen border red when running in dev-mode.\\
+\bu{Thrashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, "thrashing" occurs. The HDD is put to heavy use, and framerate drops. Trashing can happen if too many different resources are visible on the screen. In order to help designers balance their creativity with the need for a decent framerate, the engine detects trashing and flashes the screen border red when running in dev-mode.\\
 \par
 \bu{Sounds are special:} Because sound cards are fed via a system of interrupts, the sound manager cannot recover from a page miss. Therefore, all sound resources are loaded first (they are located at the start of \cw{SWAP.WL1}) and only in conventional memory.
 
