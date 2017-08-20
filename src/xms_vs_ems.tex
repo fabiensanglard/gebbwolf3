@@ -1,0 +1,66 @@
+\label{ems_vs_xms}
+Accessing past the first MiB of RAM was still difficult in 1991. Stuck in real mode with a 20 bit address bus, games and applications had to rely on two types of RAM drivers: EMS and XMS.\\
+\par
+
+\section{EMS: Expanded Memory Specification}
+Developed in 1985 by Lotus, Intel, and Microsoft, LIM EMS was originally designed to pilot hardware memory boards. Like with sound cards, graphic cards, and network cards, a customer could purchase an EMS memory board to increase the RAM capacity of a machine. Applications could access the newly added RAM via the EMS driver.\\
+\par
+\begin{fancyquotes}
+It's garbage! It's a kludge! ... But we're going to do it.\\
+\par
+Bill Gates - Microsoft
+\end{fancyquotes}\\
+\par
+ EMS is built on the idea of memory mapping, where 64 KiB of RAM in conventional memory called a "page frame" is divided into four units of 16KiB called "pages". These pages are windows into extended memory which can be read or written.\\
+\par
+
+
+Many memory boards were available for Intel 286 machines but they were expensive. In 1989 a RapidRAM 2 MiB board\footnote{http://www.atarimagazines.com/compute/issue112/Memory\_Expansion\_Boards.php} could be purchased for \$1,495\footnote{Adjusted to inflation, \$1,495 in 1989 is equivalent to \$2,951.25 in 2017.} . A SUPERAM 4 MiB cost \$3,199\footnote{Adjusted to inflation, \$3,199 in 1989 is equivalent to \$6,315.08 in 2017.}.\\
+\par
+Upon arriving on the market, the Intel 386 changed the EMS landscape dramatically. Thanks to its new Virtual 8086 Mode, the driver \cw{EMM386.EXE}\footnote{Short for Extended Memory Manager for 386.} was able to run DOS in a virtual machine. EMS memory could be emulated in software using normal RAM which made hardware EMS boards  obsolete.\\
+
+
+
+\begin{fancyquotes}
+The purpose of a V86 task is to form a "virtual machine" with which to
+execute an 8086 program. A complete virtual machine consists not only of
+80386 hardware but also of systems software. Thus, the emulation of an 8086
+is the result of cooperation between hardware and software:\\
+ \par
+ The hardware provides a virtual set of registers (via the TSS), a
+ virtual memory space (the first megabyte of the linear address space of
+ the task), and directly executes all instructions that deal with these
+ registers and with this address space.\\
+\par
+INTEL 80386 PROGRAMMER'S REFERENCE MANUAL
+\end{fancyquotes}\\
+\par
+Michal Necasek explains well how the EMM386 driver operated:\\
+\par
+\begin{fancyquotes}
+The idea was simple in principle, but quite complex in its implementation. The V86 mode requires the CPU to be in protected mode, but DOS is not a protected-mode operating system. Therefore, EMM386 had to include a miniature 32-bit protected-mode operating system; that was a necessity, not a feature. One of the most important tasks of this mini-OS was setting up page tables and enabling paging, a major new feature of the i386 CPU.\\
+\par
+Paging was how EMM386 did its magic. Swapping memory blocks in an out of the EMS page frame (located in the first megabyte of RAM and directly accessible by real-mode DOS applications) was accomplished by reprogramming the page tables and thus controlling which physical memory pages mapped to a given linear address. No memory copying was involved and the mechanism was very similar to how 8086 EMS boards worked, but used only the CPU's built-in memory management facilities instead of relying on external hardware.\\
+\par
+Michal Necasek - os2museum.com
+\end{fancyquotes}\\
+\par
+The implementation relying on virtual memory meant EMS-emulated RAM suffered no performance penalty. The only limitation was the 16 KiB size of each page.
+
+
+
+\section{XMS: eXtended Memory Specification}
+In 1988, Lotus, Intel, Microsoft, and AST gathered to produce another standard: eXtended Memory Specification. The goal was to provide a more flexible API than EMS, closer to what programmers used, and allow for bigger chunks of data to be manipulated. The driver emulating XMS RAM, \cw{HIMEM.SYS}, also shipped with MS-DOS. A user could elect to create XMS RAM by adding a line to \cw{CONFIG.SYS}.\\
+\par
+Because the size of data to manipulate was arbitrary, \cw{HIMEM.SYS} could not use the same V86 trick as \cw{EMM386.EXE}. How does one access RAM outside of the addressable space without virtual memory? On a 386, it was easy: the driver switched the CPU into protected mode, performed whatever was asked, and switched the CPU back to real mode.\\
+\par
+ On a 286 it was more complicated. Intel architects never envisioned programmers would want to go back to real mode from protected mode. As a result, there was no documented way to transition from protected mode to real mode.\\
+ \par
+  That did not stop Microsoft engineers from trying to do it anyway. They figured they could use the soft reboot provided via the keyboard combination of Control-Alt-Del. When detecting this pattern the i8042 keyboard controller resets the CPU and asks the BIOS to initialized the machine. This operation takes several seconds and would not have been usable. By writing a special value to a special memory location it was possible to prevent the long BIOS initialization and "just" reset the CPU. This trick effectively transitioned a 286 from protected mode to real mode but it was slow and took a full millisecond to complete.\\
+ \par
+  A different (and faster) technique surfaced later, involving generating a triple fault (faulting in a fault handler by invalidating the IDTR and causing an interrupt).\\
+  \par
+   Finally, when \cw{HIMEM.SYS v2.06} came out, it removed the need to even leave real mode. It used the undocumented \cw{LOADALL} instruction to control hidden registers offsetting all RAM access\footnote{"HIMEM.SYS, Unreal mode, and LOADALL" - http://www.os2museum.com/wp/himem-sys-unreal-mode-and-loadall/ .}.\\
+\par
+\section{What It Meant For Wolfenstein 3D}
+The XMS API provided the ability to work on a dataset bigger than 64 KiB but Wolfenstein 3D did not require this since it works on small textures/sprites sequentially. The need for copy between extended RAM and conventional RAM made XMS RAM 10 times slower than EMS RAM. In this context EMS was far more attractive than XMS for Wolfenstein 3D.

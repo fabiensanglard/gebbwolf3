@@ -5,11 +5,10 @@ The audio and heartbeat system runs concurrently with the rest of the program. O
 The idea is to configure the hardware to trigger a hardware interrupt at a regular interval. This interrupt is caught by a system called PIC which transforms it into a software interrupt. The software interrupt ID is used as an offset in a vector to look up a function belonging to the engine. At this point, the CPU is stopped (a.k.a: interrupted) from doing whatever it was doing (likely running the 3D renderer), and it starts running the interrupt handler which is called an ISR\footnote{Interrupt Service Routine}. We now have two systems running in parallel.\\
 \par
 \begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{imgs/drawings/irqs/explanationsvg.pdf}
-\caption{Hardware interrupts are translated to software interrupt via the PIC.}
- \end{figure}
-
+  \centering
+  \includegraphics[width=\textwidth]{imgs/drawings/irqs/explanationsvg.pdf}
+  \caption{Hardware interrupts are translated to software interrupt via the PIC.}
+\end{figure}
 \par
  Since interrupts keep triggering constantly from various sources, an ISR must choose what should happen if an IRQ is raised while it is still running. There are two options.  The ISR can decide it needs a "long" time to run and disable other IRQs via the IMR \footnote{Interrupt Mask Register}. This path introduces the problem of discarding important information such as keyboard or mouse inputs.\\
  \par
@@ -21,35 +20,35 @@ The idea is to configure the hardware to trigger a hardware interrupt at a regul
 The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. When a counter hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU.}. One counter is connected to the buzzer and generates sounds, a second counter is connected to the RAM to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in the caching system.}, and the third counter is connected to the PIC.\\
 \par
 \begin{figure}[H]
-\centering
- \includegraphics[width=.5\textwidth]{imgs/drawings/heatbeats.pdf}
- \caption{Interactions between PIT and PIC.}
- \end{figure}
+  \centering
+  \includegraphics[width=.5\textwidth]{imgs/drawings/heatbeats.pdf}
+  \caption{Interactions between PIT and PIC.}
+\end{figure}
 \par
 
 The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at Offset 8 (resulting in mapping to software interrupts INT08 to INT0F).\\
 
 \par
 \begin{figure}[H]
-\centering
-\begin{tabularx}{\textwidth}{ X X  }
-  \toprule
-  \textbf{INT} & \textbf{Type} \\ \bottomrule
-0 & System timer \\
-1 & Keyboard controller \\
-3 & Serial port COM2 \\ 
-4 & Serial port COM1 \\
-5 & Line print terminal 2 \\
-6 & Floppy controller \\
-7 & Line print terminal 1 \\
-8 & RTC timer \\
-12 & Mouse controller \\
-13 & Math co-processor \\
-14 & ATA channel 1 \\
-15 & ATA channel 2  \\
-\bottomrule
-\end{tabularx}
-\caption{Software Interrupts and their associated routines.}
+	\centering
+	\begin{tabularx}{\textwidth}{ X X  }
+	  \toprule
+	  \textbf{INT} & \textbf{Type} \\ \bottomrule
+		0 & System timer \\
+		1 & Keyboard controller \\
+		3 & Serial port COM2 \\ 
+		4 & Serial port COM1 \\
+		5 & Line print terminal 2 \\
+		6 & Floppy controller \\
+		7 & Line print terminal 1 \\
+		8 & RTC timer \\
+		12 & Mouse controller \\
+		13 & Math co-processor \\
+		14 & ATA channel 1 \\
+		15 & ATA channel 2  \\
+		\bottomrule
+	\end{tabularx}
+	\caption{Software Interrupts and their associated routines.}
 \end{figure}
 Above are INTs and associated routines. Notice \#8 which is associated with the RTC Timer. This usually updates the operating system clock. Because IRQ\#8 was hijacked, the operating system clock was wrong after running a game and remained so until the PC was rebooted.\\
 \par
@@ -60,8 +59,6 @@ The engine can decide at what frequency to be interrupted, depending on the type
 \item \cw{SDL\_t0SlowAsmService} when running at 140Hz, to play sound effects on the beeper via PWM and PCM audio effects on SoundBlaster.
 \item \cw{SDL\_t0FastAsmService} when running at 700Hz, to play FM music, FM sound effects on AdLib, and PCM audio effects on Disney Sound Source.
 \item \cw{SDL\_t0ExtremeAsmService} when running at 7000Hz, to play PCM sound in an alternate way. This mode was never enabled in shipping products, see page \pageref{pcs_pcm} for a detailed explanation.
-
-
 \end{enumerate}
 \par
 
@@ -266,21 +263,19 @@ This line defines a variable \cw{BLASTER} which the engine retrieves and parses 
 
 
 
- 
-\subsection{PC Speaker: PWM}
-The hardware chapter described a problem for sound effects: the default PC speaker could only generate square waves, resulting in long beeps which are not acceptable for gaming.\\
 
+
+
+
+
+
+
+
+ 
+\subsection{PC Speaker: Square Waves}
+The hardware chapter described a problem for sound effects: the default PC speaker could only generate square waves, resulting in long beeps which are not acceptable for gaming.\\
 \par
- \begin{fancyquotes}
-  The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc)., the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC, thereby enabling approximate playback of PCM audio.\\
-  \par
-  This technique is called pulse-width modulation (PWM).\\
-  \par
-  Jim Leonard - oldskool.org
- \end{fancyquotes}
-\par
-  
-The idea is to approximate a signal using square waves. It is simpler to understand when the signal is a simple sinusoid:
+The solution was to approximate a tune by placing the PC Speaker in repeat mode and make it change frequency every 1/140th of a second. It is simpler to understand when the signal is a simple sinusoid:
 \par
 \begin{figure}[H]
 \centering
@@ -293,7 +288,7 @@ The idea is to approximate a signal using square waves. It is simpler to underst
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/pwm/pwm_approximation.png}
- \caption{The same sound approximated with PWM.}
+ \caption{The same sound approximated with square wave and frequency changes.}
  \end{figure}
 \par
 
@@ -301,20 +296,20 @@ To do this, the audio system once again relies on the PIT chipset. Counter 0 is 
 \par
 \begin{figure}[H]
 \centering
-\begin{tabularx}{\textwidth}{ X X  }
-  \toprule
-  \textbf{Mode} & \textbf{Type} \\ \bottomrule
-1 & Hardware Re-triggerable One-shot\\
-2 & Rate Generator\\
-3 & Square Wave Generator\\
-4 & Software Triggered Strobe\\
-5 & Hardware Triggered Strobe\\
-\bottomrule
-\end{tabularx}
-\caption{Available modes of a PIT counter.}
+   \begin{tabularx}{\textwidth}{ X X  }
+	  \toprule
+	  \textbf{Mode} & \textbf{Type} \\ \bottomrule
+		1 & Hardware Re-triggerable One-shot\\
+		2 & Rate Generator\\
+		3 & Square Wave Generator\\
+		4 & Software Triggered Strobe\\
+		5 & Hardware Triggered Strobe\\
+	  \bottomrule
+  \end{tabularx}
+  \caption{Available modes of a PIT counter.}
 \end{figure}
 \par 
-When instructed to play a PWM sound effect, the audio system sets itself to run at 140Hz via PIC Counter 0. Every times it wakes up, it reads the frequency to maintain for the next 1/140th of a second and writes it to Counter 2. The frequencies to use are encoded as a stream of bytes, the value of which is decoded as follows:\\
+When instructed to play a PC Speaker sound effect, the audio system sets itself to run at 140Hz via PIC Counter 0. Every times it wakes up, it reads the frequency to maintain for the next 1/140th of a second and writes it to Counter 2. The frequencies to use are encoded as a stream of bytes, the value of which is decoded as follows:\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pwm.c}
@@ -326,25 +321,29 @@ In the assembly, three I/O ports are accessed:\\
 \lstinputlisting[language=C]{code/pwm_code_header.c}
 \end{minipage}
 \par
-Notice how the \cw{* 60} is not calculated. Once again the engine tries to save as much CPU time as possible by using a bit of RAM. The frequency is read from a lookup table \cw{pcSoundLookup}:\\
+
+While the end result was not great, it was better than a beep.\\
+\par
+\bu{Trivia :} LucasArts obtained surprisingly good results for their game Monkey Island. See the video "LGR - Evolution of PC Audio - As Told by Secret of Monkey Island"\footnote{https://www.youtube.com/watch?v=a324ykKV-7Y}.\\
 \par
 \begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/pcSoundLookup.c}
+\lstinputlisting[language={[x86masm]Assembler}]{code/pwm_code.asm}
 \end{minipage}
 \par
-Notice how \cw{6b} (\cw{10110110}) is sent to the PIC Command register (\cw{pcTAccess}=\cw{0x43}):
+
+Notice how the \cw{* 60} is not calculated but looked up. Once again the engine tries to save as much CPU time as possible by using a bit of RAM. The frequency is read from a lookup table \cw{pcSoundLookup}.\\
+\par
+\begin{minipage}{\textwidth}
+\lstinputlisting[language=C,morekeywords=word]{code/pcSoundLookup.c}
+\end{minipage}
+\par
+Notice how \cw{6b} (\cw{10110110}) is sent to the PIC Command register:
 \begin{itemize}
 	\item \cw{10} = Target Counter 2.
  	\item \cw{11} = High \& low byte of counter updated.
 	\item \cw{011} = Square Wave Generator.
 	\item \cw{0} = 16 bit mode.
 \end{itemize}
-\par
-\begin{minipage}{\textwidth}
-\lstinputlisting[language={[x86masm]Assembler}]{code/pwm_code.asm}
-\end{minipage}
-\par
-While the end result was not great, it was better than a beep\footnote{LucasArts obtained surprisingly good results for their game Monkey Island. See the video "LGR - Evolution of PC Audio - As Told by Secret of Monkey Island", https://www.youtube.com/watch?v=a324ykKV-7Y.}.\\
 \par
 
 
@@ -366,9 +365,39 @@ The source code features an audio code path which plays PCM digitized sound via 
 \lstinputlisting[language=C]{code/sound_fork.c}
 \end{minipage}
 \par
-This codepath shipped but was never enabled. According to John Carmack overhead was too much a problem. Jim Leonard provided a more in depth explanation:\\
+The problem of this method is to find a way to fit 8 bit samples into a 1 bit DAC. Let's take the example of the digitized sound "Mein Liben" which has 6,896 samples of 8 bits.\\
+
+
+
+
+\begin{figure}[H]
+  \centering
+  \fullimage{audio/mein_liben.png}
+  \caption{Mein Liben PCM 8 bit. You can clearly see the three syllables.}
+\end{figure}
+\par
+
+The audio system goes for a surprisingly straightforward solution. It set itself to run at 7000Hz and manually move the cone of the speaker, using quantization to map 256 values to either 1 or 0.\\
+\par
+\begin{minipage}{\textwidth}
+  \lstinputlisting[language={[x86masm]Assembler}]{code/pcm_on_speaker.asm}
+\end{minipage}
+\par
+ \cw{SDL\_t0ExtremeAsmService} takes an 8 bit value and convert it to \cw{00} or \cw{10} to drive bit 1 in I/O port \cw{61h}. When bit 1 is set to 1, the beeper cone will go in position high and when set to 0, it will go to position low.\\
+\par
 
 \par
+\begin{figure}[H]
+  \centering
+  \fullimage{audio/mein_liben_1_bit.png}
+  \caption{Mein Liben resampled to 1 bit.}
+\end{figure}
+\par
+The visual representation of a 1 bit per sample "Mein Liben" PCM looks like mashed potatoes but it sounds remarkably good. You can hear it thanks to a passionate YouTuber called Dafe Allen who recompiled the engine with PCM playback enabled\footnote{"Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects": "https://www.youtube.com/watch?v=1BtlsjJRnFU".}.\\
+\par
+As good as it sounds, this codepath shipped but was never enabled. According to John Carmack overhead was too much a problem. Jim Leonard provided a more in depth explanation.\\
+\par
+
  \begin{fancyquotes}
  PCM playback over the PC speaker was likely cut because it would require SDL\_t0ExtremeAsmService. The Disney Sound Source had a 16 byte buffer but the PC Speaker had no such thing, the only way to feed it fast enough is to run the interrupt audio system at 7000 Hz.\\
  \par
@@ -377,27 +406,40 @@ This codepath shipped but was never enabled. According to John Carmack overhead 
  Running at a frequency this high would have caused the game to freeze on slower machines while the sample played through the speaker.\\
 \par
  Jim Leonard
-\end{fancyquotes}
-\par
-Even if it never ran in production it is still interesting to look inside this function to find out how it manages to fit 8 bit samples into a 1 bit DAC. In the following listing we see that \cw{SDL\_t0ExtremeAsmService} simply takes an 8 bit value and convert it to \cw{00} or \cw{10} to drive bit 1 in I/O port \cw{61h}. When bit 1 is set to 1, the beeper will go in position high and when set to 0, it will go to position low.\\
-
-\par
-\begin{minipage}{\textwidth}
-  \lstinputlisting[language={[x86masm]Assembler}]{code/pcm_on_speaker.asm}
-\end{minipage}
+\end{fancyquotes}\\
 \par
 
 
 
-The result sounds surprising good for a 1 bit DAC. If you are curious you can hear it thanks to a passionate YouTuber called Dafe Allen who recompiled the engine with PCM playback enabled\footnote{"Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects": "https://www.youtube.com/watch?v=1BtlsjJRnFU".}.
 
 
 
 
 
 
-
-
+\subsection{PC Speaker: PWM}
+Even though this method was not used in Wolfenstein 3D, it is worth mentioning a third way hackers managed to play pleasant sounds via the PC speaker. The method produced audio quality superior to both the square waves and the 1 bit conversion we just saw. It was called Pulse Width Modulation.\\
+\par
+The idea is to manipulate the speaker cone manually and instruct it to move faster than it can, interrupting it "somewhere" between it position up or down.\\
+\par
+The technique was patented (US US5054086 A) by Access Software and called RealSound. Many studio licensed it (but not id Software) during the 80s but the advent of dedicated sound cards with FM and PCM capabilities made RealSound obsolete.
+\par
+ \begin{fancyquotes}
+  The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc)., the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC, thereby enabling approximate playback of PCM audio.\\
+  \par
+  This technique is called pulse-width modulation (PWM).\\
+  \par
+  Jim Leonard - oldskool.org
+ \end{fancyquotes}
+\par
+In the next drawing we see how commanding the cone faster than it can move results in intermediate positions.
+\par
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{imgs/drawings/pwm.pdf}
+  
+\end{figure}
+\par
 
 
 

@@ -467,7 +467,19 @@ Unfortunately extended memory access was not standardized. Users could load eith
 
 Or they could have no idea they had to install a driver, load nothing at startup, and not use any of the RAM beyond 1MiB. This use case was a big issue. Many customers could not understand why despite installing (extremely expensive\footnote{In 1992, 4MiB of RAM cost \$149 which adjusted to inflation would be \$256 in 2017.}) megabytes of RAM on their machine, the game they just purchased would refuse to start up claiming "Not enough memory". id Software had to publish an explanation (see Appendix "\nameref{chap:barrier640}") along with the game.\\
 \par
-How are these drivers working? After all, how does one access RAM outside of the addressable space? On a 386 the driver switched the CPU into protected mode, performed whatever was asked, and switched the CPU back to real mode. On a 286, there was originally no way to switch back to real mode\footnote{The first hack to perform the impossible did it with a special value written to a special memory location preventing the BIOS from reinitializing the computer after a reset, and then causing a reset through the i8042 keyboard controller. Other techniques involved generating a triple fault (faulting in a fault handler by invalidating the IDTR and causing an interrupt). Using the triple fault was faster since the keyboard controller took almost a millisecond but the triple fault performed in a hundred microseconds.} but eventually a method surfaced, using the undocumented \cw{LOADALL} instruction to control hidden registers offsetting all RAM access\footnote{"HIMEM.SYS, Unreal mode, and LOADALL" - http://www.os2museum.com/wp/himem-sys-unreal-mode-and-loadall/ .}.
+
+The two APIs had similar features but completely different architecture.\\
+\par
+\subsubsection{XMS API}
+The XMS driver works\footnote{eXtended Memory Specification (XMS) July 19, 1988.} like \cw{malloc}/\cw{free} from \cw{libc} and is the most intuitive to a programmer. It allows manipulation of data in the non-addressable extended memory via operations such as \cw{allocate}, \cw{free}, \cw{realloc}, and \cw{move}.\\
+\par
+% \begin{enumerate}
+%  \item \cw{allocate}
+%  \item \cw{free}
+%  \item \cw{realloc}
+%  \item \cw{move} 
+% \end{enumerate}
+The key aspect of XMS is that memory has to be copied between extended RAM and conventional RAM.
 
 \begin{figure}[H]
 \centering
@@ -477,22 +489,18 @@ How are these drivers working? After all, how does one access RAM outside of the
 \end{figure}
 
 
-\textbf{\underline{Trivia :}}  As of 2016, more than thirty five years after the introduction of the 8086, in the name of backward compatibility, all PCs in the world still start in real mode. A bootloader switches them to protected mode, loads the kernel, and then actual startup can begin.
+
 
 
 \subsubsection{EMS API}
-
 The EMS driver opens a window beyond the addressable RAM, as shown on page \pageref{fig:ems_xms_layout}. The idea revolves around memory mapping. The driver allows for manipulating four units of 16KiB called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, a page can be swapped into the page frame.\\
 \par
 
 
-
-\subsubsection{XMS API}
-The XMS driver works\footnote{eXtended Memory Specification (XMS) July 19, 1988.} like \cw{malloc}, providing operations such as \cw{allocate}, \cw{free}, \cw{realloc} and the most important one \cw{move} which allows copying from extended RAM to conventional RAM.
-
-
-
-
+\subsubsection{EMS vs XMS}
+How the drivers achieved the impossible (after all how do you access RAM past 1 MiB with 20 bits pointer?) and what were the trade-off of each approach is a fascinating topic explained in detail in Annexe \ref{ems_vs_xms} on page \pageref{ems_vs_xms}.\\
+\par
+ If you prefer not to dive into too much details, just remember that EMS mapping approach was several time faster than XMS copying approach. This speed consideration considerably impacted the memory management of Wolfenstein 3D.
 
 
 
@@ -524,10 +532,10 @@ At this point, if you are puzzled by the CPU and its design you are not alone. O
 
 
 \par
-\bu{Trivia :} 640KiB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745KiB, which obviously doesn't fit in Conventional Memory. The trick is to use a technique of "overlay" pages where only a few overlays are loaded when the game starts. When the CPU is about to reach the end of an overlay, special instructions (inserted by the compiler) load the next overlays from HDD and setup a \cw{jmp} instruction for the CPU to follow. The technique can be seen as an exercise of graph paging similar to how Gromit places rails in front of an ongoing miniature train as he is sitting on top of it in "The Wrong Trousers".
+\bu{Trivia :} 640KiB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745KiB, which obviously doesn't fit in Conventional Memory. The trick is to use a technique of "overlay" pages where only a few overlays are loaded when the game starts. When the CPU is about to reach the end of an overlay, special instructions (inserted by the compiler) load the next overlays from HDD and setup a \cw{jmp} instruction for the CPU to follow. The technique can be seen as an exercise of graph paging similar to how Gromit places rails in front of an ongoing miniature train as he is sitting on top of it in "The Wrong Trousers".\\
+\par
 
-
-
+\textbf{\underline{Trivia :}}  As of 2016, more than thirty five years after the introduction of the 8086, in the name of backward compatibility, all PCs in the world still start in real mode. A bootloader switches them to protected mode, loads the kernel, and then actual startup can begin.
 
 
 

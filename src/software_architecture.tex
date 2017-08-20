@@ -310,7 +310,7 @@ Originally all assets for 3D sequences are on HDD in file \cw{VSWAP.WL1}. When a
  \includegraphics[width=\textwidth]{imgs/drawings/page_manager_architecture.pdf}
  \end{figure}
  \par
- The architecture of the Page Manager suggests it originally only supported Conventional and EMS RAM. Support for XMS was added later on as a last resort (L2) mechanism.\\
+ The architecture of the Page Manager is interesting since it treats XMS as a last resort L2 cache level while EMS RAM is used like conventionnal memory. This is because EMS driven RAM is several time faster than XMS driven RAM. This topic is detailled in Annexe \ref{ems_vs_xms} on page \pageref{ems_vs_xms}\\
  \par
 In order to minimize the cost of page misses, the engine preloads the page cache before a level start. The user experiences this as the "Get Psyched" screen:
  \par

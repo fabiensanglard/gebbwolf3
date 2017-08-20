@@ -1,15 +1,5 @@
-;	Stuff for the PC speaker
-pcTimer				=	42h
-pcTAccess			=	43h
-pcSpeaker			=	61h
-pcSpkBits			=	3
-
-;
-;   SDL_t0ExtremeAsmService
-;   Timer 0 ISR 7000Hz interrupts
-;
-    PROC    SDL_t0ExtremeAsmService
-    PUBLIC  SDL_t0ExtremeAsmService
+PROC    SDL_t0ExtremeAsmService
+PUBLIC  SDL_t0ExtremeAsmService
 
     ... 
 

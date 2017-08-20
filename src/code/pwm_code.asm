@@ -1,4 +1,4 @@
- MACRO DOFX
+MACRO DOFX
   les di,[pcSound]       ; PC sound effects
   mov ax,es
   or ax,di
