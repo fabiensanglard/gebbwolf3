@@ -428,7 +428,7 @@ At the beginning of a frame, the engine switches to the next page and clears the
  \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
  \end{minipage}
 \par
-Clearing the 3D canvas made of 304*152 = 46,208 pixels requires only 46,208/8 = 5,776 write operations.\\
+Clearing the 3D canvas made of 304*152 = 46,208 pixels requires only 27 instructions thanks to \cw{REP STOSW}.\\
 \par
 Colors for the floor and the ceiling do not come from map data files. The ground is always the same color (\cw{0x19}) and ceiling colors are hardcoded in the engine on a per level basis.\\
 \par

@@ -1,9 +1,8 @@
 \section{Performance}
 With all the tricks and optimizations described, how well did the game run on most machines? With most of the computers of this era gone, it is hard to tell. But thanks to the personnal collections of Jim Leonard and Foone Turing, and a special version of Wolfenstein 3D displaying frames per seconds, we were able to come up with the numbers in figure \ref{perf_summary}.\\
 \par
-It is interesting to see performance improve with CPU frequency and VGA card quality. A 386DX-40 with a bad VGA card (ATI TVGA) can be brought to the same level as a 386SX-16 with a good card (Cirrus Logic AVGA). Likewise, upgrading the VGA card from a ATI TVGA to a Cirrus Logic could double performances on a  386DX-40.\\ 
+By far the most important component after the CPU was the VGA card. Cirrus Logic RAM was optimized for fast write (and slow read) which explains the huge performance boost compared to other cards. A 386DX-40 with a bad VGA card can be brought to the same level as a 386SX-16 with a good card. Likewise, upgrading the VGA card could double performances on a 386DX-40.\\ 
 \par
-By far the most important component after the CPU was the VGA card. Cirrus Logic RAM was optimized for fast write (and slow read) which explains the huge performance boost compared to other cards.
 
 \par
 \begin{figure}[H]
@@ -12,7 +11,7 @@ By far the most important component after the CPU was the VGA card. Cirrus Logic
   \toprule
   \textbf{CPU} & \textbf{Mhz} & \textbf{Cache} & \textbf{Audio} & \textbf{VGA Card} &\textbf{Bus} & \textbf{Avg FPS} \\ \bottomrule
 
-286 & 6mhz  & 0k  & AdLib & Paradise PVGA1A & 16 &   5  \\ \bottomrule
+286 & 6mhz  & 0k  & AdLib & Hercules VGA & 8 &   5  \\ \bottomrule
 286 & 12mhz  & 0k & AdLib & Paradise PVGA1A & 16 &  7  \\ \bottomrule
 286 & 25mhz  & 0k & ESS1868 & CirrusLogic 5420 & 16 &  19  \\ \bottomrule
 386SX &	16mhz	&512k		& No & Oak Technology OTIVGA 	& 16	& 10 \\

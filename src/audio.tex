@@ -12,12 +12,12 @@ The idea is to configure the hardware to trigger a hardware interrupt at a regul
 \par
  Since interrupts keep triggering constantly from various sources, an ISR must choose what should happen if an IRQ is raised while it is still running. There are two options.  The ISR can decide it needs a "long" time to run and disable other IRQs via the IMR \footnote{Interrupt Mask Register}. This path introduces the problem of discarding important information such as keyboard or mouse inputs.\\
  \par
- Alternately, the ISR can decide not to mask other IRQs and do what it is supposed to do as fast as possible, keeping in mind the routine can be stopped anywhere (and never resumed).\\
+ Alternately, the ISR can decide not to mask other IRQs and do what it is supposed to do as fast as possible so as to not delay the firing of other important interrupts that may lose data if they aren't serviced quickly enough.\\
  \par
  Wolfenstein 3D uses the latter approach and keeps tasks in its ISR very small and short. To this effect everything in the audio and heartbeat system is written in assembly and avoids "heavy" processing.
 
 \subsection{IRQs and ISRs}
-The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. When a counter hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU.}. One counter is connected to the buzzer and generates sounds, a second counter is connected to the RAM to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in the caching system.}, and the third counter is connected to the PIC.\\
+The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. Counter \#2 is connected to the RAM in order to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in the caching system.}. Counter \#1 is connected to the buzzer and generates sounds. Counter \#0 is connected toe the PIC. When counter \#0 hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU.} and sends it to the PIC.\\
 \par
 \begin{figure}[H]
   \centering
@@ -33,24 +33,24 @@ The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at
 	\centering
 	\begin{tabularx}{\textwidth}{ X X  }
 	  \toprule
-	  \textbf{INT} & \textbf{Type} \\ \bottomrule
-		0 & System timer \\
-		1 & Keyboard controller \\
-		3 & Serial port COM2 \\ 
-		4 & Serial port COM1 \\
-		5 & Line print terminal 2 \\
-		6 & Floppy controller \\
-		7 & Line print terminal 1 \\
-		8 & RTC timer \\
-		12 & Mouse controller \\
-		13 & Math co-processor \\
-		14 & ATA channel 1 \\
-		15 & ATA channel 2  \\
+	  \textbf{I.V.T Entry \#} & \textbf{Type} \\ \bottomrule
+		08h & System timer \\
+		09h & Keyboard controller \\
+		0Ah & Serial port COM2 \\ 
+		0Bh & Serial port COM1 \\
+		0Ch & Line print terminal 2 \\
+		0Dh & Floppy controller \\
+		0Eh & Line print terminal 1 \\
+		0Fh & RTC timer \\
+		11h & Mouse controller \\
+		12h & Math co-processor \\
+		13h & ATA channel 1 \\
+		14h & ATA channel 2  \\
 		\bottomrule
 	\end{tabularx}
-	\caption{Software Interrupts and their associated routines.}
+	\caption{The Interrupt Vector Table.}
 \end{figure}
-Above are INTs and associated routines. Notice \#8 which is associated with the RTC Timer. This usually updates the operating system clock. Because IRQ\#8 was hijacked, the operating system clock was wrong after running a game and remained so until the PC was rebooted.\\
+Notice \#8 which is associated with the System timer and usually updates the operating system clock. Because IRQ 0 was hijacked, the operating system clock updated by INT 08h could be wrong if the game didn't call the older INT 08 interrupt..\\
 \par
 Using these two chips and placing its own function at Interrupt Vector Table (IVT) \#8, the engine can stop its runtime at a regular interval, effectively implementing a subsystem running concurrently with everything else.\\
 \par
@@ -137,20 +137,18 @@ The OPL2 is made of 9 channels capable of emulating instruments. Each channel is
 \lstinputlisting[language=C,morekeywords={longword}]{code/audio_ports.c}
 \end{minipage}
 \par
-When the AdLib was released in 1986, developers were instructed to send data "as fast as possible". At 4.77Mhz, a PC was unable to out-pace the AdLib. Yet as CPUs got faster, issues started to arise and the card was unable to keep up. The Programming Guide was amended.\\
+When the AdLib was released in 1986, developers were instructed to send data "as fast as possible". At 4.77Mhz, a PC was unable to out-pace the AdLib. Yet as CPUs got faster, issues started to arise and the card was unable to keep up.\\
 \par
 
 \begin{fancyquotes}
-After writing to the register port, you must wait twelve cycles before sending the data; after writing the data, eighty-four cycles must elapse before any other sound card operation may be performed\protect\footnotemark.
- \bigskip \\
- Alternatively you can issue one IN instruction.\\
+The original AdLib manual (before they shipped) did not call for ANY delays. The original IBM PC (4.77 Mhz) couldn't get ahead of the card. By the time it shipped they were telling use to do one IN instruction, and every time a new faster processor came out they added some delay to their recomendation. The old 8088 machines would not have worked with the 35 IN instructions now required, it would have slowed the machine down so much nothing else could get done.\\
  \par
- \textbf{Jeffrey S. Lee}
+ \textbf{Jason Linhart}
  \end{fancyquotes}
 \\
 \footnotetext{http://www.oldskool.org/guides/oldonnew/sound .}
 \par
-Later, reliable specs were published.\\
+Later the Programming Guide was amended with reliable specs.\\
 \par
 \begin{fancyquotes}
 Wait three point three (3.3) microseconds for the address, and twenty-three (23) microseconds for the data.\\
@@ -216,7 +214,7 @@ AdLib only has an FM synthesizer, with sounds played on its Channel 0. Sounds ar
 
 \subsection{Disney Sound Source System: PCM}
 
-The Disney Sound Source is simple to program\footnote{The Programmer's Guide to the Disney Sound Source is a whopping 2 pages!} because it can do only one thing. It plays PCM audio in format 8 bits at 7000Hz on a single channel. That's it -- nothing more, nothing less. As soon as it is plugged in the parallel port, its 8 bit DAC will read from an internal 16 byte deep FIFO and turn them into sound via its integrated loud speaker.\\ 
+The Disney Sound Source is simple to program\footnote{The Programmer's Guide to the Disney Sound Source is a whopping 2 pages!} because it can do only one thing. It plays  8 bit PCM audio at 7000Hz on a single channel. That's it -- nothing more, nothing less. Data is fed through the parallel port to the device, which is stored into a 16-byte FIFO queue, which then feeds an 8-bit DAC connected to its integrated loudspeaker.\\ 
 \par
 Even though the sampling rate is 7000Hz, the sound system needs not to run at such a high frequency. The 16 byte buffer allows to run at 700Hz and send a batch of 9-10 bytes every iterations. Every time the audio system wakes, it reads the DAC status to check how many bytes have been consumed in the FIFO. The engine pushes as many bytes as possible until the FIFO is full and returns. When the FIFO empties, the Disney Sound Source stops making noise.\\
 \par
@@ -299,6 +297,7 @@ To do this, the audio system once again relies on the PIT chipset. Counter 0 is 
    \begin{tabularx}{\textwidth}{ X X  }
 	  \toprule
 	  \textbf{Mode} & \textbf{Type} \\ \bottomrule
+	    0 & Interrupt on Terminal Count\\
 		1 & Hardware Re-triggerable One-shot\\
 		2 & Rate Generator\\
 		3 & Square Wave Generator\\
@@ -422,7 +421,7 @@ Even though this method was not used in Wolfenstein 3D, it is worth mentioning a
 \par
 The idea is to manipulate the speaker cone manually and instruct it to move faster than it can, interrupting it "somewhere" between it position up or down.\\
 \par
-The technique was patented (US US5054086 A) by Access Software and called RealSound. Many studio licensed it (but not id Software) during the 80s but the advent of dedicated sound cards with FM and PCM capabilities made RealSound obsolete.
+The technique was patented (US US5054086 A) by Access Software and called RealSound. Many studio licensed it during the 80s but the advent of dedicated sound cards with FM and PCM capabilities made RealSound obsolete in the early 90s.
 \par
  \begin{fancyquotes}
   The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc)., the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC, thereby enabling approximate playback of PCM audio.\\
