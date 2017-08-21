@@ -31,26 +31,37 @@ The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at
 \par
 \begin{figure}[H]
 	\centering
-	\begin{tabularx}{\textwidth}{ X X  }
+	\begin{tabularx}{\textwidth}{ l p{.5\textwidth}  }
 	  \toprule
 	  \textbf{I.V.T Entry \#} & \textbf{Type} \\ \bottomrule
-		08h & System timer \\
-		09h & Keyboard controller \\
-		0Ah & Serial port COM2 \\ 
-		0Bh & Serial port COM1 \\
-		0Ch & Line print terminal 2 \\
-		0Dh & Floppy controller \\
-		0Eh & Line print terminal 1 \\
-		0Fh & RTC timer \\
-		11h & Mouse controller \\
-		12h & Math co-processor \\
-		13h & ATA channel 1 \\
-		14h & ATA channel 2  \\
+
+	  00h	&	CPU divide by zero \\
+01h	&	Debug single step \\
+02h	&	Non Maskable Interrupt \\
+03h	&	Debug breakpoints \\
+04h	&	Arithmetic overflow \\
+05h	&	BIOS provided Print Screen routine \\
+06h	&	Reserved \\
+07h	&	Reserved \\
+
+		08h & IRQ0, System timer \\
+		09h & IRQ1, Keyboard controller \\
+		0Ah & IRQ2, Bus cascade services for second 8259 \\
+		0Bh & IRQ3, Serial port COM2 \\ 
+		0Ch & IRQ4, Serial port COM1 \\
+		0Dh & IRQ5, LPT2, Parallel port 2 \\
+		0Eh & IRQ6, Floppy Disk Controller \\
+		0Fh & IRQ7, LPT2, Parallel port 1 \\
+		10h & Video services (VGA)\\
+		11h & Equipment check \\
+		12h & Memory size determination \\
+		%13h & ATA channel 1 \\
+		%14h & ATA channel 2  \\
 		\bottomrule
 	\end{tabularx}
 	\caption{The Interrupt Vector Table.}
 \end{figure}
-Notice \#8 which is associated with the System timer and usually updates the operating system clock. Because IRQ 0 was hijacked, the operating system clock updated by INT 08h could be wrong if the game didn't call the older INT 08 interrupt..\\
+Notice \#8 which is associated with the System timer and usually updates the operating system clock. Because IRQ 0 was hijacked, the operating system clock is not updated updated while Wolfenstein 3D runs. Upon exiting the game, DOS will run late by the amount of time played.\\
 \par
 Using these two chips and placing its own function at Interrupt Vector Table (IVT) \#8, the engine can stop its runtime at a regular interval, effectively implementing a subsystem running concurrently with everything else.\\
 \par
