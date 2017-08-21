@@ -1,5 +1,5 @@
 void AsmRefresh() {
-	for (int =0 ; i < pixx ; i++) {
+    for (int =0 ; i < pixx ; i++) {
         short angle=midangle+pixelangle[pixx];
         // Setup xstep and ystep based on angle.
         do {
@@ -13,9 +13,9 @@ testvertical:
                 HitVertWall();
         } while (1);
 
-		continue;
+        continue;
 
-		do {
+        do {
             if (needed)
                 goto testvertical;               
 testhorizontal:
@@ -26,5 +26,5 @@ testhorizontal:
                 HitHorizWall();
          
         } while (1);
-	}
+    }
 }

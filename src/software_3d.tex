@@ -458,7 +458,7 @@ Following are ceiling colors \cw{0x1D}, \cw{0xBF}, \cw{0x4E} and \cw{0x8D}.\\
 
 \subsection{Solving the CPU Problem}
 
-In the Chapter \ref{chapter_hardware}: \pageref{chapter_hardware} describing CPU capabilities, the reader was left with a problem: the machine cannot perform floating point operations quickly enough. This is a pretty big issue for a 3D engine given all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed point arithmetic".
+In the Chapter \ref{chapter_hardware} \nameref{chapter_hardware} p\pageref{chapter_hardware} describing CPU capabilities, the reader was left with a problem: the machine cannot perform floating point operations quickly enough. This is a pretty big issue for a 3D engine given all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed point arithmetic".
 
 
 
@@ -1116,7 +1116,7 @@ I personally find the graphic explanation with SOH-CAH-TOA clearer.\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
- \caption{Translating from map space to player space involves a rotation and also a translation of coordinates.}
+ \caption{Translating from map space to player space.}
  \end{figure}
 
 
@@ -1159,7 +1159,7 @@ This correction is enough to give pleasant straight lines for the walls. To demo
 \subsection{Drawing Walls}
 With column height calculated, all that remains is to draw a column of textured pixels.\\
 \par
-That may sound easy but is in fact difficult on a CPU with as little power as a 386. Scaling a column of 64 texels is expensive. It turns out you need a few optimizations to do it fast enough. This is where Wolfenstein 3D leaves other 3D engines of the era in the dust. The secret to its speed lies in:
+That may sound easy but is in fact difficult on a CPU with as little power as a 386. Scaling a column of 64 texels is expensive. It turns out you need a few optimizations to do it fast enough. This is where Wolfenstein 3D leaves other 3D engines of the era in the dust. The secret to its speed lies in two tricks called:
 \begin{itemize}
 \item Compiled scalers
 \item Deferred column rendering
@@ -1192,9 +1192,9 @@ As the photoshopped pink line shows, each column of pixels for a wall is centere
 \par
 This would involve a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} always cause a pipeline flush.}, a fixed point accumulator, and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible function allows \cw{scaleTextureToHeight} to accept any height from \cw{0} to \cw{INT\_MAX}.\\
 \par
- There is a faster way to do this which involves the usual RAM vs CPU tradeoff. In this case we can invest a little bit of RAM to gain a lot of CPU time.\\
+ There is a faster way to do this which involves the usual RAM vs CPU tradeoff. In this case we can invest a little bit of RAM to gain a lot of CPU time. The idea is to make the scaler less generic and instead generate hard-coded functions.\\
  \par 
- The idea is to make the scaler less generic and instead generate hard-coded functions.\\
+
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/hardcoded_draw.c}
@@ -1391,7 +1391,7 @@ To visualize the performance gain in real cases, the engine has been modified to
 This technique helps solve for scenarios where a large number of pixels have to be written due to the size of the wall. It only really shines when a lot of magnification occurs. For walls far away (minified) this technique doesn't help at all, but this matters less as small walls are cheap because they have fewer pixels
 to render.\\
 \par
-\bu{Trivia :} Generating code at runtime may sound like an outdated technology. However, it was used as recently as 2016 when Android emulator used PixelFlinger to render the entire GUI.
+\bu{Trivia :} Generating code at runtime may sound like an outdated technology. However, it was used as recently as 2016 when Android emulator used PixelFlinger to render the entire phone screen.
 
 
 
