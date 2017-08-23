@@ -4,16 +4,16 @@ static void SDL_SetTimerSpeed(void) {
 	word	rate;
 	void interrupt	(*isr)(void);
 
-	if (PCM_sound) {               // 7000 Hz
-		rate = TickBase * 100;
+	if (DigiMode == PCSpeaker) && DigiPlaying) { 
+		rate = TickBase * 100;     // 7000 Hz
 		isr = SDL_t0ExtremeAsmService;
 	}
-	else if (FM_sound_effects) {   // 700 Hz
-		rate = TickBase * 10;
+	else if (music || ((DigiMode == Dss) && DigiPlaying) {   
+		rate = TickBase * 10;     //  700 Hz
 		isr = SDL_t0FastAsmService;
 	}
-	else {   // beeper             // 140 Hz
-		rate = TickBase * 2;
+	else {         
+		rate = TickBase * 2;      //  140 Hz
 		isr = SDL_t0SlowAsmService;
 	}
 

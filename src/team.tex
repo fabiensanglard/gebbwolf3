@@ -124,7 +124,11 @@ The development of Wolfenstein 3D started in November 1991. As temperatures fell
 During these seven months, the organization of the team was pretty much standard for a game studio of this era: four guys crammed in one room, dictating a fast pace and strong sense of camaraderie (and a lot of noise disturbance given John Romero and Tom Hall's type of interaction).\\
 \par On the map (next page) you can see on the upper floor the SNES where countless games of F-Zero were played and the Dungeons \& Dragons area extensively mentioned in "Masters of Doom". To have a team member (John Carmack) with his apartment directly above the studio was not out of the ordinary\footnote{ "90 Hours A Week And Loving It!" by Andy Hertzfeld.}.\\
 \par
-The team's space was setup as follows.
+\begin{fancyquotes}
+We started with floppy data transfer, but we had a Novell network on coax Ethernet by the end. We didn't have a version control system.  Surprisingly, we went all the way to Quake 3 without one, then we started using Visual Source Safe.\\
+ \\
+\textbf{John Carmack - Programmer}
+\end{fancyquotes}
 
 
 
@@ -146,11 +150,7 @@ The team's space was setup as follows.
 \end{figure}
 Everybody was working with the best PC money could buy, a high end 386-DX 33Mhz with 4MiB of RAM. As for combining engine, tools, and assets:\\
 
- \begin{fancyquotes}
-We started with floppy data transfer, but we had a Novell network on coax Ethernet by the end. We didn't have a version control system.  Surprisingly, we went all the way to Quake 3 without one, then we started using Visual Source Safe.\\
- \\
-\textbf{John Carmack - Programmer}
-\end{fancyquotes}
+ 
 
 
 
@@ -187,7 +187,7 @@ John Carmack took care of the runtime code. John Romero programmed many of the t
 
 \begin{figure}[H]
 \centering
-  \scaledimage{0.95}{compiling.png}
+  \fullimage{compiling.png}
   \caption{Compiling Wolfenstein 3D with Borland C++ 3.1}
 \end{figure}
 
@@ -205,8 +205,8 @@ To compensate for the tiny CRT display, some of the developers used two screens 
 At that point, we wanted 21" monitors, but couldn't justify them.  I used a second mono monitor to allow Turbo Debugger 386 to keep the main screen in graphics mode while I stepped through the code.\\
  \\
 \textbf{John Carmack - Programmer}
-\end{fancyquotes}
-\\
+\end{fancyquotes}\\
+\par
 You may have noticed in the listing of VGA modes that mode \cw{13h} and mode \cw{3h} (see Figure \ref{vga-modes-available}, p\pageref{fig:vga_modes})  don't have the same starting RAM address. This allows for a trick where two graphics cards are plugged into the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally.
 \begin{figure}[H]
   \centering
