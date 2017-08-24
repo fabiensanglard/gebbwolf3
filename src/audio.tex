@@ -59,7 +59,7 @@ The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at
 		%14h & ATA channel 2  \\
 		\bottomrule
 	\end{tabularx}
-	\caption{The Interrupt Vector Table.}
+	\caption{The Interrupt Vector Table (entries 0 to 18).}
 \end{figure}
 Notice \#8 which is associated with the System timer and usually updates the operating system clock. Because IRQ 0 was hijacked, the operating system clock is not updated updated while Wolfenstein 3D runs. Upon exiting the game, DOS will run late by the amount of time played.\\
 \par
