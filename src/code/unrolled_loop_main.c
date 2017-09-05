@@ -1,4 +1,4 @@
-int main (int argc, char *argv[]) {}
+void main (void) {
     CheckForEpisodes();
     Patch386 ();
     InitGame ();

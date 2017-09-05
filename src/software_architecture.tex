@@ -124,7 +124,7 @@ The first thing the program does is check the assets available via \cw{CheckForE
 \lstinputlisting[language=C]{code/unrolled_loop_main.c}
 \end{minipage}
 \par
-Since the target machine ran in real mode, the code was compiled using 16 bit instructions only. For operations on \cw{long} (32 bit), Borland used its own math library. In \cw{Patch386} Wolfenstein 3D detects if the CPU is a 386 and patches its own code to replace Bordland's integral division with instructions using 32 bit registers \cw{eax} and \cw{edx}.\\
+Since the target machine ran in real mode, the code was compiled using 16 bit instructions only. For operations on \cw{long} (32 bit), Borland used its own math library. In \cw{Patch386} Wolfenstein 3D detects if the CPU is a 386 and patches its own code to replace Borland's integral division with instructions using 32 bit registers \cw{eax} and \cw{edx}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}]{code/integral_div.asm}
