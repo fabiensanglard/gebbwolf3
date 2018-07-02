@@ -39,14 +39,22 @@
 \newcommand{\quotes}[1]{``#1''}
 \newcommand{\note}[1]{\par\color{red}\#\#\#\#\##1\color{black}\\ \par}
 
-% Create space filters images with bilinear sampling which messes up the small sprites 
-% to compensate I added a path to use 300dpi assets which are nearest upsampled sprites.
+% 100 DPI ASSETS
+%===============
+\newcommand{\fullimage}[1]{               \includegraphics[width=\textwidth]{screenshots/#1}  }
+\newcommand{\cfullimage}[2]{\begin{figure}[H] \centering \includegraphics[width=\textwidth]{screenshots/#1} \caption{#2} \label{#1} \end{figure}}
+\newcommand{\scaledimage}[2]{\includegraphics[width=#1\textwidth]{screenshots/#2}}
+\newcommand{\scaledrawimage}[2]{\includegraphics[width=#1]{screenshots/#2}}
+\newcommand{\cscaledimage}[3]{\begin{figure}[H] \centering \includegraphics[width=#1\textwidth]{screenshots/#2} \caption{#3} \label{#2} \end{figure}}
 
-%\newcommand{\fullimage}[1]{\includegraphics[width=\textwidth]{screenshots/#1}}
-%\newcommand{\scaledimage}[2]{\includegraphics[width=#1\textwidth]{screenshots/#2}}
 
-\newcommand{\fullimage}[1]{\includegraphics[width=\textwidth]{screenshots_300dpi/#1} }
-\newcommand{\scaledimage}[2]{\includegraphics[width=#1\textwidth]{screenshots_300dpi/#2} }
+% 300 DPI ASSETS
+%===============
+% \newcommand{\fullimage}[1]{\includegraphics[width=\textwidth]{screenshots_300dpi/#1} }
+% \newcommand{\cfullimage}[2]{\begin{figure}[H] \centering \includegraphics[width=\textwidth]{screenshots_300dpi/#1} \caption{#2} \label{#1} \end{figure}}
+% \newcommand{\scaledrawimage}[2]{\includegraphics[width=#1]{screenshots_300dpi/#2}}
+% \newcommand{\scaledimage}[2]{\includegraphics[width=#1\textwidth]{screenshots_300dpi/#2} }
+% \newcommand{\cscaledimage}[3]{\begin{figure}[H] \centering \includegraphics[width=#1\textwidth]{screenshots_300dpi/#2} \label{#2} \caption{#3}\end{figure}}
 
 % Allow to include urls in pdf
 \usepackage[pdftex]{hyperref}
@@ -262,3 +270,4 @@ middleextra={\draw[dashed,line width=1pt,xshift=1pt] (O) -- (P|-O);\draw[dashed,
   \fontdimen7\font=0.1em% extra space
   \hyphenchar\font=`\-% allowing hyphenation
 }
+\newcommand{\trivia}[1]{\bu{Trivia :} #1}

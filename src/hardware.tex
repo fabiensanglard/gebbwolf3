@@ -9,7 +9,7 @@ To study the IBM PC, it is easiest to first break it down in small parts. Five s
 \label{fig:digraph}
 \end{figure}
 
-Overall, a lot of friction was present since manufacturers had not embraced the gaming industry yet. Some parts were bad, some were very bad, and some were downright impossible to deal with.\\
+A lot of friction was present since manufacturers had not embraced the gaming industry yet. Parts quality varied from  bad, terrible, to downright impossible to deal with.\\
 \par
 
 \begin{figure}[H]
@@ -30,6 +30,8 @@ Overall, a lot of friction was present since manufacturers had not embraced the 
 
 \section{CPU: Central Processing Unit}
   
+
+
   In 1991 there were 56 million PCs in the USA \footnote{"Computers". Collier's Encyclopedia. Vol. 7, 1992: 114, 129.}. The performance of these machines was so overwhelmingly determined by the CPU that a PC was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had an Intel 80386 or equivalent, it was called a "386". If it had an Intel 80286, it was a "286".\\
 \subsection{Overview}
   The predominant CPU manufacturer was Intel with its line of x86 microprocessors\footnote{73\% of PCs sold in 1989 featured an Intel CPU according to Intel Corporation's Annual Report.}. Machines based on the 16 bit 80286 processor did not sell well but their successors with the 80386 introduced in 1985 were immensely successful\footnote{An estimated 3.74 million 386 based systems were sold in 1990 according to Dataquest in PC Magazine February 1992.}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
@@ -85,13 +87,17 @@ Overall, a lot of friction was present since manufacturers had not embraced the 
 \par
 
 \subsection{The Intel 80386}
+  \begin{wrapfigure}[7]{r}{0.3\textwidth}
+\centering
+\includegraphics[width=.3\textwidth]{imgs/drawings/intel_logo.pdf}
+\end{wrapfigure}
 The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagship P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel.}.\\
 \par
 Two choices in the design of the 386 contributed to its success. First, the designers decided to listen to the programmers' feedback and dropped the idea of using a new instruction set. As a result the 386 is fully backward compatible with the 286. Second, they managed to add a 32 bit operating mode which solved many of the memory addressing issues of the 286.\\
 \par
 \textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View.} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "software poison".\\
 \par
-The 80386 relies on three systems and a three stage instruction pipeline.\\
+The 80386 relies on three systems and a three stage instruction pipeline as shown in next page.\\
 \par
 \begin{figure}[H]
 \centering
@@ -276,7 +282,7 @@ And finally the graphic representation with window and offset:\\
 \caption{3.14 window and offset.}
 \label{fig:fp_internals}
 \end{figure}
-  \bigskip
+ 
 
 Floating point arithmetic is a powerful tool. It can represent very small or huge values while keeping track of fractional parts of a number, and also protecting from overflow by floating the window when necessary.\\
 \par
@@ -471,15 +477,9 @@ Or they could have no idea they had to install a driver, load nothing at startup
 The two APIs had similar features but completely different architecture.\\
 \par
 \subsubsection{XMS API}
-The XMS driver works\footnote{eXtended Memory Specification (XMS) July 19, 1988.} like \cw{malloc}/\cw{free} from \cw{libc} and is the most intuitive to a programmer. It allows manipulation of data in the non-addressable extended memory via operations such as \cw{allocate}, \cw{free}, \cw{realloc}, and \cw{move}.\\
+The XMS driver works\footnote{eXtended Memory Specification (XMS) July 19, 1988.} like \cw{malloc}/\cw{free} from \cw{libc} and is the most intuitive to a programmer. It allows manipulation of data in the non-addressable extended memory via operations such as \cw{allocate}, \cw{free}, \cw{realloc}, and \cw{move}. The key aspect of XMS is that memory has to be copied between extended RAM and conventional RAM.\\
 \par
-% \begin{enumerate}
-%  \item \cw{allocate}
-%  \item \cw{free}
-%  \item \cw{realloc}
-%  \item \cw{move} 
-% \end{enumerate}
-The key aspect of XMS is that memory has to be copied between extended RAM and conventional RAM.
+
 
 \begin{figure}[H]
 \centering
@@ -552,7 +552,9 @@ At this point, if you are puzzled by the CPU and its design you are not alone. O
 
 \section{Video}
 
-PCs were connected to CRT monitors: big, heavy, small diagonal, cathode-ray based, curved-surface screens. Most had a 14" diagonal with a 4:3 aspect ratio. To give you an idea of the size, Figure \ref{fig:lcd_vs_crt} shows a comparison between a 14" CRT from 1992 and a 30" LCD display from 2014.\\
+PCs were connected to CRT monitors: big, heavy, small diagonal, cathode-ray based, curved-surface screens. Most had a 14" diagonal with a 4:3 aspect ratio.\\
+\par
+
 
 \begin{figure}[H]
 \centering
@@ -560,6 +562,12 @@ PCs were connected to CRT monitors: big, heavy, small diagonal, cathode-ray base
 \caption{CRT (left) vs LCD (right)}
 \label{fig:lcd_vs_crt}
 \end{figure}
+\par
+  To give you an idea of the size and resolution, figure \ref{fig:lcd_vs_crt} shows a comparison between a 14" CRT from 1992 (capable of a resolution of 640x480) and a 30" Apple Cinema Display from 2014 (capable of a resolution of 2560x1600).\\
+  \par
+\trivia{Despite their difference of capabilities, both monitors are the same weight 27.5 pounds (12 kg).}
+
+
 
 \begin{minipage}{.4\textwidth}
 \textbf{\underline{Trivia :}} How big and heavy could a CRT be? The InterView 28hd96 by Integraph had a 28" diagonal allowing a resolution of 1920x1080 at a time where most monitors displayed 640x480. It weighed 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).\\
@@ -612,19 +620,26 @@ The Monochrome Display Adapter (\codeword{MDA}) was released in 1981 with the IB
 \end{figure}
 
 Each iteration added new features and by 1991 the predominant graphic system was VGA. All video cards installed on PCs had to follow the standard set by IBM. The universality of that system was a double-edged sword. While developers had to program for only one graphic system, there was no escaping its shortcomings.\\
+\par
+Opposite page, courtesy of \cw{vgamuseum.info}, the VGA card Trident 8800 (8 bit ISA). Notice the eight chips on the left of the card forming the VRAM where the framebuffers are stored\protect\footnotemark. On bottom, the VGA card Diamond Stealth (16 bit ISA).
+\pagebreak
 
 \begin{figure}[H] 
   \centering 
-  \fullimage{hardware/suntra_trident_tvga8800br.png} 
-  \caption{The VGA card Trident 8800 (8 bit ISA). Courtesy of \cw{vgamuseum.info}. Notice the eight chips on the left of the card forming the VRAM where the framebuffers are stored\protect\footnotemark.}
+  \scaledimage{0.9}{hardware/suntra_trident_tvga8800br.png} 
+  
 \end{figure}
 \footnotetext{This Trident TVGA8800BR is actually more than VGA capable since its eight V53C464P80L chips can store 64KiB each, accounting for a total of 512KiB VRAM. Cards featuring more than 256KiB were called Super-VGA but this is another story altogether.}
 \par
 \begin{figure}[H] 
   \centering 
-  \fullimage{hardware/diamond_stealth_vram_revb2.png} 
-  \caption{The VGA card Diamond Stealth (16 bit ISA). Courtesy of \cw{vgamuseum.info}.}
+  \scaledimage{0.9}{hardware/diamond_stealth_vram_revb2.png} 
 \end{figure}
+\pagebreak
+
+
+
+
 
 \bu{Trivia :} There was no GPU market back then. Since all video cards "only" had to be VGA compatible with 256KiB of RAM, many just bought the cheapest thing available. Note however that some cards had an 8 bit ISA bus connector (like the Trident) and some had a 16 bit ISA connector like the Diamond, making the Diamond transfer data twice as fast.\\
 \par
@@ -634,8 +649,7 @@ Each iteration added new features and by 1991 the predominant graphic system was
 
 \subsection{VGA Architecture}
 
-VGA can be summarized as three major systems with input, storage, and output systems:\\
-
+VGA can be summarized as three major systems with input, storage, and output systems:
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlling how VGA RAM is accessed (the CPU-VRAM interface)
 \item The framebuffer (the VRAM) made of four memory banks of 64KB (rather than one bank of 256KiB)
@@ -655,7 +669,7 @@ Keep in mind that this architecture reduced the penalty of read operations, but 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/drawings/vga.pdf}
+\includegraphics[width=0.9\textwidth]{imgs/drawings/vga.pdf}
 \caption{VGA Architecture.}
 \label{fig:vga_arch}
 \end{figure}
@@ -680,7 +694,7 @@ The first problem with this design is that it is unintuitive. There is no linear
 \par
 \begin{figure}[H]
 \centering
-\includegraphics[width=.6\textwidth]{imgs/drawings/vga_ram_screen_layout.eps}
+\includegraphics[width=.5\textwidth]{imgs/drawings/vga_ram_screen_layout.eps}
 \label{fig:vga_arch}
 \caption{VGA mode 13h, How bank layout appears on screen.}
 \end{figure}
@@ -688,7 +702,9 @@ The first problem with this design is that it is unintuitive. There is no linear
  
 
 \par
-In order to configure this mess of planes and the controllers, 300 poorly documented internal registers must be set. Needless to say few programmers dove into the internals of the VGA. The first figure describing its architecture is actually deceptively simplified. IBM's VGA reference documentation had its own drawing, which showcases the complexity of the system.\\
+In order to configure this mess of planes and the controllers, 300 poorly documented internal registers must be set. Needless to say few programmers dove into the internals of the VGA. The first figure describing its architecture is actually deceptively simplified.\pagebreak
+
+ Figure \ref{fig:ibm_vga} shows how IBM's reference documentation explained the architecture of the VGA. The maze of wire showcases well the actual complexity of the system.\\
  \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/ibm_vga.pdf}
@@ -700,7 +716,7 @@ In order to configure this mess of planes and the controllers, 300 poorly docume
 
 
 
-To compensate for the complexity, IBM provided a routine to initialize all the registers via one simple BIOS call. One configuration can be selected out of 15 available (a configuration is called a "mode") with an associated resolution, number of colors, and memory layout.
+To compensate for the complexity, IBM provided a routine to initialize all the registers via one simple BIOS call. One configuration can be selected out of 15 available (a configuration is called a "mode") with an associated resolution, number of colors, and memory layout.\pagebreak
 
 \subsection{VGA Modes}
 
@@ -737,29 +753,35 @@ The BIOS can be called to configure the VGA as follows.
 
 
  \subsection{VGA Programming: Memory Mapping}
-To write to the VRAM, the RAM's 1MiB address space maps 64KiB starting as indicated in the Mode table. In mode \cw{13h} for example, the VRAM is mapped from 0xA0000 to 0xAFFFF. One of the first questions to come to mind is "How can I access 256KiB of RAM with only 64KiB of address space?" The answer is "bank switching". Write and Read operations are routed based on a mask register indicating which bank should be read or written to.\\
+To write to the VRAM, the RAM's 1MiB address space maps 64KiB starting as indicated in table \ref{vga-modes-available}. In mode \cw{13h} for example, the VRAM is mapped from 0xA0000 to 0xAFFFF.\\
+\par One of the first questions to come to mind is "How can I access 256KiB of RAM with only 64KiB of address space?" The answer is "bank switching" as summarized in figure \ref{ram_to_vga_mapping}. Write and Read operations are routed based on a mask register indicating which bank should be read or written to. \\
 \par
+
+ \subsection{VGA Programming: Mode 12h}
+ The first mode commonly considered for game programming is mode \cw{12h}. It offers a resolution of 640x480 at 70hz with 16 colors. Each pixel is encoded in 4 bits (a nibble) spread across the four banks.\\
+\par
+
+
+
  \begin{figure}[H]
 \centering
   
-      \includegraphics[width=\textwidth]{imgs/drawings/ram_to_vga_mapping.pdf}
-    
+      \includegraphics[width=.8\textwidth]{imgs/drawings/ram_to_vga_mapping.pdf}
+    \label{ram_to_vga_mapping}
 \caption{Mapping PC RAM to VGA VRAM banks.}
 \end{figure}
-
-
-
+\par
+ To write the color of the first pixel, a developer has to write the first bit of the nibble in plane 0, the second in plane 1, the third in plane 2 and the fourth in plane 3. The CRT Controller then reads 4 bytes at a time (one from each plane) resulting in 8 pixels on screen.\\
+\par
  
 
- \subsection{VGA Programming: Mode 12h}
- The first mode commonly considered for game programming is mode \cw{12h}. It offers a resolution of 640x480 at 70hz with 16 colors. Each pixel is encoded in 4 bits (a nibble) spread across the four banks. To write the color of the first pixel, a developer has to write the first bit of the nibble in plane 0, the second in plane 1, the third in plane 2 and the fourth in plane 3. The CRT Controller then reads 4 bytes at a time (one from each plane) resulting in 8 pixels on screen.\\
-\par
+
 \begin{figure}[H]
 \centering
- \includegraphics[width=\textwidth]{imgs/drawings/mode12h.pdf}
+ \includegraphics[width=.8\textwidth]{imgs/drawings/mode12h.pdf}
 \caption{VGA bank layout in mode 12h.}
 \end{figure}
-\par
+\pagebreak
 
 The only good thing about this mode is that it has square pixels. The 640x480 aspect ratio matches the 4:3 of a CRT so there is no distortion of the framebuffer when it is output to the screen. Pretty much everything else is bad:\\
 \begin{itemize}
@@ -771,14 +793,15 @@ The only good thing about this mode is that it has square pixels. The 640x480 as
  \begin{figure}[H]
 \centering
  \fullimage{wolf3d_ega.png}
- \caption{Wolfenstein 3D in 16 colors.}
+ \label{wolf16}
 \end{figure}
+\par
+In figure \ref{wolf16}, Wolfenstein 3D opening screen as it would have been rendered with sixteen colors.
 
 
 
 
-
- 
+ \pagebreak
   \subsection{VGA Programming: Mode 13h}
   Mode \cw{13h} is far more appealing since it offers a lower resolution of 320x200 with 256 colors at 70Hz. It also has the advantage of faking linear buffer. A special chip called Chain-4 uses the lower 2 bits of the RAM address to automatically program the mask and route the operation to the appropriate VRAM bank. This convenience mechanism was originally added because mode \cw{13h} was meant to display static images and a linear address space made it easy for developers to copy from RAM to VRAM.\\
   \par
@@ -837,7 +860,7 @@ The side effect of this convenience mechanism is that 75\% of the RAM is wasted 
 
 \begin{figure}[H]
   \centering
-  \fullimage{circlescreen.png}
+  \scaledimage{0.95}{circlescreen.png}
   \caption{How the framebuffer appears once stretched on the CRT monitor.}
 \end{figure}
 \par
@@ -883,10 +906,18 @@ With two buffers (a.k.a double buffering) the CPU can start writing in the secon
 \section{Audio}
 \label{hardware-audio}
 PCs came equipped with a silver-dollar-sized beeper commonly known as a "PC Speaker", capable of generating a square wave via 2 levels of output.\\
-\par
- \begin{figure}[H]
+\begin{figure}[H]
+
 \centering
-\includegraphics[width=\textwidth]{imgs/drawings/square_wave.pdf}
+
+\scaledimage{0.6}{pcspeaker.png}
+\end{figure}
+
+
+\begin{figure}[H]
+
+\centering
+\includegraphics[width=.8\textwidth]{imgs/drawings/square_wave.pdf}
 \caption{Two beeps of different frequencies generated via PC Speaker.}
 \end{figure}
 
@@ -922,13 +953,14 @@ Although adoption was growing (Creative would go on to sell one million SoundBla
   \subsection{AdLib}
   AdLib's music card was first on the market. The company was founded in 1988 by Martin Prevel, a former professor of music from Quebec. After an initial struggle to get game developers to use their card (the SDK was \$300), AdLib managed to convince Taito, Velocity, and Sierra On-Line to support their hardware. Sierra in particular did much to increase adoption with King's Quest IV selling close to 3 million copies. Soon after, all games supported the "music card".\\
   \par
-   Equipped with a Yamaha YM3812, also known as the OPL2, the card can produce 9 channels of sound, each capable of simulating an instrument. Based on FM synthesizing, the channels were limited but allowed for pleasant music.\\
+
   \begin{figure}[H] 
     \centering 
     \scaledimage{.8}{hardware/adlib.png} 
     \caption{An AdLib sound card. Notice the big YM3812 chip and the 8 bit ISA connector.}
   \end{figure}
-   
+   \par
+      Equipped with a Yamaha YM3812, also known as the OPL2, the card can produce 9 channels of sound, each capable of simulating an instrument. Based on FM synthesizing, the channels were limited but allowed for pleasant music.\\
 \par
 \bu{Trivia :} Canadian companies, and especially those from Quebec, were prevalent in the early 90s due to their technological prowess. AdLib manufactured Sound Card, Matrox made a killing with its Millenium Graphic Card, and Watcom sold the best DOS C compiler\footnote{Watcom's compiler was so good id would use it to compile Doom.}. ATI\footnote{History would repeat itself in the late 90s in the field of graphic cards: Nvidia vs ATI.} would later emerge as a major GPU innovator in the 2000s.\\
   
@@ -936,7 +968,7 @@ Although adoption was growing (Creative would go on to sell one million SoundBla
 
 
   \subsection{Sound Blaster}
-  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative. It was a smart product which was clearly targeting AdLib's dominant position. Not only was it equipped with the same OPL2 chip, providing 100\% compatibility with AdLib music playback, but it was also technologically superior with a DSP\footnote{An Intel MCS-51 "Digital Sound Processor", not "Digital Signal Processor".}  allowing PCM playback (digitized sounds) at 8 bits per sample and up to 22.05kHz sampling rate. The card also came with a DA-15 port allowing joystick connection. Most importantly, the SoundBlaster was \$90 cheaper than the AdLib.\\ 
+  The Sound Blaster 1.0 (code named "Killer Kard"), was released in 1989 by Creative. It was a smart product which was clearly targeting AdLib's dominant position.\\ 
 \par
 
 \begin{figure}[H] 
@@ -945,6 +977,8 @@ Although adoption was growing (Creative would go on to sell one million SoundBla
   \caption{A SoundBlaster (v1.2). }
   \label{asb12}
 \end{figure}
+\par
+Not only was it equipped with the same OPL2 chip, providing 100\% compatibility with AdLib music playback, but it was also technologically superior with a DSP\footnote{An Intel MCS-51 "Digital Sound Processor", not "Digital Signal Processor".}  allowing PCM playback (digitized sounds) at 8 bits per sample and up to 22.05kHz sampling rate. The card also came with a DA-15 port allowing joystick connection. Most importantly, the SoundBlaster was \$90 cheaper than the AdLib.\\
 \par
 Figure \ref{asb12} is the Sound Blaster model CT1350B. Notice the OPL2 chip (labeled FM1312), the big CT1336 bus interface (labeled "CREATIVE") on the center left, the CT1351 DSP on the upper left, and the 8 bit ISA bus connector.\\
 \par
@@ -969,13 +1003,63 @@ The model above is a CT1330A. Notice the double FM1312 chip in the center. The t
 
 
   \subsection{Disney Sound Source}
-  In 1990, Disney began selling the Disney Sound Source (DSS). Plugged into the printer port (parallel port) of the PC, an 8-bit DAC similar to the "Covox Speech Thing" was connected to a speaker box. It was incredibly easy to set up, simple to program (it could only play one type of PCM and had no FM synthesizer), and very cheap compared to the other audio solutions (\$14). It would have made programmers and customers happy if not for one serious limitation. The parallel port bandwidth\footnote{The parallel port maximum bandwidth is 150 kbits/s.} allowed a sampling rate up to 18,750 Hz but the design of the DSS limited the PCM sampling rate to 7,000Hz. This was still enough to produce pleasant sounds, but fell short when compared to the 22kHz or even 44kHz of a Sound Blaster Pro.
+  In 1990, Disney began selling the Disney Sound Source (DSS). Plugged into the printer port (parallel port) of the PC, an 8-bit DAC similar to the "Covox Speech Thing" was connected to a speaker box. 
   \par
   \begin{figure}[H] 
     \centering 
-    \fullimage{hardware/ss.png} 
+    \scaledimage{0.9}{hardware/ss.png} 
     \caption{The speaker box (DAC not shown).}
   \end{figure}
+\par
+It was incredibly easy to set up, simple to program (it could only play one type of PCM and had no FM synthesizer), and very cheap compared to the other audio solutions (\$14). It would have made programmers and customers happy if not for one serious limitation. The parallel port bandwidth\footnote{The parallel port maximum bandwidth is 150 kbits/s.} allowed a sampling rate up to 18,750 Hz but the design of the DSS limited the PCM sampling rate to 7,000Hz. This was still enough to produce pleasant sounds, but fell short when compared to the 22kHz or even 44kHz of a Sound Blaster Pro.
+
+
+
+
+
+
+
+
+
+\section{Bus}
+Although developers had no control over them, it is still worth mentioning how these components were connected to each other.\\ 
+\par
+
+The ISA\footnote{Industry Standard Architecture.} bus connects the CPU to all devices, including RAM. It was already 10 years old in 1991 but still used universally in PCs. The data path to the RAM is either 16 bit wide for 286 and 386SX or 32 bit on 386DX based machines. It runs at the same frequency as the CPU.\\
+\par
+
+\begin{figure}[H]
+\centering
+      \includegraphics[width=0.9\textwidth]{imgs/drawings/bus.pdf}
+\end{figure}
+\pagebreak
+The rest of the bus connecting to everything that is not the RAM can be either:
+\begin{itemize}
+\item 8 bit wide at 4.77 MHz  for 19.1 Mbit/s
+\item 16 bit wide at 8.33MHz for 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates .}.
+\end{itemize}
+Of course it is also backward compatible and an 8 bit ISA card can be plugged into a 16 bit ISA bus.\\
+\par
+\par
+\bu{Trivia :} On ISA all devices are connected to the bus at all times and listen on the bus address lane. Each device features an "address decoder" to detect if it should reply to a bus request. This is how the VGA RAM is "mapped" in RAM. The VGA card "address decoder"  filters out everything that is not within \cw{A0000h} and \cw{AFFFFh}. Accordingly, the RAM disregards any request that is within the range [\cw{A0000h} - \cw{AFFFFh}].\\
+\par
+ \begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{imgs/drawings/isa.pdf}
+\end{figure}
+
+\par
+ In practice the effective bandwidth of the bus is divided by two due to packet overhead and interrupts. As a result, a PC equipped with an 8 bit ISA VGA card can push 19.1Mbits/s/2/8 = 1.1MB/s. In mode \cw{13h}, since a frame is 320x200 = 64,000 bytes, the theoretical maximum framerate with a CPU taking 0ms to render a frame is 1,100,000 / 64,000 = 17 frames per seconds.\\
+ \par
+ On a 16 bit VGA card, 33,400,000 bits per seconds gives 33,400,000/8/64000 = 65 frames per seconds.\\
+ \par
+ If you factor in other things which had to be transported by the bus such as palette, keyboard interrupt, mouse inputs, and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand how important it was to limit data transfer and why few programs of that era could max out the VGA's 70 frames per seconds\footnote{Specialized demos could reach 70 fps on VGA by careful management of unchanged regions or using planar writes for the 4x speedup.}.
+
+
+
+
+
+
 
 
 
@@ -1031,37 +1115,13 @@ Finally, a SoundBlaster sound card connected via the ISA bus provided a new port
 \end{figure}
 
 
-\section{Bus}
-Although developers had no control over them, it is still worth mentioning how these components were connected to each other.\\ 
-\par
 
-The ISA\footnote{Industry Standard Architecture.} bus connects the CPU to all devices, including RAM. It was already 10 years old in 1991 but still used universally in PCs. The data path to the RAM is either 16 bit wide for 286 and 386SX or 32 bit on 386DX based machines. It runs at the same frequency as the CPU.\\
-\par
-The rest of the bus connecting to everything that is not the RAM can be either:
-\begin{itemize}
-\item 8 bit wide at 4.77 MHz  for 19.1 Mbit/s
-\item 16 bit wide at 8.33MHz for 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates .}.
-\end{itemize}
-Of course it is also backward compatible and an 8 bit ISA card can be plugged into a 16 bit ISA bus.\\
-\par
-\begin{figure}[H]
-\centering
-      \includegraphics[width=\textwidth]{imgs/drawings/bus.pdf}
-\end{figure}
-\par
-\bu{Trivia :} On ISA all devices are connected to the bus at all times and listen on the bus address lane. Each device features an "address decoder" to detect if it should reply to a bus request. This is how the VGA RAM is "mapped" in RAM. The VGA card "address decoder"  filters out everything that is not within \cw{A0000h} and \cw{AFFFFh}. Accordingly, the RAM disregards any request that is within the range [\cw{A0000h} - \cw{AFFFFh}].\\
-\par
- \begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{imgs/drawings/isa.pdf}
-\end{figure}
 
-\par
- In practice the effective bandwidth of the bus is divided by two due to packet overhead and interrupts. As a result, a PC equipped with an 8 bit ISA VGA card can push 19.1Mbits/s/2/8 = 1.1MB/s. In mode \cw{13h}, since a frame is 320x200 = 64,000 bytes, the theoretical maximum framerate with a CPU taking 0ms to render a frame is 1,100,000 / 64,000 = 17 frames per seconds.\\
- \par
- On a 16 bit VGA card, 33,400,000 bits per seconds gives 33,400,000/8/64000 = 65 frames per seconds.\\
- \par
- If you factor in other things which had to be transported by the bus such as palette, keyboard interrupt, mouse inputs, and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand how important it was to limit data transfer and why few programs of that era could max out the VGA's 70 frames per seconds\footnote{Specialized demos could reach 70 fps on VGA by careful management of unchanged regions or using planar writes for the 4x speedup.}.
+
+
+
+
+
 
 
 \section{Summary}

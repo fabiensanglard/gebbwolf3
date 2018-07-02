@@ -34,20 +34,20 @@ To draw all these pixels they needed a powerful CPU, and a PC outperformed any c
 \input{imgs/drawings/available_hardware_mips.tex}
 
  
-With its fast CPU and 256KiB framebuffer, a 1991 PC looked promising at first. However, there were three seemingly impossible\footnote{The title of this book could have been "The Impossible Machine".} obstacles to overcome:\\
+With its fast CPU and 256KiB framebuffer, a 1991 PC looked promising at first. However, there were three seemingly impossible\footnote{The title of this book could have been "The Impossible Machine".} obstacles to overcome:
 \begin{itemize}
 \item The video system (called VGA) could not double buffer. It was not possible to have smooth animations without ugly artifacts called "tears" on the screen.
 \item The CPU could only perform integer operations, but 3D calculations required keeping track of fractions.
 \item The PC Speaker, the default sound device, could only produce square waves resulting in a bunch of "beeps" which were more annoying than anything else.
 \end{itemize}
-Beyond these major blockers were even more challenges:\\
+Beyond these major blockers were even more challenges:
 \begin{itemize}
 \item The RAM addressing mode was not flat but segmented, resulting in complex and error prone pointer arithmetics.
 \item VGA pixels were not square: the framebuffer was stretched vertically when
 transferred to the screen.
 \item The audio eco-system was fragmented. Each of the various sound systems had different capabilities and expectations.
 \item The machine could only address 1MB of RAM. To go beyond required entering a fragmented eco-system of drivers.
-\item The bus was slow and I/O with the VRAM\footnote{VGA RAM} was a bottleneck. It was next to impossible to write a full framebuffer at 70 frames per second.
+\item The bus was slow and I/O with the VRAM was a bottleneck. It was next to impossible to write a full framebuffer at 70 frames per second.
 \end{itemize}
 
 Overall, it looked like the machine was \emph{doom}ed to do boring things. But many around the world did not accept that and tinkered with the hardware to achieve unexpected results. How they did it is the \textit{raison d'\^etre} of this book. I've chosen to divide this book in three chapters:
@@ -59,7 +59,7 @@ Overall, it looked like the machine was \emph{doom}ed to do boring things. But m
 \par
 By first showing the hardware constraints, I hope programmers will develop an appreciation for the software and how it navigates obstacles, sometimes turning limitations into advantages.\\
 \par
-\bu{Trivia :} The name "Wolfenstein 3D" was inspired by the 1981 Apple II title "Castle Wolfenstein" from Silas Warner. The Apple version was stealth oriented (Wolfenstein's "Profound Carnage" style was a clear departure from the original theme) but really stood out thanks to its unprecedented use of digitized voices. Initially the team believed they would be unable to use the Wolfenstein name due to trademark issues. They came up with multiple possible titles only to discover that the original developer, Muse Software, had gone out of business several years earlier and let the trademark lapse, leaving them free to name their game Wolfenstein 3D.
+
 
 \begin{figure}[H]
 \centering
@@ -72,3 +72,6 @@ By first showing the hardware constraints, I hope programmers will develop an ap
 \scaledimage{0.85}{CastleWolfensteinAppleII.png}
 \caption{"Castle Wolfenstein" gameplay.}
 \end{figure}
+
+
+\bu{Trivia :} The name "Wolfenstein 3D" was inspired by the 1981 Apple II title "Castle Wolfenstein" from Silas Warner. The Apple version was stealth oriented (Wolfenstein's "Profound Carnage" style was a clear departure from the original theme) but really stood out thanks to its unprecedented use of digitized voices. Initially the team believed they would be unable to use the Wolfenstein name due to trademark issues. They came up with multiple possible titles only to discover that the original developer, Muse Software, had gone out of business several years earlier and let the trademark lapse, leaving them free to name their game Wolfenstein 3D.
