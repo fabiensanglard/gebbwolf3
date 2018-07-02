@@ -1,14 +1,18 @@
 \documentclass[book.tex]{subfiles}
 \begin{document}
 \section{Getting the Source Code}
-The game engine source code was uploaded on id software's ftp\footnote{File Transfer Protocol.} server on July 21st, 1995.\\ 
+The game engine source code was uploaded on id Software's ftp\footnote{File Transfer Protocol.} server on July 21st, 1995.\\ 
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[]{code/ftp_url.txt}
 \end{minipage}
 \par
 More than twenty two years later the archive is still located at the exact same URL, a remarkable fact given the ever changing nature of the web.\\
-
+\par
+Alternatively, you can use \cw{github.com} where id Software migrated all of its opensource code around 2012. It is not only faster, it is also more reliable.\\
+\par
+\tcode{wolf3d_github.txt}\\
+\par
 \section{First Contact}
 Once downloaded and decompressed, the archive \codeword{woldsrc.zip} contains another self-extracting PKZIP archive. It was a convenience back in the day, but is not practical now and is easy to deflate.\\
 \par
@@ -156,7 +160,7 @@ The sound system is started via the Sound Manager in \cw{SDL\_SetTimerSpeed}. Wh
 \par
 The reason for interrupts is extensively explained in Chapter \ref{audio_and_heartbeat} "\nameref{audio_and_heartbeat}". In short, with an OS supporting neither process nor thread, it was the only way to have something execute concurrently with the rest of the engine.\\
 \par
-An ISR\footnote{Interrupt Service Routine.} is installed in the Interrupt Vector Table to respond to interrupts triggered by the engine. Note how the ISR can be called at frequencies of 140Hz, 700Hz, or even 7000Hz depending on the needs of the sound system.\\
+An ISR (Interrupt Service Routine) is installed in the Interrupt Vector Table to respond to interrupts triggered by the engine. Note how the ISR can be called at frequencies of 140Hz, 700Hz, or even 7000Hz depending on the needs of the sound system.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/soundsystem_interrupt.c}
