@@ -25,14 +25,24 @@ Once downloaded and decompressed, the archive \codeword{woldsrc.zip} contains an
 \end{minipage}
 
 \par
- The code is 90\% in C with assembly\footnote{All the assembly in Wolf3D is done with TASM (a.k.a Turbo Assembler by Borland). It uses Intel notation where the destination is before the source: \cw{instr} \cw{dest} \cw{source}.} for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code (SLOC) is not a meaningful metric against a single codebase but excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Google's Chrome browser is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
+ The code is 90\% in C with assembly\footnote{All the assembly in Wolf3D is done with TASM (a.k.a Turbo Assembler by Borland). It uses Intel notation where the destination is before the source: \cw{instr} \cw{dest} \cw{source}.} for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code (SLOC) is not a meaningful metric against a single codebase but excels when it comes to extracting proportions.\\
+ \par
+  Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Google's Chrome browser is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
 \par
+ \begin{fancyquotes}
+   We didn't have spell checkers in our editors back then, and I always had poor spelling.  The word "collumn" appears in the source code dozens of times.  After I released the source code, one of the emails that stands out in memory read:
+ \bigskip \\
+It's "COLUMN", you dumb FUCK!\\
+ \bigskip \\
+\textbf{John Carmack - Programmer}
+ \end{fancyquotes}
+ \par
 \begin{figure}[H]
 \centering
   \begin{tikzpicture}[font=\small]
     \begin{axis}[
       width=\textwidth,
-      height=0.55\textwidth,
+      height=0.8\textwidth,
       ybar=0.6\textwidth,
       bar width=20pt,
       ylabel={Lines of Code},
@@ -62,13 +72,7 @@ Once downloaded and decompressed, the archive \codeword{woldsrc.zip} contains an
  
 \par
 
- \begin{fancyquotes}
-   We didn't have spell checkers in our editors back then, and I always had poor spelling.  The word "collumn" appears in the source code dozens of times.  After I released the source code, one of the emails that stands out in memory read:
- \bigskip \\
-It's "COLUMN", you dumb FUCK!\\
- \bigskip \\
-\textbf{John Carmack - Programmer}
- \end{fancyquotes}
+
  
 The archive contains more than just source code; it also features:
 \begin{itemize}
@@ -173,7 +177,7 @@ An ISR\footnote{Interrupt Service Routine.} is installed in the Interrupt Vector
 
 
 
-
+\pagebreak
 \section{Architecture}
 
 The source code is structured in two layers. WL\_* files are high-level layers relying on low-level ID\_* sub-systems called Managers interacting with the hardware.\\
@@ -356,14 +360,15 @@ The video manager features two parts:
 \subsection{Cache Manager (CA)}
 The cache manager is a small but critical component. It loads and decompresses maps, 2D graphics, and audio resources stored on the filesystem and makes them available in RAM. Assets of each kind are stored in two files. A header file contains the offset to allow translation from asset ID to byte offset in the data file.\\
  \par
+ \bu{Note:} All resources are compressed. In the case of maps and audio, compression is hard-coded in the engine. For graphics, however, a third file (\cw{DICT}) contains the compression dictionary to decompress each asset. The Cache Manager handles decompression transparently.\\
+\par
+\bu{Trivia :} Is there a typo in the filename \cw{AUDIOHED.WL} ? The correct spelling would be \texttt{\justify AUDIOHEAD.WL1}. Where is the \cw{A}? This is in fact a limitation of the operating system. DOS only allows 8.3 filename (at most eight characters followed by a dot, then at most three characters for the extension).
+\par
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/cache_manager_architecture.pdf}
  \end{figure}
- \par
-\bu{Note:} All resources are compressed. In the case of maps and audio, compression is hard-coded in the engine. For graphics, however, a third file (\cw{DICT}) contains the compression dictionary to decompress each asset. The Cache Manager handles decompression transparently.\\
-\par
-\bu{Trivia :} Is there a typo in the filename \cw{AUDIOHED.WL} ? The correct spelling would be \texttt{\justify AUDIOHEAD.WL1}. Where is the \cw{A}? This is in fact a limitation of the operating system. DOS only allows 8.3 filename (at most eight characters followed by a dot, then at most three characters for the extension).
+
 
 
 

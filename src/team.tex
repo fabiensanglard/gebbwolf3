@@ -184,10 +184,22 @@ Everybody was working with the best PC money could buy, a high end 386-DX 33Mhz 
 
 
 
-Development and compilation was done with Borland C++ 3.1 (but the language used was C) which ran in VGA mode 3 offering a screen 80 characters wide and 25 characters tall.\\
+Development was done with Borland C++ 3.1 (but the language used was C) which ran in VGA mode 3 offering a screen 80 characters wide and 25 characters tall.\\
 \par
 John Carmack took care of the runtime code. John Romero programmed many of the tools (TED5 map editor, IGRAB-ED graphic assets packers, MUSE sound packer). Jason Blochowiak wrote important subsystems of the game (Input manager, Page manager, Sound manager, User manager).\\
 
+\begin{figure}[H]
+\centering
+  \fullimage{development.png}
+\caption{Borland C++ 3.1 editor}
+\end{figure}
+\par
+Borland solution was an all-in-one package. The IDE, \cw{BC.EXE}, despite some instabilities allowed crude multi-windows code editing with pleasant syntax highlights. Compiled and Linker were also part of the package under \cw{} and \cw{TLINK.EXE}\footnote{Source: Borland C++ 3.1 User Guide.}.
+\pagebreak
+
+
+There was no need to go command-line mode however. The IDE allowed to create a project, build, run and debug.\\
+\par
 \begin{figure}[H]
 \centering
   \fullimage{compiling.png}
@@ -195,11 +207,7 @@ John Carmack took care of the runtime code. John Romero programmed many of the t
 \end{figure}
 
 
-\begin{figure}[H]
-\centering
-  \fullimage{development.png}
-\caption{Borland C++ 3.1 editor}
-\end{figure}
+
 
 
 To compensate for the tiny CRT display, some of the developers used two screens (an unusual thing at the time).\\
@@ -211,20 +219,20 @@ At that point, we wanted 21" monitors, but couldn't justify them.  I used a seco
 \end{fancyquotes}\\
 \par
 You may have noticed in the listing of VGA modes that mode \cw{13h} and mode \cw{3h} (see Figure \ref{vga-modes-available}, p\pageref{fig:vga_modes})  don't have the same starting RAM address. This allows for a trick where two graphics cards are plugged into the same PC. One MDA setup as monochrome text mode picks up data at 0xB8000 while a VGA mapped at 0xA0000 runs the game normally.
-\begin{figure}[H]
-  \centering
-      \scaledimage{1}{wolf_screen1.png}
-      \caption{Monitor 1 connected to MDA card showing Borland Turbo Debugger 386.}
-\end{figure}
-\par
- This setup allows a developer to debug the game engine with breakpoints.
+% \begin{figure}[H]
+  % \centering
+      \scaledimage{0.97}{wolf_screen1.png}\\
+      % \caption{Monitor 1 connected to MDA card showing Borland Turbo Debugger 386.}
+% \end{figure}
+% \par
+ % This setup allows a developer to debug the game engine with breakpoints.
+\vspace{2mm}
 
-
-\begin{figure}[H]
-  \centering
-    \scaledimage{1}{wolf_screen2.png}
-    \caption{Monitor 2 connected to VGA card running the game normally.}
-\end{figure}
+% \begin{figure}[H]
+  % \centering
+    \scaledimage{0.97}{wolf_screen2.png}
+    % \caption{Monitor 2 connected to VGA card running the game normally.}
+% \end{figure}
 
 
 
@@ -405,15 +413,19 @@ Maps were created using an in-house editor called TED5, short for Tile EDitor. T
  \begin{figure}[H]
 \centering
  \fullimage{ted5_scrolling_map.png}
- \caption{TED5 used for Commander Keen - side scroller.} 
+ %\caption{TED5 used for Commander Keen - side scroller.} 
  \end{figure}
 
-TED5 allows placement of tiles on layers called "planes". This layered approach proved powerful and versatile. In Commander Keen, layers are used for background, tiles which the hero can stand on, generating bonuses and so on. For Wolfenstein 3D, two layers are used: one for walls, and one to place bonuses and enemies on.\\
+
 \begin{figure}[H]
 \centering
  \fullimage{TED.png}
- \caption{TED5 used for top view level design in Rescue Rover.} 
+ %\caption{TED5 used for top view level design in Rescue Rover.} 
  \end{figure}
+
+ \par
+ TED5 allows placement of tiles on layers called "planes". This layered approach proved powerful and versatile. In Commander Keen, layers are used for background, tiles which the hero can stand on, generating bonuses and so on. For Wolfenstein 3D, two layers are used: one for walls, and one to place bonuses and enemies on.\\
+ \par
 
 Reusing TED5 was a double win. Not only did it save tool development time, but ramp-up time was also reduced as all team members had been using it for years. TED5 was so good at doing the job that it allowed designers to make a level within minutes.\\
 \par
@@ -440,7 +452,7 @@ mouse and Tom would say, "Sorry!" That picture never appears in TED5
 anywhere.\\
    \\
 \textbf{John Romero - Programmer}
- \end{fancyquotes}\\
+ \end{fancyquotes}
 
 
 
@@ -485,9 +497,19 @@ All music composition was done by Robert Prince.\\
 In the early days of the OPL soundcards, the "gold standard" sequencing software was Sequencer Plus Gold ("SPG") by Voyetra. The reason for this was it had an OPL instrument/instrument bank editor.\\
 \par
 To rough out compositions, I used Cakewalk ("CW"). I had been using it for several years already and had it all set up to use the analog boxes for sound output. Having "real" sounds from those boxes helped me visualize (audiolize?) what I wanted musically. I would save the CW files in *.mid format and load them into SPG to create the OPL instrument for each track. I built different instrument banks for the different genres of music.\\
-   \\
+\par
+
 \textbf{Bobby Prince - Composer}
  \end{fancyquotes}\\
+ \par
+\begin{figure}[H]
+\centering
+
+ \includegraphics[width=0.9\textwidth]{imgs/drawings/music_pipelione.pdf}
+ \caption{Music pipeline as described by Bobby Prince.}
+\end{figure}
+\par
+
 
 \begin{figure}[H]
 \centering
@@ -495,13 +517,16 @@ To rough out compositions, I used Cakewalk ("CW"). I had been using it for sever
 \caption{Sequencer Plus Gold ("SPG") by Voyetra.}
 \end{figure}
 
-\begin{figure}[H]
-\centering
 
- \includegraphics[width=\textwidth]{imgs/drawings/music_pipelione.pdf}
- \caption{Music pipeline as described by Bobby Prince.}
-\end{figure}
-What goes in the \cw{AUDIOT} archive is a music format called IMF\footnote{Id software Music File.}. As it supports only the YM3812, it is tailored for the chip with zero abstraction layer. It consists of a stream of machine language commands with associated delays\footnote{IMF format is explained in detail on page \pageref{IMF_explanation}}. The stream pilots the nine channels in the OPL2. A channel is able to simulate an instrument and play notes thanks to two oscillators, one playing the role of a modulator and the other the role of a carrier. There are many other ways to control a channel such as envelope, frequency or octave. The way a channel is programmed is described in detail in Section \ref{IMF_explanation}, "\nameref{IMF_explanation}" on page \pageref{IMF_explanation}.
+What goes in the \cw{AUDIOT} archive is a music format called IMF\footnote{Id software Music File.}. As it supports only the YM3812, it is tailored for the chip with zero abstraction layer. It consists of a stream of machine language commands with associated delays\footnote{IMF format is explained in detail on page \pageref{IMF_explanation}}.\\
+\par
+ The stream pilots the nine channels in the OPL2. A channel is able to simulate an instrument and play notes thanks to two oscillators, one playing the role of a modulator and the other the role of a carrier. There are many other ways to control a channel such as envelope, frequency or octave.\\
+\par The way a channel is programmed is described in detail in Section \ref{IMF_explanation}, "\nameref{IMF_explanation}" on page \pageref{IMF_explanation}.\\
+\par
+LGSDGLASFLDSA
+\pagebreak
+
+
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/channel.pdf}
@@ -559,12 +584,7 @@ At 4am on May 5th, 1992 the first episode of the game was uploaded to Massachuse
 \par
 In order to maximize income, it was therefore paramount to make the game easy to copy and redistribute. In 1991, Internet was still in its infancy and the best medium was the 3\nicefrac{1}{2}-inch floppy disk. Particular attention was given to the total size of the game so it would fit on one disk. All assets combined accounted for 1,204KiB but everything was compressed to 645KiB (a 3\nicefrac{1}{2}-inch floppy can store 720KiB). The full six episodes fit on two disks. Spear of Destiny would fit on three disks.
 The game shipped as follows:\\
-\par
- \begin{figure}[H]
-\centering
- \fullimage{result.png}
- \caption{All files distributed as shareware as they appear in DOS command prompt.}
-  \end{figure}
+
   \par
  The files can be divided in five parts:
  \begin{itemize}
@@ -587,8 +607,16 @@ The game shipped as follows:\\
     \item VGAGRAPH.WL1 : Compressed pics lumped together.
      \end{itemize}
 \end{itemize}
+
+\par
+ \begin{figure}[H]
+\centering
+ \fullimage{result.png}
+ \caption{All files distributed as shareware as they appear in DOS command prompt.}
+  \end{figure}
  \par
 
+\pagebreak
 \textbf{\underline{Trivia :}} The file extensions did have meaning: 
 \begin{itemize}
 \item WL1: Shareware.
