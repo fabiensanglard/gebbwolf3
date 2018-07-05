@@ -424,6 +424,8 @@ This optimization still results in a 30\% overall speed increase.\\
 \subsection{Clearing the Screen}
 At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. To create this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. Since values are written 16 bits at a time, it can write 8 pixels at a time.\\ 
 \par
+DRAWING 320x200 with top section = 32,000 pixels, botton section = 32,000 pixels on the right : 32,000/8 writes ; 32,000/8 writes
+\par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
  \end{minipage}
@@ -657,7 +659,9 @@ Why do I think VSD is the toughest 3-D challenge? Although rasterization issues 
 In contrast, VSD is an open-ended problem, and there are dozens of approaches currently in use. Even more significantly, the performance of VSD, done in an unsophisticated fashion, scales directly with scene complexity, which tends to increase as a square or cube function, so this very rapidly becomes the limiting factor in doing realistic worlds. I expect VSD increasingly to be the dominant issue in realtime PC 3-D over the next few years, as 3-D worlds become increasingly detailed.
  \bigskip \\
 \textbf{Michael Abrash - Graphics Programming Black Book}
- \end{fancyquotes}
+ \end{fancyquotes}\\
+ \par
+ TRIIVIA ABOUT MICJAEL ABREASH LEGEND AND WHY THIS BOOK IS CALLED THE BLACK BOOK.\\
  \par
 VSD is not only complicated to do right, it is also hard to do fast. It is easy to understand with a small example where objects are free form with no alignment, as follows.
 
@@ -699,7 +703,8 @@ If you made extremely jagged block maps that would turn into many dozen independ
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
 
-
+\par
+INSER HERE STORY ABOUT WOLF3D SNES USING A BSP.\\
 
  \par
 \begin{figure}[H]
@@ -759,30 +764,22 @@ Note that $ystep$ and $xstep$ are simple lookups into the \cw{tan} array since $
 
 
 \subsubsection{Call Apogee}
-With maps being quick and easy to draw, a contest was planned. Players who found a special item in a particularly difficult to access place in the game were instructed to call the publisher (Apogee). The maze is located in Episode 2, Map 8.\\
-\par
+With maps being quick and easy to draw, a contest was planned. Players who found a special item in a particularly difficult to access place in the game were instructed to call the publisher (Apogee).\\
+\par The maze is located in E2M8. Behind a forest of push walls (white squares) and angry bosses (blue circles), the player finally encounters an strange sign (the red triangle).
+
+
 \begin{figure}[H]
   \centering
  \fullimage{e2m8.png}
  \caption{E2M8 maze.}
 \end{figure}
-
 \par
-Behind a forest of push walls (white squares) and angry bosses (blue circles), the player finally encounters an enigmatic sign (the red triangle).
-
-\begin{minipage}{.5\textwidth}
+\begin{wrapfigure}[6]{r}{0.4\textwidth}
+\scaledimage{0.4}{call_apogee.png} 
+\end{wrapfigure}
 However, as players reverse engineered the map format and cheat sites emerged, the contest was called off. The sign was replaced with a skeleton in all games shipped in 1992.\\
 \par
 In the previous map, notice there are no push walls leading to the red triangle; the room is sealed.\\
- \end{minipage}
-\begin{minipage}{.5\textwidth}
-\begin{figure}[H]
- \centering
- \scaledimage{0.9}{call_apogee.png} 
-\end{figure}
-\end{minipage}
-\bigskip
-\par
 \begin{fancyquotes}
 "Call Apogee and say Aardwolf."  It's a sign that to this day is something
 that I get asked about a lot.  This is a sign that appears on a wall in a
@@ -850,11 +847,7 @@ This implementation results in many \cw{jmp} instructions. These would kill the 
 \par
 This part of the code relies heavily on unit circle principles. As we need to know how much to go vertically when advancing on the X axis and how much to go horizontally when advancing on the Y axis, the \cw{tan} function is especially useful. This is easier to understand with the unit circle drawn (circle radius $r$ is equal to 1).
 \label{unit_circle}
-\begin{figure}[H]
-\centering
- \input{imgs/drawings/unit_circle.tex}
- \caption{Unit circle.}
-\end{figure}
+\scaleddrawing{0.5}{unit_circle}{Unit circle}
 \par
 When advancing 1 on the X axis, the ray moves up $tan(\theta)$ on the Y axis. The reciprocal is calculated as follows: move 1 on Y axis, move $tan(90-\theta)$ on X axis. To accelerate \cw{cos}, \cw{sin} and \cw{tan} calculations, the engine uses lookup table. See \ref{cossintable} "\nameref{cossintable}" on page \pageref{cossintable}.
 
@@ -879,20 +872,18 @@ When advancing 1 on the X axis, the ray moves up $tan(\theta)$ on the Y axis. Th
 
 \subsubsection{High School Math}
 Before proceeding to the next section (describing what is done with the distance from the player to the wall), here is a short refresher on a piece of high school math which forms the foundation of most calculations in the engine: SOH-CAH-TOA.\\
+
+
+
+\par
+\scaleddrawing{0.6}{soh-cah-toa}{Unit circle}
 \par
  \begin{fancyquotes}
   I'm no super mathematician-- I learned high school math well enough to solve real world problems with it.\\
  \par
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
-
-
 \par
-\begin{figure}[H]
-\centering
- \input{imgs/drawings/soh-cah-toa.tex}
- \caption{SOH-CAH-TOA mnemonics.}
-\end{figure}
 
 
 
@@ -1052,7 +1043,7 @@ This projection (z) is mathematically hard to calculate in one go (especially wi
  \caption{Projected distance \cw{z} it calculated via two sub-components.}
 \end{figure}
 Using CAH gives $A = dx * \cos(\alpha)$ and SOH gives $B = dy * \sin(\alpha) $.\\
-\par
+\pagebreak
 
 Adding them together becomes:
 \par
@@ -1086,7 +1077,7 @@ $z = A + B = dx * \cos(\alpha) - dy * \sin(\alpha) $
   \end{equation*}
 \end{figure}
 \par
-For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy). It would rotate coordinates from map space to player space (where axis orientation is dictated by the player view angle). \label{rotatematrix}
+For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy). It would rotate coordinates from map space to player space (where axis orientation is dictated by the player view angle) as show in figure \ref{spaces2}. \label{rotatematrix}
 \begin{figure}[H]
   \centering
   \begin{equation*}
@@ -1113,16 +1104,19 @@ For people who like equations, the overall operation can be seen as the multipli
 \par
 I personally find the graphic explanation with SOH-CAH-TOA clearer.\\
 \par
-\begin{figure}[H]
-\centering
- \includegraphics[width=\textwidth]{imgs/drawings/spaces.pdf}
- \caption{Translating from map space to player space.}
- \end{figure}
-
-
+\subsection{Fisheye Effect Corrected}
+This correction is enough to give pleasant straight lines for the walls. To demonstrate the difference, pages \pageref{fish_eye_corrected} and page \pageref{wolf3d_7_fullframe} show two versions of the same scene next to each other. First uncorrected (with fisheye) and then with projected distance \cw{z} instead of direct distance \cw{d}.\\
+\par
+\pagebreak
 
 \par
-This correction is enough to give pleasant straight lines for the walls. To demonstrate the difference, here are a few screenshots showing two versions of the same scene next to each other. First uncorrected (with fisheye) and then with projected distance \cw{z} instead of direct distance \cw{d}.\\
+\drawing{spaces2}{Translating from map space to player space.}
+\par
+The map space coordinates of point A and B are transformed in player space coordinate where the player is located at coordinate \cw{0,0}.\\
+
+
+
+
 
  \begin{minipage}{\textwidth}
  
@@ -1131,7 +1125,7 @@ This correction is enough to give pleasant straight lines for the walls. To demo
 \vspace*{0.5cm}\\
 \centering
   \scaledimage{0.9}{fish_eye/fish_eye_corrected.png}
-
+\label{fish_eye_corrected}
 
  \end{minipage}
 
@@ -1144,6 +1138,7 @@ This correction is enough to give pleasant straight lines for the walls. To demo
 \vspace*{0.5cm}\\
 \centering
  \scaledimage{0.9}{wolf3d_7_fullframe.png}
+ \label{wolf3d_7_fullframe}
 \end{minipage}
 
 
@@ -1250,15 +1245,17 @@ This buffering is done because the renderer allows itself to cheat a little when
 Rays are similar if they hit the same wall and result in the same \cw{v} horizontal texture coordinate. In short, this optimization leverages wall magnification.\\
 \par
 The best case for this trick is shown in the following screenshots. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiple pixels horizontally. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
-\begin{figure}[H]
- \centering
- \fullimage{post_optimization_1_show.png}
-\end{figure}
+\par
+ \cfullimage{post_optimization_1_show.png}{}
+\par
 
-This trick is only possible because of an interesting property of the VGA bank layout. If you take a look on page \pageref{vga_layout}, you see a 3D view with its associated bank storage underneath. Each bank looks like a compressed version of the screen because it stores every fourth column, 80 columns to be exact. Bank 0 stores column 0, column 4, column 8, and so on. Bank 1 stores column 1, column 5, column 9 and so on. Column 0 and Column 1 are at the same address in bank 0 and bank 1.
+This trick is only possible because of an interesting property of the VGA bank layout. If you take a look on page \pageref{vga_layout}, you see a 3D view with its associated bank storage underneath.\\
+\par
+Each bank looks like a compressed version of the screen because it stores every fourth column, 80 columns to be exact. Bank 0 stores column 0, column 4, column 8, and so on. Bank 1 stores column 1, column 5, column 9 and so on. Column 0 and Column 1 are at the same address in bank 0 and bank 1.
  \par
   \begin{minipage}{\textwidth}
  
+
 \centering
   \scaledimage{0.9}{vga_layout/wolf3d_7.png}
 \vspace*{0.3cm}

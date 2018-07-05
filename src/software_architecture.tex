@@ -355,7 +355,7 @@ The video manager features two parts:
 \item A high level dedicated to 2D menu drawings.
 \end{itemize}
 \par
-
+TODO: DRAWING FILLER SPACE.
 
 
 
@@ -484,6 +484,8 @@ At the time signon is displayed, the only loaded manager is the Memory Manager. 
 \end{minipage}
 After that screen, the \cw{introscn} variable (using 320x200 bytes = 64,000 bytes) is unloaded from RAM to make more room for runtime.\\
 \par
+\trivia{Notice, in the body of function \cw{SignonScreen}, a reference to "virtual reality" which was added for a company licensing the engine to build arcade VR cabinets. Several decades later, John Carmack would be involved in a VR renaissance with Oculus VR in 2012.}
+\pagebreak
 
 
 
@@ -507,7 +509,11 @@ After that screen, the \cw{introscn} variable (using 320x200 bytes = 64,000 byte
 \subsection{Solving the VGA Problem}
 Chapter \ref{chapter_hardware} \nameref{chapter_hardware} left us with an unresolved issue: all the VGA modes lack double buffering capability.\\
 \par
- The most appealing mode (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. The Chain-4 chipset in the VGA circuitry automatically maps the RAM starting at \cw{A0000h} to the four VRAM banks. 
+ The most appealing mode (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. The Chain-4 chipset in the VGA circuitry automatically maps the RAM starting at \cw{A0000h} to the four VRAM banks. When active, a developer needs not to worry about banks. The screen can be cleared with a simple function as follows.\\
+ \par
+   \begin{minipage}{\textwidth}
+  \lstinputlisting[language=C]{code/clear_vga.c}
+  \end{minipage}
  \par
  \begin{figure}[H]
 \centering

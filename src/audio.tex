@@ -189,28 +189,33 @@ Overall, music is simple to execute because almost everything has been pre-proce
 
 
 \section{Sound Effects}
-Sound effects are where things become complicated. None of the cards use the same format and audio configurations are numerous. The sound settings screen illustrates how complex this is.
+Sound effects are where things become complicated. None of the cards use the same format and audio configurations are numerous. The sound settings screen, featuring now less than three sections illustrates how complex this is.\\
 \par
-\begin{figure}[H]
-\centering
- \fullimage{audio/audio_settings.png}
- \end{figure}
+\trivia{Notice how the sound settings screen on next page overlap. It is possible to select "SoundBlaster" twice in the SFX sections since it appears both in section "Sound Effects" and in section "Digitized Sound". It is far from obvious what to expect if such a configuration is selected.}\\
 \par
-Sounds are stored in three formats. Once for PC Speaker, once for AdLib, and once for SoundBlaster/Disney Sound Source in the \cw{AudioT} archive created by Muse. Sounds are segregated by format but always stored in the same order. This way a sound can be accessed in three formats by using \cw{STARTPCSOUNDS} + \cw{sound\_ID} or \cw{STARTADLIBSOUNDS} + \cw{sound\_ID}.\\
 
+ \cfullimage{audio/audio_settings.png}{Overlapping audio settings.}
+\par
+Sounds are stored in three formats.
+\begin{enumerate}
+\item PC Speaker.
+\item AdLib.
+\item SoundBlaster/Disney Sound Source.
+\end{enumerate}
+They are all package in the \cw{AudioT} archive created by Muse. Sounds are segregated by format but always stored in the same order. This way a sound can be accessed in three formats by using \cw{STARTPCSOUNDS} + \cw{sound\_ID} or \cw{STARTADLIBSOUNDS} + \cw{sound\_ID}.\\
+\par
+Strangely, only PC speaker and AdLib sounds are stored in the \cw{AUDIOT.*} files; the digitized sounds are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used. The authors of this code were asked, but it seems nobody can remember why.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/muse_header.c}
 \end{minipage}
-\par
-Strangely, only PC speaker and AdLib sounds are stored in the \cw{AUDIOT.*} files; the digitized sounds are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used. The authors of this code were asked, but it seems nobody can remember why.\\
+\pagebreak
 
-\par
 
 
 
 \subsection{Sound Effects: AdLib}
-AdLib only has an FM synthesizer, with sounds played on its Channel 0. Sounds are played the same way as music via IMF, as previously described.
+AdLib only has an FM synthesizer, with sounds played on its Channel 0. Sounds are played the same way as music via IMF, as previously described.\\
 
 
 
@@ -241,7 +246,7 @@ Even though the sampling rate is 7000Hz, the sound system needs not to run at su
 
 \par
 \subsection{SoundBlaster System: PCM}
-Since the SoundBlaster also supports 7000Hz PCM, it uses the same sound effects files as the Disney Sound Source. However, it also features a DSP which is DMA capable. As a result, the CPU does not have to waste cycles transferring data. The audio system has little to do and call allow itself to run in "slow" mode at 140Hz. It wakes up to point the DMA to the right memory address each time it crosses the end of a 16K segment via a DMA routine callback.
+Since the SoundBlaster also supports 7000Hz PCM, it uses the same sound effects files as the Disney Sound Source. However, it also features a DSP which is DMA capable. As a result, the CPU does not have to waste cycles transferring data. The audio system has little to do and call allow itself to run in "slow" mode at 140Hz. It wakes up to point the DMA to the right memory address each time it crosses the end of a 16K segment via a DMA routine callback.\\
 \par
 
 
