@@ -424,8 +424,9 @@ This optimization still results in a 30\% overall speed increase.\\
 \subsection{Clearing the Screen}
 At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. To create this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. Since values are written 16 bits at a time, it can write 8 pixels at a time.\\ 
 \par
-DRAWING 320x200 with top section = 32,000 pixels, botton section = 32,000 pixels on the right : 32,000/8 writes ; 32,000/8 writes
-\par
+\scaledimage{1}{clear_screen_pixels}
+
+
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
  \end{minipage}
@@ -660,19 +661,27 @@ In contrast, VSD is an open-ended problem, and there are dozens of approaches cu
  \bigskip \\
 \textbf{Michael Abrash - Graphics Programming Black Book}
  \end{fancyquotes}\\
- \par
- TRIIVIA ABOUT MICJAEL ABREASH LEGEND AND WHY THIS BOOK IS CALLED THE BLACK BOOK.\\
- \par
-VSD is not only complicated to do right, it is also hard to do fast. It is easy to understand with a small example where objects are free form with no alignment, as follows.
-
 \par
+\begin{wrapfigure}[17]{r}{0.45\textwidth} 
+\vspace{-10pt}
+\scaledimage{0.45}{gpbb.png} 
+\end{wrapfigure} 
+\bu{Trivia: } In the early 90s, Michael Abrash writings were one of the rare source of high quality information when it came to Computer Graphics and Assembly programming.\\
+\par
+He published two highly regarded books ("Zen of Assembly Language" in 1990 and "Zen of Code Optimization" in 1994) but it is though his column "Ramblings in Realtime" published monthly in Dr. Dobb's Journal that he achieved notoriety.
+ \\
+\par
+ In 1997 most of Michael Abrash work plus new articles about Quake engine were compiled into the "Graphics Programming Black Book". The title and dimension of this book are an homage to Mr Abrash's masterpiece.
+
+
+
+
+
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/situation.pdf}
- 
+\includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/situation.pdf} 
 \end{figure}
-
-In a world with no constraints, it is difficult to find the intersection of a ray with an object.\\
+VSD is not only complicated to do right, it is also hard to do fast. It is easy to understand with a small example where objects are free form with no alignment, as follows. In a world with no constraints, it is difficult to find the intersection of a ray with an object.\\
 \par
 In the example above, a valid approach would be to iterate over all objects in the world and perform ray marching, which consists of checking if a ray intersects objects at a regular interval. However, this is very CPU intensive and would not be fast enough with fixed point. Not to mention some objects could slip between the regular intervals, making VSD inaccurate.
 \begin{figure}[H]
@@ -682,7 +691,9 @@ In the example above, a valid approach would be to iterate over all objects in t
 \end{figure}
 
 
-In a world with some constraints the problem becomes much simpler. If a map is made of aligned square blocks evenly distributed across a grid, a solution yielding 100\% accuracy and low runtime overhead is to check for 'hits` only when a ray crosses the grid. This was the choice made for Wolfenstein 3D, and explains why the game can only draw perpendicular walls of 8 feet by 8 feet by 8 feet.\\
+In a world with some constraints the problem becomes much simpler. If a map is made of aligned square blocks evenly distributed across a grid, a solution yielding 100\% accuracy and low runtime overhead is to check for 'hits` only when a ray crosses the grid.\\
+\par
+ This was the choice made for Wolfenstein 3D, and explains why the game can only draw perpendicular walls of 8 feet by 8 feet by 8 feet.\\
 \par
 \begin{figure}[H]
 \centering
@@ -701,12 +712,25 @@ There was a clear performance cost to it - doing 320 traces through a tile map a
 If you made extremely jagged block maps that would turn into many dozen independent wall segments, the ray casting could start to look like a good performance choice, but few scenes were even close to that.  This is exactly the same ray tracing versus rasterization performance tradeoff that is still being made today, but now it is "how many tens of millions of triangles per frame to ray tracing break-even" instead of "how many dozen wall segments".
  \bigskip \\
 \textbf{John Carmack - Programmer}
- \end{fancyquotes}
-
+ \end{fancyquotes}\\
 \par
-INSER HERE STORY ABOUT WOLF3D SNES USING A BSP.\\
 
+
+\begin{wrapfigure}[14]{r}{0.45\textwidth} 
+\vspace{-10pt}
+\scaledimage{0.45}{e1m1.png} 
+\end{wrapfigure} 
+\bu{Trivia :} The cost of raycasting would end up being too much for the tiny 5A22 CPU when porting Wolfenstein 3D to Super Nintendo.\\
+\par
+ The first version of the port reached an unacceptably low framerate which threatened the port.\\
  \par
+ id was faced with the choice of overcoming the problems with "wall-span rendering" or cancel the SNES version altogether. He ended up using Binary Space Partitioning for the first time, a technique he later used for Doom.
+
+ 
+
+
+
+
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/dda.pdf}
@@ -714,7 +738,7 @@ INSER HERE STORY ABOUT WOLF3D SNES USING A BSP.\\
 \par
 
 
-DDA is so fast because once the first intersection of a ray with an axis is known (A for Y axis and B for X axis), all subsequent intersections' coordinates are two cheap additions away.
+DDA is so fast because once the first intersection of a ray with an axis is known (A for Y axis and B for X axis), all subsequent intersections' coordinates are two additions away.
 \par
 
 
@@ -752,7 +776,8 @@ $E = (X_{B} + xstep, Y_{B} + 1)$\\
     \scalebox{1.3}{
 $D = (X_{E} + xstep, Y_{E} + 1)$\\
 }
-\end{equation*}
+\end{equation*}\\
+\par
 Note that $ystep$ and $xstep$ are simple lookups into the \cw{tan} array since $xstep=tan(\theta)$ and $ystep=tan(90-\theta)$ where $\theta$ is the angle of the ray in map coordinates\footnote{A visual reminder of how the unit circle works can be found on page \pageref{unit_circle}.}.\\
 \par
 \begin{figure}[H]
@@ -774,7 +799,8 @@ With maps being quick and easy to draw, a contest was planned. Players who found
  \caption{E2M8 maze.}
 \end{figure}
 \par
-\begin{wrapfigure}[6]{r}{0.4\textwidth}
+\begin{wrapfigure}[8]{r}{0.4\textwidth}
+\vspace{-10pt}
 \scaledimage{0.4}{call_apogee.png} 
 \end{wrapfigure}
 However, as players reverse engineered the map format and cheat sites emerged, the contest was called off. The sign was replaced with a skeleton in all games shipped in 1992.\\

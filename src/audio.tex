@@ -21,14 +21,13 @@ The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footn
 \par
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.5\textwidth]{imgs/drawings/heatbeats.pdf}
+  \includegraphics[width=.65\textwidth]{imgs/drawings/heatbeats.pdf}
   \caption{Interactions between PIT and PIC.}
 \end{figure}
 \par
 
-The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at Offset 8 (resulting in mapping to software interrupts INT08 to INT0F).\\
+The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at Offset 8 (resulting in mapping to software interrupts INT08 to INT0F). \pagebreak
 
-\par
 \begin{figure}[H]
 	\centering
 	\begin{tabularx}{\textwidth}{ l p{.5\textwidth}  }
@@ -69,7 +68,7 @@ The engine can decide at what frequency to be interrupted, depending on the type
 \begin{enumerate}
 \item \cw{SDL\_t0SlowAsmService} when running at 140Hz, to play sound effects on the beeper via PWM and PCM audio effects on SoundBlaster.
 \item \cw{SDL\_t0FastAsmService} when running at 700Hz, to play FM music, FM sound effects on AdLib, and PCM audio effects on Disney Sound Source.
-\item \cw{SDL\_t0ExtremeAsmService} when running at 7000Hz, to play PCM sound in an alternate way. This mode was never enabled in shipping products, see page \pageref{pcs_pcm} for a detailed explanation.
+\item \cw{SDL\_t0ExtremeAsmService} when running at 7000Hz, to play PCM sound in an alternate way. This mode was never enabled in shipping products (see page \pageref{pcs_pcm}).
 \end{enumerate}
 \par
 
