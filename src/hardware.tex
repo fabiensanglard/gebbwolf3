@@ -466,7 +466,7 @@ The 20 bit address bus of real mode limits the addressable RAM to 1MiB. Machines
 \par
 Unfortunately extended memory access was not standardized. Users could load either of the drivers provided with DOS:
 \begin{itemize}
-\item Expanded Memory Specification (EMS) drivers: EMM368.EXE.
+\item Expanded Memory Specification (EMS) drivers: EMM386.EXE.
 \item eXtended Memory Specification (XMS) drivers: HIMEM.SYS.
 \end{itemize}
 
@@ -534,7 +534,7 @@ At this point, if you are puzzled by the CPU and its design you are not alone. O
 \bu{Trivia :} 640KiB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745KiB, which obviously doesn't fit in Conventional Memory. The trick is to use a technique of "overlay" pages where only a few overlays are loaded when the game starts. When the CPU is about to reach the end of an overlay, special instructions (inserted by the compiler) load the next overlays from HDD and setup a \cw{jmp} instruction for the CPU to follow. The technique can be seen as an exercise of graph paging similar to how Gromit places rails in front of an ongoing miniature train as he is sitting on top of it in "The Wrong Trousers".\\
 \par
 
-\textbf{\underline{Trivia :}}  As of 2016, more than thirty five years after the introduction of the 8086, in the name of backward compatibility, all PCs in the world still start in real mode. A bootloader switches them to protected mode, loads the kernel, and then actual startup can begin.
+\textbf{\underline{Trivia :}}  As of 2017, more than thirty five years after the introduction of the 8086, in the name of backward compatibility, all PCs in the world still start in real mode. A bootloader switches them to protected mode, loads the kernel, and then actual startup can begin.
 
 
 
@@ -744,7 +744,7 @@ The BIOS can be called to configure the VGA as follows.
 13h           & VGA graphic   & 320x200         & 256             & A0000h                                \\ \hline
 \end{tabularx}
 \end{table}
-\caption{VGA Modes available.}\label{fig:vga_modes}
+%\caption{VGA Modes available.}\label{fig:vga_modes}
 \label{vga-modes-available}
  \end{figure}
  
@@ -757,7 +757,7 @@ To write to the VRAM, the RAM's 1MiB address space maps 64KiB starting as indica
 \par
 
  \subsection{VGA Programming: Mode 12h}
- The first mode commonly considered for game programming is mode \cw{12h}. It offers a resolution of 640x480 at 70hz with 16 colors. Each pixel is encoded in 4 bits (a nibble) spread across the four banks.\\
+ The first mode commonly considered for game programming is mode \cw{12h}. It offers a resolution of 640x480 at 60hz\footnote{Oddly, this mode is the only one to work at 60Hz. All others run at 70Hz.} with 16 colors. Each pixel is encoded in 4 bits (a nibble) spread across the four banks.\\
 \par
 
 
@@ -1106,7 +1106,7 @@ Finally, a SoundBlaster sound card connected via the ISA bus provided a new port
 \label{fig:gamePort}
 \end{figure}
 
-\bu{Trivia :} The CRT monitor was connected to the VGA card via a DE15 port. More than 20 years later manufacturers are still trying to get ride of the "VGA port" as it is now commonly called. It looked a lot like a serial port and newcomers often damaged it by forcing a mouse into it.
+\bu{Trivia :} The CRT monitor was connected to the VGA card via a DE15 port. More than 20 years later manufacturers are still trying to get rid of the "VGA port" as it is now commonly called. It looked a lot like a serial port and newcomers often damaged it by forcing a mouse into it.
  \begin{figure}[H]
 \centering
 \includegraphics[width=0.14\textwidth]{imgs/drawings/DE15_VGA.eps}

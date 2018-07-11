@@ -14,7 +14,7 @@ Alternatively, you can use \cw{github.com} where id Software migrated all of its
 \tcode{wolf3d_github.txt}\\
 \par
 \section{First Contact}
-Once downloaded and decompressed, the archive \codeword{woldsrc.zip} contains another self-extracting PKZIP archive. It was a convenience back in the day, but is not practical now and is easy to deflate.\\
+Once downloaded and decompressed, the archive \codeword{wolfsrc.zip} contains another self-extracting PKZIP archive. It was a convenience back in the day, but is not practical now and is easy to deflate.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting{code/unzip.txt}
@@ -29,9 +29,11 @@ Once downloaded and decompressed, the archive \codeword{woldsrc.zip} contains an
 \end{minipage}
 
 \par
- The code is 90\% in C with assembly\footnote{All the assembly in Wolf3D is done with TASM (a.k.a Turbo Assembler by Borland). It uses Intel notation where the destination is before the source: \cw{instr} \cw{dest} \cw{source}.} for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}. Lines of code (SLOC) is not a meaningful metric against a single codebase but excels when it comes to extracting proportions.\\
+ The code is 90\% in C with assembly\footnote{All the assembly in Wolf3D is done with TASM (a.k.a Turbo Assembler by Borland). It uses Intel notation where the destination is before the source: \cw{instr} \cw{dest} \cw{source}.} for bottleneck optimizations and low level I/O such as video or audio\footnote{id Software would not switch to C++ until Doom 3 around 2000.}.\\
  \par
-  Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Google's Chrome browser is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
+   Lines of code (SLOC) is not a meaningful metric against a single codebase but excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Google's Chrome browser is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
+\par
+The source code release was overwhelmingly well received by gamer and programmers. It was something no other game studio had done before.\\
 \par
  \begin{fancyquotes}
    We didn't have spell checkers in our editors back then, and I always had poor spelling.  The word "collumn" appears in the source code dozens of times.  After I released the source code, one of the emails that stands out in memory read:

@@ -53,7 +53,7 @@ This is a pretty standard design for an engine from the early 90s. However, it h
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/replay.pdf}
- \caption{The second frame too longer to be rendered during the replay. No inputs are available for the player. Replay is now out of sync.}
+ \caption{The second frame took longer to be rendered during the replay. No inputs are available for the player. Replay is now out of sync.}
  \end{figure}
 \par
 To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulates events at fixed interval (\cw{DEMOTICK} = 4)\footnote{70/4 = 17.5, the machine used to record the demo ran at 17 fps. Probably a high end 386.}. This hack resulted in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
@@ -1257,20 +1257,20 @@ A simple raycaster with compiled scalers would have looked like this.\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/naive_raycaster_pseudocode.c}
-\end{minipage}
+\end{minipage}\\
 \par
 Instead, the engine buffers what to draw as follows.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wolf3d_raycaster_pseudocode.c}
-\end{minipage}
+\end{minipage}\\
 
 \par
 This buffering is done because the renderer allows itself to cheat a little when two rays are deemed similar enough. If consecutive rays share characteristics, they are grouped together and drawn at the same height, regardless of their exact distance from the player's point of view. This process introduces a little distortion but unlocks a formidable speed increase: the engine can write multiple columns on the screen, up to eight pixels in 3 writes.\\
 \par
 Rays are similar if they hit the same wall and result in the same \cw{v} horizontal texture coordinate. In short, this optimization leverages wall magnification.\\
 \par
-The best case for this trick is shown in the following screenshots. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiple pixels horizontally. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
+The best case for this trick is shown in figure \ref{post_optimization_1_show.png}. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiple pixels horizontally. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
 \par
  \cfullimage{post_optimization_1_show.png}{}
 \par
@@ -1498,7 +1498,7 @@ Testing if a ray is stopped by a door or not costs almost nothing:\\
     \scalebox{1.3}{
 $A_{X} + \dfrac{ystep}{2} < doorposition[doorIndex]$\\
 }
-\end{equation*}
+\end{equation*}\\
 \par
  In case of success, the ray traverses the wall tile and continues being tested against the grid. If the ray is a hit, the coordinates of the point of interception are calculated as $Intercept_{X} = A_{X} + \dfrac{ystep}{2}$ and $Intercept_{Y} = A_{Y} + \dfrac{TILE\_SIZE}{2}$ and passed to the renderer.
 
@@ -1622,7 +1622,7 @@ Sprites are special, however. Walls fill the full 64x64 space and are fully opaq
    \end{minipage}
 
 \par
-
+\vspace{4mm}
 \bu{Trivia :} Sprites with a lot of transparency (such as the two shown previously) would later turn out to be a major fillrate issue with the hardware accelerated renderer for the iOS port.\\
 \par
 \begin{fancyquotes}
