@@ -118,9 +118,14 @@ Every system in the engine uses this variable to pace itself. The renderer will 
 The audio system is complex because of the fragmentation of audio devices it can deal with. The early 90s was a time before Windows 95 harnessed all audio cards under the DirectSound common API. Each development studio had to write their own abstraction layer and id Software was no exception. At a high level, the Sound Manager offers a lean API divided in two categories: one for sounds and one for music.\\
 \par
 \begin{minipage}{\textwidth}
+\lstinputlisting[language=C,morekeywords={longword}]{code/sound1.h}
+\end{minipage}
+\par
+\begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/sound.h}
 \end{minipage}
 \par
+\vspace{10pt}
 But in the implementation lies a maze of functions directly accessing the I/O port of four sound outputs: AdLib, SoundBlaster, Buzzer, and Disney Sound Source. All belong to one of the three supported families of sound generators: FM Synthesizer (Frequency Modulation), PCM (Pulse Code Modulation) or PWM (Pulse Width Modulation).\\
 
 
@@ -387,7 +392,7 @@ The problem of this method is to find a way to fit 8 bit samples into a 1 bit DA
 \begin{figure}[H]
   \centering
   \scaledimage{0.98}{audio/mein_liben.png}
-  \caption{Mein Liben PCM 8 bit. You can clearly see the three syllables.}
+  \caption{Mein Leben PCM 8 bit. You can clearly see the three syllables.}
 \end{figure}
 \par
 
@@ -404,10 +409,10 @@ The audio system goes for a surprisingly straightforward solution. It set itself
 \begin{figure}[H]
   \centering
   \scaledimage{0.98}{audio/mein_liben_1_bit.png}
-  \caption{Mein Liben resampled to 1 bit.}
+  \caption{Mein Leben resampled to 1 bit.}
 \end{figure}
 \par
-The visual representation of a 1 bit per sample "Mein Liben" PCM looks like mashed potatoes but it sounds remarkably good. You can hear it thanks to a passionate YouTuber named Dafe Allen who recompiled the engine with PCM playback enabled\footnote{"Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects": "https://www.youtube.com/watch?v=1BtlsjJRnFU".}.\\
+The visual representation of a 1 bit per sample "Mein Leben" PCM looks like mashed potatoes but it sounds remarkably good. You can hear it thanks to a passionate YouTuber named Dafe Allen who recompiled the engine with PCM playback enabled\footnote{"Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects": "https://www.youtube.com/watch?v=1BtlsjJRnFU".}.\\
 \par
 As good as it sounds, this codepath shipped but was never enabled. According to John Carmack overhead was too much a problem. Jim Leonard provided a more in depth explanation.\\
 \par

@@ -937,7 +937,7 @@ This drawing is all the math you need to understand the fish eye correction and 
 
 
 \subsubsection{Calculating Column Heights}
-Once the intersection between a ray and a wall is found from coordinate (\cw{viewx},\cw{viewy}) to (\cw{xintercept},\cw{yintercept}), it is time to calculate how tall the column of pixels for this ray should be. This happens in the function \cw{CalcHeight}.\\
+Once the intersection between a ray and a wall is found from coordinate (\cw{viewx}, \cw{viewy}) to (\cw{xintercept}, \cw{yintercept}), it is time to calculate how tall the column of pixels for this ray should be. This happens in the function \cw{CalcHeight}.\\
 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/CalcHeight.c}
@@ -983,6 +983,7 @@ In this drawing the player is located at \cw{viewpoint} with a view angle \begin
 
     \begin{figure}[H]
     \centering
+    \vspace{-10pt}
       \fullimage{fish_eye/bad_mild.png}
      \caption{Fish eye effect: Mild}. \label{fig:mips}
      \end{figure} 
@@ -1374,40 +1375,44 @@ In the worst case scenario, the engine needs to draw eight columns of pixels, un
  \end{figure}
 
 
-A better case where two passes with mask set to 15 then 3 allows drawing 6 columns of pixels :\\
- \par
- \begin{minipage}{\textwidth}
-\lstinputlisting[language=C]{code/pass_0_5.c}
-\end{minipage}
-\par
-   \begin{figure}[H]
- \centering
- \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation5.pdf}
+% A better case where two passes with mask set to 15 then 3 allows drawing 6 columns of pixels :\\
+%  \par
+%  \begin{minipage}{\textwidth}
+% \lstinputlisting[language=C]{code/pass_0_5.c}
+% \end{minipage}
+% \par
+%    \begin{figure}[H]
+%  \centering
+%  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation5.pdf}
   
- \end{figure}
+%  \end{figure}
 
 
 
 
 
 
-To visualize the performance gain in real cases, the engine has been modified to draw columns of pixels which were written "for free" thanks to the VGA mask manipulation in pink. We can see the performance improvement is significant, with 50\% of write operations avoided.
+To visualize the performance gain in real cases, the engine has been modified to draw columns of pixels which were written "for free" thanks to the VGA mask manipulation in pink (page \pageref{wolf3d_in_pink} and \pageref{wolf3d_in_pink2}). We can see the performance improvement is significant, with 50\% of write operations avoided.
+
+\trivia{Even though its was originally distributed exclusively as a shareware, sales called for a more "traditional" distribution. GT Interactive picked it up in 1993 and sold it in a nice box, along with the "Official Hint Manual". In 1995, the game was re-released on CD-ROM}.\\
+\par
+\fullimage{cover.png}
+
 
 \begin{minipage}{\textwidth}
  \centering
- \scaledimage{0.9}{post_optimization_1_show.png}
+ \scaledimage{0.9}{post_optimization_1_show.png} \label{wolf3d_in_pink}
 \vspace*{0.5cm}\\
  \scaledimage{0.9}{post_optimization_1_pink_show.png}
 
 \end{minipage}
 
 
-
 \par
 
 \begin{minipage}{\textwidth}
  \centering
- \scaledimage{0.9}{post_optimization_2_show.png}
+ \scaledimage{0.9}{post_optimization_2_show.png} \label{wolf3d_in_pink2}
  \vspace*{0.5cm}\\
  \scaledimage{0.9}{post_optimization_2_pink_show.png}
 \end{minipage}
@@ -1439,7 +1444,9 @@ to render.\\
 \subsubsection{Texturing}
 A subtle but extremely efficient trick used to improve the quality of the wall rendering is pre-baked light texturing. Wall texture assets were generated twice by the artists: once lit and once unlit.\\
 \par
-At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (looking at the map from above) on the Y axis, the engine uses a lit texture. If the ray hits an horizontal wall (on the X axis), it uses the unlit version of the same texture. The difference is not obvious at first, but with the same scene rendered side by side with and without this effect, the visual difference is striking, giving the scene more realism because of this directional-light effect.\\
+At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (looking at the map from above) on the Y axis, the engine uses a lit texture. If the ray hits an horizontal wall (on the X axis), it uses the unlit version of the same texture.\\
+\par
+ The difference is not obvious at first, but with the same scene rendered side by side with and without this effect, the visual difference is striking, giving the scene more realism because of this directional-light effect.\\
 \par
   \begin{figure}[H]
 \centering
@@ -1658,7 +1665,7 @@ The occlusion array is written to during raycasting.\\
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_population.c}
 \end{minipage}
-While drawing sprites, the occlusion array is read. If the height of a wall is greater than that of a sprite, it means the wall is is front of the sprite and the full sprite rendition is skipped.\\
+While drawing sprites, the occlusion array is read. If the height of a wall is greater than that of a sprite, it means the wall is in front of the sprite and the full sprite rendition is skipped.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_usage.c}
@@ -1933,8 +1940,6 @@ Perfect sound propagation is a simplistic model. When a gun is fired, all enemie
   \end{flushright}
   \end{minipage}
 \end{minipage}
-\noindent
-\\
 
 
 \par

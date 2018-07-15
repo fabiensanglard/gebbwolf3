@@ -83,7 +83,7 @@ A lot of friction was present since manufacturers had not embraced the gaming in
 
 
  \par
-\textbf{\underline{Trivia :}} Two other companies produced Intel clones: AMD and Cyrix. Their mediocre performance did not justify the lower cost and as a result they never gained significant market share. Almost all PCs featured an Intel CPU. Interestingly, AMD evolved to become a serious challenger\footnote{The history of AMD vs Intel litigations could be the subject of its own book.} while Cyrix merged with National Semiconductor in 1997.\\
+\textbf{\underline{Trivia :}} Two other companies produced Intel 386 clones: AMD and Cyrix. Their mediocre performance did not justify the lower cost and as a result they never gained significant market share. Almost all PCs featured an Intel CPU. Interestingly, AMD evolved to become a serious challenger\footnote{The history of AMD vs Intel litigations could be the subject of its own book.} while Cyrix merged with National Semiconductor in 1997.\\
 \par
 
 \subsection{The Intel 80386}
@@ -497,7 +497,7 @@ The EMS driver opens a window beyond the addressable RAM, as shown on page \page
 
 
 \subsubsection{EMS vs XMS}
-How the drivers achieved the impossible (after all how do you access RAM past 1 MiB with 20 bits pointer?) and what were the trade-off of each approach is a fascinating topic explained in detail in Annexe \ref{ems_vs_xms} on page \pageref{ems_vs_xms}.\\
+How the drivers achieved the impossible (after all how do you access RAM past 1 MiB with 20 bits pointer?) and what were the trade-off of each approach is a fascinating topic explained in detail in Appendix \ref{ems_vs_xms} on page \pageref{ems_vs_xms}.\\
 \par
  If you prefer not to dive into too much details, just remember that EMS mapping approach was several time faster than XMS copying approach. This speed consideration considerably impacted the memory management of Wolfenstein 3D.
 
@@ -659,9 +659,9 @@ The most surprising part of the architecture is obviously the framebuffer. Why h
 \par
 Part of the explanation comes from backward compatibility. EGA, the predecessor of VGA had only 64KiB of RAM. It was very easy to design a backward compatible system that used only one bank of 64KiB.\\
 \par
-The more significant reason was RAM latency and the need for minimum bandwidth. A CRT running at 70Hz and displaying 640x480 in 16 colors needs a pixel every $\frac{1}{640*480*70}$th of a second. At this resolution, one pixel is encoded with 4 bits. Each nibble is translated to a 666 RGB color by the DAC. That encoding divides bandwidth by $4.5$, but still requires one byte every 93 nano-seconds.\\
+The more significant reason was RAM latency and the need for minimum bandwidth. A CRT running at 60Hz and displaying 640x480 in 16 colors needs a pixel every $\frac{1}{640*480*60}$th of a second. At this resolution, one pixel is encoded with 4 bits. Each nibble is translated to a 666 RGB color by the DAC. That encoding divides bandwidth by $4.5$, but still requires one byte every 108 nano-seconds.\\
 \par
- Unfortunately, RAM access latency was 200ns - not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168.} to refresh the screen at 70hz, so the DAC would starve. If latency could not be reduced, the throughput could still be improved by reading from four banks at a time. Reading in parallel gave an amortized RAM latency of 200/4 = 50ns, which was fast enough.\\
+ Unfortunately, RAM access latency was 200ns - not nearly fast enough\footnote{Computer Graphic: Principles and Practice 2nd Edition, page 168.} to refresh the screen at 60hz, so the DAC would starve. If latency could not be reduced, the throughput could still be improved by reading from four banks at a time. Reading in parallel gave an amortized RAM latency of 200/4 = 50ns, which was fast enough.\\
 \par
 Keep in mind that this architecture reduced the penalty of read operations, but plotting a pixel in the framebuffer with a write operation was still slow. Writing to the VRAM as little as possible was crucial to maintaining a decent framerate. 
 
@@ -786,7 +786,7 @@ The only good thing about this mode is that it has square pixels. The 640x480 as
 \begin{itemize}
 \item No double buffer: 640X480/2 = 0x25800 bytes which is more than half the 256KiB (0x40000) of VRAM available.
 \item High resolution means more pixels, which means more calculations and more drawing.
-\item 16 color graphics look really, REALLY ugly.
+\item 16 color graphics look really, REALLY ugly\footnote{The exception to the rule is "Dark Seed", an adventure game developed and published by Cyberdreams in 1992. Inspired by H. R. Giger artworks, it is notorio for its gorgeous visuals in 640x480, 16 colors.}.
 \end{itemize}
 
  \begin{figure}[H]
@@ -814,11 +814,11 @@ In figure \ref{wolf16}, Wolfenstein 3D opening screen as it would have been rend
 
 When writing or reading a value V at address K in RAM, the Chain-4 breaks the address down into two parts:
 \begin{itemize}
-\item The 2 lower bits are used to configure the mask automatically. 0x00 goes to bank 0, 0x01 to bank 1, 0x10 to bank 2 and 0x11 to bank 3.
+\item The 2 lower bits are used to configure the mask automatically. 0b00 goes to bank 0, 0b01 to bank 1, 0b10 to bank 2 and 0b11 to bank 3.
 \item The 14 higher bits are right shifted by two bits and used as an offset in the bank.
 \end{itemize}
   \par
-  For example, writing at 0xABF13 in RAM would result in writing in bank 3 at offset 0xBF13 >> 2 = 2FC4. Since this is all hardwired in the Chain-4, this extra work is fast and totally invisible to the user.
+  For example, writing at 0xABF13 in RAM would result in writing in bank 3 at offset 0xABF13 >> 2 = 0x2AFC4. Since this is all hardwired in the Chain-4, this extra work is fast and totally invisible to the user.
  \begin{figure}[H]
 \centering
       \includegraphics[width=\textwidth]{imgs/drawings/mode_13h_example.pdf}
@@ -1127,7 +1127,7 @@ Finally, a SoundBlaster sound card connected via the ISA bus provided a new port
 \section{Summary}
 To say a PC was difficult to program for games would be an understatement. It was a nightmare. The CPU was good at doing the wrong thing, the best graphic interface allowed neither double buffering nor square pixels, the memory model only allowed 1 standard MiB with an address composed of two separate 16 bit registers, and the \cw{near}/\cw{far} pointers forbade using standard C. Last but not least, the default sound system could only produce square waves and the people who did have a sound card installed could have any of the three major brands.\\
 \par
-Yet despite all these unfavorable conditions, teams of developers gathered to tame the beast and unleash its power to gamers. One of these called themselves id Software\footnote{They originally called themselves Ideas From the Deep but then decided to shorten it to simply id, which stands for "in demand," and is pronounced as in "did" or "kid." The name also refers to id, the part of the brain that behaves by the pleasure principle in Freudian psychology.}.
+Yet despite all these unfavorable conditions, teams of developers gathered to tame the beast and unleash its power to gamers. One of these called themselves id Software\footnote{They originally called themselves Ideas From the Deep but then decided to shorten it to simply id, which stands for "in demand", and is pronounced as in "did" or "kid." The name also refers to id, the part of the brain that behaves by the pleasure principle in Freudian psychology.}.
 \end{document}
 
 

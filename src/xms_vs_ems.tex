@@ -56,7 +56,7 @@ Because the size of data to manipulate was arbitrary, \cw{HIMEM.SYS} could not u
 \par
  On a 286 it was more complicated. Intel architects never envisioned programmers would want to go back to real mode from protected mode. As a result, there was no documented way to transition from protected mode to real mode.\\
  \par
-  That did not stop Microsoft engineers from trying to do it anyway. They figured they could use the soft reboot provided via the keyboard combination of Control-Alt-Del. When detecting this pattern the i8042 keyboard controller resets the CPU and asks the BIOS to initialized the machine. This operation takes several seconds and would not have been usable. By writing a special value to a special memory location it was possible to prevent the long BIOS initialization and "just" reset the CPU. This trick effectively transitioned a 286 from protected mode to real mode but it was slow and took a full millisecond to complete.\\
+  That did not stop Microsoft engineers from trying to do it anyway. They figured they could use the soft reboot provided via the keyboard combination of Control-Alt-Del. When detecting this pattern the i8042 keyboard controller resets the CPU and asks the BIOS to initialize the machine. This operation takes several seconds and would not have been usable. By writing a special value to a special memory location it was possible to prevent the long BIOS initialization and "just" reset the CPU. This trick effectively transitioned a 286 from protected mode to real mode but it was slow and took a full millisecond to complete.\\
  \par
   A different (and faster) technique surfaced later, involving generating a triple fault (faulting in a fault handler by invalidating the IDTR and causing an interrupt).\\
   \par

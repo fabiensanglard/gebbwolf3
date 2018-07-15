@@ -15,6 +15,5 @@ void DemoLoop() {
         PlayLoop () ; // 3D renderer (action)
         StopMusic ();
     }
-  }    
-  Quit("Demo loop exited???");
+    Quit("Demo loop exited???");
 }
