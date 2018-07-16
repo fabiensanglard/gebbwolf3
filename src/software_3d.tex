@@ -1271,24 +1271,27 @@ This buffering is done because the renderer allows itself to cheat a little when
 \par
 Rays are similar if they hit the same wall and result in the same \cw{v} horizontal texture coordinate. In short, this optimization leverages wall magnification.\\
 \par
-The best case for this trick is shown in figure \ref{post_optimization_1_show.png}. The player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiple pixels horizontally. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
+The best case for this trick is shown in the next screenshot where the player is as close as possible to a wall. In this example, the wall completely covers the left part of the screen. The magnification is obvious given how texels spread across multiple pixels horizontally. In this case, multiple consecutive rays hit a texture at the same horizontal coordinate.\\
 \par
- \cfullimage{post_optimization_1_show.png}{}
+ \fullimage{post_optimization_1_show.png}
 \par
 
-This trick is only possible because of an interesting property of the VGA bank layout. If you take a look on page \pageref{vga_layout}, you see a 3D view with its associated bank storage underneath.\\
+This trick is only possible because each columns on screen are fully stored in a single VGA bank. For a screen alternating columns of plain colors green blue, red, and pink, all green colors are in bank 0. All blue columns are in bank 1 and so on.\\
 \par
-Each bank looks like a compressed version of the screen because it stores every fourth column, 80 columns to be exact. Bank 0 stores column 0, column 4, column 8, and so on. Bank 1 stores column 1, column 5, column 9 and so on. Column 0 and Column 1 are at the same address in bank 0 and bank 1.
+\fullimage{lines.png}
  \par
+  On page \pageref{vga_layout} you can see a 3D view with its associated bank storage underneath. Each bank looks like a compressed version of the screen because it stores every fourth column. Bank 0 stores column 0, column 4, column 8, and so on. Bank 1 stores column 1, column 5, column 9 and so on. Column 0 and Column 1 are at the same address in bank 0 and bank 1.\\
+\par
+
   \begin{minipage}{\textwidth}
  
 
 \centering
-  \scaledimage{0.9}{vga_layout/wolf3d_7.png}
+  \scaledimage{0.86}{vga_layout/wolf3d_7.png}
 \vspace*{0.3cm}
 \label{vga_layout}
 \centering
-  \scaledimage{0.9}{vga_layout/wolf3d_7_bank.png}
+  \scaledimage{0.86}{vga_layout/wolf3d_7_bank.png}
 
 
  \end{minipage}

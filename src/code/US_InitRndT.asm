@@ -1,3 +1,4 @@
+
 ;=================================================
 ;
 ; void US_InitRndT (boolean randomize)
@@ -6,7 +7,9 @@
 ;
 ;=================================================
 
+
 PROC	US_InitRndT randomize:word
+
 	uses	si,di
 	public	US_InitRndT
 

@@ -1,3 +1,11 @@
+/*
+=================
+= VL_SetPalette
+= If fast palette setting has been tested for, it is used
+= (some cards don't like outsb palette setting)
+=================
+*/
+
 void VL_SetPalette (byte far *palette) {
   asm mov dx,PEL_WRITE_ADR
   asm mov al,0
@@ -27,5 +35,4 @@ setloop:
 done:
   asm mov ax,ss
   asm mov ds,ax
-
 }

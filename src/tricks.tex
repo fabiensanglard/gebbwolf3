@@ -137,12 +137,17 @@ There is an alternate way to represent a LFSR called "Galois", which allows one 
 
 
 \subsection{Palette}
-Even though it limited the graphic capabilities of the game, the palette system can be turned into a strength. It is easy to fade the screen to white (when picking up an item), red (when taking damage), or black (when transitioning between 2D menus). It only takes 256*3 = 768 bytes and 768 out instructions to modify the full screen.
-\begin{figure}[H]
-  \centering
- \fullimage{palette_damage.png}
- \caption{The palette RGB colors is altered when taking damage.} \label{fig:palette_damage}
-\end{figure}
+Even though it limited the graphic capabilities of the game, the palette system can be turned into a strength. It is easy to fade the screen to white (when picking up an item), red (when taking damage), or black (when transitioning between 2D menus). It only takes 256*3 = 768 bytes and 768 out instructions to modify the full screen.\\
+\par
+
+ \scaledimage{0.45}{palette_damage.png}\hspace{20pt}\scaledimage{0.45}{palette_damage.png}\par
+ \vspace{10pt}
+ \scaledimage{0.45}{palette_damage.png}\hspace{20pt}\scaledimage{0.45}{palette_damage.png}\par
+ \vspace{10pt}
+ \scaledimage{0.45}{palette_damage.png}\hspace{20pt}\scaledimage{0.45}{palette_damage.png}\par
+ %\caption{The palette RGB colors is altered when taking damage.} \label{fig:palette_damage}
+\pagebreak
+
 A fast path is provided (which ironically only works if the CPU is as slow as the VGA processor) to update the palette via one \cw{rep outsb} instruction. Otherwise, if not supported, a loop of 768 \cw{outsb} is used.\\
 \par
 \begin{minipage}{\linewidth}
@@ -157,13 +162,13 @@ A fast path is provided (which ironically only works if the CPU is as slow as th
 
 
 \section{Pseudo Random Generator}
-Random numbers are necessary for many things during runtime, such as calculating whether an enemy is able to hit the player based on its accuracy. This is achieved with a precalculated pseudo-random series of 256 elements. The last random value is also the index of the next value.\\
+Random numbers are necessary for many things during runtime, such as calculating whether an enemy is able to hit the player based on its accuracy. This is achieved with a precalculated pseudo-random series of 256 elements.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}, style=mystyle,basicstyle=\small]{code/rndtable.asm}
 \end{minipage}
 \par
-The pseudo-random series is initialized using the current time modulo 256 when the engine starts up.\\
+ Each entry in the array has a dual function. It is an integer within the range [0-255]\footnote{Or at least it was intended to!} and it is also the index of the next entry to fetch for next call. The overall works as a 255 entries chained list. The pseudo-random series is initialized using the current time modulo 256 when the engine starts up.\\
 \par
 
 \begin{fancyquotes}
@@ -175,7 +180,7 @@ The random table wasn't even a shuffle - note that there are no 1s and two 2s in
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language={[x86masm]Assembler}]{code/US_InitRndT.asm}
-\end{minipage}
+\end{minipage}\\
 \par
 The random number generator saves the last index in \cw{rndindex}. Upon request for a new number, it simply looks up the new value and updates \cw{rndindex}.
 \par
