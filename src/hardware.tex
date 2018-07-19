@@ -89,6 +89,7 @@ A lot of friction was present since manufacturers had not embraced the gaming in
 \subsection{The Intel 80386}
   \begin{wrapfigure}[7]{r}{0.3\textwidth}
 \centering
+\vspace{-10pt}
 \includegraphics[width=.3\textwidth]{imgs/drawings/intel_logo.pdf}
 \end{wrapfigure}
 The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagship P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel.}.\\
@@ -220,7 +221,7 @@ Although correct, this way of explaining floating point usually leaves programme
 \caption{Alternate Floating Point internals.}
 \end{figure}
   \bigskip  
-The window tells within which two consecutive power-of-two the number will be: [0,1], [1,2], [2,4], [4,8] and so on (up to [$2^{127}$,$2^{128}$]). The offset divides the window in $ 2^{23} = 8388608 $  buckets. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g. [2,4]), you can "float" it right and represent the number within the next window (e.g. [4,8]). This only costs a little bit of precision.\\
+The window tells within which two consecutive power-of-two the number will be. From [$2^{-127}$,$2^{-126}$],..., [0.5,1], [1,2], [2,4], and all the way up to [$2^{127}$,$2^{128}$]. The offset divides the window in $ 2^{23} = 8388608 $  buckets. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g. [2,4]), you can "float" it right and represent the number within the next window (e.g. [4,8]). This only costs a little bit of precision.\\
 
 
 \par \bu{Trivia :} How much precision is lost when the window covers a wider range? Let's take an example with window [0,1] where the 8388608 offsets cover a range of 1 which gives a precision of $(1-0)/8388608=0.00000011920929$. In the window [2048,4096] the 8388608 offsets cover a range of $(4096-2048) = 2048$ which gives a precision $ (4096-2048)/8388608=0.0002$.\\
@@ -576,8 +577,8 @@ In the photo on the right : John Carmack in 1996 working on an 28hd96 while prog
 \begin{minipage}{.6\textwidth}
 \begin{figure}[H]
   \begin{flushright}
-       %\frame{
-       \scaledimage{0.9}{johnCarmackWorking.png}
+       \vspace{-10pt}
+       \scaledimage{0.92}{johnCarmackWorking.png}
        %}
     \end{flushright}
 \end{figure}
@@ -620,7 +621,7 @@ The Monochrome Display Adapter (\codeword{MDA}) was released in 1981 with the IB
 
 Each iteration added new features and by 1991 the predominant graphic system was VGA. All video cards installed on PCs had to follow the standard set by IBM. The universality of that system was a double-edged sword. While developers had to program for only one graphic system, there was no escaping its shortcomings.\\
 \par
-Opposite page, courtesy of \cw{vgamuseum.info}, the VGA card Trident 8800 (8 bit ISA). Notice the eight chips on the left of the card forming the VRAM where the framebuffers are stored\protect\footnotemark. On bottom, the VGA card Diamond Stealth (16 bit ISA).
+Opposite page, on top the VGA card Trident 8800 (8 bit ISA). The eight chips on the left of the card form the VRAM where the framebuffers are stored\protect\footnotemark. On the bottom, a Diamond Stealth (16 bit ISA). Both photos are courtesy of \cw{vgamuseum.info}.
 \pagebreak
 
 \begin{figure}[H] 
