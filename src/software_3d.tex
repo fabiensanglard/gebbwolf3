@@ -476,7 +476,7 @@ The normal layout of an \cw{int} is as follows.
  \input{imgs/drawings/int.tex}
  \caption{Integer layout.} \label{fig:int_layout}
  \end{figure}
-The value of the sequence of bits \emph{0010010010010010}:
+The value of the sequence of bits \emph{0010001000100010}:
 \begin{figure}[H]
 \centering
 \input{imgs/drawings/int_example.tex}
@@ -492,8 +492,8 @@ Fixed Point allows for keeping track of fractions while still using the integer 
   \input{imgs/drawings/fp.tex}
  \caption{Fixed point layout 8:8 (8 bits for the integer part and 8 bits for the fractional part).} \label{fig:mips}
 \end{figure}
-
-The same sequence of bits \emph{0010010010010010} with different powers of two...
+                                
+The same sequence of bits \emph{0010001000100010} with different powers of two...
 \begin{figure}[H]
  \centering
    \input{imgs/drawings/fp_example.tex}
@@ -774,11 +774,11 @@ $E = (X_{B} + xstep, Y_{B} + 1)$\\
 \end{equation*}
   \begin{equation*}
     \scalebox{1.3}{
-$D = (X_{E} + xstep, Y_{E} + 1)$\\
+$H = (X_{E} + xstep, Y_{E} + 1)$\\
 }
 \end{equation*}\\
 \par
-Note that $ystep$ and $xstep$ are simple lookups into the \cw{tan} array since $xstep=tan(\theta)$ and $ystep=tan(90-\theta)$ where $\theta$ is the angle of the ray in map coordinates\footnote{A visual reminder of how the unit circle works can be found on page \pageref{unit_circle}.}.\\
+Note that $ystep$ and $xstep$ are simple lookups into the \cw{tan} array since $ystep=tan(\theta)$ and $xstep=tan(90-\theta)$ where $\theta$ is the angle of the ray in map coordinates\footnote{A visual reminder of how the unit circle works can be found on page \pageref{unit_circle_label}.}.\\
 \par
 \begin{figure}[H]
   \centering
@@ -872,8 +872,8 @@ The DDA intersection algorithm is implemented in a fully-handcrafted 740 lines o
 This implementation results in many \cw{jmp} instructions. These would kill the icache and empty the pipeline on a modern CPU. But on an architecture with a small pipeline and no i-cache such as the 386 it is not a frame killer.\\
 \par
 This part of the code relies heavily on unit circle principles. As we need to know how much to go vertically when advancing on the X axis and how much to go horizontally when advancing on the Y axis, the \cw{tan} function is especially useful. This is easier to understand with the unit circle drawn (circle radius $r$ is equal to 1).
-\label{unit_circle}
-\scaleddrawing{0.5}{unit_circle}{Unit circle}
+
+\scaleddrawing{0.5}{unit_circle}{Unit circle} \label{unit_circle_label}
 \par
 When advancing 1 on the X axis, the ray moves up $tan(\theta)$ on the Y axis. The reciprocal is calculated as follows: move 1 on Y axis, move $tan(90-\theta)$ on X axis. To accelerate \cw{cos}, \cw{sin} and \cw{tan} calculations, the engine uses lookup table. See \ref{cossintable} "\nameref{cossintable}" on page \pageref{cossintable}.
 
@@ -1447,7 +1447,7 @@ to render.\\
 \subsubsection{Texturing}
 A subtle but extremely efficient trick used to improve the quality of the wall rendering is pre-baked light texturing. Wall texture assets were generated twice by the artists: once lit and once unlit.\\
 \par
-At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (looking at the map from above) on the Y axis, the engine uses a lit texture. If the ray hits an horizontal wall (on the X axis), it uses the unlit version of the same texture.\\
+At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (in map space) on the Y axis, the engine uses a lit texture. If the ray hits an horizontal wall (on the X axis), it uses the unlit version of the same texture.\\
 \par
  The difference is not obvious at first, but with the same scene rendered side by side with and without this effect, the visual difference is striking, giving the scene more realism because of this directional-light effect.\\
 \par

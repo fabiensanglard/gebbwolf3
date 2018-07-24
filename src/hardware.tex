@@ -32,7 +32,7 @@ A lot of friction was present since manufacturers had not embraced the gaming in
   
 
 
-  In 1991 there were 56 million PCs in the USA \footnote{"Computers". Collier's Encyclopedia. Vol. 7, 1992: 114, 129.}. The performance of these machines was so overwhelmingly determined by the CPU that a PC was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had an Intel 80386 or equivalent, it was called a "386". If it had an Intel 80286, it was a "286".\\
+  In 1991 there were 56 million PCs in the USA\footnote{"Computers". Collier's Encyclopedia. Vol. 7, 1992: 114, 129.}. The performance of these machines was so overwhelmingly determined by the CPU that a PC was referred to not by its brand or GPU\footnote{There was no GPU yet. The term was coined by Nvidia in 1999, who marketed the GeForce 256 as "the world's first GPU", or Graphics Processing Unit.} but by the main chip inside. If a PC had an Intel 80386 or equivalent, it was called a "386". If it had an Intel 80286, it was a "286".\\
 \subsection{Overview}
   The predominant CPU manufacturer was Intel with its line of x86 microprocessors\footnote{73\% of PCs sold in 1989 featured an Intel CPU according to Intel Corporation's Annual Report.}. Machines based on the 16 bit 80286 processor did not sell well but their successors with the 80386 introduced in 1985 were immensely successful\footnote{An estimated 3.74 million 386 based systems were sold in 1990 according to Dataquest in PC Magazine February 1992.}. As a result, Wolfenstein 3D was designed to run on a PC with a 386 CPU, with degraded performance (yet still playable) on a 286.\\
 \par
@@ -600,7 +600,7 @@ The Monochrome Display Adapter (\codeword{MDA}) was released in 1981 with the IB
   \toprule \codeword{MDA}
    (\textbf{M}onochrome
    \textbf{D}isplay
-   \textbf{A}dapater) & 1981 
+   \textbf{A}dapter) & 1981 
    \\ \codeword{CGA}
    (\textbf{C}olor
    \textbf{G}raphics
@@ -850,7 +850,7 @@ The side effect of this convenience mechanism is that 75\% of the RAM is wasted 
   Mode \cw{13h} looks a bit better than \cw{12h} but is still pretty terrible for games or even static images:\\
   \begin{itemize}
 \item With Chain-4 all the RAM address space is used and there is no way to double buffer.
-\item Since the resolution is 320x200, the aspect ratio (1.6) does not match the monitor's (1.333). As a result the framebuffer stored in the VRAM is stretched when transfered to the CRT. This may seem like a small distortion but is quite problematic. An example with a circle in the framebuffer displaying as an ellipse on the screen speaks for itself.
+\item Since the resolution is 320x200, the aspect ratio (1.6) does not match the monitor's (1.333). As a result the framebuffer stored in the VRAM is stretched when transferred to the CRT. This may seem like a small distortion but is quite problematic. An example with a circle in the framebuffer displaying as an ellipse on the screen speaks for itself.
 \end{itemize}
 
 \begin{figure}[H]

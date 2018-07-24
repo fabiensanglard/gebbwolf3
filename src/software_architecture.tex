@@ -237,7 +237,7 @@ The engine does not rely on \cw{malloc} to manage conventional memory, as this c
 A block can be marked with attributes:
 \begin{itemize}
 \item \cw{LOCKBIT} : This block of RAM cannot be moved during compaction.
-\item \cw{PURGEBITS} : Four levels available, 0= unpurgable, 1= purgable, 2= not used, 3= purge first.
+\item \cw{PURGEBITS} : Four levels available, 0= unpurgeable, 1= purgeable, 2= not used, 3= purge first.
 \end{itemize}
 
 The memory manager starts by allocating all available RAM via \cw{malloc}/\cw{farmalloc} and creates a \cw{LOCKED} block of size 1KiB at the end. The linked list uses two pointers: \cw{HEAD} and \cw{ROVER} which point to the second to last block.
@@ -340,7 +340,7 @@ This design has a small yet annoying flaw. On a low memory machine, a cache miss
 \par
 The size of the swap file varies depending on the version of the game being played: \cw{VSWAP.WL1} (shareware) is 742KiB while \cw{VSWAP.WL6} (full version) is 1,500KiB. In both cases a machine with 2MiB of RAM on top of the factory issued 1MiB is enough to have all assets loaded during precaching.\\
 \par
-\bu{Thrashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, "thrashing" occurs. The HDD is put to heavy use, and framerate drops. Trashing can happen if too many different resources are visible on the screen. In order to help designers balance their creativity with the need for a decent framerate, the engine detects trashing and flashes the screen border red when running in dev-mode.\\
+\bu{Thrashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, "thrashing" occurs. The HDD is put to heavy use, and framerate drops. Thrashing can happen if too many different resources are visible on the screen. In order to help designers balance their creativity with the need for a decent framerate, the engine detects trashing and flashes the screen border red when running in dev-mode.\\
 \par
 \bu{Sounds are special:} Because sound cards are fed via a system of interrupts, the sound manager cannot recover from a page miss. Therefore, all sound resources are loaded first (they are located at the start of \cw{SWAP.WL1}) and only in conventional memory.
 
@@ -481,7 +481,7 @@ Besides showing recognized devices such as mouse, joystick, and sound cards, the
 \lstinputlisting[language=C]{code/OutOfMemory.txt}
 \end{minipage}
 \par
-The signon screen shows that Wolf3D needs at least 320KiB of Conventional RAM. John Romero wrote a release note to help people understand what was going on and avoid angry calls. You can read it in the annex under "The 640KB Barrier".\\
+The signon screen shows that Wolf3D needs at least 320KiB of Conventional RAM. John Romero wrote a release note to help people understand what was going on and avoid angry calls. You can read it in the Appendix under "The 640KB Barrier".\\
 \par 
 At the time signon is displayed, the only loaded manager is the Memory Manager. There is not even a filesystem for the engine to access yet. That is why the palette and the signon screen are compiled within the executable. This is done so they are loaded in RAM by the operating system (DOS) loader. All the engine does is load the palette into the VGA, copy the signon bitmap from RAM to VRAM, and fill the "thermometer" blocks with green or yellow based on what was detected.\\
 \par

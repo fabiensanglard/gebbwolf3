@@ -17,7 +17,7 @@ The idea is to configure the hardware to trigger a hardware interrupt at a regul
  Wolfenstein 3D uses the latter approach and keeps tasks in its ISR very small and short. To this effect everything in the audio and heartbeat system is written in assembly and avoids "heavy" processing.
 
 \subsection{IRQs and ISRs}
-The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT \footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC \footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. Counter \#2 is connected to the RAM in order to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in the caching system.}. Counter \#1 is connected to the buzzer and generates sounds. Counter \#0 is connected to the PIC. When counter \#0 hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU.} and sends it to the PIC.\\
+The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT\footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC\footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. Counter \#2 is connected to the RAM in order to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in the caching system.}. Counter \#1 is connected to the buzzer and generates sounds. Counter \#0 is connected to the PIC. When counter \#0 hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU.} and sends it to the PIC.\\
 \par
 \begin{figure}[H]
   \centering
@@ -402,7 +402,7 @@ The audio system goes for a surprisingly straightforward solution. It set itself
   \lstinputlisting[language={[x86masm]Assembler}]{code/pcm_on_speaker.asm}
 \end{minipage}
 \par
- \cw{SDL\_t0ExtremeAsmService} takes an 8 bit value and convert it to \cw{00} or \cw{10} to drive bit 1 in I/O port \cw{61h}. When bit 1 is set to 1, the beeper cone will go in position high and when set to 0, it will go to position low.\\
+ \cw{SDL\_t0ExtremeAsmService} takes an 8 bit value and converts it to \cw{00} or \cw{10} to drive bit 1 in I/O port \cw{61h}. When bit 1 is set to 1, the beeper cone will go in position high and when set to 0, it will go to position low.\\
 \par
 
 \par
@@ -441,7 +441,7 @@ Even though this method was not used in Wolfenstein 3D, it is worth mentioning a
 \par
 The idea is to manipulate the speaker cone manually and instruct it to move faster than it can, interrupting it "somewhere" between its position up or down.\\
 \par
-The technique was patented (US US5054086 A) by Access Software and called RealSound. Many studio licensed it during the 80s but the advent of dedicated sound cards with FM and PCM capabilities made RealSound obsolete in the early 90s.
+The technique was patented (US US5054086 A) by Access Software and called RealSound. Many studios licensed it during the 80s but the advent of dedicated sound cards with FM and PCM capabilities made RealSound obsolete in the early 90s.
 \par
  \begin{fancyquotes}
   The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc)., the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC, thereby enabling approximate playback of PCM audio.\\
