@@ -210,7 +210,7 @@ There are seven managers in total:\\
 	\item Input
 \end{itemize}
 \par
-The WL\_ stuff was written specifically for Wolf3D while the ID\_ managers were reused from previous games (Hovertank 3D and Catacomb 3D) and improved for the needs of the new engine.
+The WL\_ stuff was written specifically for Wolf3D while the ID\_ managers were reused from previous games (Hovertank 3D and Catacomb 3-D) and improved for the needs of the new engine.
 
 \begin{figure}[H]
 \centering
@@ -389,7 +389,7 @@ The cache manager is a small but critical component. It loads and decompresses m
 
 \subsection{User Manager (US)}
 \begin{minipage}{0.7\textwidth}
-The User Manager is largely based on the Catacomb 3D code and was written by Jason Blochowiak. The copy/paste is very visible since 90\% of the functions declared in the header (ID\_US.H) are not actually implemented in \cw{ID\_US.C}. 
+The User Manager is largely based on the Catacomb 3-D code and was written by Jason Blochowiak. The copy/paste is very visible since 90\% of the functions declared in the header (ID\_US.H) are not actually implemented in \cw{ID\_US.C}. 
 It is a poorly named manager as it mostly takes care of text layout. When a \cw{WL\_*} high level routine needs to draw a string, it is passed to \cw{US\_Print} which does all measurement (e.g. Draw string centered)
 and then passes this information to the Video Manager (\cw{VW\_DrawPropString}), which takes care of rendition.
 \end{minipage}

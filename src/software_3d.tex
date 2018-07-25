@@ -617,7 +617,7 @@ And much easier when the engine knows two \cw{fixed} are the same sign:\\
  \end{minipage}
 \par
 
- \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game consoles manufactured in the 90s and later did not feature floating point units in order to reduce production cost and maximize CPU pipeline throughout. Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples.
+ \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game consoles manufactured in the 90s and later did not feature floating point units in order to reduce production cost and maximize CPU pipeline throughput. Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples.
  
 
  
@@ -875,7 +875,7 @@ This part of the code relies heavily on unit circle principles. As we need to kn
 
 \scaleddrawing{0.5}{unit_circle}{Unit circle} \label{unit_circle_label}
 \par
-When advancing 1 on the X axis, the ray moves up $tan(\theta)$ on the Y axis. The reciprocal is calculated as follows: move 1 on Y axis, move $tan(90-\theta)$ on X axis. To accelerate \cw{cos}, \cw{sin} and \cw{tan} calculations, the engine uses lookup table. See \ref{cossintable} "\nameref{cossintable}" on page \pageref{cossintable}.
+When advancing 1 on the X axis, the ray moves up $tan(\theta)$ on the Y axis. The reciprocal is calculated as follows: move 1 on Y axis, move $tan(90-\theta)$ on X axis. To accelerate \cw{cos}, \cw{sin} and \cw{tan} calculations, the engine uses a lookup table. See \ref{cossintable} "\nameref{cossintable}" on page \pageref{cossintable}.
 
 
 
