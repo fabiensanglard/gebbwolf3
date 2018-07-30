@@ -718,13 +718,13 @@ If you made extremely jagged block maps that would turn into many dozen independ
 
 \begin{wrapfigure}[14]{r}{0.45\textwidth} 
 \vspace{-10pt}
-\scaledimage{0.45}{e1m1.png} 
+\scaledimage{0.45}{bsp_map.png} 
 \end{wrapfigure} 
 \bu{Trivia :} The cost of raycasting would end up being too much for the tiny 5A22 CPU when porting Wolfenstein 3D to Super Nintendo.\\
 \par
- The first version of the port reached an unacceptably low framerate which threatened the port.\\
+ The first version of the port reached an unacceptably low framerate which threatened the viability project. John Carmack ended up preprocessing map with Binary Space Partitioning to sort map elements. Walls were them projected into screenspace and textured.\\
  \par
- id was faced with the choice of overcoming the problems with "wall-span rendering" or cancel the SNES version altogether. He ended up using Binary Space Partitioning for the first time, a technique he later used for Doom.
+ On the right, the BSP resulting from repeatedly splitting map \cw{E1M1} in two, until each "area" is convex.
 
  
 

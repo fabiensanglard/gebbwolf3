@@ -1,3 +1,4 @@
+
 BackDoorStrs[5][16] = {
     "a spoon?",
     "bite me!",
@@ -5,4 +6,5 @@ BackDoorStrs[5][16] = {
     "pelt",
     "beta"
     "snoops"
-},
+}
+
