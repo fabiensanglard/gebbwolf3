@@ -705,6 +705,8 @@ The first problem with this design is that it is unintuitive. There is no linear
 In order to configure this mess of planes and the controllers, 300 poorly documented internal registers must be set. Needless to say few programmers dove into the internals of the VGA. The first figure describing its architecture is actually deceptively simplified.\pagebreak
 
  Figure \ref{fig:ibm_vga} shows how IBM's reference documentation explained the architecture of the VGA. The maze of wire showcases well the actual complexity of the system.\\
+ \par
+ \vspace{10pt}
  \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/ibm_vga.pdf}
@@ -721,7 +723,7 @@ To compensate for the complexity, IBM provided a routine to initialize all the r
 \subsection{VGA Modes}
 
 The BIOS can be called to configure the VGA as follows.
-
+\vspace{-10pt}
 \begin{figure}[H]
 \centering
 \begin{table}[H]
@@ -745,7 +747,7 @@ The BIOS can be called to configure the VGA as follows.
 13h           & VGA graphic   & 320x200         & 256             & A0000h                                \\ \hline
 \end{tabularx}
 \end{table}
-%\caption{VGA Modes available.}\label{fig:vga_modes}
+\caption{VGA Modes available.}%\label{fig:vga_modes}
 \label{vga-modes-available}
  \end{figure}
  
@@ -753,8 +755,7 @@ The BIOS can be called to configure the VGA as follows.
 
 
  \subsection{VGA Programming: Memory Mapping}
-To write to the VRAM, the RAM's 1MiB address space maps 64KiB starting as indicated in table \ref{vga-modes-available}. In mode \cw{13h} for example, the VRAM is mapped from 0xA0000 to 0xAFFFF.\\
-\par One of the first questions to come to mind is "How can I access 256KiB of RAM with only 64KiB of address space?" The answer is "bank switching" as summarized in figure \ref{ram_to_vga_mapping}. Write and Read operations are routed based on a mask register indicating which bank should be read or written to. \\
+To write to the VRAM, the RAM's 1MiB address space maps 64KiB starting as indicated in table \ref{vga-modes-available}. In mode \cw{13h} for example, the VRAM is mapped from 0xA0000 to 0xAFFFF. One of the first questions to come to mind is "How can I access 256KiB of RAM with only 64KiB of address space?" The answer is "bank switching" as summarized in figure \ref{ram_to_vga_mapping_label}. Write and Read operations are routed based on a mask register indicating which bank should be read or written to. \\
 \par
 
  \subsection{VGA Programming: Mode 12h}
@@ -763,12 +764,11 @@ To write to the VRAM, the RAM's 1MiB address space maps 64KiB starting as indica
 
 
 
- \begin{figure}[H]
-\centering
-  
-      \includegraphics[width=.8\textwidth]{imgs/drawings/ram_to_vga_mapping.pdf}
-    \label{ram_to_vga_mapping}
-\caption{Mapping PC RAM to VGA VRAM banks.}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.8\textwidth]{imgs/drawings/ram_to_vga_mapping.pdf}
+  \caption{Mapping PC RAM to VGA VRAM banks.}
+  \label{ram_to_vga_mapping_label}
 \end{figure}
 \par
  To write the color of the first pixel, a developer has to write the first bit of the nibble in plane 0, the second in plane 1, the third in plane 2 and the fourth in plane 3. The CRT Controller then reads 4 bytes at a time (one from each plane) resulting in 8 pixels on screen.\\
