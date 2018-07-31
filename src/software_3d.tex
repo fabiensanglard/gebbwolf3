@@ -226,78 +226,92 @@ To take full advantage of this optimization, the 3D renderer uploads images to t
 
 
 
-\begin{minipage}{.3\textwidth}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/109.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/110.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/111.png}
   \end{minipage}
-\par
+  \vspace{-5pt}
 
 
 
-\begin{minipage}{.3\textwidth}
+
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/112.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/113.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/114.png}
   \end{minipage}
-\par
+    \vspace{-5pt}
 
 
 
-  \begin{minipage}{.3\textwidth}
+
+  \begin{minipage}{.32\textwidth}
      \fullimage{latched/115.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/116.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/117.png}
   \end{minipage}
-\par
 
 
 
 
 
-  \begin{minipage}{.3\textwidth}
+\vspace{-10pt}
+  \begin{minipage}{.32\textwidth}
      \fullimage{latched/118.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/119.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/120.png}
   \end{minipage}
-\par
+\vspace{-5pt}
 
 
 
-  \begin{minipage}{.3\textwidth}
+  \begin{minipage}{.32\textwidth}
      \fullimage{latched/121.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/122.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/123.png}
   \end{minipage}
-\par
+\vspace{-5pt}
 
-    \begin{minipage}{.3\textwidth}
+    \begin{minipage}{.32\textwidth}
      \fullimage{latched/124.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/125.png}
   \end{minipage}
-\begin{minipage}{.3\textwidth}
+  \hspace{5pt}
+\begin{minipage}{.32\textwidth}
      \fullimage{latched/126.png}
   \end{minipage}
 \par
@@ -1397,11 +1411,9 @@ In the worst case scenario, the engine needs to draw eight columns of pixels, un
 
 To visualize the performance gain in real cases, the engine has been modified to draw columns of pixels which were written "for free" thanks to the VGA mask manipulation in pink (page \pageref{wolf3d_in_pink} and \pageref{wolf3d_in_pink2}). We can see the performance improvement is significant, with 50\% of write operations avoided.
 
-\trivia{Even though its was originally distributed exclusively as a shareware, sales called for a more "traditional" distribution. GT Interactive picked it up in 1993 and sold it in a nice box, along with the "Official Hint Manual". In 1995, the game was re-released on CD-ROM}.\\
+\trivia{Even though its was originally distributed exclusively as a shareware, sales called for a more "traditional" medium. GT Interactive picked up Wolfenstein 3D in 1993 and gifted it with an actual box, along with the "Official Hint Manual" which was done by Tom Halls and Kevin Clouds. In 1995, the game was re-released on CD-ROM}.\\
 \par
 \fullimage{cover.png}
-
-
 \begin{minipage}{\textwidth}
  \centering
  \scaledimage{0.9}{post_optimization_1_show.png} \label{wolf3d_in_pink}
@@ -1636,7 +1648,8 @@ Sprites are special, however. Walls fill the full 64x64 space and are fully opaq
 \bu{Trivia :} Sprites with a lot of transparency (such as the two shown previously) would later turn out to be a major fillrate issue with the hardware accelerated renderer for the iOS port.\\
 \par
 \begin{fancyquotes}
-Wolfenstein (and Doom) originally drew the characters as sparse stretched columns of solid pixels (vertical instead of horizontal for efficiency in interleaved planar mode-X VGA), but OpenGL versions need to generate a square texture with transparent pixels.  Typically this is then drawn by either alpha blending or alpha testing a big quad that is mostly empty space.  You could play through several early levels of Wolf without this being a problem, but in later levels there are often large fields of dozens of items that stack up to enough overdraw to max out the GPU and drop the framerate to 20 fps.  The solution is to bound the solid pixels in the texture and only draw that restricted area, which solves the problem with most items, but Wolf has a few different heavily used ceiling lamp textures that have a small lamp at the top and a thin but full width shadow at the bottom.  A single bounds doesn't exclude many texels, so I wound up including two bounds, which made them render many times faster. 
+Wolfenstein (and Doom) originally drew the characters as sparse stretched columns of solid pixels (vertical instead of horizontal for efficiency in interleaved planar mode-X VGA), but OpenGL versions need to generate a square texture with transparent pixels.  Typically this is then drawn by either alpha blending or alpha testing a big quad that is mostly empty space.  You could play through several early levels of Wolf without this being a problem, but in later levels there are often large fields of dozens of items that stack up to enough overdraw to max out the GPU and drop the framerate to 20 fps.\\
+\par  The solution is to bound the solid pixels in the texture and only draw that restricted area, which solves the problem with most items, but Wolf has a few different heavily used ceiling lamp textures that have a small lamp at the top and a thin but full width shadow at the bottom.  A single bounds doesn't exclude many texels, so I wound up including two bounds, which made them render many times faster. 
 \bigskip \\
 \textbf{John Carmack - Programmer}
  \end{fancyquotes}
@@ -1945,8 +1958,7 @@ Perfect sound propagation is a simplistic model. When a gun is fired, all enemie
 \end{minipage}
 
 
-\par
-
+\pagebreak
 \bu{Trivia :} The ambush behavior is explained in the Hint Book as follows:\\
 \par
 \begin{fancyquotes}
