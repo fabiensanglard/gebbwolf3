@@ -78,7 +78,7 @@ A lot of friction was present since manufacturers had not embraced the gaming in
  \par
   \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 MIPS.\\
   \par
- Intel built two versions of the 386: the 386-SX and the 386-DX. They were identical processors yet the DX version was almost twice as powerful as the SX (on the chart the \cw{386 SX 33Mhz} and the \cw{386 DX 33Mhz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM being twice as wide on the DX (32 bits vs 16 bits). Despite its inferiority, the SX sold well because it was cheaper and a lot of people had no idea what a "bus" was, they just wanted "a 386".\\
+ Intel built two versions of the 386: the 386-SX and the 386-DX. They were identical processors yet the DX version was almost twice as powerful as the SX (on the chart the \cw{386 SX 33Mhz} and the \cw{386 DX 33Mhz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM being twice as wide on the DX (32 bits vs 16 bits). The 386-SX bus unit enabled manufacturers to reuse motherboard chips designed for the Intel 286 which had a 16-bit bus unit, furthermore reducing costs. Despite its inferiority, the SX sold well because it was cheaper and a lot of people had no idea what a "bus" was, they just wanted "a 386".\\
 
 
 
@@ -92,14 +92,41 @@ A lot of friction was present since manufacturers had not embraced the gaming in
 \vspace{-10pt}
 \includegraphics[width=.3\textwidth]{imgs/drawings/intel_logo.pdf}
 \end{wrapfigure}
-The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagship P7\footnote{a.k.a Intel i960.}, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel.}.\\
+The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagship Intel i960, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel.}.\\
 \par
 Two choices in the design of the 386 contributed to its success. First, the designers decided to listen to the programmers' feedback and dropped the idea of using a new instruction set. As a result the 386 is fully backward compatible with the 286. Second, they managed to add a 32 bit operating mode which solved many of the memory addressing issues of the 286.\\
 \par
 \textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View.} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "software poison".\\
 \par
-The 80386 relies on three systems and a three stage instruction pipeline as shown in next page.\\
+
+
+\fullimage{386_layout_photo.png}
+\par \vspace{-1pt}
+% Below, a 1:1 scale of the 3.68cm x 3.68cm packaging next to a schematic showing the actual die inside.\\
+\begin{minipage}{0.48\textwidth}
+\centering
+\scaledrawimage{3.68cm}{386_packaging.png} 
+
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\scaledrawimage{3.68cm}{386_packaging_die.png}
+\end{minipage}
+
+
+
+ \pagebreak
+ 
+
+
+\cfullimage{386_layout_drawing.png}{Intel 80386-DX die layout}
 \par
+Featured on this double page, a 386-DX 16 Mhz. If you are holding a physical 9.25''x7.5'' copy of this book, the CPU packaging is 36.8x36.8 mm square and the die is 12x12 mm, both 1:1 scale.\\
+\par
+Despite the apparent complexity, the 80386 can be summarized as three systems and a three stage instruction pipeline.
+
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/386_architecture.pdf}
@@ -224,7 +251,7 @@ Although correct, this way of explaining floating point usually leaves programme
 The window tells within which two consecutive power-of-two the number will be. From [$2^{-127}$,$2^{-126}$],..., [0.5,1], [1,2], [2,4], and all the way up to [$2^{127}$,$2^{128}$]. The offset divides the window in $ 2^{23} = 8388608 $  buckets. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g. [2,4]), you can "float" it right and represent the number within the next window (e.g. [4,8]). This only costs a little bit of precision.\\
 
 
-\par \bu{Trivia :} How much precision is lost when the window covers a wider range? Let's take an example with window [0,1] where the 8388608 offsets cover a range of 1 which gives a precision of $(1-0)/8388608=0.00000011920929$. In the window [2048,4096] the 8388608 offsets cover a range of $(4096-2048) = 2048$ which gives a precision $ (4096-2048)/8388608=0.0002$.\\
+\par \bu{Trivia :} How much precision is lost when the window covers a wider range? Let's take an example with window [1,2] where the 8388608 offsets cover a range of 1 which gives a precision of $(2-1)/8388608=0.00000011920929$. In the window [2048,4096] the 8388608 offsets cover a range of $(4096-2048) = 2048$ which gives a precision $ (4096-2048)/8388608=0.0002$.\\
 \par
 
 The next figure illustrates how the number 6.1 would be encoded. The window must start at 4 and span to the next power of two, 8. The offset is about half way down the window.
@@ -296,7 +323,7 @@ This is not a problem when everything is hardwired within a hardware floating po
 \par
 
 
-\textbf{\underline{Trivia :}} People who really wanted a hardware floating point unit could buy one. In the 90s the only people who could possibly want one would have been scientists (as per Intel's understanding of the market). The i387 chip was marketed as a "Math CoProcessor". Performance was average and price was outrageous\footnote{\$200 in 1991 equivalent to \$374 in 2018.}. As a result, sales were mediocre.\\
+\textbf{\underline{Trivia :}} People who really wanted a hardware floating point unit could buy one. In the 90s the only people who could possibly want one would have been scientists (as per Intel's understanding of the market). The i387 chip was marketed as a "Math CoProcessor". Performance was average and price was outrageous\footnote{\$200 in 1991 equivalent to \$374 in 2018.} but they sold extremely well.\\
 \begin{figure}[H]
 \centering
   
@@ -350,7 +377,7 @@ For compatibility reasons all PCs have to start in real mode. You may assume tha
 
 
   \subsection{DOS Limitations}
-  Microsoft Corporation highly valued the applications running on their operating systems. As a business priority, they were adamant to never break anything with a new system\footnote{"Tales of Application Compatibility", Old New Thing by Raymond Chen.}.  Since many applications were written during the 80s on machines having only real mode, DOS 5.0\footnote{Released in June 1991.} kept running that way and as a result its routines and system calls were incompatible with protected mode. This created an awkward situation where the de-facto operating system delivered with every machine sold prevented programmers from using the machine at its full potential. Developers were forced to ignore all the features of a 1992 CPU and instead use it like a very fast Intel 8086 CPU from 1976. They were thus limited to the following characteristics: \\
+  Microsoft Corporation highly valued the applications running on their operating systems. As a business priority, they were adamant to never break anything with a new system\footnote{"Tales of Application Compatibility", Old New Thing by Raymond Chen.}.  Since many applications were written during the 80s on machines having only real mode, DOS 5.0\footnote{Released in June 1991.} kept running that way and as a result its routines and system calls were incompatible with protected mode. This created an awkward situation where the de-facto operating system delivered with every machine sold prevented programmers from using the machine at its full potential. Developers were forced to ignore all the features of a 1992 CPU and instead use it like a very fast Intel 8086 CPU from 1976. They were thus limited to the following characteristics:
 \begin{itemize}
 \item ALU
 \item 16 registers:
@@ -375,7 +402,7 @@ For compatibility reasons all PCs have to start in real mode. You may assume tha
   With protected mode unavailable, 1991 developers programmed like it was 1976: with a 20 bit wide address bus offering only 1MiB of addressable RAM. Regardless how much memory was installed on the machine, only 1MiB could be addressed. To top it all off, addressing had to be done not with the 32 bit registers available but by combining two 16 bit registers. One was the segment, the other an offset within that segment. Hence the name: '16 bit segmented programming'.
 
   \bigskip
-The memory layout is as follow:\\
+The memory layout is as follow:
 \begin{itemize}
 \item From 00000h to 003FFh : the Interrupt Vector Table.
 \item From 00400h to 004FFh : BIOS data.
@@ -383,15 +410,14 @@ The memory layout is as follow:\\
 \item From 00600h to 9FFFFh : Usable by a program (about 620KiB in the best case). 
 \item From A0000h to FFFFFh : UMA (Upper Memory Area): Reserved to BIOS ROM, video card and sound card mapped I/O.
 \end{itemize}
-
+\par
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/real_mode.pdf}
-
 \caption{First 1MiB of RAM layout.}
 \label{fig:fp_internals}
 \end{figure}
-
+\pagebreak
 
 Out of the original 1024KiB, only 640KiB (called Conventional Memory) was accessible to a program. 384KiB was reserved for the UMA and every single driver installed (\codeword{.SYS} and \codeword{.COM}) took away from the remaining 640KiB.
 
@@ -417,7 +443,7 @@ With a 20 bit address bus and registers too small to contain a whole address (16
 There are two kinds of pointers: \cw{near} and \cw{far}. A \cw{near} pointer is 16 bit and considered \emph{fast} because it can be used as is (but it only allows a \cw{jmp} in the current code segment). A \cw{far} pointer can access anything and allows a \cw{jmp} anywhere but is slower since a 16 bit segment register has to be shifted left 4 bits and combined with the other 16 bit offset register to form a 20 bit address.\\
 
 That may not sound too bad, but in practice this segmented addressing leads to many issues.
-The least problematic is about the language. Since C was invented on a flat memory machine, it had to be augmented by PC compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To build pointers, a set of macros are provided: \codeword{FP\_SEG} and \codeword{FP\_OFF}. \cw{libc} is also "different": \cw{malloc} returns a \cw{near} pointer and therefore can only allocate up to 64KiB. To get more than 64KiB, \cw{farmalloc} is needed.\\
+The least problematic is about the language. Since C was invented on a flat memory machine, it had to be augmented by PC compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To manipulate pointers, macros \codeword{MK\_FP} build them and \codeword{FP\_SEG/FP\_OFF} access fields. \cw{libc} is also "different": \cw{malloc} returns a \cw{near} pointer and therefore can only allocate up to 64KiB. To get more than 64KiB, \cw{farmalloc} is needed.\\
 \par
 The larger issue is that two pointers referring to the same address can fail an equality test. In this model, the 1MiB of RAM is divided in 65536 paragraphs by the segment pointer. A paragraph is 16 bytes but an offset can be up to 65536 bytes which results in many overlaps. This can be explained with the following examples.\\
 \par
@@ -621,7 +647,7 @@ The Monochrome Display Adapter (\codeword{MDA}) was released in 1981 with the IB
 
 Each iteration added new features and by 1991 the predominant graphic system was VGA. All video cards installed on PCs had to follow the standard set by IBM. The universality of that system was a double-edged sword. While developers had to program for only one graphic system, there was no escaping its shortcomings.\\
 \par
-Opposite page, on top the VGA card Trident 8800 (8 bit ISA). The eight chips on the left of the card form the VRAM where the framebuffers are stored\protect\footnotemark. On the bottom, a Diamond Stealth (16 bit ISA). Both photos are courtesy of \cw{vgamuseum.info}.
+Opposite page, on top, the VGA card Trident 8800 (8 bit ISA). The eight chips on the left of the card form the VRAM where the framebuffers are stored\protect\footnotemark. On the bottom, a Diamond Stealth (16 bit ISA). Both photos are courtesy of \cw{vgamuseum.info}.
 \pagebreak
 
 \begin{figure}[H] 
@@ -679,8 +705,7 @@ Keep in mind that this architecture reduced the penalty of read operations, but 
 
 \subsection{VGA Planar Madness}
 
-Four memory banks grant enough throughput to reach high resolutions at 70Hz. The price is complexity of programming, as acknowledged by even the best programmers of the time.\\
-
+Four memory banks grant enough throughput to reach high resolutions at 60Hz/70Hz. The price is complexity of programming, as acknowledged by even the best programmers of the time.\\
  \begin{fancyquotes}
    Right off the bat, I'd like to make one thing perfectly clear: The VGA is hard-sometimes very hard-to program for good performance.
  \bigskip \\
@@ -695,16 +720,16 @@ The first problem with this design is that it is unintuitive. There is no linear
 \begin{figure}[H]
 \centering
 \includegraphics[width=.57\textwidth]{imgs/drawings/vga_ram_screen_layout.eps}
-\label{fig:vga_arch}
+\label{fig:vga_layout_banks}
 \caption{VGA mode 13h, How bank layout appears on screen.}
 \end{figure}
 
  
 
 \par
-In order to configure this mess of planes and the controllers, 300 poorly documented internal registers must be set. Needless to say few programmers dove into the internals of the VGA. The first figure describing its architecture is actually deceptively simplified.\\
+In order to configure this mess of planes and the controllers, 300 poorly documented internal registers must be set. Needless to say few programmers dove into the internals of the VGA.\\
 \par
- Figure \ref{fig:ibm_vga} shows how IBM's reference documentation explained the architecture of the VGA. The maze of wire showcases well the actual complexity of the system.\\
+  Figure \ref{fig:vga_arch} which described the architecture was actually deceptively simplified. Figure \ref{fig:ibm_vga} shows how IBM's reference documentation explained the VGA. The maze of wire showcases well the actual complexity of the system.\\
  \par
  \vspace{10pt}
  \begin{figure}[H]
@@ -718,7 +743,7 @@ In order to configure this mess of planes and the controllers, 300 poorly docume
 
 
 
-To compensate for the complexity, IBM provided a routine to initialize all the registers via one simple BIOS call. One configuration can be selected out of 15 available (a configuration is called a "mode") with an associated resolution, number of colors, and memory layout.\pagebreak
+To compensate for the complexity, IBM provided a routine to initialize all the registers via one BIOS call. One mode can be selected out of 15 available with an associated resolution, number of colors, and memory layout.
 
 \subsection{VGA Modes}
 
@@ -727,24 +752,24 @@ The BIOS can be called to configure the VGA as follows.
 \begin{figure}[H]
 \centering
 \begin{table}[H]
-\begin{tabularx}{\textwidth}[c]{llllr}
+\begin{tabularx}{\textwidth}[c]{llllcr}
 \hline
-\textbf{Mode} & \textbf{Type} & \textbf{Format} & \textbf{Colors} & \multicolumn{1}{l}{\textbf{RAM Mapping}} \\ \hline
-0             & text          & 40x25           & 16 (monochrome) & B8000h                                \\ \hline
-1             & text          & 40x25           & 16              & B8000h                                \\ \hline
-2             & text          & 80x25           & 16 (monochrome) & B8000h                                \\ \hline
-3             & text          & 80x25           & 16              & B8000h                                \\ \hline
-4             & CGA Graphics  & 320x200         & 4               & B8000h                                \\ \hline
-5             & CGA Graphics  & 320x200         & 4 (monochrome)  & B8000h                                \\ \hline
-6             & CGA Graphics  & 640x200         & 2               & B8000h                                \\ \hline
-7             & MDA text      & 9x14            & 3 (monochrome)  & B0000h                                \\ \hline
-0Dh           & EGA graphic   & 320x200         & 16              & A0000h                                \\ \hline
-0Eh           & EGA graphic   & 640x200         & 16              & A0000h                                \\ \hline
-0Fh           & EGA graphic   & 640x350         & 3               & A0000h                                \\ \hline
-10h           & EGA graphic   & 640x350         & 16              & A0000h                                \\ \hline
-11h           & VGA graphic   & 640x480         & 2               & A0000h                                \\ \hline
-12h           & VGA graphic   & 640x480         & 16              & A0000h                                \\ \hline
-13h           & VGA graphic   & 320x200         & 256             & A0000h                                \\ \hline
+\textbf{Mode} & \textbf{Type} & \textbf{Format} & \textbf{Colors} & \hspace{10pt}\textbf{RAM Mapping}\hspace{10pt} & \textbf{Hz}        \\ \hline
+0             & text          & 40x25           & 16 (monochrome) & B8000h     & 70                           \\ \hline
+1             & text          & 40x25           & 16              & B8000h    & 70                            \\ \hline
+2             & text          & 80x25           & 16 (monochrome) & B8000h    & 70                            \\ \hline
+3             & text          & 80x25           & 16              & B8000h    & 70                            \\ \hline
+4             & CGA Graphics  & 320x200         & 4               & B8000h    & 70                            \\ \hline
+5             & CGA Graphics  & 320x200         & 4 (monochrome)  & B8000h    & 70                            \\ \hline
+6             & CGA Graphics  & 640x200         & 2               & B8000h    & 70                            \\ \hline
+7             & MDA text      & 9x14            & 3 (monochrome)  & B0000h    & 70                            \\ \hline
+0Dh           & EGA graphic   & 320x200         & 16              & A0000h    & 70                            \\ \hline
+0Eh           & EGA graphic   & 640x200         & 16              & A0000h    & 70                            \\ \hline
+0Fh           & EGA graphic   & 640x350         & 3               & A0000h    & 70                            \\ \hline
+10h           & EGA graphic   & 640x350         & 16              & A0000h    & 70                            \\ \hline
+11h           & VGA graphic   & 640x480         & 2               & A0000h    & 70                            \\ \hline
+12h           & VGA graphic   & 640x480         & 16              & A0000h    & 60                            \\ \hline
+13h           & VGA graphic   & 320x200         & 256             & A0000h    & 70                            \\ \hline
 \end{tabularx}
 \end{table}
 \caption{VGA Modes available.}%\label{fig:vga_modes}
@@ -759,7 +784,7 @@ To write to the VRAM, the RAM's 1MiB address space maps 64KiB starting as indica
 \par
 
  \subsection{VGA Programming: Mode 12h}
- The first mode commonly considered for game programming is mode \cw{12h}. It offers a resolution of 640x480 at 60hz\footnote{Oddly, this mode is the only one to work at 60Hz. All others run at 70Hz.} with 16 colors. Each pixel is encoded in 4 bits (a nibble) spread across the four banks.\\
+ The first mode commonly considered for game programming is mode \cw{12h}. It offers a resolution of 640x480 at 60hz\footnote{Because of bandwidth requirements, this mode is the only one to work at 60Hz. All others run at 70Hz.} with 16 colors. Each pixel is encoded in 4 bits (a nibble) spread across the four banks.\\
 \par
 
 
@@ -787,7 +812,7 @@ The only good thing about this mode is that it has square pixels. The 640x480 as
 \begin{itemize}
 \item No double buffer: 640X480/2 = 0x25800 bytes which is more than half the 256KiB (0x40000) of VRAM available.
 \item High resolution means more pixels, which means more calculations and more drawing.
-\item 16 color graphics look really, REALLY ugly\footnote{The exception to the rule is "Dark Seed", an adventure game developed and published by Cyberdreams in 1992. Inspired by H. R. Giger artworks, it is notorio for its gorgeous visuals in 640x480, 16 colors.}.
+\item 16 color graphics look really, REALLY ugly\footnote{The exception to the rule is "Dark Seed", an adventure game developed and published by Cyberdreams in 1992. Inspired by H. R. Giger artworks, it is notorious for its gorgeous visuals in 640x480, 16 colors.}.
 \end{itemize}
 
  \begin{figure}[H]
@@ -815,7 +840,7 @@ In figure \ref{wolf16}, Wolfenstein 3D opening screen as it would have been rend
 
 When writing or reading a value V at address K in RAM, the Chain-4 breaks the address down into two parts:
 \begin{itemize}
-\item The 2 lower bits are used to configure the mask automatically. 0b00 goes to bank 0, 0b01 to bank 1, 0b10 to bank 2 and 0b11 to bank 3.
+\item The 2 lower bits are used to configure the mask automatically. \cw{00b} goes to bank 0, \cw{01b} to bank 1, \cw{10b} to bank 2 and \cw{11b} to bank 3.
 \item The 14 higher bits are right shifted by two bits and used as an offset in the bank.
 \end{itemize}
   \par
@@ -835,12 +860,13 @@ The side effect of this convenience mechanism is that 75\% of the RAM is wasted 
 
 
    \subsubsection{Setup}
-  To setup the VGA in Mode \cw{13h} using the BIOS is incredibly easy:\\
+  To setup the VGA in Mode \cw{13h} using the BIOS is incredibly easy. It can be done with only two instructions:\\
   \par
   \lstinputlisting[ language={[x86masm]Assembler}]{code/vga_mode13.asm}
   
   \par
-  The \codeword{int 10} instruction is a software interrupt caught by the BIOS routine in charge of graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA registers with the corresponding mode. After the VGA is initialized one can write to the mapped memory at \cw{0xA0000}. This can be demonstrated with a code sample; here is some code to clear the screen to black.\\
+  The \codeword{int 10} instruction is a software interrupt caught by the BIOS routine in charge of graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA registers with the corresponding mode.\\
+  \par After the VGA is initialized one can write to the mapped memory at \cw{0xA0000}. This can be demonstrated with a code sample; here is some code to clear the screen to black.\\
   
   \begin{minipage}{\textwidth}
   \lstinputlisting[language=C]{code/clear_vga.c}
