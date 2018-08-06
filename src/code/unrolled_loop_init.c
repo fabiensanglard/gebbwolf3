@@ -15,6 +15,6 @@ void InitGame () {
     CA_CacheGrChunk(STARTFONT); // Load font
     MM_SetLock (&grsegs[STARTFONT],true); // Lock font
     LoadLatchMem ();     // Load picture asset to VRAM
-    BuildTables ();      // sin/cos/view loopu tables
+    BuildTables ();      // sin/cos/view lookup tables
     SetupWalls ();       // Lookup table wall textures
 }

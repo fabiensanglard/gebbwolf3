@@ -156,7 +156,7 @@ The longer the distance the ray traveled, the shorter the column is drawn on scr
 \begin{minipage}{\textwidth}
 \begin{figure}[H]
   \centering
- \includegraphics[width=.5\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
+ \includegraphics[width=.56\textwidth]{imgs/drawings/ray_caster_explained/beginning.pdf}
    
 \end{figure}
 \end{minipage}
@@ -164,14 +164,34 @@ The longer the distance the ray traveled, the shorter the column is drawn on scr
 
 
 
+\begin{figure}[H]
+ \centering
+  \fullimage{wolf3d_6_scaled}
+ \caption{Stage 3: Drawing Things (a.k.a: Scaled, a.k.a: Sprites)}  
+\end{figure}
+ \begin{minipage}{.4\textwidth}
+After the raycaster is done, "things" are rendered. During this step, clipping is performed against the wall and doors.
+ \end{minipage}
+\begin{minipage}{.6\textwidth}
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=.9\textwidth]{imgs/drawings/ray_caster_explained/beginning2.pdf}
+   
+\end{figure}
+\end{minipage}
+
  
  
- \begin{figure}[H]
-\centering
- \fullimage{wolf3d_6_scaled}
- \caption{Stage 3: Drawing Things (a.k.a: Scaled, a.k.a: Sprites)} 
- \end{figure}
- After the raycaster is done, "things" are rendered. During this step, clipping is performed against the wall and doors.
+%  \begin{figure}[H]
+% \centering
+%  \fullimage{wolf3d_6_scaled}
+%  \caption{Stage 3: Drawing Things (a.k.a: Scaled, a.k.a: Sprites)} 
+%  \end{figure}
+%  \begin{figure}[H]
+%   \centering
+%  \includegraphics[width=.56\textwidth]{imgs/drawings/ray_caster_explained/beginning2.pdf}
+% \end{figure}
+%  After the raycaster is done, "things" are rendered. During this step, clipping is performed against the wall and doors.
 
 
 
@@ -1724,7 +1744,7 @@ Followed by 49 transparent pixels, and finally one sequence of 5 pixels for the 
 \par
 \scaledimage{0.8}{light_sprite_column_bottom.png}
 \par
-Total: 64 texels. This column is encoded with 2 commands of 1 byte offset +  1 byte length + 5 bytes of payload. A payloadless command with length 0x00 marks the end. Total size is 17 bytes.\\
+Total: 64 texels. This column is encoded with 2 commands of 1 byte offset +  1 byte length + 5 bytes of payload. A payloadless command with length 0x00 marks the end. Total size is 16 bytes.\\
  \end{minipage}
 \begin{minipage}{.5\textwidth}
 \begin{figure}[H]

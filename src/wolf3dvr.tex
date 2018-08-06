@@ -46,8 +46,32 @@ Tom Roe, a 3D artist who uploaded a video on YouTube\footnote{"AWT Cybertag VR D
 
 \begin{figure}[H]
   \centering
-\scaledimage{0.9}{w3dvr/game.png}
+\scaledimage{1}{w3dvr/game.png}
  
 \end{figure}
+\par
+Tom Hall helped Cybertag by going on-site in Tennessee for two days. About ten new maps were specially designed for deathmatch while some were  simplyfied version of the adventure mode.\\
+\par
+\begin{fancyquotes}
+I playtested the levels to see if they worked. It was super-early VR and fuzzy, but kinda of novel. But you couldn't look up and down, and it was joystick control, so I applaud the early baby steps, but it wasn't particularly fun.\\
+\par
 
+I thought it was interesting, but it was way too early, and as I always say, "People don't like to put shit on their head."
+\bigskip \\
+\textbf{Tom Halls}
+ \end{fancyquotes}\\
+\par
+The source code does contains the special code id Software created for \textit{Cybertag VR}.\\
+\par
+\ccode{vr_variable.c}
+
+To be put in VR mode, the engine simply checks a command-line parameter.\\
+\par
+\ccode{vr_InitGame.c}
+
+
+The engine seems to have had a crude communication with the display via a driver at a hard-coded location (segment \cw{0x40}, offset \cw{0x40}). Each frame, the viewing angle was retrieved from the driver and a view rendered. There was no synchronization system to make sure both eyes were rendered without simulation time increase so the resulting effect must have been weird at times.\\
+\par
+
+\ccode{vr_if1.c}
 

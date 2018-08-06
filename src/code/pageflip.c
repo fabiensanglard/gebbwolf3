@@ -7,7 +7,7 @@
   asm inc dx
   asm mov al,ch
   asm out dx,al    ; set the high byte
-
+  asm dec dx
   asm mov al,0x0d  ; Tell the CRTC we want to update 
   asm out dx,al    ; the start address low register
   asm inc dx

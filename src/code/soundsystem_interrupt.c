@@ -12,11 +12,11 @@ static void SDL_SetTimerSpeed(void) {
 	word	rate;
 	void interrupt	(*isr)(void);
 
-	if (DigiMode == sds_PC) && DigiPlaying) { 
+	if ((DigiMode == sds_PC) && DigiPlaying) { 
 		rate = TickBase * 100;     // 7000 Hz
 		isr = SDL_t0ExtremeAsmService;
 	}
-	else if (music || ((DigiMode == sds_SoundSource) 
+	else if (music || ((DigiMode == sds_SoundSource)) 
 		&& DigiPlaying) {   
 		rate = TickBase * 10;     //  700 Hz
 		isr = SDL_t0FastAsmService;

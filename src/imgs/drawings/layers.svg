@@ -54,14 +54,14 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4118143"
-     inkscape:cx="321.66766"
-     inkscape:cy="854.28571"
+     inkscape:zoom="3.9932139"
+     inkscape:cx="368.58976"
+     inkscape:cy="917.98061"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="851"
+     inkscape:window-width="1680"
+     inkscape:window-height="1005"
      inkscape:window-x="0"
      inkscape:window-y="1"
      inkscape:window-maximized="1" />
@@ -73,7 +73,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -139,139 +139,154 @@
          y="159.66434"
          style="font-size:11.25px">HARDWARE</tspan></text>
     <g
-       transform="translate(-0.7083031,-6.7289238)"
-       id="g6095-1">
-      <rect
-         y="106.77045"
-         x="254.99103"
-         height="20.540945"
-         width="75.080696"
-         id="rect6089-3"
-         style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-      <text
-         sodipodi:linespacing="125%"
-         id="text6091-0"
-         y="121.52001"
-         x="260.90735"
-         style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"><tspan
-           y="121.52001"
-           x="260.90735"
-           id="tspan6093-2"
-           sodipodi:role="line">Manager</tspan></text>
+       id="g6081"
+       transform="translate(-2.5294922e-6,0)">
+      <g
+         transform="translate(-8.7864202,-10.783816)"
+         id="g6036-1">
+        <rect
+           style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect6089-1"
+           width="75.080696"
+           height="20.540945"
+           x="262.99103"
+           y="106.77045" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="275.30951"
+           y="119.97152"
+           id="text6091-5"
+           sodipodi:linespacing="125%"><tspan
+             style="font-size:11.25px"
+             sodipodi:role="line"
+             id="tspan6093-8"
+             x="275.30951"
+             y="119.97152">Manager</tspan></text>
+      </g>
+      <g
+         transform="translate(-3.505948,-1.0016994)"
+         id="g6036">
+        <rect
+           style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect6089"
+           width="75.080696"
+           height="20.540945"
+           x="262.99103"
+           y="106.77045" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="275.30951"
+           y="119.97152"
+           id="text6091"
+           sodipodi:linespacing="125%"><tspan
+             style="font-size:11.25px"
+             sodipodi:role="line"
+             id="tspan6093"
+             x="275.30951"
+             y="119.97152">Manager</tspan></text>
+      </g>
     </g>
     <g
-       id="g6095"
-       transform="translate(8,0)">
-      <rect
-         y="106.77045"
-         x="254.99103"
-         height="20.540945"
-         width="75.080696"
-         id="rect6089"
-         style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-      <text
-         sodipodi:linespacing="125%"
-         id="text6091"
-         y="121.52001"
-         x="260.90735"
-         style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"><tspan
-           y="121.52001"
-           x="260.90735"
-           id="tspan6093"
-           sodipodi:role="line"
-           style="font-size:11.25px">Manager</tspan></text>
+       transform="translate(89.834516,-0.63383526)"
+       id="g6081-4">
+      <g
+         transform="translate(-8.7864202,-10.783816)"
+         id="g6036-1-0">
+        <rect
+           style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect6089-1-5"
+           width="75.080696"
+           height="20.540945"
+           x="262.99103"
+           y="106.77045" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="275.30951"
+           y="119.97152"
+           id="text6091-5-4"
+           sodipodi:linespacing="125%"><tspan
+             style="font-size:11.25px"
+             sodipodi:role="line"
+             id="tspan6093-8-6"
+             x="275.30951"
+             y="119.97152">Manager</tspan></text>
+      </g>
+      <g
+         transform="translate(-3.505948,-1.0016994)"
+         id="g6036-9">
+        <rect
+           style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect6089-5"
+           width="75.080696"
+           height="20.540945"
+           x="262.99103"
+           y="106.77045" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="275.30951"
+           y="119.97152"
+           id="text6091-58"
+           sodipodi:linespacing="125%"><tspan
+             style="font-size:11.25px"
+             sodipodi:role="line"
+             id="tspan6093-1"
+             x="275.30951"
+             y="119.97152">Manager</tspan></text>
+      </g>
     </g>
     <g
-       transform="translate(87.830252,-6.7289238)"
-       id="g6095-13">
-      <rect
-         y="106.77045"
-         x="254.99103"
-         height="20.540945"
-         width="75.080696"
-         id="rect6089-8"
-         style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-      <text
-         sodipodi:linespacing="125%"
-         id="text6091-05"
-         y="121.52001"
-         x="260.90735"
-         style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"><tspan
-           y="121.52001"
-           x="260.90735"
-           id="tspan6093-1"
-           sodipodi:role="line">Manager</tspan></text>
-    </g>
-    <g
-       transform="translate(93.496718,-1.0624563)"
-       id="g6095-10">
-      <rect
-         y="106.77045"
-         x="254.99103"
-         height="20.540945"
-         width="75.080696"
-         id="rect6089-6"
-         style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-      <text
-         sodipodi:linespacing="125%"
-         id="text6091-4"
-         y="121.52001"
-         x="260.90735"
-         style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"><tspan
-           y="121.52001"
-           x="260.90735"
-           id="tspan6093-0"
-           sodipodi:role="line"
-           style="font-size:11.25px">Manager</tspan></text>
-    </g>
-    <g
-       transform="translate(174.24387,-7.4372322)"
-       id="g6095-2">
-      <rect
-         y="106.77045"
-         x="254.99103"
-         height="20.540945"
-         width="75.080696"
-         id="rect6089-9"
-         style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-      <text
-         sodipodi:linespacing="125%"
-         id="text6091-6"
-         y="121.52001"
-         x="260.90735"
-         style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"><tspan
-           y="121.52001"
-           x="260.90735"
-           id="tspan6093-22"
-           sodipodi:role="line">Manager</tspan></text>
-    </g>
-    <g
-       transform="translate(183.45189,0.35416042)"
-       id="g6095-3">
-      <rect
-         y="106.77045"
-         x="254.99103"
-         height="20.540945"
-         width="75.080696"
-         id="rect6089-94"
-         style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-      <text
-         sodipodi:linespacing="125%"
-         id="text6091-1"
-         y="121.52001"
-         x="260.90735"
-         style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"><tspan
-           y="121.52001"
-           x="260.90735"
-           id="tspan6093-3"
-           sodipodi:role="line"
-           style="font-size:11.25px">Manager</tspan></text>
+       transform="translate(179.66905,-0.38341042)"
+       id="g6081-8">
+      <g
+         transform="translate(-8.7864202,-10.783816)"
+         id="g6036-1-2">
+        <rect
+           style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect6089-1-8"
+           width="75.080696"
+           height="20.540945"
+           x="262.99103"
+           y="106.77045" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="275.30951"
+           y="119.97152"
+           id="text6091-5-5"
+           sodipodi:linespacing="125%"><tspan
+             style="font-size:11.25px"
+             sodipodi:role="line"
+             id="tspan6093-8-0"
+             x="275.30951"
+             y="119.97152">Manager</tspan></text>
+      </g>
+      <g
+         transform="translate(-3.505948,-1.0016994)"
+         id="g6036-3">
+        <rect
+           style="fill:#e9e9e9;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect6089-0"
+           width="75.080696"
+           height="20.540945"
+           x="262.99103"
+           y="106.77045" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="275.30951"
+           y="119.97152"
+           id="text6091-6"
+           sodipodi:linespacing="125%"><tspan
+             style="font-size:11.25px"
+             sodipodi:role="line"
+             id="tspan6093-6"
+             x="275.30951"
+             y="119.97152">Manager</tspan></text>
+      </g>
     </g>
   </g>
 </svg>

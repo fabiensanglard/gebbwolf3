@@ -83,7 +83,7 @@ A lot of friction was present since manufacturers had not embraced the gaming in
 
 
  \par
-\textbf{\underline{Trivia :}} Two other companies produced Intel 386 clones: AMD and Cyrix. Their mediocre performance did not justify the lower cost and as a result they never gained significant market share. Almost all PCs featured an Intel CPU. Interestingly, AMD evolved to become a serious challenger\footnote{The history of AMD vs Intel litigations could be the subject of its own book.} while Cyrix merged with National Semiconductor in 1997.\\
+\textbf{\underline{Trivia :}} Two other companies produced Intel 386 clones: AMD and Cyrix. Their mediocre performance did not justify the lower cost and as a result they never gained significant market share. Almost all PCs featured an Intel CPU. Interestingly, AMD evolved to become a serious challenger while Cyrix merged with National Semiconductor in 1997.\\
 \par
 
 \subsection{The Intel 80386}
@@ -95,6 +95,8 @@ A lot of friction was present since manufacturers had not embraced the gaming in
 The trip from blueprint to silicon was not a pleasure cruise for the 80386. It started as a side project for a small team in San Jose while select employees in Portland worked on the flagship Intel i960, a CPU using a new instruction set capable of running high level language and memory garbage collection in hardware. When the Portland team hit a wall due to performance, the 386 went from step child to king\footnote{Intel 386 Microprocessor Design and Development Oral History Panel.}.\\
 \par
 Two choices in the design of the 386 contributed to its success. First, the designers decided to listen to the programmers' feedback and dropped the idea of using a new instruction set. As a result the 386 is fully backward compatible with the 286. Second, they managed to add a 32 bit operating mode which solved many of the memory addressing issues of the 286.\\
+\par
+Like the 80286, the 80386 used a 1.5$\mu$m process. The increased surface (from 49 mm$^2$ to 104 mm$^2$) allowed to pack 275,000 transitors instead of 134,000.\\
 \par
 \textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View.} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "software poison".\\
 \par
@@ -120,11 +122,10 @@ Two choices in the design of the 386 contributed to its success. First, the desi
  
 
 
-\cfullimage{386_layout_drawing.png}{Intel 80386-DX die layout}
-\par
-Featured on this double page, a 386-DX 16 Mhz. If you are holding a physical 9.25''x7.5'' copy of this book, the CPU packaging is 36.8x36.8 mm square and the die is 12x12 mm, both 1:1 scale.\\
-\par
-Despite the apparent complexity, the 80386 can be summarized as three systems and a three stage instruction pipeline.
+\cfullimage{386_layout_drawing.png}{Intel 80386-DX 16 Mhz die layout\protect\footnotemark}
+\par \footnotetext{Source: "The Intel 80386- Architecture and Implementation" by Khaled A. El-Ayat and Rakesh K. Agarwal..}
+If you are holding a physical 9.25"x7.5" copy of this book, the CPU packaging is 36.8x36.8 mm square and the die is 10x10 mm, at 1:1 scale.\\
+\par Despite the apparent complexity, the 80386 can be summarized as three systems and a three stage instruction pipeline.
 
 
 \begin{figure}[H]
