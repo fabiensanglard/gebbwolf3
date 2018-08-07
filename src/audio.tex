@@ -17,7 +17,7 @@ The idea is to configure the hardware to trigger a hardware interrupt at a regul
  Wolfenstein 3D uses the latter approach and keeps tasks in its ISR very small and short. To this effect everything in the audio and heartbeat system is written in assembly and avoids "heavy" processing.
 
 \subsection{IRQs and ISRs}
-The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT\footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC\footnote{Programmable Interrupt Counter}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. Counter \#2 is connected to the RAM in order to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in the caching system.}. Counter \#1 is connected to the buzzer and generates sounds. Counter \#0 is connected to the PIC. When counter \#0 hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU.} and sends it to the PIC.\\
+The IRQ and ISR system relies on two chips: the Intel 8254 which is a PIT\footnote{Programmable Interval Timer} and the Intel 8259 which is a PIC\footnote{Programmable Interrupt Controller}. The PIT features a crystal oscillating in square waves. On each period, it decrements its three counters. Counter \#2 is connected to the RAM in order to automatically perform something called "memory refresh"\footnote{Without frequent refresh, DRAM will lose its content. This is one of the reasons it is slower and SRAM is preferred in the caching system.}. Counter \#1 is connected to the buzzer and generates sounds. Counter \#0 is connected to the PIC. When counter \#0 hits zero it generates an IRQ\footnote{Interrupt Request Line: Hardware lines over which devices can send interrupt signals to the CPU.} and sends it to the PIC.\\
 \par
 \begin{figure}[H]
   \centering
@@ -48,9 +48,9 @@ The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at
 		0Ah & IRQ2, Bus cascade services for second 8259 \\
 		0Bh & IRQ3, Serial port COM2 \\ 
 		0Ch & IRQ4, Serial port COM1 \\
-		0Dh & IRQ5, LPT2, Parallel port 2 \\
+		0Dh & IRQ5, LPT2, Parallel port (HDD on XT) \\
 		0Eh & IRQ6, Floppy Disk Controller \\
-		0Fh & IRQ7, LPT2, Parallel port 1 \\
+		0Fh & IRQ7, LPT1, Parallel port \\
 		10h & Video services (VGA)\\
 		11h & Equipment check \\
 		12h & Memory size determination \\
@@ -328,7 +328,7 @@ To do this, the audio system once again relies on the PIT chipset. Counter 0 is 
   \caption{Available modes of a PIT counter.}
 \end{figure}
 \par 
-When instructed to play a PC Speaker sound effect, the audio system sets itself to run at 140Hz via PIC Counter 0. Every times it wakes up, it reads the frequency to maintain for the next 1/140th of a second and writes it to Counter 2. The frequencies to use are encoded as a stream of bytes, the value of which is decoded as follows:\\
+When instructed to play a PC Speaker sound effect, the audio system sets itself to run at 140Hz via PIT Counter 0. Every times it wakes up, it reads the frequency to maintain for the next 1/140th of a second and writes it to Counter 2. The frequencies to use are encoded as a stream of bytes, the value of which is decoded as follows:\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pwm.c}

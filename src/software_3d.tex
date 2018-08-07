@@ -1701,7 +1701,7 @@ The occlusion array is written to during raycasting.\\
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_population.c}
 \end{minipage}
-While drawing sprites, the occlusion array is read. If the height of a wall is greater than that of a sprite, it means the wall is in front of the sprite and the full sprite rendition is skipped.\\
+While drawing sprites, the occlusion array is read. If the height of a wall is greater than that of a sprite, it means the wall is in front of the sprite and the column is skipped.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/wallheight_usage.c}

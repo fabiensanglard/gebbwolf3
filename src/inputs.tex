@@ -1,5 +1,5 @@
 \section{User Inputs}
-In an era before Microsoft harnessed all inputs under DirectInput API with Windows 95, developers had to write drivers for each input type they wanted to support. This involved talking directly to the hardware in the vendor's protocol on a physical port. The keyboard is plugged into a PS/2, the mouse to a serial port (DE9), and the joystick to a game port (DA-15) on the SoundBlaster.
+In an era before Microsoft harnessed all inputs under DirectInput API with Windows 95, developers had to write drivers for each input type they wanted to support. This involved talking directly to the hardware in the vendor's protocol on a physical port. The keyboard is plugged into a PS/2 or AT port, the mouse to a serial port (DE9), and the joystick to a game port (DA-15) on the SoundBlaster.
 
 
 
@@ -25,7 +25,7 @@ The state of the keyboard is maintained in a global array \cw{Keyboard}, availab
 
 
 \subsection{Mouse}
-A driver has to be loaded at startup for the mouse to be accessible. Beginning with DOS 2.1, operating systems had a default driver. It had to be added to \cw{config.sys} so it would reside in RAM.\\
+A driver has to be loaded at startup for the mouse to be accessible. DOS did not come with one. It was usually on a vendor provided floppy disk. \cw{MOUSE.COM} (or \cw{MOUSE.SYS}) had to be added to \cw{config.sys} so it would reside in RAM. It was usually stored in \cw{DOS} folder.\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/mouse.sys.c}
