@@ -680,7 +680,7 @@ VGA can be summarized as three major systems with input, storage, and output sys
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlling how VGA RAM is accessed (the CPU-VRAM interface)
 \item The framebuffer (the VRAM) made of four memory banks of 64KB (rather than one bank of 256KiB)
-\item The CRTC Controller and the DAC\footnote{Digital to Analog Converter.} taking care of converting the palette indexed framebuffer to RGB and then to analog signal (interface VRAM-CRT)
+\item The CRT Controller and the DAC\footnote{Digital to Analog Converter.} taking care of converting the palette indexed framebuffer to RGB and then to analog signal (VRAM-CRT interface)
 \end{itemize}
 
 The most surprising part of the architecture is obviously the framebuffer. Why have four small fragmented banks instead of one big linear one?\\
@@ -1027,7 +1027,7 @@ The model above is a CT1330A. Notice the double FM1312 chip in the center. The t
 \par
 \bu{Trivia :} The card appears to have a 16 bit ISA bus connector (check the difference with the Sound Blaster 1.0). However it does not have 'fingers' for data transfer on the higher "AT" portion of the bus connector. It uses the 16 bit extension to the ISA bus to provide the user with an additional choice for an IRQ (10) and DMA (0) channel only found on the 16 bit portion of the edge connector.\\
 \par
-\bu{Trivia :} Notice on the very left of the card in black there is an IDE Data interface to connect a CD-ROM. That was the only way to connect a CD-ROM to a PC back then.
+\bu{Trivia :} Notice on the very left of the card in black there is a Panasonic interface to connect a CD-ROM. That was the only way to connect a CD-ROM to a PC back then.
 
 
   \subsection{Disney Sound Source}
@@ -1039,7 +1039,7 @@ The model above is a CT1330A. Notice the double FM1312 chip in the center. The t
     \caption{The speaker box (DAC not shown).}
   \end{figure}
 \par
-It was incredibly easy to set up, simple to program (it could only play one type of PCM and had no FM synthesizer), and very cheap compared to the other audio solutions (\$14). It would have made programmers and customers happy if not for one serious limitation. The parallel port bandwidth\footnote{The parallel port maximum bandwidth is 150 kbits/s.} allowed a sampling rate up to 18,750 Hz but the design of the DSS limited the PCM sampling rate to 7,000Hz. This was still enough to produce pleasant sounds, but fell short when compared to the 22kHz or even 44kHz of a Sound Blaster Pro.
+It was incredibly easy to set up, simple to program (it could only play one type of PCM and had no FM synthesizer), and very cheap compared to the other audio solutions (\$14). It would have made programmers and customers happy if not for one serious limitation. The parallel port bandwidth\footnote{The parallel port maximum bandwidth was 150 kbits/s at the time. Enhanced Parallel Port and later Enhanced Capability Port significantly increased the transfer rate necessarey to scanner and laser printers.} allowed a sampling rate up to 18,750 Hz but the design of the DSS limited the PCM sampling rate to 7,000Hz. This was still enough to produce pleasant sounds, but fell short when compared to the 22kHz or even 44kHz of a Sound Blaster Pro.
 
 
 
@@ -1126,7 +1126,7 @@ The PS/2 port was used to connect a keyboard.
 \end{figure}
 
 
-Finally, a SoundBlaster sound card connected via the ISA bus provided a new port: a Game Port (DA-15) allowing for connection to a joystick.
+Finally, a SoundBlaster sound card connected via the ISA bus provided a Game Port (DA-15) allowing for connection to a joystick\footnote{In 1981, the very first IBM PC could be purchased with a DA-15 "Game Port" extension card at the cost of \$55 (\$159 in 2018).}.
  \begin{figure}[H]
 \centering
 \includegraphics[width=0.19\textwidth]{imgs/drawings/ports/DA-15_GamePort.eps}
