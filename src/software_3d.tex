@@ -230,7 +230,9 @@ Before starting to draw frames, the 3D renderer sets up the VRAM with static ele
 This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine draws the 3D view in the reserved white canvas in the center. Small portions at the bottom of the HUD are updated: Level, Score, Lives, Status, Health, Ammo, and Current Weapon receive special treatment via another VGA trick in order to speed up rendition.\\
 \par
 
-The hardware chapter described Mode \cw{12h}, which despite being unfit for games still has an interesting characteristic. Mode \cw{12h} is a 16 color mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operations are one byte wide, it is not hard to imagine the difficulty in plotting a single pixel without changing the others stored in the same byte. One would have to do four read, four xor, and four writes. Since the designers of the VGA were not complete sadists, they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
+The hardware chapter described Mode \cw{12h}, which despite being unfit for games still has an interesting characteristic. Mode \cw{12h} is a 16 color mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operations are one byte wide, it is not hard to imagine the difficulty in plotting a single pixel without changing the others stored in the same byte. One would have to do four read, four xor, and four writes.\\
+\par
+ Since the designers of the VGA were not complete sadists, they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
 \par
  \begin{figure}[H]
 \centering
@@ -440,7 +442,7 @@ While it is faster to copy four pixels in one read and one write, this trick doe
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/StatusDrawPic.c}
-\end{minipage}
+\end{minipage}\\
 \par
 This optimization still results in a 30\% overall speed increase.\\
 \par
@@ -456,7 +458,7 @@ This optimization still results in a 30\% overall speed increase.\\
 
 
 \subsection{Clearing the Screen}
-At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. To create this effect, it uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. Since values are written 16 bits at a time, it can write 8 pixels at a time.\\ 
+At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. It uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. With 16-bit registers, 8 pixels can be written with a single instruction resulting in a forecast of 5776 instructions for a full 3D canvas. Upon looking under the hood, a lesser figure is unveiled.\\ 
 \par
 \scaledimage{1}{clear_screen_pixels}
 
@@ -824,7 +826,7 @@ Note that $ystep$ and $xstep$ are simple lookups into the \cw{tan} array since $
 
 \subsubsection{Call Apogee}
 With maps being quick and easy to draw, a contest was planned. Players who found a special item in a particularly difficult to access place in the game were instructed to call the publisher (Apogee).\\
-\par The maze is located in E2M8. Behind a forest of push walls (white squares) and angry bosses (blue circles), the player finally encounters an strange sign (the red triangle).
+\par The maze is located in E2M8. Behind a forest of push walls (white squares) and angry bosses (blue circles), the player finally encounters a strange sign (the red triangle).
 
 
 \begin{figure}[H]

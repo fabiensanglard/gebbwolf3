@@ -5,6 +5,7 @@
 //
 /////////////////////////////////////////////////
 
+
 #define STARTPCSOUNDS      0
 #define STARTADLIBSOUNDS  81
 #define STARTDIGISOUNDS	 162
@@ -28,6 +29,7 @@ typedef enum {
 		ANGELTIREDSND,           // 80		
 		LASTSOUND
 } soundnames;
+
 
 // Music names & indexes
 typedef enum {

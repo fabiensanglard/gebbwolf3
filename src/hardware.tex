@@ -249,7 +249,7 @@ Although correct, this way of explaining floating point usually leaves programme
 \caption{Alternate Floating Point internals.}
 \end{figure}
   \bigskip  
-The window tells within which two consecutive power-of-two the number will be. From [$2^{-127}$,$2^{-126}$],..., [0.5,1], [1,2], [2,4], and all the way up to [$2^{127}$,$2^{128}$]. The offset divides the window in $ 2^{23} = 8388608 $  buckets. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g. [2,4]), you can "float" it right and represent the number within the next window (e.g. [4,8]). This only costs a little bit of precision.\\
+The window tells within which two consecutive power-of-two the number will be. From [$2^{-127}$,$2^{-126}$],..., [0.5,1], [1,2], [2,4], and all the way up to [$2^{127}$,$2^{128}$]. The offset divides the window in $ 2^{23} = 8,388,608 $  buckets. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g. [2,4]), you can "float" it right and represent the number within the next window (e.g. [4,8]). This only costs a little bit of precision.\\
 
 
 \par \bu{Trivia :} How much precision is lost when the window covers a wider range? Let's take an example with window [1,2] where the 8388608 offsets cover a range of 1 which gives a precision of $(2-1)/8388608=0.00000011920929$. In the window [2048,4096] the 8388608 offsets cover a range of $(4096-2048) = 2048$ which gives a precision $ (4096-2048)/8388608=0.0002$.\\
@@ -324,7 +324,7 @@ This is not a problem when everything is hardwired within a hardware floating po
 \par
 
 
-\textbf{\underline{Trivia :}} People who really wanted a hardware floating point unit could buy one. In the 90s the only people who could possibly want one would have been scientists (as per Intel's understanding of the market). The i387 chip was marketed as a "Math CoProcessor". Performance was average and price was outrageous\footnote{\$200 in 1991 equivalent to \$374 in 2018.} but they sold extremely well.\\
+People who really wanted a hardware floating point unit could buy one. In the 90s the only people who could possibly want one would have been scientists (as per Intel's understanding of the market). The i387 chip was marketed as a "Math CoProcessor". Performance was average and price was outrageous\footnote{\$200 in 1991 equivalent to \$374 in 2018.} but they sold extremely well.\\
 \begin{figure}[H]
 \centering
   
@@ -444,7 +444,7 @@ With a 20 bit address bus and registers too small to contain a whole address (16
 There are two kinds of pointers: \cw{near} and \cw{far}. A \cw{near} pointer is 16 bit and considered \emph{fast} because it can be used as is (but it only allows a \cw{jmp} in the current code segment). A \cw{far} pointer can access anything and allows a \cw{jmp} anywhere but is slower since a 16 bit segment register has to be shifted left 4 bits and combined with the other 16 bit offset register to form a 20 bit address.\\
 
 That may not sound too bad, but in practice this segmented addressing leads to many issues.
-The least problematic is about the language. Since C was invented on a flat memory machine, it had to be augmented by PC compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. To manipulate pointers, macros \codeword{MK\_FP} build them and \codeword{FP\_SEG/FP\_OFF} access fields. \cw{libc} is also "different": \cw{malloc} returns a \cw{near} pointer and therefore can only allocate up to 64KiB. To get more than 64KiB, \cw{farmalloc} is needed.\\
+The least problematic is about the language. Since C was invented on a flat memory machine, it had to be augmented by PC compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came to existence. Macro \codeword{MK\_FP} built them and \codeword{FP\_SEG/FP\_OFF} access individual components. \cw{libc} is also "different": \cw{malloc} returns a \cw{near} pointer and therefore can only allocate up to 64KiB. To get more than 64KiB, \cw{farmalloc} is needed.\\
 \par
 The larger issue is that two pointers referring to the same address can fail an equality test. In this model, the 1MiB of RAM is divided in 65536 paragraphs by the segment pointer. A paragraph is 16 bytes but an offset can be up to 65536 bytes which results in many overlaps. This can be explained with the following examples.\\
 \par
@@ -520,7 +520,7 @@ The XMS driver works\footnote{eXtended Memory Specification (XMS) July 19, 1988.
 
 
 \subsubsection{EMS API}
-The EMS driver opens a window beyond the addressable RAM, as shown on page \pageref{fig:ems_xms_layout}. The idea revolves around memory mapping. The driver allows for manipulating four units of 16KiB called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, a page can be swapped into the page frame.\\
+The EMS driver opens a window beyond the addressable RAM, as shown on page \pageref{fig:ems_xms_layout}. The idea revolves around memory mapping. The driver allows for manipulating four units of 16KiB called "pages" via a 64KiB area called "Page Frame". Upon request to the driver, a page can be swapped into the page frame without copying anything.\\
 \par
 
 
@@ -668,7 +668,7 @@ Opposite page, on top, the VGA card Trident 8800 (8 bit ISA). The eight chips on
 
 
 
-\bu{Trivia :} There was no GPU market back then. Since all video cards "only" had to be VGA compatible with 256KiB of RAM, many just bought the cheapest thing available. Note however that some cards had an 8 bit ISA bus connector (like the Trident) and some had a 16 bit ISA connector like the Diamond, making the Diamond transfer data twice as fast.\\
+\bu{Trivia :} There was no GPU market back then. Since all video cards "only" had to be VGA compatible with 256KiB of RAM, many just bought the cheapest thing available. Note however that some cards had an 8 bit ISA bus connector (like the Trident) and some had a 16 bit ISA connector (like the Diamond) which made them almost twice as fast.\\
 \par
 
 
@@ -676,7 +676,7 @@ Opposite page, on top, the VGA card Trident 8800 (8 bit ISA). The eight chips on
 
 \subsection{VGA Architecture}
 
-VGA can be summarized as three major systems with input, storage, and output systems:
+VGA can be summarized as three major systems with made of input, storage, and output:
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlling how VGA RAM is accessed (the CPU-VRAM interface)
 \item The framebuffer (the VRAM) made of four memory banks of 64KB (rather than one bank of 256KiB)
@@ -1018,16 +1018,14 @@ Figure \ref{asb12} is the Sound Blaster model CT1350B. Notice the OPL2 chip (lab
 
   \subsection{Sound Blaster Pro}
 The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but added support for stereo 22.05 kHz playback and 44.1 kHz in mono. It also added a "mixer" to blend audio sources (mic, line in, and CD) and choose the attenuation level of left and right outputs. Stereo was achieved with a pair of YM3812 chips (one for each audio channel).\\\label{sbmixerpage}
-\begin{figure}[H] 
-  \centering 
-  \fullimage{hardware/sbpro.png} 
-  \caption{A Sound Blaster Pro card.}
-\end{figure}
-The model above is a CT1330A. Notice the double FM1312 chip in the center. The two big chips in the upper left are the DSP (CT1341) and the Mixer. Below, labeled "Creative" is the big CT1316 bus interface.\\
+
+  \cfullimage{hardware/sbpro.png}{A Sound Blaster Pro card.}
+
+Figure \ref{hardware/sbpro.png} shows a Sound Blaster Pro, model CT1330A where most components were duplicated for stereo purposes. Notice the double FM1312 chip in the center. The two big chips in the upper left are the DSP (CT1341) and the Mixer. Below, labeled "Creative" is the big CT1316 bus interface.\\
 \par
 \bu{Trivia :} The card appears to have a 16 bit ISA bus connector (check the difference with the Sound Blaster 1.0). However it does not have 'fingers' for data transfer on the higher "AT" portion of the bus connector. It uses the 16 bit extension to the ISA bus to provide the user with an additional choice for an IRQ (10) and DMA (0) channel only found on the 16 bit portion of the edge connector.\\
 \par
-\bu{Trivia :} Notice on the very left of the card in black there is a Panasonic interface to connect a CD-ROM. That was the only way to connect a CD-ROM to a PC back then.
+Notice on the very left of the card in black there is a Panasonic interface to connect a CD-ROM. That was the only way to connect a CD-ROM to a PC back then.
 
 
   \subsection{Disney Sound Source}
@@ -1035,7 +1033,7 @@ The model above is a CT1330A. Notice the double FM1312 chip in the center. The t
   \par
   \begin{figure}[H] 
     \centering 
-    \scaledimage{0.9}{hardware/ss.png} 
+    \scaledimage{0.8}{hardware/ss.png} 
     \caption{The speaker box (DAC not shown).}
   \end{figure}
 \par
