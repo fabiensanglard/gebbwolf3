@@ -19,7 +19,7 @@ Even for a complex scene involving multiple doors and rooms, this method can del
 \begin{figure}[H]
   \centering
  \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_door.png}
- \caption{Rendition of the 320 column of pixels (with texturing).} 
+ \caption{Rendition of the 320 columns of pixels (with texturing).} 
 \end{figure} 
 
 
@@ -43,7 +43,7 @@ As we saw when we unrolled the loop, the action scene is made of frames in a loo
  \lstinputlisting[language=C]{code/flawded_game_loop.c}
  \end{minipage}
 \par
-This is a pretty standard design for an engine from the early 90s. However, it has a major flaw: each slice of the game has a different duration depending on how long it takes to render and update. This variability makes the game nondeterministic between two machines, or even between two runs on the same machine. In the next drawing, all three timeslices representing three frames have different durations.\\
+This is a pretty standard design for an engine from the early 90's. However, it has a major flaw: each slice of the game has a different duration depending on how long it takes to render and update. This variability makes the game nondeterministic between two machines, or even between two runs on the same machine. In the next drawing, all three timeslices representing three frames have different durations.\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.pdf}
@@ -58,7 +58,7 @@ This is a pretty standard design for an engine from the early 90s. However, it h
 \par
 To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulates events at fixed interval (\cw{DEMOTICK} = 4)\footnote{70/4 = 17.5, the machine used to record the demo ran at 17 fps. Probably a high end 386.}. This hack resulted in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
 \par
-In 1993, the Doom engine would solve this issue by simulating the world at fixed intervals\footnote{Doom run at a fixed rate of 35 fps.}.\\
+In 1993, the Doom engine would solve this issue by simulating the world at fixed intervals\footnote{Doom runs at a fixed rate of 35 fps.}.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed_game_loop.c}
@@ -133,7 +133,7 @@ The longer the distance the ray traveled, the shorter the column is drawn on scr
  \caption{Stage 2: Drawing Walls: 160 rays}  
 \end{figure}
  \begin{minipage}{.4\textwidth}
- Doors are not sprites, they are part of the solid world. Notice how on the map a door is block aligned with the wall yet is rendered farther for perspective.\\
+ Doors are not sprites, they are part of the solid world. Notice how on the map a door is block-aligned with the wall yet is rendered farther for perspective.\\
  \par
  The raycaster recognizes door tiles and injects a delta to the distance a ray traveled. If the door is partially open, the raycaster is also able to detect if the ray should stop or be allowed to traverse the tile.
  \end{minipage}
@@ -230,14 +230,14 @@ Before starting to draw frames, the 3D renderer sets up the VRAM with static ele
 This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine draws the 3D view in the reserved white canvas in the center. Small portions at the bottom of the HUD are updated: Level, Score, Lives, Status, Health, Ammo, and Current Weapon receive special treatment via another VGA trick in order to speed up rendition.\\
 \par
 
-The hardware chapter described Mode \cw{12h}, which despite being unfit for games still has an interesting characteristic. Mode \cw{12h} is a 16 color mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operations are one byte wide, it is not hard to imagine the difficulty in plotting a single pixel without changing the others stored in the same byte. One would have to do four read, four xor, and four writes.\\
+The hardware chapter described Mode \cw{12h}, which despite being unfit for games still has an interesting characteristic. Mode \cw{12h} is a 16-color mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operations are one byte wide, it is not hard to imagine the difficulty in plotting a single pixel without changing the others stored in the same byte. One would have to do four read, four xor, and four writes.\\
 \par
  Since the designers of the VGA were not complete sadists, they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
 \par
  \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/latches.pdf}
- \caption{Latches memorize read operation from each bank. The memorized value can be used for later writes.}
+ \caption{Latches memorize read operations from each bank. The memorized value can be used for later writes.}
  \end{figure}
 With this architecture, each time the VRAM is read \circled{R}, the latch from the corresponding bank is loaded with the read value. Each time a value is written to the VRAM \circled{W}, it can be composited by the ALU using the latched value and the written value. This design allowed mode \cw{12h} programmers to plot a pixel easily with one read, one ALU setup, and one write instead of four reads, 4 xors, and 4 writes.\\
 \par
@@ -497,7 +497,7 @@ Following are ceiling colors \cw{0x1D}, \cw{0xBF}, \cw{0x4E} and \cw{0x8D}.\\
 
 \subsection{Solving the CPU Problem}
 
-In the Chapter \ref{chapter_hardware} \nameref{chapter_hardware} p\pageref{chapter_hardware} describing CPU capabilities, the reader was left with a problem: the machine cannot perform floating point operations quickly enough. This is a pretty big issue for a 3D engine given all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed point arithmetic".
+In the Chapter \ref{chapter_hardware} \nameref{chapter_hardware} p\pageref{chapter_hardware} describing CPU capabilities, the reader was left with a problem: the machine cannot perform floating point operations quickly enough. This is a pretty big issue for a 3D engine given all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed-point arithmetic".
 
 
 
@@ -505,7 +505,7 @@ In the Chapter \ref{chapter_hardware} \nameref{chapter_hardware} p\pageref{chapt
 
 
 
-\subsubsection{Fixed Point}
+\subsubsection{Fixed-Point}
 The normal layout of an \cw{int} is as follows.
 \begin{figure}[H]
 \centering
@@ -521,12 +521,12 @@ The value of the sequence of bits \emph{0010001000100010}:
 Represents $ 2^{13} + 2^9 + 2^5 + 2^1 =  8738 $.\\
  \par
 
-Fixed Point allows for keeping track of fractions while still using the integer operations of the CPU. The machine manipulates what are supposed to be integer numbers, but the programmer sees them as a value containing an integer part and a fractional part:\\
+Fixed-Point allows for keeping track of fractions while still using the integer operations of the CPU. The machine manipulates what are supposed to be integer numbers, but the programmer sees them as a value containing an integer part and a fractional part:\\
 \par
 \begin{figure}[H]
  \centering
   \input{imgs/drawings/fp.tex}
- \caption{Fixed point layout 8:8 (8 bits for the integer part and 8 bits for the fractional part).} \label{fig:mips}
+ \caption{Fixed-point layout 8:8 (8 bits for the integer part and 8 bits for the fractional part).} \label{fig:mips}
 \end{figure}
                                 
 The same sequence of bits \emph{0010001000100010} with different powers of two...
@@ -543,7 +543,7 @@ $ = 34.1328125$\\
 
 \bigskip
 
-The beauty of fixed point is that addition and subtraction work exactly like integers from the CPU instruction side.\\
+The beauty of fixed-point is that addition and subtraction work exactly like integers from the CPU instruction side.\\
 
 
 
@@ -591,9 +591,9 @@ The beauty of fixed point is that addition and subtraction work exactly like int
    \caption{1.5 >> 1 = 0.75} 
 \end{figure}
 
-The notation for fixed point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONAL\_PART}. In the game, the player's position is \cw{16:16}. The grid location is one shift operation away \cw{player->x $\gg$ 16}.\\
+The notation for fixed-point is \cw{BITS\_FOR\_INTEGER\_PART:BITS\_FOR\_FRACTIONAL\_PART}. In the game, the player's position is \cw{16:16}. The grid location is one shift operation away \cw{player->x $\gg$ 16}.\\
 \par
-Performing multiplication and division are special cases. There are two ways to do this: either multiply two 32 bit values into 64 bits (and drop the upper and lower 16 bits) or drop the precision of both fixed point values and then multiply them into 32 bits. Both methods involve accepting a loss of data via overflow or underflow. Let's take the example of $98.7539 * 1.5$.
+Performing multiplication and division are special cases. There are two ways to do this: either multiply two 32-bit values into 64 bits (and drop the upper and lower 16 bits) or drop the precision of both fixed-point values and then multiply them into 32 bits. Both methods involve accepting a loss of data via overflow or underflow. Let's take the example of $98.7539 * 1.5$.
 
 
 \par
@@ -633,7 +633,7 @@ $128 + 16 + 4 + 0.125 = 148.125 $\\
 \par
 Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bits disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8).\\
 \par
-In the source code, all fixed point variables are 32 bits wide and use a special \cw{typedef}.\\
+In the source code, all fixed-point variables are 32 bits wide and use a special \cw{typedef}.\\
 \par
 \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/fixed.c}
@@ -653,7 +653,7 @@ And much easier when the engine knows two \cw{fixed} are the same sign:\\
  \end{minipage}
 \par
 
- \textbf{\underline{Trivia :}}  Fixed Point Arithmetic usage was not limited to PC gaming. Many game consoles manufactured in the 90s and later did not feature floating point units in order to reduce production cost and maximize CPU pipeline throughput. Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples.
+ \textbf{\underline{Trivia :}}  Fixed-Point Arithmetic usage was not limited to PC gaming. Many game consoles manufactured in the 90s and later did not feature floating point units in order to reduce production cost and maximize CPU pipeline throughput. Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples.
  
 
  
@@ -667,7 +667,7 @@ With the CPU \cw{float}/\cw{int} problem out of the way, it is time to study how
  \includegraphics[width=.8\textwidth]{imgs/drawings/coo_sys.pdf}
 \end{figure}
 \par
-Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed point variables are used all over the place. Column heights are 29:3. Player position is 16:16. Angles however are \cw{int}s representing tenths of degrees with a range [0, 3600].
+Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed-point variables are used all over the place. Column heights are 29:3. Player position is 16:16. Angles however are \cw{int}s representing tenths of degrees with a range [0, 3600].
 
 
 
@@ -702,12 +702,12 @@ In contrast, VSD is an open-ended problem, and there are dozens of approaches cu
 \vspace{-10pt}
 \scaledimage{0.45}{gpbb.png} 
 \end{wrapfigure} 
-\bu{Trivia: } In the early 90s, Michael Abrash writings were one of the rare source of high quality information when it came to Computer Graphics and Assembly programming.\\
+\bu{Trivia: } In the early 90s, Michael Abrash's writings were one of the rare sources of high quality information when it came to Computer Graphics and Assembly programming.\\
 \par
-He published two highly regarded books ("Zen of Assembly Language" in 1990 and "Zen of Code Optimization" in 1994) but it is though his column "Ramblings in Realtime" published monthly in Dr. Dobb's Journal that he achieved notoriety.
+He published two highly regarded books ("Zen of Assembly Language" in 1990 and "Zen of Code Optimization" in 1994) but it is through his column "Ramblings in Realtime" published monthly in Dr. Dobb's Journal that he achieved notoriety.
  \\
 \par
- In 1997 most of Michael Abrash work plus new articles about Quake engine were compiled into the "Graphics Programming Black Book". The title and dimension of this book are an homage to Mr Abrash's masterpiece.
+ In 1997 most of Michael Abrash's work plus new articles about Quake engine were compiled into the "Graphics Programming Black Book". The title and dimension of this book are an homage to Mr Abrash's masterpiece.
 
 
 
@@ -717,9 +717,9 @@ He published two highly regarded books ("Zen of Assembly Language" in 1990 and "
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/situation.pdf} 
 \end{figure}
-VSD is not only complicated to do right, it is also hard to do fast. It is easy to understand with a small example where objects are free form with no alignment, as follows. In a world with no constraints, it is difficult to find the intersection of a ray with an object.\\
+VSD is not only complicated to do right, it is also hard to do fast. It is easy to understand with a small example where objects are free-form with no alignment, as follows. In a world with no constraints, it is difficult to find the intersection of a ray with an object.\\
 \par
-In the example above, a valid approach would be to iterate over all objects in the world and perform ray marching, which consists of checking if a ray intersects objects at a regular interval. However, this is very CPU intensive and would not be fast enough with fixed point. Not to mention some objects could slip between the regular intervals, making VSD inaccurate.
+In the example above, a valid approach would be to iterate over all objects in the world and perform ray marching, which consists of checking if a ray intersects objects at a regular interval. However, this is very CPU intensive and would not be fast enough with fixed-point. Not to mention some objects could slip between the regular intervals, making VSD inaccurate.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/unaligned.pdf}
@@ -741,7 +741,7 @@ These constraints enable a variant of the DDA algorithm\footnote{Digital differe
 \par
 \begin{fancyquotes}
 \par
-Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacomb 3D.  C3D (and Hovertank 3D before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn't really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel "rock solid".
+Much was made about the "ray casting" used in Wolfenstein, but the real reason for it was that I had a lot of trouble with wall-span rendering in Catacomb 3D.  C3D (and Hovertank 3D before that) shipped with various graphics glitches that you could get in some combinations of map block configurations, position, and viewing angle.  Some were due to fixed-point precision issues not being handled optimally, and some were due to clipping and culling issues that I didn't really get a handle on until a couple years later.  In any case, they bothered me a lot.  Spurious graphics glitches do a lot of harm to the sense of immersion in a game, and I very much wanted Id games to feel "rock solid".
  \bigskip \\
 There was a clear performance cost to it - doing 320 traces through a tile map and treating each column independently is much slower than looping through a few long wall segments.  However, the resulting code was small and very regular compared to the hairball of my wall span renderers, and it did deliver the rock-solid feel I wanted.
  \bigskip \\
@@ -758,7 +758,7 @@ If you made extremely jagged block maps that would turn into many dozen independ
 \end{wrapfigure} 
 \bu{Trivia :} The cost of raycasting would end up being too much for the tiny 5A22 CPU when porting Wolfenstein 3D to Super Nintendo.\\
 \par
- The first version of the port reached an unacceptably low framerate which threatened the viability project. John Carmack ended up preprocessing map with Binary Space Partitioning to sort map elements. Walls were them projected into screenspace and textured.\\
+ The first version of the port reached a low framerate which threatened its viability. John Carmack ended up preprocessing maps with Binary Space Partitioning to speed up elements sorting. Walls were draw "near to far" with an occlusion array to prevent overdraw.\\
  \par
  On the right, the BSP resulting from repeatedly splitting map \cw{E1M1} in two, until each "area" is convex.
 
@@ -825,7 +825,7 @@ Note that $ystep$ and $xstep$ are simple lookups into the \cw{tan} array since $
 
 
 \subsubsection{Call Apogee}
-With maps being quick and easy to draw, a contest was planned. Players who found a special item in a particularly difficult to access place in the game were instructed to call the publisher (Apogee).\\
+With maps being quick and easy to draw, a contest was planned. Players who found a special item in a particularly difficult-to-access place in the game were instructed to call the publisher (Apogee).\\
 \par The maze is located in E2M8. Behind a forest of push walls (white squares) and angry bosses (blue circles), the player finally encounters a strange sign (the red triangle).
 
 
@@ -1097,16 +1097,15 @@ To avoid this distortion and produce a more pleasant rendition, what must be use
  \caption{Direct distance \cw{d} and projected distance \cw{z}.}
 \end{figure}
 
-This projection (z) is mathematically hard to calculate in one go (especially with fixed point). The trick is to break it down into two components and use the mnemonic SOH-CAH-TOA.\\
+This projection (z) is mathematically hard to calculate in one go (especially with fixed-point). The trick is to break it down into two components and use the mnemonic SOH-CAH-TOA.\\
 
 
 \begin{figure}[H]
 \centering
  \input{imgs/drawings/fish_eye/correct_way.tex}
- \caption{Projected distance \cw{z} it calculated via two sub-components.}
+ \caption{Projected distance \cw{z} is calculated via two sub-components.}
 \end{figure}
 Using CAH gives $A = dx * \cos(\alpha)$ and SOH gives $B = dy * \sin(\alpha) $.\\
-\pagebreak
 
 Adding them together becomes:
 \par
@@ -1140,7 +1139,7 @@ $z = A + B = dx * \cos(\alpha) - dy * \sin(\alpha) $
   \end{equation*}
 \end{figure}
 \par
-For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy). It would rotate coordinates from map space to player space (where axis orientation is dictated by the player view angle) as show in figure \ref{spaces2}. \label{rotatematrix}
+For people who like equations, the overall operation can be seen as the multiplication of a rotation matrix with the vector intercept (dx,dy). It would rotate coordinates from map space to player space (where axis orientation is dictated by the player view angle) as shown in figure \ref{spaces2}. \label{rotatematrix}
 \begin{figure}[H]
   \centering
   \begin{equation*}
@@ -1175,7 +1174,7 @@ This correction is enough to give pleasant straight lines for the walls. To demo
 \par
 \drawing{spaces2}{Translating from map space to player space.}
 \par
-The map space coordinates of point A and B are transformed in player space coordinate where the player is located at coordinate \cw{0,0}.\\
+The map space coordinates of points A and B are transformed in player space coordinate where the player is located at coordinate \cw{0,0}.\\
 
 
 
@@ -1248,7 +1247,7 @@ As the photoshopped pink line shows, each column of pixels for a wall is centere
 \end{minipage}
 
 \par
-This would involve a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} always cause a pipeline flush.}, a fixed point accumulator, and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible function allows \cw{scaleTextureToHeight} to accept any height from \cw{0} to \cw{INT\_MAX}.\\
+This would involve a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} always cause a pipeline flush.}, a fixed-point accumulator, and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible function allows \cw{scaleTextureToHeight} to accept any height from \cw{0} to \cw{INT\_MAX}.\\
 \par
  There is a faster way to do this which involves the usual RAM vs CPU tradeoff. In this case we can invest a little bit of RAM to gain a lot of CPU time. The idea is to make the scaler less generic and instead generate hard-coded functions.\\
  \par 
@@ -1713,7 +1712,7 @@ Since the entire screen is refreshed on the next frame, the occlusion array does
 
 
 \begin{fancyquotes}
-There was still a little more room for improvement in compiled scaler performance for wall textures:  if the textures were reorganized so that they went "middle-out", you could avoid half the loads by doing a 16 bit read and writing out AL for the top pixels and AH for the bottom pixels.\\
+There was still a little more room for improvement in compiled scaler performance for wall textures:  if the textures were reorganized so that they went "middle-out", you could avoid half the loads by doing a 16-bit read and writing out AL for the top pixels and AH for the bottom pixels.\\
 \par 
 The combination of the compiled scalers getting more efficient at higher magnifications and the VGA latch writes avoiding entire columns let Wolf maintain almost the same speed with big walls and small walls, which was important.\\
 \par

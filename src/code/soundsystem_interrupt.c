@@ -6,7 +6,8 @@ typedef	enum {
   sds_SoundSource,
   sds_SoundBlaster
 } SDSMode;
-extern	SDSMode		DigiMode;
+
+extern	SDSMode	 DigiMode;
 
 static void SDL_SetTimerSpeed(void) {
 	word	rate;

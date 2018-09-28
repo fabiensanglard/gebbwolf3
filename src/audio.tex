@@ -92,7 +92,7 @@ The PIT chip runs at 1.193182 MHz. This initially seems like an odd choice from 
 
 
 \subsection{Heartbeats}
-Each time the interrupt system triggers, it runs another small (yet paramount) system before taking care of audio requests. The sole goal of this heartbeat system is to maintain a 64 bit variable: \cw{TimeCount}.\\
+Each time the interrupt system triggers, it runs another small (yet paramount) system before taking care of audio requests. The sole goal of this heartbeat system is to maintain a 64-bit variable: \cw{TimeCount}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/timecount.c}
@@ -234,7 +234,7 @@ AdLib only has an FM synthesizer, with sounds played on its Channel 0. Sounds ar
 
 \subsection{Disney Sound Source System: PCM}
 
-The Disney Sound Source is simple to program\footnote{The Programmer's Guide to the Disney Sound Source is a whopping 2 pages!} because it can do only one thing. It plays  8 bit PCM audio at 7000Hz on a single channel. That's it -- nothing more, nothing less. Data is fed through the parallel port to the device, which is stored into a 16-byte FIFO queue, which then feeds an 8-bit DAC connected to its integrated loudspeaker.\\ 
+The Disney Sound Source is simple to program\footnote{The Programmer's Guide to the Disney Sound Source is a whopping 2 pages!} because it can do only one thing. It plays 8-bit PCM audio at 7000Hz on a single channel. That's it -- nothing more, nothing less. Data is fed through the parallel port to the device, which is stored into a 16-byte FIFO queue, which then feeds an 8-bit DAC connected to its integrated loudspeaker.\\ 
 \par
 Even though the sampling rate is 7000Hz, the sound system needs not to run at such a high frequency. The 16 byte buffer allows to run at 700Hz and send a batch of 9-10 bytes every iterations. Every time the audio system wakes, it reads the DAC status to check how many bytes have been consumed in the FIFO. The engine pushes as many bytes as possible until the FIFO is full and returns. When the FIFO empties, the Disney Sound Source stops making noise.\\
 \par
@@ -361,7 +361,7 @@ Notice how \cw{b6} (\cw{10110110}) is sent to the PIC Command register:
 	\item \cw{10} = Target Counter 2.
  	\item \cw{11} = High \& low byte of counter updated.
 	\item \cw{011} = Square Wave Generator.
-	\item \cw{0} = 16 bit mode.
+	\item \cw{0} = 16-bit mode.
 \end{itemize}
 \par
 
@@ -384,7 +384,7 @@ The source code features an audio code path which plays PCM digitized sound via 
 \lstinputlisting[language=C]{code/sound_fork.c}
 \end{minipage}
 \par
-The problem of this method is to find a way to fit 8 bit samples into a 1 bit DAC. Let's take the example of the digitized sound "Mein Leben" which has 6,896 samples of 8 bits.\\
+The problem of this method is to find a way to fit 8-bit samples into a 1-bit DAC. Let's take the example of the digitized sound "Mein Leben" which has 6,896 samples of 8 bits.\\
 
 
 
@@ -402,7 +402,7 @@ The audio system goes for a surprisingly straightforward solution. It set itself
   \lstinputlisting[language={[x86masm]Assembler}]{code/pcm_on_speaker.asm}
 \end{minipage}
 \par
- \cw{SDL\_t0ExtremeAsmService} takes an 8 bit value and converts it to \cw{00} or \cw{10} to drive bit 1 in I/O port \cw{61h}. When bit 1 is set to 1, the beeper cone will go in position high and when set to 0, it will go to position low.\\
+ \cw{SDL\_t0ExtremeAsmService} takes an 8-bit value and converts it to \cw{00} or \cw{10} to drive bit 1 in I/O port \cw{61h}. When bit 1 is set to 1, the beeper cone will go in position high and when set to 0, it will go to position low.\\
 \par
 
 \par
@@ -437,7 +437,7 @@ As good as it sounds, this codepath shipped but was never enabled. According to 
 
 
 \subsection{PC Speaker: PWM}
-Even though this method was not used in Wolfenstein 3D, it is worth mentioning a third way hackers managed to play pleasant sounds via the PC speaker. The method produced audio quality superior to both the square waves and the 1 bit conversion we just saw. It was called Pulse Width Modulation.\\
+Even though this method was not used in Wolfenstein 3D, it is worth mentioning a third way hackers managed to play pleasant sounds via the PC speaker. The method produced audio quality superior to both the square waves and the 1-bit conversion we just saw. It was called Pulse Width Modulation.\\
 \par
 The idea is to manipulate the speaker cone manually and instruct it to move faster than it can, interrupting it "somewhere" between its position up or down.\\
 \par

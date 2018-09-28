@@ -85,7 +85,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.92859779"
-     inkscape:cx="277.34353"
+     inkscape:cx="206.26862"
      inkscape:cy="738.35287"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -103,7 +103,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -148,7 +148,7 @@
        x="117.15534"
        y="206.77565" />
     <g
-       transform="matrix(1.3275984,0,0,-1.3276234,-59.679089,232.95129)"
+       transform="matrix(1.3275984,0,0,-1.3276234,-59.679089,250.95129)"
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-width:0.75323272;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="g2168"><path
@@ -225,26 +225,26 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="10.768925"
-       y="153.15697"
+       y="169.15697"
        id="text14439"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan14441"
          x="10.768925"
-         y="153.15697"
+         y="169.15697"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;line-height:125%;font-family:Sans;-inkscape-font-specification:'Sans, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start">HDD</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="6.4613528"
-       y="190.84819"
+       y="116.84819"
        id="text14443"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         id="tspan14445"
          x="6.4613528"
-         y="190.84819"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:125%;font-family:Sans;-inkscape-font-specification:'Sans, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start">SWAP.WL</tspan></text>
+         y="116.84819"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:125%;font-family:Sans;-inkscape-font-specification:'Sans, Normal';text-align:start;writing-mode:lr-tb;text-anchor:start"
+         id="tspan4213">VSWAP.WL</tspan></text>
     <g
        id="g5793"
        transform="translate(-3.2306775,0)">
