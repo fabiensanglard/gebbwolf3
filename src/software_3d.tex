@@ -456,7 +456,7 @@ This optimization still results in a 30\% overall speed increase.\\
 
 
 
-
+\vspace{-10pt}
 \subsection{Clearing the Screen}
 At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. It uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. With 16-bit registers, 8 pixels can be written with a single instruction resulting in a forecast of 5776 instructions for a full 3D canvas. Upon looking under the hood, a lesser figure is unveiled.\\ 
 \par
