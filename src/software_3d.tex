@@ -458,7 +458,7 @@ This optimization still results in a 30\% overall speed increase.\\
 
 \vspace{-10pt}
 \subsection{Clearing the Screen}
-At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. It uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. With 16-bit registers, 8 pixels can be written with a single instruction resulting in a forecast of 5776 instructions for a full 3D canvas. Upon looking under the hood, a lesser figure is unveiled.\\ 
+At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. It uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. With 16-bit registers, 8 pixels can be written with a single instruction. This would result in 5776 instructions for a full 3D canvas. Yet upon looking under the hood, a lesser figure is unveiled.\\ 
 \par
 \scaledimage{1}{clear_screen_pixels}
 
@@ -467,7 +467,7 @@ At the beginning of a frame, the engine switches to the next page and clears the
  \lstinputlisting[language=C,morekeywords=asm]{code/VGAClearScreen.c}
  \end{minipage}
 \par
-Clearing the 3D canvas made of 304*152 = 46,208 pixels requires only 27 instructions thanks to \cw{REP STOSW}.\\
+Clearing the 3D canvas made of 304*152 = 46,208 pixels requires only 779 instructions thanks to \cw{REP STOSW} (16 for setup, 5x76 for toploop, 3 for inter-loop, and 5x76 for bottomloop).\\
 \par
 Colors for the floor and the ceiling do not come from map data files. The ground is always the same color (\cw{0x19}) and ceiling colors are hardcoded in the engine on a per level basis.\\
 \par
@@ -631,7 +631,7 @@ Finally multiply them together:
 \end{figure} 
 $128 + 16 + 4 + 0.125 = 148.125 $\\
 \par
-Notice that you have to be careful. In the previous example some precision was lost ($ 2^{-8}$ bits disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8).\\
+In the previous example some precision was lost ($ 2^{-8}$ bits disappeared during the $\gg 4$ operation) and an overflow could have occurred (multiplying by 3 instead of 1.5 would have gone past the precision of 8:8).\\
 \par
 In the source code, all fixed-point variables are 32 bits wide and use a special \cw{typedef}.\\
 \par
@@ -645,6 +645,7 @@ Not all \cw{fixed} are the same. Some are \cw{16:16}, some are \cw{24:8} and ope
  \lstinputlisting[language=C,morekeywords={asm,fixed}]{code/FixedByFrac.c}
  \end{minipage}
 \par
+\vspace{10pt}
 And much easier when the engine knows two \cw{fixed} are the same sign:\\
 
 \par
@@ -652,7 +653,7 @@ And much easier when the engine knows two \cw{fixed} are the same sign:\\
  \lstinputlisting[language=C]{code/fixed_mul.c}
  \end{minipage}
 \par
-
+\vspace{10pt}
  \textbf{\underline{Trivia :}}  Fixed-Point Arithmetic usage was not limited to PC gaming. Many game consoles manufactured in the 90s and later did not feature floating point units in order to reduce production cost and maximize CPU pipeline throughput. Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples.
  
 
@@ -687,7 +688,8 @@ Since one block is 8 feet, maps can be 512 feet wide and tall. Fixed-point varia
 
 \subsubsection{Square World and Ray Casting}
 Drawing the walls is all about determining what is visible, what is not, and what is in front of what. Michael Abrash's view on the topic tells it all:\\
-\par
+\vspace{-10pt}
+
 \begin{fancyquotes}
 I want to talk about what is, in my book, the toughest 3-D problem of all, visible surface determination (drawing the proper surface at each pixel), and its close relative, culling (discarding non-visible polygons as quickly as possible, a way of accelerating visible surface determination). In the interests of brevity, I'll use the abbreviation VSD to mean both visible surface determination and culling from now on.
  \bigskip \\
@@ -716,10 +718,12 @@ He published two highly regarded books ("Zen of Assembly Language" in 1990 and "
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/situation.pdf} 
+\caption{}
+\label{situation}
 \end{figure}
-VSD is not only complicated to do right, it is also hard to do fast. It is easy to understand with a small example where objects are free-form with no alignment, as follows. In a world with no constraints, it is difficult to find the intersection of a ray with an object.\\
+VSD is not only complicated to do right, it is also hard to do fast. It is easy to understand with a small example where objects are free-form like in figure \ref{situation}. In a world with no constraints, it is difficult to find the intersection of a ray with an object.\\
 \par
-In the example above, a valid approach would be to iterate over all objects in the world and perform ray marching, which consists of checking if a ray intersects objects at a regular interval. However, this is very CPU intensive and would not be fast enough with fixed-point. Not to mention some objects could slip between the regular intervals, making VSD inaccurate.
+A valid approach would be to iterate over all objects in the world and perform ray marching, which consists of checking if a ray intersects objects at a regular interval. However, this is very CPU intensive and would not be fast enough with fixed-point. Not to mention some objects could slip between the regular intervals, making VSD inaccurate.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/casting_a_ray/unaligned.pdf}
@@ -737,7 +741,9 @@ In a world with some constraints the problem becomes much simpler. If a map is m
  \caption{Raycasting with a grid.}
 \end{figure}
 \par
-These constraints enable a variant of the DDA algorithm\footnote{Digital differential analyzer.}, which is a fast and accurate way to detect where a ray hits a wall on the map.
+These constraints severly limited what kind of world a designer could create but in return enabled usage of a fast algorithm.\\
+\par
+The Digital Differential Analyzer (a.k.a: DDA) considerably reduces the number of coordinate to search in order to find a contact with a wall. It is not only fast, it is also accurate with no room (pun intended) for errors.
 \par
 \begin{fancyquotes}
 \par
@@ -758,7 +764,7 @@ If you made extremely jagged block maps that would turn into many dozen independ
 \end{wrapfigure} 
 \bu{Trivia :} The cost of raycasting would end up being too much for the tiny 5A22 CPU when porting Wolfenstein 3D to Super Nintendo.\\
 \par
- The first version of the port reached a low framerate which threatened its viability. John Carmack ended up preprocessing maps with Binary Space Partitioning to speed up elements sorting. Walls were draw "near to far" with an occlusion array to prevent overdraw.\\
+ The first version of the port achieved a low framerate which threatened its viability. John Carmack ended up preprocessing maps with Binary Space Partitioning to speed up elements sorting. Walls were draw "near to far" with an occlusion array to prevent overdraw.\\
  \par
  On the right, the BSP resulting from repeatedly splitting map \cw{E1M1} in two, until each "area" is convex.
 
@@ -841,7 +847,7 @@ With maps being quick and easy to draw, a contest was planned. Players who found
 \end{wrapfigure}
 However, as players reverse engineered the map format and cheat sites emerged, the contest was called off. The sign was replaced with a skeleton in all games shipped in 1992.\\
 \par
-In the previous map, notice there are no push walls leading to the red triangle; the room is sealed.\\
+In the E2M8 drawing, notice there are no push walls leading to the red triangle; the room is sealed.\\
 \begin{fancyquotes}
 "Call Apogee and say Aardwolf."  It's a sign that to this day is something
 that I get asked about a lot.  This is a sign that appears on a wall in a
@@ -1049,7 +1055,7 @@ In this drawing the player is located at \cw{viewpoint} with a view angle \begin
  \caption{Fish eye effect: Bad} \label{fig:mips}
  \end{figure}
 \begin{minipage}{.4\textwidth}
-From a distance of 24 feet, the distortion cannot be ignored and the problem is clear.\\
+From a distance of 24 feet, the distortion cannot be ignored like in the previous 32-feet away screenshot.\\
 \par
 Note that even though the player is getting closer to the wall, the ratio of A to B remains the same. Only the absolute difference in pixel height when the column is rendered on screen is increasing.
  \end{minipage}
@@ -1166,6 +1172,8 @@ For people who like equations, the overall operation can be seen as the multipli
 \par
 I personally find the graphic explanation with SOH-CAH-TOA clearer.\\
 \par
+\trivia{If you tried to derivate the formula and find yourself confused with the vertical axis sign, do it again while keeping in mind that Wolfentein 3D map coordinate system origin is in the upper left which flips the Y axis.}\\
+\par
 \subsection{Fisheye Effect Corrected}
 This correction is enough to give pleasant straight lines for the walls. To demonstrate the difference, pages \pageref{fish_eye_corrected} and page \pageref{wolf3d_7_fullframe} show two versions of the same scene next to each other. First uncorrected (with fisheye) and then with projected distance \cw{z} instead of direct distance \cw{d}.\\
 \par
@@ -1174,7 +1182,7 @@ This correction is enough to give pleasant straight lines for the walls. To demo
 \par
 \drawing{spaces2}{Translating from map space to player space.}
 \par
-The map space coordinates of points A and B are transformed in player space coordinate where the player is located at coordinate \cw{0,0}.\\
+In figure \ref{spaces2}, the map space coordinates of points A and B are transformed in player space coordinate where the player is located at coordinate \cw{0,0}.\\
 
 
 
@@ -1338,6 +1346,7 @@ To achieve this trick, the engine must be careful in factoring in the four bank 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/ScalePost.c}
 \end{minipage}
+\par
 The engine will group up to 8 columns together. Because of the VGA alignment it can take up to three passes to write them all. Since there can be multiple combinations of VGA bank alignment and number of pixels to draw, the VGA mask is precalculated and looked up at runtime. Each pass has its own settings. A pass runs only if the VGA mask is not zero.\\
 
  \par
@@ -1349,7 +1358,7 @@ Each \cw{mapmasks} array is used during each pass \cw{X} as:\\
 \par
  VGA\_MASK = \cw{mapmasksX[first\_column\_x\_coordinate\%4][numcolumn - 1]}\\
  \par
- The engine does an early return when VGA\_mask is equal to 0 (which is equivalent to "no more pixels are to be drawn"). This is easier to demonstrate with drawings. First a recap of how the VGA byte mask works.
+ The engine does an early return when VGA\_MASK is equal to 0 (which is equivalent to "no more pixels are to be drawn"). This is easier to demonstrate with drawings. First a recap of how the VGA byte mask works.
 \begin{itemize}
 \item Bank 0 is selected when bit 1<<1 (1) is set to 1.
 \item Bank 1 is selected when bit 1<<2 (2) is set to 1.
@@ -1457,7 +1466,7 @@ to render.\\
 \par
 \bu{Trivia :} Generating code at runtime may sound like an outdated technology. However, it was used as recently as 2016 when Android emulator used PixelFlinger to render the entire phone screen.
 
-
+\vspace{10pt}
 
 
 
@@ -1483,6 +1492,7 @@ A subtle but extremely efficient trick used to improve the quality of the wall r
 At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (in map space) on the Y axis, the engine uses a lit texture. If the ray hits an horizontal wall (on the X axis), it uses the unlit version of the same texture.\\
 \par
  The difference is not obvious at first, but with the same scene rendered side by side with and without this effect, the visual difference is striking, giving the scene more realism because of this directional-light effect.\\
+ \vspace{10pt}
 \par
   \begin{figure}[H]
 \centering
@@ -1986,9 +1996,9 @@ Perfect sound propagation is a simplistic model. When a gun is fired, all enemie
 Each enemy is given specific orders which dictate his actions once he knows of your presence. Some are ordered to immediately attack, while others are trained to act only upon visual contact.\\
 \par
 \textbf{Kevin Cloud. The Official Hint Manual for Wolfenstein 3D}
- \end{fancyquotes}
+ \end{fancyquotes}\\
 \par
-\bu{Trivia :} Be it bug or dedication, a guard on an \cw{AMBUSH} tile will react ONLY to seeing the player. Seeing another actor/dog die right in front of him will not activate him.\\
+Be it bug or dedication, a guard on an \cw{AMBUSH} tile will react ONLY to seeing the player. Seeing another actor/dog die right in front of him will not activate him.\\
 
 
 \subsubsection{Patrolling}

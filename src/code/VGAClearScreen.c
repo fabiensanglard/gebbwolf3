@@ -9,18 +9,18 @@ void VGAClearScreen (void)
   asm  mov  dx,80
   asm  mov  ax,[viewwidth]
   asm  shr  ax,2
-  asm  sub  dx,ax         // dx = 40-viewwidth/2
+  asm  sub  dx,ax      // dx = 40-viewwidth/2
 
   asm  mov  bx,[viewwidth]
-  asm  shr  bx,3          // bl = viewwidth/8
+  asm  shr  bx,3       // bl = viewwidth/8
   asm  mov  bh,BYTE PTR [viewheight]
-  asm  shr  bh,1          // half height
+  asm  shr  bh,1       // half height
 
   asm  mov  es,[screenseg]
   asm  mov  di,[bufferofs]
   asm  mov  ax,[ceiling]
 
-  toploop:
+  toploop:          // Ceiling loop. One line/iteration
   asm  mov  cl,bl
   asm  rep  stosw
   asm  add  di,dx
@@ -28,10 +28,10 @@ void VGAClearScreen (void)
   asm  jnz  toploop
 
   asm  mov  bh,BYTE PTR [viewheight]
-  asm  shr  bh,1          // half height
+  asm  shr  bh,1    // half height
   asm  mov  ax,0x1919
 
-  bottomloop:
+  bottomloop:       // Floor loop.    One line/iteration
   asm  mov  cl,bl
   asm  rep  stosw
   asm  add  di,dx

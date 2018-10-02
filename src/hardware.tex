@@ -444,7 +444,7 @@ With a 20-bit address bus and registers too small to contain a whole address (16
 There are two kinds of pointers: \cw{near} and \cw{far}. A \cw{near} pointer is 16 bits and considered \emph{fast} because it can be used as is (but it only allows a \cw{jmp} in the current code segment). A \cw{far} pointer can access anything and allows a \cw{jmp} anywhere but is slower since a 16-bit segment register has to be shifted left 4 bits and combined with the other 16-bit-offset register to form a 20-bit address.\\
 
 That may not sound too bad, but in practice this segmented addressing leads to many issues.
-The least problematic is about the language. Since C was invented on a flat memory machine, it had to be augmented by PC compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came into existence. Macro \codeword{MK\_FP} built them and \codeword{FP\_SEG/FP\_OFF} access individual components. \cw{libc} is also "different": \cw{malloc} returns a \cw{near} pointer and therefore can only allocate up to 64KiB. To get more than 64KiB, \cw{farmalloc} is needed.\\
+The least problematic is about the language. Since C was invented on a flat memory machine, it had to be augmented by PC compiler manufacturers. That is how the \codeword{near} and \codeword{far} keywords came into existence. Macro \codeword{MK\_FP} built them and \codeword{FP\_SEG/FP\_OFF} accessed individual components. \cw{libc} is also "different": \cw{malloc} returns a \cw{near} pointer and therefore can only allocate up to 64KiB. To get more than 64KiB, \cw{farmalloc} is needed.\\
 \par
 The larger issue is that two pointers referring to the same address can fail an equality test. In this model, the 1MiB of RAM is divided in 65536 paragraphs by the segment pointer. A paragraph is 16 bytes but an offset can be up to 65536 bytes which results in many overlaps. This can be explained with the following examples.\\
 \par
@@ -679,7 +679,7 @@ Opposite page, on top, the VGA card Trident 8800 (8-bit ISA). The eight chips on
 VGA can be summarized as three major systems with made of input, storage, and output:
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlling how VGA RAM is accessed (the CPU-VRAM interface)
-\item The framebuffer (the VRAM) made of four memory banks of 64KB (rather than one bank of 256KiB)
+\item The framebuffer (the VRAM) made of four memory banks of 64KiB (rather than one bank of 256KiB)
 \item The CRT Controller and the DAC\footnote{Digital to Analog Converter.} taking care of converting the palette-indexed framebuffer to RGB and then to analog signal (VRAM-CRT interface)
 \end{itemize}
 

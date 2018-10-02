@@ -1,2 +1,2 @@
-#define MAXVIEWWIDTH    320
-unsigned  wallheight[MAXVIEWWIDTH];
+#define MAXVIEWWIDTH  320
+unsigned wallheight[MAXVIEWWIDTH];
