@@ -728,7 +728,7 @@ The first problem with this design is that it is unintuitive. There is no linear
  
 
 \par
-In order to configure this mess of planes and the controllers, 300 poorly documented internal registers must be set. Needless to say few programmers dove into the internals of the VGA.\\
+In order to configure this mess of planes and the controllers, 50 poorly documented internal registers must be set. Needless to say few programmers dove into the internals of the VGA.\\
 \par
   Figure \ref{fig:vga_arch}, which described the architecture, was actually deceptively simplified. Figure \ref{fig:ibm_vga} shows how IBM's reference documentation explained the VGA. The maze of wire showcases well the actual complexity of the system.\\
  \par
@@ -866,7 +866,7 @@ The side effect of this convenience mechanism is that 75\% of the RAM is wasted 
   \lstinputlisting[ language={[x86masm]Assembler}]{code/vga_mode13.asm}
   
   \par
-  The \codeword{int 10} instruction is a software interrupt caught by the BIOS routine in charge of graphic setup. It looks up the \codeword{ax} register to setup all 300 VGA registers with the corresponding mode.\\
+  The \codeword{int 10} instruction is a software interrupt caught by the BIOS routine in charge of graphic setup. It looks up the \codeword{ax} register to setup all 50 VGA registers with the corresponding mode.\\
   \par After the VGA is initialized one can write to the mapped memory at \cw{0xA0000}. This can be demonstrated with a code sample; here is some code to clear the screen to black.\\
   
   \begin{minipage}{\textwidth}
