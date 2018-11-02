@@ -68,7 +68,7 @@ The engine can decide at what frequency to be interrupted, depending on the type
 \begin{enumerate}
 \item \cw{SDL\_t0SlowAsmService} when running at 140Hz, to play sound effects on the beeper via PWM and PCM audio effects on SoundBlaster.
 \item \cw{SDL\_t0FastAsmService} when running at 700Hz, to play FM music, FM sound effects on AdLib, and PCM audio effects on Disney Sound Source.
-\item \cw{SDL\_t0ExtremeAsmService} when running at 7000Hz, to play PCM sound in an alternate way. This mode was never enabled in shipping products (see page \pageref{pcs_pcm}).
+\item \cw{SDL\_t0ExtremeAsmService} when running at 7000Hz, to play PCM sound in an alternate way. This mode was never enabled in shipped products (see page \pageref{pcs_pcm}).
 \end{enumerate}
 \par
 
@@ -132,7 +132,7 @@ But in the implementation lies a maze of functions directly accessing the I/O po
 \subsection{Music}
 Playing music is not too messy since only PCs equipped with a Yamaha YM3812 FM synthesizer could play tracks (a.k.a: with an AdLib or a SoundBlaster inside). As SoundBlaster made its programming interface compatible with AdLib there is only one code path to both cards. There is not a lot of magic here since this uses a piece of well-designed hardware dedicated to this specific task. There are a few cool tricks, though.\\
 \par
-The music system streams data to the sound cards. Music in the 90's was not in digitized formats like today's CD or MP3 formats (that would have taken too much storage space and bandwidth). Instead music was stored as series of notes played on channels simulating instruments. The format used is close to the notorious MIDI but with a few variations and is called IMF\footnote{Id Music Format}. It is proprietary to id Software and designed with OPL2 in mind (the raw format is exactly what is sent to the AdLib/Soundblaster synthesizer with no transformations). IMF has a hardcoded playback rate and music notes are played at 700 Hz.\\
+The music system streams data to the sound cards. Music in the 90's was not in digitized formats like today's CD or MP3 formats (that would have taken too much storage space and bandwidth). Instead music was stored as series of notes played on channels simulating instruments. The format used is close to the notorious MIDI but with a few variations and is called IMF\footnote{id Music Format}. It is proprietary to id Software and designed with OPL2 in mind (the raw format is exactly what is sent to the AdLib/SoundBlaster synthesizer with no transformations). IMF has a hardcoded playback rate and music notes are played at 700 Hz.\\
 \par
 Hardware limitations dictated certain aspects of music design. The FM synthesizer (OPL2) has 9 channels (a.k.a instruments) yet the composer, Bobby Prince, was asked to use only channels 1 to 8. This little trick allows for multiplexing music and sound effects on AdLib cards since it leaves channel 0 available at all times (the SoundBlaster plays sound differently).\\
 
@@ -193,9 +193,9 @@ Overall, music is simple to execute because almost everything has been pre-proce
 
 
 \section{Sound Effects}
-Sound effects are where things become complicated. None of the cards use the same format and audio configurations are numerous. The sound settings screen, featuring now less than three sections illustrates how complex this is.\\
+Sound effects are where things become complicated. None of the cards use the same format and audio configurations are numerous. The sound settings screen, featuring no less than three sections illustrates how complex this is.\\
 \par
-\trivia{Notice how the sound settings screen on next page overlap. It is possible to select "SoundBlaster" twice in the SFX sections since it appears both in section "Sound Effects" and in section "Digitized Sound". It is far from obvious what to expect if such a configuration is selected.}\\
+\trivia{Notice how the sound settings screen on the next page overlaps. It is possible to select "SoundBlaster" twice in the SFX sections since it appears both in section "Sound Effects" and in section "Digitized Sound". It is far from obvious what to expect if such a configuration is selected.}\\
 \par
 
  \cfullimage{audio/audio_settings.png}{Overlapping audio settings.}
@@ -206,7 +206,7 @@ Sounds are stored in three formats.
 \item AdLib.
 \item SoundBlaster/Disney Sound Source.
 \end{enumerate}
-They are all package in the \cw{AudioT} archive created by Muse. Sounds are segregated by format but always stored in the same order. This way a sound can be accessed in three formats by using \cw{STARTPCSOUNDS} + \cw{sound\_ID} or \cw{STARTADLIBSOUNDS} + \cw{sound\_ID}.\\
+They are all packaged in the \cw{AudioT} archive created by Muse. Sounds are segregated by format but always stored in the same order. This way a sound can be accessed in three formats by using \cw{STARTPCSOUNDS} + \cw{sound\_ID} or \cw{STARTADLIBSOUNDS} + \cw{sound\_ID}.\\
 \par
 Strangely, only PC speaker and AdLib sounds are stored in the \cw{AUDIOT.*} files; the digitized sounds are in the \cw{VMSWAP.*} archive. As a result, offset \cw{STARTDIGISOUNDS} is never used. The authors of this code were asked, but it seems nobody can remember why.\\
 \par
@@ -396,13 +396,13 @@ The problem of this method is to find a way to fit 8-bit samples into a 1-bit DA
 \end{figure}
 \par
 
-The audio system goes for a surprisingly straightforward solution. It set itself to run at 7000Hz and manually move the cone of the speaker, using quantization to map 256 values to either 1 or 0.\\
+The audio system goes for a surprisingly straightforward solution. It sets itself to run at 7000Hz and manually moves the cone of the speaker, using quantization to map 256 values to either 1 or 0.\\
 \par
 \begin{minipage}{\textwidth}
   \lstinputlisting[language={[x86masm]Assembler}]{code/pcm_on_speaker.asm}
 \end{minipage}
 \par
- \cw{SDL\_t0ExtremeAsmService} takes an 8-bit value and converts it to \cw{00} or \cw{10} to drive bit 1 in I/O port \cw{61h}. When bit 1 is set to 1, the beeper cone will go in position high and when set to 0, it will go to position low.\\
+ \cw{SDL\_t0ExtremeAsmService} takes an 8-bit value and converts it to \cw{00} or \cw{10} to drive bit 1 in I/O port \cw{61h}. When bit 1 is set to 1, the beeper cone will go to position high and when set to 0, it will go to position low.\\
 \par
 
 \par
@@ -412,9 +412,9 @@ The audio system goes for a surprisingly straightforward solution. It set itself
   \caption{Mein Leben resampled to 1 bit.}
 \end{figure}
 \par
-The visual representation of a 1 bit per sample "Mein Leben" PCM looks like mashed potatoes but it sounds remarkably good. You can hear it thanks to a passionate YouTuber named Dafe Allen who recompiled the engine with PCM playback enabled\footnote{"Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects": "https://www.youtube.com/watch?v=1BtlsjJRnFU".}.\\
+The visual representation of a 1 bit per sample "Mein Leben" PCM looks like mashed potatoes but sounds remarkably good. You can hear it today thanks to a passionate YouTuber named Dafe Allen who recompiled the engine with PCM playback enabled\footnote{"Wolfenstein 3D Hack - Digitized PC Speaker Sound Effects": "https://www.youtube.com/watch?v=1BtlsjJRnFU".}.\\
 \par
-As good as it sounds, this codepath shipped but was never enabled. According to John Carmack overhead was too much a problem. Jim Leonard provided a more in depth explanation.\\
+As good as it sounds, this codepath shipped but was never enabled. According to John Carmack, overhead was too much of a problem. Jim Leonard provided a more in depth explanation.\\
 \par
 
  \begin{fancyquotes}
@@ -424,7 +424,7 @@ As good as it sounds, this codepath shipped but was never enabled. According to 
  \par
  Running at a frequency this high would have caused the game to freeze on slower machines while the sample played through the speaker.\\
 \par
- Jim Leonard
+ \textbf{Jim Leonard}
 \end{fancyquotes}\\
 \par
 
@@ -448,7 +448,7 @@ The technique was patented (US US5054086 A) by Access Software and called RealSo
   \par
   This technique is called pulse-width modulation (PWM).\\
   \par
-  Jim Leonard - oldskool.org
+  \textbf{Jim Leonard - oldskool.org}
  \end{fancyquotes}
 \par
 In the next drawing we see how commanding the cone faster than it can move results in intermediate positions.

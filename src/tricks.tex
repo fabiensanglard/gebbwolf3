@@ -33,7 +33,7 @@ While most screen transitions are done with a fade to black (by shifting the pal
 	\item When dying
 	\item When killing a boss
 \end{itemize}
-The FizzleFade effect is difficult to describe on paper. The video found on the book companion website\footnote{http://fabiensanglard.net/fizzlefade/} is much more explicit. Here are nonetheless a series of screenshot on pages \pageref{fizzle1}, \pageref{fizzle2}, \pageref{fizzle3}, and \pageref{fizzle4} to give the reader and idea of how it works.\\
+The FizzleFade effect is difficult to describe on paper. The video found on the book companion website\footnote{http://fabiensanglard.net/fizzlefade/} is much more explicit. Here are nonetheless a series of screenshots on pages \pageref{fizzle1}, \pageref{fizzle2}, \pageref{fizzle3}, and \pageref{fizzle4} to give the reader an idea of how it works.\\
 \par
  Notice that during the transition, each pixel on the screen is turned to red (when dying) or blue (when dispatching a boss). Each pixel is written only once and seemingly at random. The covered area increases at a consistent speed which means the underlying algorithm doesn't "try" to write an already covered pixel.
 
@@ -68,7 +68,9 @@ The FizzleFade effect is difficult to describe on paper. The video found on the 
   \scaledimage{.9}{fizzlefade/boss/screenshot_130.png}\\
 \end{minipage}
 
-To implement this effect, a naive approach would have been to use the pseudo random generator \cw{US\_RndT} and keep track of which pixels had been fizzled. However, this would make the fade non-deterministic with regard to duration and would also waste CPU cycles since the same pixel coordinates (X,Y) could come up several times. There is a faster and more elegant way to implement a pseudo-random value generator. The code responsible for this effect can be found in \cw{id\_vh.cpp}, in the function \cw{FizzleFade}. At first, it is not obvious how it works.\\
+To implement this effect, a naive approach would have been to use the pseudo random generator \cw{US\_RndT} and keep track of which pixels had been fizzled. However, this would make the fade non-deterministic with regard to duration and would also waste CPU cycles since the same pixel coordinates (X,Y) could come up several times.\\
+\par
+There is a faster and more elegant way to implement a pseudo-random value generator. The code responsible for this effect can be found in \cw{id\_vh.cpp}, in the function \cw{FizzleFade}. At first, it is not obvious how it works.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/fizzlefade.c}
@@ -116,7 +118,7 @@ The Fibonacci representation helps to understand the general idea. But it is not
     \caption{Four taps on a 17-bit register; each XOR requires an instruction.}
 \end{figure}
 \par
-There is an alternate way to represent a LFSR called "Galois", which allows one XOR operations regardless of how many taps are involved. It is the way Wolfenstein 3D implements its LFSR and writes 320x200=64000 pixels exactly once with a deterministic duration.
+There is an alternate way to represent a LFSR called "Galois", which allows one XOR operations regardless of how many taps are involved. This is the way Wolfenstein 3D implements its LFSR and writes 320x200=64,000 pixels exactly once with a deterministic duration.
 \par
 \begin{figure}[H] 
     \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/galois.pdf} 
@@ -125,7 +127,7 @@ There is an alternate way to represent a LFSR called "Galois", which allows one 
       
 \bu{Note :} Because the effect works by plotting pixels individually, it was hard to replicate when developers tried to port the game to hardware accelerated GPU. None of the ports managed to replicate the fizzlefade except Wolf4SDL, which even found maximum-length LFSR taps configuration to reach resolution higher than 320x200.\\
 \par
-\bu{Note :} The tap configuration on 17 bits generates 131072 values before cycling. Since 320x200=64000, it could have been implemented with a 16-bit Maximum-length register with taps on 16,15,13 and 4 (in "Galois" notation).
+\bu{Note :} The tap configuration on 17 bits generates 131,072 values before cycling. Since 320x200=64,000, it could have been implemented with a 16-bit Maximum-length register with taps on 16,15,13 and 4 (in "Galois" notation).
 
 
 
@@ -168,7 +170,7 @@ Random numbers are necessary for many things during runtime, such as calculating
 \lstinputlisting[language={[x86masm]Assembler}, style=mystyle,basicstyle=\small]{code/rndtable.asm}
 \end{minipage}
 \par
- Each entry in the array has a dual function. It is an integer within the range [0-255]\footnote{Or at least it was intended to!} and it is also the index of the next entry to fetch for next call. The overall works as a 255 entries chained list. The pseudo-random series is initialized using the current time modulo 256 when the engine starts up.\\
+ Each entry in the array has a dual function. It is an integer within the range [0-255]\footnote{Or at least it was intended to!} and it is also the index of the next entry to fetch for next call. This works overall as a 255 entry chained list. The pseudo-random series is initialized using the current time modulo 256 when the engine starts up.\\
 \par
 
 \begin{fancyquotes}

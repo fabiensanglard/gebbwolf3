@@ -1,7 +1,7 @@
  \documentclass[book.tex]{subfiles}
 \begin{document}
 \label{chapter_hardware}
-To study the IBM PC, it is easiest to first break it down in small parts. Five sub-systems form a pipeline: Inputs, CPU, RAM, Video, and Audio.\\
+To study the IBM PC, it is easiest to first break it down to small parts. Five sub-systems form a pipeline: Inputs, CPU, RAM, Video, and Audio.\\
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{imgs/drawings/fun_pipeline.pdf}
@@ -78,7 +78,7 @@ A lot of friction was present since manufacturers had not embraced the gaming in
  \par
   \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 MIPS.\\
   \par
- Intel built two versions of the 386: the 386-SX and the 386-DX. They were identical processors yet the DX version was almost twice as powerful as the SX (on the chart the \cw{386 SX 33Mhz} and the \cw{386 DX 33Mhz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM being twice as wide on the DX (32 bits vs 16 bits). The 386-SX bus unit enabled manufacturers to reuse motherboard chips designed for the Intel 286 which had a 16-bit bus unit, furthermore reducing costs. Despite its inferiority, the SX sold well because it was cheaper and a lot of people had no idea what a "bus" was, they just wanted "a 386".\\
+ Intel built two versions of the 386: the 386-SX and the 386-DX. They were identical processors yet the DX version was almost twice as powerful as the SX (on the chart the \cw{386 SX 33Mhz} and the \cw{386 DX 33Mhz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM being twice as wide on the DX (32 bits vs 16 bits). The 386-SX bus unit enabled manufacturers to reuse motherboard chips designed for the Intel 286 which had a 16-bit bus unit, further reducing costs. Despite its inferiority, the SX sold well because it was cheaper and a lot of people had no idea what a "bus" was, they just wanted "a 386".\\
 
 
 
@@ -316,11 +316,11 @@ Floating point arithmetic is a powerful tool. It can represent very small or hug
 \par
 Floating point is handy, but the drawback is that it is also computationally expensive. The reason is simple. In order to add, subtract, multiply or divide two numbers, they both have to be expressed with the same window. This means converting one number to the representation used by the other, usually with higher precision than 32 bits (typically 80 bits on Intel FPUs)\footnote{To fully grasp how much processing a FPU does, it helps to read a software implementation. I found Berkeley SoftFloat helpful.}.\\
 \par
-This is not a problem when everything is hardwired within a hardware floating point unit but it is a big problem for the 386. If you refer back to the architecture diagram you will notice that it only has an ALU. \emph{A 386 doesn't have a hardware Floating Point Unit}. If \cw{float} operations are found in the code, they are emulated in software by the compiler, resulting in terribly slow processing ; so slow they are not usable for anything real-time.\\ 
+This is not a problem when everything is hardwired within a hardware floating point unit but it is a big problem for the 386. If you refer back to the architecture diagram you will notice that it only has an ALU. \emph{A 386 doesn't have a hardware Floating Point Unit}. If \cw{float} operations are found in the code, they are emulated in software by the compiler, resulting in terribly slow processing -- so slow they are not usable for anything real-time.\\ 
 \par
 
 
- \textbf{\underline{Trivia :}} Since floating point operations were so slow, why did the C language end up with \cw{float} and \cw{double} types ? After all, the machine used to invent the language (PDP-11) did not have a floating point unit! The manufacturer (DEC) had promised to Dennis Ritchie and Ken Thompson the next model would have one\footnote{The Development of the C Language by Dennis M. Ritchie.}. Being astronomy enthusiasts, they decided to add those two types to their language.\\
+ \textbf{\underline{Trivia :}} Since floating point operations were so slow, why did the C language end up with \cw{float} and \cw{double} types? After all, the machine used to invent the language (PDP-11) did not have a floating point unit! The manufacturer (DEC) had promised to Dennis Ritchie and Ken Thompson the next model would have one\footnote{The Development of the C Language by Dennis M. Ritchie.}. Being astronomy enthusiasts, they decided to add those two types to their language.\\
 \par
 
 
@@ -525,7 +525,7 @@ The EMS driver opens a window beyond the addressable RAM, as shown on page \page
 
 
 \subsubsection{EMS vs XMS}
-How the drivers achieved the impossible (after all how do you access RAM past 1 MiB with 20-bit pointer?) and what were the trade-off of each approach is a fascinating topic explained in detail in Appendix \ref{ems_vs_xms} on page \pageref{ems_vs_xms}.\\
+How the drivers achieved the impossible (after all how do you access RAM past 1 MiB with 20-bit pointer?) and what were the trade-offs of each approach is a fascinating topic explained in detail in Appendix \ref{ems_vs_xms} on page \pageref{ems_vs_xms}.\\
 \par
  If you prefer not to dive into too much detail, just remember that the EMS mapping approach was several times faster than the XMS copying approach. This speed consideration considerably impacted the memory management of Wolfenstein 3D.
 
@@ -559,7 +559,7 @@ At this point, if you are puzzled by the CPU and its design you are not alone. O
 
 
 \par
-\bu{Trivia :} 640KiB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745KiB, which obviously doesn't fit in Conventional Memory. The trick is to use a technique of "overlay" pages where only a few overlays are loaded when the game starts. When the CPU is about to reach the end of an overlay, special instructions (inserted by the compiler) load the next overlays from HDD and setup a \cw{jmp} instruction for the CPU to follow. The technique can be seen as an exercise of graph paging similar to how Gromit places rails in front of an ongoing miniature train as he is sitting on top of it in "The Wrong Trousers".\\
+\bu{Trivia :} 640KiB was all a game could have for executable code. But people writing compilers got clever. Strike Commander (a famous flight arcade game released in 1993) executable is 745KiB, which obviously doesn't fit in Conventional Memory. The trick is to use a technique of "overlay" pages where only a few overlays are loaded when the game starts. When the CPU is about to reach the end of an overlay, special instructions (inserted by the compiler) load the next overlays from HDD and setup a \cw{jmp} instruction for the CPU to follow. The technique can be seen as an exercise in graph paging similar to how Gromit places rails in front of an ongoing miniature train as he is sitting on top of it in "The Wrong Trousers".\\
 \par
 
 \textbf{\underline{Trivia :}}  As of 2017, more than thirty five years after the introduction of the 8086, in the name of backward compatibility, all PCs in the world still start in real mode. A bootloader switches them to protected mode, loads the kernel, and then actual startup can begin.
@@ -592,7 +592,7 @@ PCs were connected to CRT monitors: big, heavy, small diagonal, cathode ray-base
 \par
   To give you an idea of the size and resolution, figure \ref{fig:lcd_vs_crt} shows a comparison between a 14" CRT from 1992 (capable of a resolution of 640x480) and a 30" Apple Cinema Display from 2014 (capable of a resolution of 2560x1600).\\
   \par
-\trivia{Despite their difference of capabilities, both monitors are the same weight 27.5 pounds (12 kg).}
+\trivia{Despite their difference of capabilities, both monitors are the same weight: 27.5 pounds (12 kg).}
 
 
 
@@ -612,7 +612,7 @@ In the photo on the right : John Carmack in 1996 working on a 28hd96 while progr
 \end{minipage}
 
 \par
-The main issue in this system was that CRTs were analog systems while computers were digital. An interface was needed between the two and it came as a series of chipsets called "Adapters". 
+The main issue with this system was that CRTs were analog systems while computers were digital. An interface was needed between the two and it came as a series of chipsets called "Adapters". 
 
   \subsection{History of Video Adapters}
 
@@ -676,7 +676,7 @@ Opposite page, on top, the VGA card Trident 8800 (8-bit ISA). The eight chips on
 
 \subsection{VGA Architecture}
 
-VGA can be summarized as three major systems with made of input, storage, and output:
+VGA can be summarized as three major systems made of input, storage, and output:
 \begin{itemize}
 \item The Graphic Controller and Sequence Controller controlling how VGA RAM is accessed (the CPU-VRAM interface)
 \item The framebuffer (the VRAM) made of four memory banks of 64KiB (rather than one bank of 256KiB)
@@ -813,13 +813,13 @@ The only good thing about this mode is that it has square pixels. The 640x480 as
 \begin{itemize}
 \item No double buffer: 640X480/2 = 0x25800 bytes which is more than half the 256KiB (0x40000) of VRAM available.
 \item High resolution means more pixels, which means more calculations and more drawing.
-\item Sixteen colors severely limited artists. Games electing to use this mode usually looked worse than those using 256 color modes\footnote{The exception to the rule is "Dark Seed", an adventure game developed and published by Cyberdreams in 1992. Inspired by H. R. Giger artworks, it is notorious for its gorgeous visuals in 640x480, 16 colors.}.
+\item Sixteen colors severely limited artists. Games electing to use this mode usually looked worse than those using 256 color mode\footnote{The exception to the rule is "Dark Seed", an adventure game developed and published by Cyberdreams in 1992. Inspired by H. R. Giger artworks, it is notorious for its gorgeous visuals in 640x480, 16 colors.}.
 \end{itemize}
 
  \begin{figure}[H]
 \centering
  \fullimage{wolf3d_ega.png}
- \caption{What Wolfenstein 3D would have looked if it used sixteen colors.}
+ \caption{How Wolfenstein 3D would have looked if it used sixteen colors.}
  \label{wolf16}
 \end{figure}
 % \par
@@ -1021,7 +1021,7 @@ The Sound Blaster Pro had all the capabilities of a Sound Blaster 1.0 but added 
 
   \cfullimage{hardware/sbpro.png}{A Sound Blaster Pro card.}
 
-Figure \ref{hardware/sbpro.png} shows a Sound Blaster Pro, model CT1330A where most components were duplicated for stereo purposes. Notice the double FM1312 chip in the center. The two big chips in the upper left are the DSP (CT1341) and the Mixer. Below, labeled "Creative" is the big CT1316 bus interface.\\
+Figure \ref{hardware/sbpro.png} shows a Sound Blaster Pro, model CT1330A. Most components were duplicated for stereo purposes. Notice the double FM1312 chip in the center. The two big chips in the upper left are the DSP (CT1341) and the Mixer. Below, labeled "Creative" is the big CT1316 bus interface.\\
 \par
 \bu{Trivia :} The card appears to have a 16-bit ISA bus connector (check the difference with the Sound Blaster 1.0). However it does not have 'fingers' for data transfer on the higher "AT" portion of the bus connector. It uses the 16-bit extension to the ISA bus to provide the user with an additional choice for an IRQ (10) and DMA (0) channel only found on the 16-bit portion of the edge connector.\\
 \par
@@ -1064,9 +1064,9 @@ The rest of the bus connecting to everything that is not the RAM can be either:
 \item 8 bits wide at 4.77 MHz  for 19.1 Mbit/s
 \item 16 bits wide at 8.33MHz for 66.7 Mbit/s\footnote{https://en.wikipedia.org/wiki/List\_of\_device\_bit\_rates .}.
 \end{itemize}
-Of course it is also backward compatible and an 8-bit ISA card can be plugged into a 16-bit ISA bus.\\
+It is also backward compatible and an 8-bit ISA card can be plugged into a 16-bit ISA bus.\\
 \par
-\par
+\vspace{10pt}
 \bu{Trivia :} On ISA all devices are connected to the bus at all times and listen on the bus address lane. Each device features an "address decoder" to detect if it should reply to a bus request. This is how the VGA RAM is "mapped" in RAM. The VGA card "address decoder"  filters out everything that is not within \cw{A0000h} and \cw{AFFFFh}. Accordingly, the RAM disregards any request that is within the range [\cw{A0000h} - \cw{AFFFFh}].\\
 \par
  \begin{figure}[H]

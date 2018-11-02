@@ -13,7 +13,7 @@ Even for a complex scene involving multiple doors and rooms, this method can del
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/ray_caster_explained/out_room.pdf}
- \caption{Casting 320 rays (one for each column) for a screen of resolution 320x200} \label{fig:Raycasting2}
+ \caption{Casting 320 rays (one for each column) for a screen of resolution 320x200.} \label{fig:Raycasting2}
 \end{figure}
 
 \begin{figure}[H]
@@ -56,7 +56,7 @@ This is a pretty standard design for an engine from the early 90's. However, it 
  \caption{The second frame took longer to be rendered during the replay. No inputs are available for the player. Replay is now out of sync.}
  \end{figure}
 \par
-To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulates events at fixed interval (\cw{DEMOTICK} = 4)\footnote{70/4 = 17.5, the machine used to record the demo ran at 17 fps. Probably a high end 386.}. This hack resulted in a slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
+To solve this problem during the demo playback (shipped with the game), the engine disregards the heartbeats and simulates events at fixed interval (\cw{DEMOTICK} = 4)\footnote{70/4 = 17.5, the machine used to record the demo ran at 17 fps. Probably a high end 386.}. This hack resulted in slower playback on 286 CPUs and faster playback on 486 CPUs (because it was recorded on a 386DX).\\
 \par
 In 1993, the Doom engine would solve this issue by simulating the world at fixed intervals\footnote{Doom runs at a fixed rate of 35 fps.}.\\
 \par
@@ -458,7 +458,7 @@ This optimization still results in a 30\% overall speed increase.\\
 
 \vspace{-10pt}
 \subsection{Clearing the Screen}
-At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. It uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. With 16-bit registers, 8 pixels can be written with a single instruction. This would result in 5776 instructions for a full 3D canvas. Yet upon looking under the hood, a lesser figure is unveiled.\\ 
+At the beginning of a frame, the engine switches to the next page and clears the 3D area with ceiling and floor colors. It uses the same trick seen in the 2D renderer and sets the VGA bank mask to 15 to write to all banks simultaneously. With 16-bit registers, 8 pixels can be written with a single instruction. This would result in 5,776 instructions for a full 3D canvas. Yet upon looking under the hood, a lesser figure is unveiled.\\ 
 \par
 \scaledimage{1}{clear_screen_pixels}
 
@@ -497,7 +497,7 @@ Following are ceiling colors \cw{0x1D}, \cw{0xBF}, \cw{0x4E} and \cw{0x8D}.\\
 
 \subsection{Solving the CPU Problem}
 
-In the Chapter \ref{chapter_hardware} \nameref{chapter_hardware} p\pageref{chapter_hardware} describing CPU capabilities, the reader was left with a problem: the machine cannot perform floating point operations quickly enough. This is a pretty big issue for a 3D engine given all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed-point arithmetic".
+In Chapter \ref{chapter_hardware} "\nameref{chapter_hardware}" page \pageref{chapter_hardware} describing CPU capabilities, the reader was left with a problem: the machine cannot perform floating point operations quickly enough. This is a pretty big issue for a 3D engine given all the trigonometry involved. It turns out the solution is to trick the ALU via a technique called "fixed-point arithmetic".
 
 
 
@@ -704,12 +704,12 @@ In contrast, VSD is an open-ended problem, and there are dozens of approaches cu
 \vspace{-10pt}
 \scaledimage{0.45}{gpbb.png} 
 \end{wrapfigure} 
-\bu{Trivia: } In the early 90s, Michael Abrash's writings were one of the rare sources of high quality information when it came to Computer Graphics and Assembly programming.\\
+\bu{Trivia: } In the early 90s, Michael Abrash's writings were one of the rare sources of high quality information when it came to computer graphics and assembly programming.\\
 \par
-He published two highly regarded books ("Zen of Assembly Language" in 1990 and "Zen of Code Optimization" in 1994) but it is through his column "Ramblings in Realtime" published monthly in Dr. Dobb's Journal that he achieved notoriety.
+He published two highly regarded books ("Zen of Assembly Language" in 1990 and "Zen of Code Optimization" in 1994) but it is through his column "Ramblings in Realtime" published monthly in \textit{Dr. Dobb's Journal} that he achieved notoriety.
  \\
 \par
- In 1997 most of Michael Abrash's work plus new articles about Quake engine were compiled into the "Graphics Programming Black Book". The title and dimension of this book are an homage to Mr Abrash's masterpiece.
+ In 1997 most of Michael Abrash's work plus new articles about the Quake engine were compiled into the \textit{Graphics Programming Black Book}. The title and dimension of this book are an homage to Mr Abrash's masterpiece.
 
 
 
@@ -721,7 +721,7 @@ He published two highly regarded books ("Zen of Assembly Language" in 1990 and "
 \caption{}
 \label{situation}
 \end{figure}
-VSD is not only complicated to do right, it is also hard to do fast. It is easy to understand with a small example where objects are free-form like in figure \ref{situation}. In a world with no constraints, it is difficult to find the intersection of a ray with an object.\\
+VSD is not only complicated to do right, it is also hard to do fast. It is easy to understand with a small example where objects are free-form like in Figure \ref{situation}. In a world with no constraints, it is difficult to find the intersection of a ray with an object.\\
 \par
 A valid approach would be to iterate over all objects in the world and perform ray marching, which consists of checking if a ray intersects objects at a regular interval. However, this is very CPU intensive and would not be fast enough with fixed-point. Not to mention some objects could slip between the regular intervals, making VSD inaccurate.
 \begin{figure}[H]
@@ -1175,14 +1175,14 @@ I personally find the graphic explanation with SOH-CAH-TOA clearer.\\
 \trivia{If you tried to derivate the formula and find yourself confused with the vertical axis sign, do it again while keeping in mind that Wolfentein 3D map coordinate system origin is in the upper left which flips the Y axis.}\\
 \par
 \subsection{Fisheye Effect Corrected}
-This correction is enough to give pleasant straight lines for the walls. To demonstrate the difference, pages \pageref{fish_eye_corrected} and page \pageref{wolf3d_7_fullframe} show two versions of the same scene next to each other. First uncorrected (with fisheye) and then with projected distance \cw{z} instead of direct distance \cw{d}.\\
+This correction is enough to give pleasant straight lines for the walls. To demonstrate the difference, pages \pageref{fish_eye_corrected} and \pageref{wolf3d_7_fullframe} show two versions of the same scene next to each other. First uncorrected (with fisheye) and then with projected distance \cw{z} instead of direct distance \cw{d}.\\
 \par
 \pagebreak
 
 \par
 \drawing{spaces2}{Translating from map space to player space.}
 \par
-In figure \ref{spaces2}, the map space coordinates of points A and B are transformed in player space coordinate where the player is located at coordinate \cw{0,0}.\\
+In Figure \ref{spaces2}, the map space coordinates of points A and B are transformed in player space coordinate where the player is located at coordinate \cw{0,0}.\\
 
 
 
@@ -1239,7 +1239,7 @@ That may sound easy but is in fact difficult on a CPU with as little power as a 
 
 
 \subsubsection{Compiled Scalers}
-All columns of pixels representing the walls are centered vertically and either magnified or minified. The goal is to scale a column of 64 texels to any height ranging from 2 pixels to the max 3D canvas height (152 pixels); as quickly as possible.\\
+All columns of pixels representing the walls are centered vertically and either magnified or minified. The goal is to scale a column of 64 texels to any height ranging from 2 pixels to the max 3D canvas height (152 pixels) as quickly as possible.\\
 \par
  \begin{figure}[H]
 \centering
@@ -1255,7 +1255,7 @@ As the photoshopped pink line shows, each column of pixels for a wall is centere
 \end{minipage}
 
 \par
-This would involve a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} always cause a pipeline flush.}, a fixed-point accumulator, and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible function allows \cw{scaleTextureToHeight} to accept any height from \cw{0} to \cw{INT\_MAX}.\\
+This would involve a loop resulting in at least one \cw{jmp}\footnote{\cw{jmp} instructions always cause a pipeline flush.}, a fixed-point accumulator, and intermediate variables. That would be a lot of instructions due mostly to the genericity of the function. Indeed this flexible function allows \cw{scaleTextureToHeight} to accept any height from \cw{0} to \cw{INT\_MAX}.\\
 \par
  There is a faster way to do this which involves the usual RAM vs CPU tradeoff. In this case we can invest a little bit of RAM to gain a lot of CPU time. The idea is to make the scaler less generic and instead generate hard-coded functions.\\
  \par 
@@ -1404,7 +1404,7 @@ If the two columns are not properly aligned (like columns under pixels 3 and 4),
 \lstinputlisting[language=C]{code/pass_3_4.c}
 \end{minipage}
 \par
-  \begin{figure}[H]
+\begin{figure}[H]
  \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation3.pdf}
  \end{figure}
@@ -1412,17 +1412,19 @@ If the two columns are not properly aligned (like columns under pixels 3 and 4),
 
 In the worst case scenario, the engine needs to draw eight columns of pixels, under pixels 3,4,5,6,7,8,9 and A. Because of the poor alignment, three passes are needed with mask set to 8, 15 and, 7.\\
  \par
+
  \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/pass_3_A.c}
 \end{minipage}
 \par
+
   \begin{figure}[H]
  \centering
  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation4.pdf}
  \end{figure}
 
 
-% A better case where two passes with mask set to 15 then 3 allows drawing 6 columns of pixels :\\
+% In this last example, a better case where two passes with mask set to 15 then 3 allows drawing 6 columns of pixels :\\
 %  \par
 %  \begin{minipage}{\textwidth}
 % \lstinputlisting[language=C]{code/pass_0_5.c}
@@ -1431,24 +1433,33 @@ In the worst case scenario, the engine needs to draw eight columns of pixels, un
 %    \begin{figure}[H]
 %  \centering
 %  \includegraphics[width=.7\textwidth]{imgs/drawings/scalePost_explanation5.pdf}
-  
-%  \end{figure}
-
-
-
-
-
-
-To visualize the performance gain in real cases, the engine has been modified to draw columns of pixels which were written "for free" thanks to the VGA mask manipulation in pink (page \pageref{wolf3d_in_pink} and \pageref{wolf3d_in_pink2}). We can see the performance improvement is significant, with 50\% of write operations avoided.
-
-\trivia{Even though its was originally distributed exclusively as a shareware, sales called for a more "traditional" medium. GT Interactive picked up Wolfenstein 3D in 1993 and gifted it with an actual box, along with the "Official Hint Manual" which was done by Tom Halls and Kevin Clouds. In 1995, the game was re-released on CD-ROM}.\\
+ % \end{figure}
+ \par
+ \trivia{In 1993 id Software would make the VGA "multi-write" instrumental to the success of DOOM. The engine worked well with an Intel 486 CPU but the framerate was within the single digit on a 386. They solved the problem by adding a "low detail" mode where every pixels columns are doubled. The resolution of 160x168 (doubled to 320x168 with the VGA trick) allowed 386 CPU to reach a playable double digit framerate.}\\
 \par
-\fullimage{cover.png}
+\vspace{-5pt}
+\fullimage{high_res.png}
+\par
+\vspace{-5pt}
+Above, DOOM in high-resolution. Below, DOOM in low-resolution mode. The differences are barely noticeable in action sequences.\\
+\par
+\vspace{-5pt}
+\fullimage{low_res.png}
+
+
+
+
+
+To visualize Wolfenstein 3D performance gain in real cases, the engine has been modified to draw columns of pixels which were written "for free" thanks to the VGA mask manipulation in pink (pages \pageref{wolf3d_in_pink} and \pageref{wolf3d_in_pink2}). We can see the performance improvement is significant, with 50\% of write operations avoided.
+
+% \trivia{Even though its was originally distributed exclusively as a shareware, sales called for a more "traditional" medium. GT Interactive picked up Wolfenstein 3D in 1993 and gifted it with an actual box, along with the "Official Hint Manual" which was done by Tom Halls and Kevin Clouds. In 1995, the game was re-released on CD-ROM}.\\
+% \par
+% \fullimage{cover.png}
 \begin{minipage}{\textwidth}
  \centering
- \scaledimage{0.9}{post_optimization_1_show.png} \label{wolf3d_in_pink}
-\vspace*{0.5cm}\\
- \scaledimage{0.9}{post_optimization_1_pink_show.png}
+ \scaledimage{0.92}{post_optimization_1_show.png} \label{wolf3d_in_pink}
+\vspace*{0.3cm}\\
+ \scaledimage{0.92}{post_optimization_1_pink_show.png}
 
 \end{minipage}
 
@@ -1457,9 +1468,9 @@ To visualize the performance gain in real cases, the engine has been modified to
 
 \begin{minipage}{\textwidth}
  \centering
- \scaledimage{0.9}{post_optimization_2_show.png} \label{wolf3d_in_pink2}
- \vspace*{0.5cm}\\
- \scaledimage{0.9}{post_optimization_2_pink_show.png}
+ \scaledimage{0.92}{post_optimization_2_show.png} \label{wolf3d_in_pink2}
+ \vspace*{0.3cm}\\
+ \scaledimage{0.92}{post_optimization_2_pink_show.png}
 \end{minipage}
 This technique helps solve for scenarios where a large number of pixels have to be written due to the size of the wall. It only really shines when a lot of magnification occurs. For walls far away (minified) this technique doesn't help at all, but this matters less as small walls are cheap because they have fewer pixels
 to render.\\
@@ -1497,7 +1508,7 @@ At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall 
   \begin{figure}[H]
 \centering
  \fullimage{baked_lights_wood.png}
- \caption{Light and Dark wood textures.}
+ \caption{Lit and unlit wood textures.}
  \end{figure}
 \par
 
@@ -1636,7 +1647,7 @@ While the way the visible tile array is used is not the most subtle part of the 
 
 
 \subsubsection{Rendition}
-Each sprite is rendered individually in the function \cw{ScaleShape (int xcenter, int shapenum, unsigned height)}. The sprite is transformed from map space to player space using the same SOH-CAH-TOA math seen in the "Drawing Walls" section.
+Each sprite is rendered individually in the function \cw{ScaleShape (int xcenter, int shapenum, unsigned height)}. The sprite is transformed from map space to player space using the same SOH-CAH-TOA math used to draw walls.
 
 \par
 \begin{figure}[H]
@@ -1830,7 +1841,7 @@ Drawing the weapon at the bottom of the canvas is straight forward. It uses the 
 
 
 \subsection{A.I}
-To simulate enemies, some objects are allowed to "think" and take actions like firing, walking, or emitting sounds. Those thinking objects are called "actors".\\
+To simulate enemies, some objects are allowed to "think" and take actions like firing, walking, or emitting sounds. These thinking objects are called "actors".\\
 \par
 
 
@@ -1887,7 +1898,7 @@ What makes enemies interesting is how they trigger from standing to aggressive v
 \item Sight
 \item Noise
 \end{itemize}
-By far the most important stimuli and, what makes the player feel like the A.I is "smart", is reaction to noise.
+By far the most important stimuli, and what makes the player feel like the A.I is "smart", is reaction to noise.
 
 
 
@@ -1998,11 +2009,11 @@ Each enemy is given specific orders which dictate his actions once he knows of y
 \textbf{Kevin Cloud. The Official Hint Manual for Wolfenstein 3D}
  \end{fancyquotes}\\
 \par
-Be it bug or dedication, a guard on an \cw{AMBUSH} tile will react ONLY to seeing the player. Seeing another actor/dog die right in front of him will not activate him.\\
+Be it bug or dedication, a guard on an \cw{AMBUSH} tile will react ONLY to seeing the player. Seeing another actor die right in front of him will not activate him.\\
 
 
 \subsubsection{Patrolling}
-In "path" mode, an agent simulates patrolling. There is no path finding; this is all done via waypoints which change the direction of the agent. After stepping on a "change direction" tile, the agent keeps on walking straight until it hits a wall. All waypoints are manually placed by the map designer with TED5.\\ 
+In "path" mode, an actor simulates patrolling. There is no path finding; this is all done via waypoints which change the direction of the agent. After stepping on a "change direction" tile, the agent keeps on walking straight until it hits a wall. All waypoints are manually placed by the map designer with TED5.\\ 
 \par
 The waypoint system was used in other creative ways, like in E1M1 to simulate the agitation of German shepherds (marked a "D"). A detailed view of the right wings of the map from page \pageref{mape1m1} shows no less than eight waypoints making the dogs run in circles and zigzag.\\
 \par

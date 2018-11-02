@@ -13,13 +13,13 @@ Notice how the background of the menu screen is full red. This is a lot of pixel
 \par
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{imgs/drawings/vga_ram_screen_layout.pdf}
+\includegraphics[width=0.75\textwidth]{imgs/drawings/vga_ram_screen_layout.pdf}
 \caption{How bytes are read from the VRAM banks and displayed onto the screen.}
 \label{vga_layout_1}
 \end{figure}
 
 \par
-In order to clear the screen to red before drawing the menu, the 2D engine only performs 320x200/4 = 16,000 writes instead of 64000. In the drawing above, pixels 0,1,2, and 3 are written with one write operation. Then pixels 4,5,6, and 7 with another write, and so on.\\
+In order to clear the screen to red before drawing the menu, the 2D engine only performs 320x200/4 = 16,000 writes instead of 64,000. In the drawing above, pixels 0, 1, 2, and 3 are written with one write operation. Then pixels 4, 5, 6, and 7 with another write, and so on.\\
 \par
 Even better, since the RAM can be written with 16-bit register, 8 pixels can be written in one RAM operation. A full screen can be cleared with 320x200/8 = 8,000 writes.
 \par

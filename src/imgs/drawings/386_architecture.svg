@@ -145,13 +145,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.2918919"
-     inkscape:cx="364.3425"
+     inkscape:cx="344.21698"
      inkscape:cy="840"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="851"
+     inkscape:window-width="1680"
+     inkscape:window-height="1005"
      inkscape:window-x="0"
      inkscape:window-y="1"
      inkscape:window-maximized="1" />
@@ -163,7 +163,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -181,14 +181,14 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="110.69038"
-       y="77.751328"
+       x="117.01262"
+       y="78.784798"
        id="text4138"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4140"
-         x="110.69038"
-         y="77.751328">BUS  UNIT</tspan></text>
+         x="117.01262"
+         y="78.784798">BUS  UNIT</tspan></text>
     <rect
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:2.04480386;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4142"
@@ -217,13 +217,13 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="260.08368"
+       x="250.23454"
        y="193.93126"
        id="text4164"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4166"
-         x="260.08368"
+         x="250.23454"
          y="193.93126">PROCESSING UNIT</tspan></text>
     <rect
        style="fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -235,13 +235,13 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="332.65271"
+       x="333.04358"
        y="126.13626"
        id="text4170"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4172"
-         x="332.65271"
+         x="333.04358"
          y="126.13626">PAGING UNIT</tspan></text>
     <rect
        style="fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -249,18 +249,18 @@
        width="128.49373"
        height="38.70293"
        x="451.27615"
-       y="101.04421" />
+       y="101.81828" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="466.88702"
-       y="125.36218"
+       x="461.83356"
+       y="126.13626"
        id="text4170-8"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4172-7"
-         x="466.88702"
-         y="125.36218">SEGMENT UNIT</tspan></text>
+         x="461.83356"
+         y="126.13626">SEGMENT UNIT</tspan></text>
     <rect
        style="fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4168-8"

@@ -214,8 +214,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.2918919"
-     inkscape:cx="213.49225"
-     inkscape:cy="819.03766"
+     inkscape:cx="348.17844"
+     inkscape:cy="880.96235"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -241,6 +241,13 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:1, 1;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4280"
+       width="712.13391"
+       height="43.347279"
+       x="11.610879"
+       y="24.41242" />
+    <rect
        style="fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4831"
        width="715.2301"
@@ -251,18 +258,13 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:14px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="300.33472"
-       y="43.37476"
+       y="49.826641"
        id="text4835"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4837"
          x="300.33472"
-         y="43.37476">BUS INTERFACE UNIT</tspan></text>
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1,1;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 12.346117,26.126067 0,41.702882 709.889353,0 0,-44.155993"
-       id="path4877"
-       inkscape:connector-curvature="0" />
+         y="49.826641">BUS INTERFACE UNIT</tspan></text>
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4879"

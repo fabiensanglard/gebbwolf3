@@ -1,14 +1,15 @@
+\vspace{-10pt}
 \section{Wolfenstein 3D-VR}
-Around 1994 a company called Alternate World Technologies worked on an adaptation of the Wolfenstein 3D engine, designed to work with head-mounted displays, under special license from id Software.\\
- \par
+Around 1994 a company called Alternate World Technologies (AWT) worked on an adaptation of the Wolfenstein 3D engine, designed to work with head-mounted displays, under special license from id Software. Tom Roe, a 3D artist helped with some of the finer details of this project.\\
+\par
 \begin{fancyquotes}
 The Wolfenstein VR game was developed by a small game development company based in Louisville, KY back in 1993. Through an agreement with Id, Alternate Worlds Technologies, Inc., (AWT) licensed the original Wolfenstein 3D engine and used Polhemus tracker technology to create a head mounted display version of the game. The design team also modified all of the animation sequences to look more like green alien blood rather than red blood; an attempt to reduce the apparent violence in the game. Amusing by today's standards for sure.
  \bigskip \\
-I was not personally involved in the design work on Wolfenstein as I arrived after they were already shipping arcade units with this title. They also created a similar experience with Blake Stone. The Wolfenstein VR game was a single player game, though the Wolfenstein engine was later used to create a multi-player game which you mentioned, Cybertag VR. Where four players could speak to each other through a headset while playing tag in a virtual environment. I began my work with AWT as a 3d artist developing levels for a new game engine which used character and level models designed in 3d Studio. I also used Deluxe Paint to create animation sequences for Cybertag VR.
+I was not personally involved in the design work on Wolfenstein as I arrived after they were already shipping arcade units with this title. They also created a similar experience with Blake Stone. The Wolfenstein VR game was a single player game, though the Wolfenstein engine was later used to create a multi-player game [...], Cybertag VR. Where four players could speak to each other through a headset while playing tag in a virtual environment. I began my work with AWT as a 3d artist developing levels for a new game engine which used character and level models designed in 3d Studio. I also used Deluxe Paint to create animation sequences for Cybertag VR.
  \bigskip \\
 \textbf{Tom Roe - 3D artist}\\
  \end{fancyquotes}
-\par
+\pagebreak
 
 
 
@@ -22,8 +23,7 @@ The Wolfenstein VR project had no chance of success.  You could rotate your head
 \textbf{John Carmack}
  \end{fancyquotes}\\
 \par
-Tom Roe, a 3D artist who uploaded a video on YouTube\footnote{"AWT Cybertag VR Demo from 1994": https://www.youtube.com/watch?v=l9n\_TkFIttk .}, helped with some of the finer details of this project.
-\par
+In 2011, Tom Roe shared a video titled "AWT Cybertag VR Demo from 1994"\footnote{: https://www.youtube.com/watch?v=l9n\_TkFIttk .} demonstrating how the system worked. 
 
 
 \begin{figure}[H]
@@ -34,14 +34,12 @@ Tom Roe, a 3D artist who uploaded a video on YouTube\footnote{"AWT Cybertag VR D
 
 \begin{figure}[H]
   \centering
-\scaledimage{0.8}{w3dvr/multiplayer.png}
- 
+\scaledimage{0.88}{w3dvr/multiplayer.png}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-\scaledimage{0.8}{w3dvr/station.png}
- 
+\scaledimage{0.88}{w3dvr/station.png}
 \end{figure}
 
 \begin{figure}[H]
@@ -50,15 +48,15 @@ Tom Roe, a 3D artist who uploaded a video on YouTube\footnote{"AWT Cybertag VR D
  
 \end{figure}
 \par
-Tom Hall helped Cybertag by going on-site in Tennessee for two days. About ten new maps were specially designed for deathmatch while some were simplified version of the adventure mode.\\
+Tom Hall helped Cybertag by working on-site in Tennessee for two days. About ten new maps were specially designed for deathmatch while some were simplified versions of the adventure mode.\\
 \par
 \begin{fancyquotes}
-I playtested the levels to see if they worked. It was super-early VR and fuzzy, but kinda of novel. But you couldn't look up and down, and it was joystick control, so I applaud the early baby steps, but it wasn't particularly fun.\\
+I playtested the levels to see if they worked. It was super-early VR and fuzzy, but kind of novel. But you couldn't look up and down, and it was joystick control, so I applaud the early baby steps, but it wasn't particularly fun.\\
 \par
 
 I thought it was interesting, but it was way too early, and as I always say, "People don't like to put shit on their head."
 \bigskip \\
-\textbf{Tom Halls}
+\textbf{Tom Hall}
  \end{fancyquotes}\\
 \par
 The source code does contains the special code id Software created for \textit{Cybertag VR}.\\
@@ -70,7 +68,7 @@ To be put in VR mode, the engine simply checks a command-line parameter.\\
 \ccode{vr_InitGame.c}
 
 
-The engine seems to have had a crude communication with the display via a driver at a hard-coded location (segment \cw{0x40}, offset \cw{0x40}). Each frame, the viewing angle was retrieved from the driver and a view rendered. There was no synchronization system to make sure both eyes were rendered without simulation time increase so the resulting effect must have been weird at times.\\
+The engine seems to have had a crude communication with the display via a driver at a hard-coded location (segment \cw{0x40}, offset \cw{0x40}). For each frame, the viewing angle was retrieved from the driver and a view rendered. There was no synchronization system to make sure both eyes were rendered without simulation time increase so the resulting effect must have been weird at times.\\
 \par
 
 \ccode{vr_if1.c}

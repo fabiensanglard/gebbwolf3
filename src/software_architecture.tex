@@ -33,7 +33,7 @@ Once downloaded and decompressed, the archive \codeword{wolfsrc.zip} contains an
  \par
    Lines of code (SLOC) is not a meaningful metric against a single codebase but excels when it comes to extracting proportions. Wolfenstein 3D with its 27,223 SLOC is very small compared to most software. \cw{curl} (a command-line tool to download url content) is 154,134 SLOC. Google's Chrome browser is 1,700,000 SLOC. Linux kernel is 15,000,000 SLOC.\\
 \par
-The source code release was overwhelmingly well received yet among the many praise some extraordinary comments left ever-lasting memories.\\
+The source code release was overwhelmingly well received yet among the many praises some extraordinary comments left ever-lasting memories.\\
 \par
  \begin{fancyquotes}
    We didn't have spell checkers in our editors back then, and I always had poor spelling.  The word "collumn" appears in the source code dozens of times.  After I released the source code, one of the emails that stands out in memory read:
@@ -98,7 +98,7 @@ The archive contains more than just source code; it also features:
 \section{Big Picture}
 The game engine is divided in three blocks:
 \begin{itemize}
-\item 2D menu engine which lets the user configure the game.
+\item 2D menu engine which lets users configure the game.
 \item 3D game renderer where the users spend most of their time.
 \item Sound system which runs concurrently with either the 2D or 3D renderer. 
 \end{itemize}
@@ -324,9 +324,9 @@ Originally all assets for 3D sequences are on HDD in file \cw{VSWAP.WL1}. When a
  \includegraphics[width=\textwidth]{imgs/drawings/page_manager_architecture.pdf}
  \end{figure}
  \par
- The architecture of the Page Manager is interesting since it treats XMS as a last resort L2 cache level while EMS RAM is used like conventional memory. This is because EMS driven RAM is several time faster than XMS driven RAM and almost as fast as conventional memory. This topic is detailed in Appendix \ref{ems_vs_xms} on page \pageref{ems_vs_xms}.\\
+ The architecture of the Page Manager is interesting since it treats XMS as a last resort L2 cache level while EMS RAM is used like conventional memory. This is because EMS driven RAM is several times faster than XMS driven RAM and almost as fast as conventional memory. This topic is detailed in Appendix \ref{ems_vs_xms} on page \pageref{ems_vs_xms}.\\
  \par
-In order to minimize the cost of page misses, the engine preloads the page cache before a level start. The user experiences this as the "Get Psyched" screen:
+In order to minimize the cost of page misses, the engine preloads the page cache before a level starts. The user experiences this as the "Get Psyched" screen:
  \par
 \begin{figure}[H]
 \centering
@@ -340,7 +340,7 @@ This design has a small yet annoying flaw. On a low memory machine, a cache miss
 \par
 The size of the swap file varies depending on the version of the game being played: \cw{VSWAP.WL1} (shareware) is 742KiB while \cw{VSWAP.WL6} (full version) is 1,500KiB. In both cases a machine with 2MiB of RAM on top of the factory-issued 1MiB is enough to have all assets loaded during precaching.\\
 \par
-\bu{Thrashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, "thrashing" occurs. The HDD is put to heavy use, and framerate drops. Thrashing can happen if too many different resources are visible on the screen. In order to help designers balance their creativity with the need for a decent framerate, the engine detects trashing and flashes the screen border red when running in dev-mode.\\
+\bu{Thrashing:} When the system has to evict pages but ends up reloading the same resource during the same frame, "thrashing" occurs. The HDD is put to heavy use, and framerate drops. Thrashing can happen if too many different resources are visible on the screen. In order to help designers balance their creativity with the need for a decent framerate, the engine detects thrashing and flashes the screen border red when running in dev-mode.\\
 \par
 \bu{Sounds are special:} Because sound cards are fed via a system of interrupts, the sound manager cannot recover from a page miss. Therefore, all sound resources are loaded first (they are located at the start of \cw{VSWAP.WL1}) and only in conventional memory.
 
@@ -355,7 +355,7 @@ The size of the swap file varies depending on the version of the game being play
 
 
 \subsection{Video Manager (VL \& VH)}
-The video manager features two parts. There are a Higher level component and a Lower level one:
+The video manager features two parts. There is a higher level component and a lower level one:
 \begin{itemize}
 \item The \cw{VL\_*} layer is made of both C and ASM, where the C functions abstract away VGA register manipulation via assembly routines. 
 \item The high-level layer (\cw{VH\_*}) is dedicated to 2D menu drawings and is of course a client of the lower layer.
@@ -370,9 +370,9 @@ The video manager features two parts. There are a Higher level component and a L
 \subsection{Cache Manager (CA)}
 The cache manager is a small but critical component. It loads and decompresses maps, 2D graphics, and audio resources stored on the filesystem and makes them available in RAM. Assets of each kind are stored in two files. A header file contains the offset to allow translation from asset ID to byte offset in the data file.\\
  \par
- All resources are compressed. In the case of maps and audio, compression is hard-coded in the engine. For graphics, however, a third file (\cw{DICT}) contains the compression dictionary to decompress each asset. The Cache Manager handles decompression transparently relying on two compression methods. Assets use a traditional huffman method but the maps are compressed twice with a "carmacized" pass which is an independent re-discovery of LZ (Lempel-Ziv) approach\footnote{John Carmack mentioned on several occasions how difficult it was to access programming books back in the 90s. He would "invent" something only to find out later others had already done it and better than him!"}.\\
+ All resources are compressed. In the case of maps and audio, compression is hard-coded in the engine. For graphics, however, a third file (\cw{DICT}) contains the compression dictionary to decompress each asset. The Cache Manager handles decompression transparently, relying on two compression methods. Assets use a traditional huffman method but the maps are compressed twice with a "carmacized" pass which is an independent re-discovery of the LZ (Lempel-Ziv) approach\footnote{John Carmack mentioned on several occasions how difficult it was to access programming books back in the 90s. He would "invent" something only to find out later others had already done it and better than him!}.\\
 \par
-\bu{Trivia :} Is there a typo in the filename \cw{AUDIOHED.WL} ? The correct spelling would be \texttt{\justify AUDIOHEAD.WL1}. Where is the \cw{A}? This is in fact a limitation of the operating system. DOS only allows 8.3 filename (at most eight characters followed by a dot, then at most three characters for the extension).
+\bu{Trivia :} Is there a typo in the filename \cw{AUDIOHED.WL} ? The correct spelling would be \texttt{\justify AUDIOHEAD.WL1}. Where is the \cw{A}? This is in fact a limitation of the operating system. DOS only allows 8.3 filenames (at most eight characters followed by a dot, then at most three characters for the extension).
 \par
 \begin{figure}[H]
 \centering
@@ -389,7 +389,7 @@ The cache manager is a small but critical component. It loads and decompresses m
 
 \subsection{User Manager (US)}
 \begin{minipage}{0.7\textwidth}
-The User Manager is largely based on the Catacomb 3-D code and was written by Jason Blochowiak. The copy/paste is very visible since 90\% of the functions declared in the header (ID\_US.H) are not actually implemented in \cw{ID\_US.C}. 
+The user manager is largely based on the Catacomb 3-D code and was written by Jason Blochowiak. The copy/paste is very visible since 90\% of the functions declared in the header (ID\_US.H) are not actually implemented in \cw{ID\_US.C}. 
 It is a poorly named manager as it mostly takes care of text layout. When a \cw{WL\_*} high-level routine needs to draw a string, it is passed to \cw{US\_Print} which does all measurement (e.g. Draw string centered)
 and then passes this information to the Video Manager (\cw{VW\_DrawPropString}), which takes care of rendition.
 \end{minipage}
@@ -440,7 +440,7 @@ The sound manager is described extensively in the "Sound and Music" section.
 
 
 \subsection{Input Manager (IN)}
-The Input manager abstracts interactions with joystick, keyboard, and mouse. It features the boring boilerplate code to deal with PS/2, Serial, and DA-15 ports, with each using their own I/O addresses.
+The input manager abstracts interactions with joystick, keyboard, and mouse. It features the boring boilerplate code to deal with PS/2, Serial, and DA-15 ports, with each using their own I/O addresses.
 
 
 
@@ -458,7 +458,7 @@ The Input manager abstracts interactions with joystick, keyboard, and mouse. It 
 
 
 \section{Startup}
-As the game engine starts, it must deal with the difficulties described in Chapter \ref{chapter_hardware} \nameref{chapter_hardware}. This is where things become really interesting.
+As the game engine starts, it must deal with the difficulties described in Chapter \ref{chapter_hardware} "\nameref{chapter_hardware}". This is where things become really interesting.
 
 
 
@@ -475,7 +475,7 @@ That is what the "signon" screen is for: self diagnostics.
 \caption{Signon screen.}
 \end{figure}
 \par
-Besides showing recognized devices such as mouse, joystick, and sound cards, the signon screen's most important metric is labeled "MAIN". Due to the architecture described in Chapter \ref{chapter_hardware} \nameref{chapter_hardware}, a DOS program has only 640KiB of RAM available. Each driver loaded by the user takes away from these 640KiB. If DOS cannot load the executable in RAM, the user will see the following error message:\\
+Besides showing recognized devices such as mouse, joystick, and sound cards, the signon screen's most important metric is labeled "MAIN". Due to the architecture described in Chapter \ref{chapter_hardware} "\nameref{chapter_hardware}", a DOS program has only 640KiB of RAM available. Each driver loaded by the user takes away from these 640KiB. If DOS cannot load the executable in RAM, the user will see the following error message:\\
 \par 
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C]{code/OutOfMemory.txt}
@@ -490,7 +490,7 @@ At the time signon is displayed, the only loaded manager is the Memory Manager. 
 \end{minipage}
 After that screen, the \cw{introscn} variable (using 320x200 bytes = 64,000 bytes) is unloaded from RAM to make more room for runtime.\\
 \par
-\trivia{Notice, in the body of function \cw{SignonScreen}, a reference to "virtual reality" which was added for a company licensing the engine to build arcade VR cabinets. Several decades later, John Carmack would be involved in a VR renaissance with Oculus VR in 2012.}
+\trivia{Notice in the body of function \cw{SignonScreen} a reference to "virtual reality" which was added for a company licensing the engine to build arcade VR cabinets. Several decades later, John Carmack would be involved in a VR renaissance with Oculus VR in 2012.}
 \pagebreak
 
 
@@ -513,7 +513,7 @@ After that screen, the \cw{introscn} variable (using 320x200 bytes = 64,000 byte
 
 
 \subsection{Solving the VGA Problem}
-Chapter \ref{chapter_hardware} \nameref{chapter_hardware} left us with an unresolved issue: all the VGA modes lack double buffering capability.\\
+Chapter \ref{chapter_hardware} "\nameref{chapter_hardware}"" left us with an unresolved issue: all the VGA modes lack double buffering capability.\\
 \par
  The most appealing mode (13h) offers a single framebuffer at a resolution of 320x200 non-square pixels with 256 indexed colors. The Chain-4 chipset in the VGA circuitry automatically maps the RAM starting at \cw{A0000h} to the four VRAM banks. When active, a developer needs not to worry about banks. The screen can be cleared with a simple function as follows.\\
  \par
@@ -536,7 +536,7 @@ This mapping system is also called "chaining". Because 2 bits out of the address
  \end{figure}
 
  \par
- The waste is really the fault of the Chain-4 chip. However it turns out it is possible to disable this. The technique was popularized by Michael Abrash in Dr. Dobb's Journal of July 1991. In his article he described what he coined Mode-X. An undocumented sequence of operations disabling Chain-4 allows for a resolution of 320x240 square pixels (since the ratio is 4:3) and full access to the 256KiB of RAM.\\
+ The waste is really the fault of the Chain-4 chip. However it turns out it is possible to disable this. The technique was popularized by Michael Abrash in \textit{Dr. Dobb's Journal} of July 1991. In his article he described what he coined Mode-X. An undocumented sequence of operations disabling Chain-4 allows for a resolution of 320x240 square pixels (since the ratio is 4:3) and full access to the 256KiB of RAM.\\
  \par
  Wolfenstein 3D does things slightly differently. It disables Chain-4 but keeps resolution at 320x200. This mode was coined Mode-Y one year later\footnote{rec.games.programmer, February 10th, 1992}. \\
  \par

@@ -1,8 +1,7 @@
 boolean FizzleFade {
 	long rndval = 1;
 	int x,y;
-	do
-	{
+	do{
 		// seperate random value into x/y pair
 		asm	mov	ax,[WORD PTR rndval]
 		asm	mov	dx,[WORD PTR rndval+2]
@@ -29,6 +28,6 @@ noxor:
 		copy_screen_pixel(x,y);
 
 		if (rndval == 1) return false; // end sequence
-			
+		
 	} while (1)
 }
