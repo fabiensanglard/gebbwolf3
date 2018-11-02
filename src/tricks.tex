@@ -118,7 +118,7 @@ The Fibonacci representation helps to understand the general idea. But it is not
     \caption{Four taps on a 17-bit register; each XOR requires an instruction.}
 \end{figure}
 \par
-There is an alternate way to represent a LFSR called "Galois", which allows one XOR operations regardless of how many taps are involved. This is the way Wolfenstein 3D implements its LFSR and writes 320x200=64,000 pixels exactly once with a deterministic duration.
+There is an alternate way to represent a LFSR called "Galois", which allows one XOR operations regardless of how many taps are involved. This is how Wolfenstein 3D implements its LFSR and writes 320x200=64,000 pixels exactly once with a deterministic duration.
 \par
 \begin{figure}[H] 
     \centering \includegraphics[width=\textwidth]{imgs/drawings/fizzlefade/galois.pdf} 
@@ -143,9 +143,9 @@ Even though it limited the graphic capabilities of the game, the palette system 
 \par
 
  \scaledimage{0.45}{palette_damage00.png}\hspace{40pt}\scaledimage{0.45}{palette_damage20.png}\par
- \vspace{10pt}
+ \vspace{15pt}
  \scaledimage{0.45}{palette_damage40.png}\hspace{40pt}\scaledimage{0.45}{palette_damage60.png}\par
- \vspace{10pt}
+ \vspace{15pt}
  \scaledimage{0.45}{palette_damage80.png}\hspace{40pt}\scaledimage{0.45}{palette_damage100.png}\par
  %\caption{The palette RGB colors is altered when taking damage.} \label{fig:palette_damage}
 \pagebreak

@@ -285,32 +285,19 @@ Since the VGA is palette-based (colors were not specified via 24-bit RGB but via
 The palette coordinates run \cw{0x00} to \cw{0x0F} horizontally and \cw{0x00} to \cw{0xF0} vertically. The horizontal blue gradient at the bottom starts at 0xF0 and ends at 0xFE. 0xFF (represented in pink) is a special color deemed transparent by the engine and always skipped during rendering.\\
 \par
 
-All assets were hand drawn with a mouse. Since the VGA stretched the framebuffer when displaying it on the screen, Adrian had to be careful to draw at the same resolution as the game would run (320x200).\\
-\par
+All assets were hand drawn with a mouse. Since the VGA stretched the framebuffer when displaying it on the screen, Adrian had to be careful to draw at the same resolution as the game would run (320x200).
+
 \begin{fancyquotes}
 Adrian and Kevin both worked directly in Deluxe Paint, we didn't have any scanning tools at the time.\\
 \\
 \textbf{John Carmack - Programmer}
-\end{fancyquotes}
-\\
+\end{fancyquotes}\\
+\par
 Graphic assets are divided in two categories:
 \begin{itemize}
 \item 2D Menu items shipping with the game in \cw{VGAGRAPH}, \cw{VGAHEAD} and, \cw{VGADICT}
 \item 3D Action phase items (walls and sprites) shipping in the \cw{VSWAP} archive
 \end{itemize}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 \section{Assets Workflow}
@@ -587,6 +574,7 @@ What goes in the \cw{AUDIOT} archive is a music format called IMF\footnote{Id so
 \section{Distribution}
 At 4am on May 5th, 1992 the first episode of the game was uploaded to Massachusetts via Software Creations' BBS\footnote{Bulletin Board Systems where servers allowing users to connect via a console and upload/download programs.} server. Wolfenstein 3D was distributed as shareware; the game engine and first episode were given for free and encouraged to be copied and distributed to a maximum number of people. To receive the five other episodes, each player had to pay \$50 to id Software.\\
 \par
+\vspace{-10pt}
 \begin{figure}[H]
 \centering
  \fullimage{shareware.png}
@@ -628,8 +616,13 @@ The game shipped as follows:\\
  \caption{All files distributed as shareware as they appear in DOS command prompt.}
   \end{figure}
  \par
-
+\textbf{\underline{Trivia :}} The engine is very tiny and only uses 94KiB in total. But with 64KiB of the executable dedicated to the \cw{Signon} screen (and 768 bytes for the palette), the engine is in fact only 29KiB.
 \pagebreak
+
+
+
+
+
 The file extensions did have meaning: 
 \begin{itemize}
 \item WL1: Shareware.
@@ -640,7 +633,7 @@ The file extensions did have meaning:
 \item SOD: Spear of Destiny.
 \end{itemize}
  
-\textbf{\underline{Trivia :}} The engine is very tiny and only uses 94KiB in total. But with 64KiB of the executable dedicated to the \cw{Signon} screen (and 768 bytes for the palette), the engine is in fact only 29KiB.\\
+
 \par
 \begin{figure}[H]
 \centering
@@ -655,8 +648,8 @@ Figure \ref{disk.png} shows a 3\nicefrac{1}{2}-inch floppy widely used to share 
 \par
 \begin{figure}[H]
 \centering
-\scaledimage{0.7}{cover.png}
-\caption{Wolfenstein 3D brick and mortar box}
+\scaledimage{0.8}{cover.png}
+\caption{Wolfenstein 3D brick and mortar box.}
 \end{figure}
 \par
 Even though its was originally distributed exclusively as a shareware, sales later called for a more "traditional" medium. GT Interactive picked up Wolfenstein 3D in 1993 and gifted it with an actual box, along with the "Official Hint Manual" which was done by Tom Hall and Kevin Cloud. In 1995, the game was re-released on CD-ROM.\\
