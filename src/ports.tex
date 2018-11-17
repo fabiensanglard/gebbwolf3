@@ -53,7 +53,7 @@ The solution was to sacrifice performance for implementation simplicity.  Instea
 \end{fancyquotes}\\
 \par
 Switching the core algorithm from raycasting to BSP sorted wall span rasterization was not the only trick John Carmack had to use to get the game to run on Super NES. You may remember from page \pageref{sprite_engine_ref} that console graphics are based on sprite engines, which are orthogonal to Wolfenstein 3D's requirements for a framebuffer.\\
-\par The solution to this problem was to use the SNES Mode 7\footnote{The same Mode 7 used for Super Mario Kart and F-Zero} where one background layer made of tiles 14x12 simulates a 112x96 framebuffer which is scaled up 2x to 224x160 thanks to the Mode 7 transformation matrix. The SNES PPU\footnote{Pixel Processing Unit} sprite engine is used to draw the weapon and the status bar with 32x32 tiles.
+\par The solution to this problem was to use the SNES Mode 7\footnote{The same Mode 7 used for Super Mario Kart and F-Zero} where one background layer made of tiles 14x12 simulates a 112x96 framebuffer which is scaled up 2x to 224x192 thanks to the Mode 7 transformation matrix. The SNES PPU\footnote{Pixel Processing Unit} sprite engine is used to draw the weapon and the status bar with 32x32 tiles.
 
 
 
