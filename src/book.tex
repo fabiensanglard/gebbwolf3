@@ -6,25 +6,8 @@
 
 \begin{document}
 
-
-\def\GE{} % Title
-\def\BB{} % Title
-\title{\GE \BB}
-
-\def\Me{Fabien Sanglard} % Title
-\author\Me
-
-\definecolor{title_white}{rgb}{1,1,1}
-\definecolor{title_grey}{rgb}{0.6,0.6,0.6}
-       
-\def\Version{0.1}
-
     \blankpage
-    \blankpage
-    %Cover page
-    \subfile{cover}
-    
-    
+    \blankpage    
 
     \renewcommand{\rmdefault}{cmss} 
     \renewcommand{\familydefault}{\sfdefault}
@@ -125,10 +108,8 @@
         \subfile{release}
     \chapter{20th Anniversary Commentary}
         \subfile{20years}
-
-    
-    \cleartoleftpage % Make sure back cover is on a "back" page
-    \subfile{cover_back}
-    \blankpage
-    \blankpage
+    \cleartoleftpage
+    \thispagestyle{plain} \blankpage
+    \thispagestyle{plain} \blankpage
+    \thispagestyle{plain} \blankpage
 \end{document}

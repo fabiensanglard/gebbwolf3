@@ -7,7 +7,7 @@ int main(int argc, char** argv){
   void far *b = MK_FP(0x0010, 0x0020);
   void far *c = MK_FP(0x0012, 0x0000);
 
-  printf("%b",a==b);
-  printf("%b",a==c);
-  printf("%b",b==c);
+  printf("%d\n",a==b);
+  printf("%d\n",a==c);
+  printf("%d\n",b==c);
 }

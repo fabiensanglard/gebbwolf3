@@ -98,7 +98,7 @@ Each time the interrupt system triggers, it runs another small (yet paramount) s
 \lstinputlisting[language=C,morekeywords={longword}]{code/timecount.c}
 \end{minipage}
 \par
-It is updated at a rate of 70 units per seconds (to match the VGA update rate of 70Hz). These units are called "ticks". Depending on how fast the audio system runs (from 150Hz to 7000Hz), it adjusts how much it should increase \cw{TimeCount}.\\
+It is updated at a rate of 70 units per seconds (to match the VGA update rate of 70Hz). These units are called "ticks". Depending on how fast the audio system runs (from 140Hz to 7000Hz), it adjusts how much it should increase \cw{TimeCount}.\\
 \par
 Every system in the engine uses this variable to pace itself. The renderer will not start rendering a frame until at least one tick has passed. The AI system expresses action duration in tick units. The input sampler checks for how long a key was pressed, and the list goes on. Everything interacting with human players uses \cw{TimeCount}.\\
 
@@ -158,7 +158,7 @@ When the AdLib was released in 1986, developers were instructed to send data "as
 \begin{fancyquotes}
 The original AdLib manual (before they shipped) did not call for ANY delays. The original IBM PC (4.77 Mhz) couldn't get ahead of the card. By the time it shipped they were telling [us] to do one IN instruction, and every time a new faster processor came out they added some delay to their recommendation. The old 8088 machines would not have worked with the 35 IN instructions now required, it would have slowed the machine down so much nothing else could get done\footnotemark.\\
  \par
- \textbf{Jason Linhart}
+ \textbf{Jason Linhart - Founder and lead programmer of MicroMagic}
  \end{fancyquotes}
 \\
 \footnotetext{Source: http://www.oldskool.org/guides/oldonnew/sound .}

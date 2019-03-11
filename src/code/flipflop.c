@@ -1,6 +1,6 @@
 void AsmRefresh() {
     
-    for (int =0 ; i < pixx ; i++) {
+    for (int i=0 ; i < pixx ; i++) {
         short angle=midangle+pixelangle[pixx];
         // Setup xstep and ystep based on angle.
         do {

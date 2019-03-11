@@ -98,7 +98,7 @@ Two choices in the design of the 386 contributed to its success. First, the desi
 \par
 Like the 80286, the 80386 used a 1.5$\mu$m process. The increased surface (from 49 mm$^2$ to 104 mm$^2$) allowed Intel to pack 275,000 transistors instead of 134,000.\\
 \par
-\textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View.} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "software poison".\\
+\textbf{\underline{Trivia :}}  The 286 was quite unpopular among both programmers and hardware designers. Bill Gates called it "brain dead"\footnote{Dewar, Robert B. K.; Smosna, Matthew (1990). Microprocessors: A Programmer's View.} for operating systems and Steve Morris (co-architect of the Intel 8086) called it "software poison".\\
 \par
 
 
@@ -133,7 +133,7 @@ If you are holding a physical 9.25"x7.5" copy of this book, the CPU packaging is
 \includegraphics[width=\textwidth]{imgs/drawings/386_architecture.pdf}
 \end{figure}
 \par
-The Bus Unit is the only difference between a SX and a DX. The SX has a 16-bit bus which allowed PC manufacturers to reuse the design of the 286 motherboards and drove the price down significantly. The DX had a fully 32-bit Bus unit.
+The Bus Unit is the only difference between an SX and a DX. The SX has a 16-bit bus which allowed PC manufacturers to reuse the design of the 286 motherboards and drove the price down significantly. The DX had a fully 32-bit Bus unit.
 \par
 \begin{figure}[H]
 \centering
@@ -204,7 +204,7 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
   
    All that CPU power was not necessarily useful for programming a game. In order to perform trigonometric computations for 3D effects, the engine has to keep track of the fractional part of each operation. This may not appear to be an issue since the C programming language has a type (\codeword{float}) precisely for that purpose. But in practice this was a problem, and to understand it we need to understand how \codeword{float} works.\\
 \par
- As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{"What every Computer Scientist should know about Floating-Point" by David Goldbert.}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is to for programming a 3D engine. In the C language, \codeword{float}s are 32-bit container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
+ As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{"What every Computer Scientist should know about Floating-Point" by David Goldbert.}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is for programming a 3D engine. In the C language, \codeword{float}s are 32-bit container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
   \item 1 bit S for the sign
   \item 8 bits E for the exponent
@@ -252,7 +252,7 @@ Although correct, this way of explaining floating point usually leaves programme
 The window tells within which two consecutive power-of-two the number will be. From [$2^{-127}$,$2^{-126}$],..., [0.5,1], [1,2], [2,4], and all the way up to [$2^{127}$,$2^{128}$]. The offset divides the window in $ 2^{23} = 8,388,608 $  buckets. With the window and the offset you can approximate a number. The window is an excellent mechanism to protect from overflowing. Once you have reached the maximum in a window (e.g. [2,4]), you can "float" it right and represent the number within the next window (e.g. [4,8]). This only costs a little bit of precision.\\
 
 
-\par \bu{Trivia :} How much precision is lost when the window covers a wider range? Let's take an example with window [1,2] where the 8388608 offsets cover a range of 1 which gives a precision of $(2-1)/8388608=0.00000011920929$. In the window [2048,4096] the 8388608 offsets cover a range of $(4096-2048) = 2048$ which gives a precision $ (4096-2048)/8388608=0.0002$.\\
+\par \bu{Trivia :} How much precision is lost when the window covers a wider range? Let's take an example with window [1,2] where the 8,388,608 offsets cover a range of 1 which gives a precision of $(2-1)/8388608=0.00000011920929$. In the window [2048,4096] the 8388608 offsets cover a range of $(4096-2048) = 2048$ which gives a precision $ (4096-2048)/8388608=0.0002$.\\
 \par
 
 The next figure illustrates how the number 6.1 would be encoded. The window must start at 4 and span to the next power of two, 8. The offset is about half way down the window.
@@ -312,7 +312,7 @@ And finally the graphic representation with window and offset:\\
 \end{figure}
  
 
-Floating point arithmetic is a powerful tool. It can represent very small or huge values while keeping track of fractional parts of a number, and also protecting from overflow by floating the window when necessary.\\
+Floating point arithmetic is a powerful tool. It can represent very small or huge values while keeping track of fractional parts of a number, and also protect from overflow by floating the window when necessary.\\
 \par
 Floating point is handy, but the drawback is that it is also computationally expensive. The reason is simple. In order to add, subtract, multiply or divide two numbers, they both have to be expressed with the same window. This means converting one number to the representation used by the other, usually with higher precision than 32 bits (typically 80 bits on Intel FPUs)\footnote{To fully grasp how much processing a FPU does, it helps to read a software implementation. I found Berkeley SoftFloat helpful.}.\\
 \par
@@ -337,7 +337,7 @@ People who really wanted a hardware floating point unit could buy one. In the 90
 
 
 \par
-A possible solution to the lack of a hardware floating point unit would have been to multiply an integer by 100 or 1000 to perform fractional operation and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes 12 to 25 cycles and a divide (\cw{div}) is even worse with 27 cycles\footnote{ZSmith.com instructions at http://zsmith.co/intel\_i.html\#imul .}.\\ 
+A possible solution to the lack of a hardware floating point unit would have been to multiply an integer by 100 or 1000 to perform fractional operations and then divide to go back to integers. That is unfortunately not possible. On a 386, a multiply (\cw{imul}) instruction takes 12 to 25 cycles and a divide (\cw{div}) is even worse with 27 cycles\footnote{ZSmith.com instructions at http://zsmith.co/intel\_i.html\#imul .}.\\ 
 \par
 As a result, a game engine designer was stuck in an awkward situation with two half solutions to his problem. Integers which were fast but not accurate enough and Floats which were accurate but not fast enough.\\
 \par
@@ -365,7 +365,7 @@ As a result, a game engine designer was stuck in an awkward situation with two h
 
 
 \section{RAM}
-The first CPUs in the Intel x86 family were designed in 1976. At a time when RAM was very expensive, the 8080 and 8086 had 16-bit registers with a 20-bit-wide address bus capable of addressing 1MiB\footnote{This book uses IEC notation where MiB is $2^{20}$ and MB is $10^6$.} of RAM. It is difficult to stress how big 1MiB of RAM was in the 70's but as an example the Apple II and the Commodore 64 both shipped with 64KiB\footnote{This book uses IEC notation where KiB is $2^{10}$ and KB is $10^3$.} which was enough to write and run amazing things. Sixteen-bit registers and 20-bit address bus were plenty even though programming was difficult and required combining two registers to build a pointer.\\
+The first CPUs in the Intel x86 family were designed in 1976. At a time when RAM was very expensive, the 8080 and 8086 had 16-bit registers with a 20-bit-wide address bus capable of addressing 1MiB\footnote{This book uses IEC notation where MiB is $2^{20}$ and MB is $10^6$.} of RAM. It is difficult to stress how big 1MiB of RAM was in the 70's but as an example the Apple II and the Commodore 64 both shipped with 64KiB\footnote{This book uses IEC notation where KiB is $2^{10}$ and KB is $10^3$.} which was enough to write and run amazing things. Sixteen-bit registers and a 20-bit address bus were plenty even though programming was difficult and required combining two registers to build a pointer.\\
 \par
 By 1986, hardware had gotten cheaper and Intel made a departure from the old architecture with its 286 and 386. These new CPUs could be put in what is called "protected mode" featuring a 24-bit-wide address bus for up to 16 MiB of flat RAM protectable with a MMU\footnote{Memory Management Unit}. The 386 also had 32-bit registers in protected mode. To make sure old programs could still run, both processors could be put in "real mode" which replicates how the Intel 8080 and 8086 operated: 16-bit registers, 20-bit address bus giving 1MiB addressable RAM with segmented addressing.\\
 \par
@@ -424,7 +424,7 @@ Out of the original 1024KiB, only 640KiB (called Conventional Memory) was access
 
 \bigskip
 
-\textbf{\underline{Trivia :}}  In France people had to load KEYBFR.SYS driver so AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KiB of Conventional Memory. Needless to say French people learned pretty quickly that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a qwerty keyboard but IDDAD on an azerty keyboard without the French driver loaded.}.\\
+\textbf{\underline{Trivia :}}  In France, people had to load KEYBFR.SYS driver so AZERTY keyboard keys would be properly mapped. The driver consumed a whopping 5KiB of Conventional Memory. Needless to say French people learned pretty quickly that god mode was IDDAD\footnote{Invincibility mode in Doom is IDDQD on a qwerty keyboard but IDDAD on an azerty keyboard without the French driver loaded.}.\\
 \par
 
 
@@ -597,7 +597,7 @@ PCs were connected to CRT monitors: big, heavy, small diagonal, cathode ray-base
 
 
 \begin{minipage}{.4\textwidth}
-\textbf{\underline{Trivia :}} How big and heavy could a CRT be? The InterView 28hd96 by Integraph had a 28" diagonal allowing a resolution of 1920x1080 at a time where most monitors displayed 640x480. It weighed 45kg (99.5lb). For comparison, a modern DELL LCD 27" weights 7.8kg (17lb).\\
+\textbf{\underline{Trivia :}} How big and heavy could a CRT be? The InterView 28hd96 by Integraph had a 28" diagonal allowing a resolution of 1920x1080 at a time where most monitors displayed 640x480. It weighed 45kg (99.5lb). For comparison, a modern DELL LCD 27" weighs 7.8kg (17lb).\\
 \par
 In the photo on the right : John Carmack in 1996 working on a 28hd96 while programming Quake 2 using Visual Studio C++.\\
 \end{minipage}
@@ -1075,11 +1075,11 @@ It is also backward compatible and an 8-bit ISA card can be plugged into a 16-bi
 \end{figure}
 
 \par
- In practice the effective bandwidth of the bus is divided by two due to packet overhead and interrupts. As a result, a PC equipped with an 8 bit ISA VGA card can push 19.1Mbits/s/2/8 = 1.1MB/s. In mode \cw{13h}, since a frame is 320x200 = 64,000 bytes, the theoretical maximum framerate with a CPU taking 0ms to render a frame is 1,100,000 / 64,000 = 17 frames per seconds.\\
+ In practice the effective bandwidth of the bus is divided by two due to packet overhead and interrupts. As a result, a PC equipped with an 8 bit ISA VGA card can push 19.1Mbits/s/2/8 = 1.1MB/s. In mode \cw{13h}, since a frame is 320x200 = 64,000 bytes, the theoretical maximum framerate with a CPU taking 0ms to render a frame is 1,100,000 / 64,000 = 17 frames per second.\\
  \par
- On a 16-bit VGA card, 33,400,000 bits per seconds gives 33,400,000/8/64000 = 65 frames per seconds.\\
+ On a 16-bit VGA card, 33,400,000 bits per seconds gives 33,400,000/8/64000 = 65 frames per second.\\
  \par
- If you factor in other things which had to be transported by the bus such as palette, keyboard interrupt, mouse inputs, and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand how important it was to limit data transfer and why few programs of that era could max out the VGA's 70 frames per seconds\footnote{Specialized demos could reach 70 fps on VGA by careful management of unchanged regions or using planar writes for the 4x speedup.}.
+ If you factor in other things which had to be transported by the bus such as palette, keyboard interrupt, mouse inputs, and music/sounds (at 23kHz sampling a digitized sound effect consumes 23,000/70 = 328 bytes per frame) it is easy to understand how important it was to limit data transfer and why few programs of that era could max out the VGA's 70 frames per second\footnote{Specialized demos could reach 70 fps on VGA by careful management of unchanged regions or using planar writes for the 4x speedup.}.
 
 
 

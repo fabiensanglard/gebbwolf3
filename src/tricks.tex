@@ -125,7 +125,7 @@ There is an alternate way to represent a LFSR called "Galois", which allows one 
     \caption{Galois representation allows for one XOR operation regardless of the number of taps. This configuration is equivalent to figure \ref{wolf_lfsr_fibo}.}
 \end{figure}
       
-\bu{Note :} Because the effect works by plotting pixels individually, it was hard to replicate when developers tried to port the game to hardware accelerated GPU. None of the ports managed to replicate the fizzlefade except Wolf4SDL, which even found maximum-length LFSR taps configuration to reach resolution higher than 320x200.\\
+\bu{Note :} Because the effect works by plotting pixels individually, it was hard to replicate when developers tried to port the game to hardware accelerated GPU. None of the ports managed to replicate the fizzlefade except Wolf4SDL, which even found maximum-length LFSR tap configurations to reach resolution higher than 320x200.\\
 \par
 \bu{Note :} The tap configuration on 17 bits generates 131,072 values before cycling. Since 320x200=64,000, it could have been implemented with a 16-bit Maximum-length register with taps on 16,15,13 and 4 (in "Galois" notation).
 
