@@ -53,13 +53,13 @@ A lot of friction was present since manufacturers had not embraced the gaming in
       axis x line=bottom,
       axis y line=left,
       enlarge x limits=0.11,
-      symbolic x coords={286 6Mhz,286 8Mhz,386SX 16,386SX 33,386DX 33,386DX 40},
+      symbolic x coords={286 6MHz,286 8MHz,386SX 16,386SX 33,386DX 33,386DX 40},
       xticklabel style={anchor=base,yshift=-\baselineskip},
       nodes near coords={\pgfmathprintnumber\pgfplotspointmeta}
     ]
       \addplot[fill=black!20,draw=black] coordinates {
-        (286 6Mhz,0.8)
-        (286 8Mhz,1.5)
+        (286 6MHz,0.8)
+        (286 8MHz,1.5)
         (386SX 16,2.5)
         (386SX 33,5.1)
         (386DX 33,8)
@@ -78,7 +78,7 @@ A lot of friction was present since manufacturers had not embraced the gaming in
  \par
   \textbf{\underline{Trivia :}} A modern processor such as the Intel Core i7 3.33 GHz operates at close to 180,000 MIPS.\\
   \par
- Intel built two versions of the 386: the 386-SX and the 386-DX. They were identical processors yet the DX version was almost twice as powerful as the SX (on the chart the \cw{386 SX 33Mhz} and the \cw{386 DX 33Mhz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM being twice as wide on the DX (32 bits vs 16 bits). The 386-SX bus unit enabled manufacturers to reuse motherboard chips designed for the Intel 286 which had a 16-bit bus unit, further reducing costs. Despite its inferiority, the SX sold well because it was cheaper and a lot of people had no idea what a "bus" was, they just wanted "a 386".\\
+ Intel built two versions of the 386: the 386-SX and the 386-DX. They were identical processors yet the DX version was almost twice as powerful as the SX (on the chart the \cw{386 SX 33MHz} and the \cw{386 DX 33MHz} are respectively at 5.1 and 8 MIPS). This is due to a data bus between the CPU and the RAM being twice as wide on the DX (32 bits vs 16 bits). The 386-SX bus unit enabled manufacturers to reuse motherboard chips designed for the Intel 286 which had a 16-bit bus unit, further reducing costs. Despite its inferiority, the SX sold well because it was cheaper and a lot of people had no idea what a "bus" was, they just wanted "a 386".\\
 
 
 
@@ -122,7 +122,7 @@ Like the 80286, the 80386 used a 1.5$\mu$m process. The increased surface (from 
  
 
 
-\cfullimage{386_layout_drawing.png}{Intel 80386-DX 16 Mhz die layout\protect\footnotemark}
+\cfullimage{386_layout_drawing.png}{Intel 80386-DX 16 MHz die layout\protect\footnotemark}
 \par \footnotetext{Source: "The Intel 80386- Architecture and Implementation" by Khaled A. El-Ayat and Rakesh K. Agarwal.}
 If you are holding a physical 9.25"x7.5" copy of this book, the CPU packaging is 36.8x36.8 mm square and the die is 10x10 mm, at 1:1 scale.\\
 \par Despite the apparent complexity, the 80386 can be summarized as three systems and a three-stage instruction pipeline.

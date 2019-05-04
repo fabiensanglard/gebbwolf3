@@ -75,7 +75,7 @@ The engine can decide at what frequency to be interrupted, depending on the type
 
 
 \subsection{PIT and PIC}
-The PIT chip runs at 1.193182 MHz. This initially seems like an odd choice from the hardware designers, but has a logical origin. In 1980 when the first IBM PC 5150 was designed, the common oscillator used in television circuitry was running at 14.31818 MHz. As it was mass produced, the TV oscillator was very cheap so utilizing it in the PC drove down cost. Engineers built the PC timer around it, dividing the frequency by 3 for the CPU (which is why the Intel ran at 4.7Mhz), and dividing by 4 to 3.57Mhz for the CGA video card. By logically ANDing these signals together, a frequency equivalent to the base frequency divided by 12 was created. This frequency is 1.1931816666 MHz. By 1991, oscillators were much cheaper and could have used any frequency but backward compatibility prevented this.\\
+The PIT chip runs at 1.193182 MHz. This initially seems like an odd choice from the hardware designers, but has a logical origin. In 1980 when the first IBM PC 5150 was designed, the common oscillator used in television circuitry was running at 14.31818 MHz. As it was mass produced, the TV oscillator was very cheap so utilizing it in the PC drove down cost. Engineers built the PC timer around it, dividing the frequency by 3 for the CPU (which is why the Intel ran at 4.7MHz), and dividing by 4 to 3.57MHz for the CGA video card. By logically ANDing these signals together, a frequency equivalent to the base frequency divided by 12 was created. This frequency is 1.1931816666 MHz. By 1991, oscillators were much cheaper and could have used any frequency but backward compatibility prevented this.\\
 \par
 
 
@@ -152,11 +152,11 @@ The OPL2 is made of 9 channels capable of emulating instruments. Each channel is
 \lstinputlisting[language=C,morekeywords={longword}]{code/audio_ports.c}
 \end{minipage}
 \par
-When the AdLib was released in 1986, developers were instructed to send data "as fast as possible". At 4.77Mhz, a PC was unable to out-pace the AdLib. Yet as CPUs got faster, issues started to arise and the card was unable to keep up.\\
+When the AdLib was released in 1986, developers were instructed to send data "as fast as possible". At 4.77MHz, a PC was unable to out-pace the AdLib. Yet as CPUs got faster, issues started to arise and the card was unable to keep up.\\
 \par
 
 \begin{fancyquotes}
-The original AdLib manual (before they shipped) did not call for ANY delays. The original IBM PC (4.77 Mhz) couldn't get ahead of the card. By the time it shipped they were telling [us] to do one IN instruction, and every time a new faster processor came out they added some delay to their recommendation. The old 8088 machines would not have worked with the 35 IN instructions now required, it would have slowed the machine down so much nothing else could get done\footnotemark.\\
+The original AdLib manual (before they shipped) did not call for ANY delays. The original IBM PC (4.77 MHz) couldn't get ahead of the card. By the time it shipped they were telling [us] to do one IN instruction, and every time a new faster processor came out they added some delay to their recommendation. The old 8088 machines would not have worked with the 35 IN instructions now required, it would have slowed the machine down so much nothing else could get done\footnotemark.\\
  \par
  \textbf{Jason Linhart - Founder and lead programmer of MicroMagic}
  \end{fancyquotes}
