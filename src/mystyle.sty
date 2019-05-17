@@ -57,7 +57,22 @@
 \newcommand{\cscaledimage}[3]{\begin{figure}[H] \centering \includegraphics[width=#1\textwidth]{screenshots_300dpi/#2} \caption{#3} \label{#2} \end{figure}}
 
 % Allow to include urls in pdf
-\usepackage[pdftex]{hyperref}
+\usepackage{hyperref}
+\hypersetup{
+    hyperindex=true,
+    bookmarks=true,
+    pdfa,
+    colorlinks=true,
+    breaklinks=true,
+    urlcolor=black,
+    linkcolor=black,
+    citecolor=black,
+    bookmarksopen=true,
+    unicode=true
+}
+\usepackage[hyperpageref]{backref}
+\usepackage{bookmark}
+\usepackage{cmap} % Compatible with pdf-a
 
 \newcommand{\bu}[1]{\textbf{\underline{#1}}}
 %fancyvrb to make verbatim box with colors
