@@ -153,7 +153,7 @@ Even though it limited the graphic capabilities of the game, the palette system 
 A fast path is provided (which ironically only works if the CPU is as slow as the VGA processor) to update the palette via one \cw{rep outsb} instruction. Otherwise, if not supported, a loop of 768 \cw{outsb} is used.\\
 \par
 \begin{minipage}{\linewidth}
-\lstinputlisting[language=C,morekeywords={asm,byte,far}]{code/vl_setpalette.c}
+\lstinputlisting[language=C,morekeywords={asm,byte,far}]{code/vl_setPalette.c}
 \end{minipage}
 
 
