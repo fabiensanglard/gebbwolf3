@@ -1,9 +1,10 @@
-if [ ! -d output ]
-then
-   mkdir output
-fi
-cd src
+#!/bin/bash
 
+if [[ $OSTYPE = "darwin*" ]]; then
+  export INKSCAPE=/Applications/Inkscape.app/Contents/Resources/bin/inkscape
+else
+  export INKSCAPE=/usr/bin/inkscape
+fi
 
 epsToPDF () {	
     # Build path without extension.
@@ -22,7 +23,6 @@ epsToPDF () {
   # epstopdf $filename
 }
 
-export INKSCAPE=/Applications/Inkscape.app/Contents/Resources/bin/inkscape
 svgToPNG() {
     # Build path without extension.
   filename=$(basename "$1")
@@ -58,11 +58,12 @@ find . -name "*.eps" | while read file; do epsToPDF "$file"; done
 find screenshots_svg -name "*.svg" | while read file; do svgToPNG "$file"; done
 
 
+# Compile
+[ ! -d output ] && mkdir output
+[ ! -d build ] && mkdir build
 
+cd src
 pdflatex -output-directory ../output book.tex
 cd ..
-if [ ! -d build ]
-then
-   mkdir build
-fi
+
 cp output/book.pdf build/book.pdf
