@@ -1,9 +1,20 @@
 #!/bin/bash
 
-if [[ $OSTYPE = "darwin*" ]]; then
-  export INKSCAPE=/Applications/Inkscape.app/Contents/Resources/bin/inkscape
+if [[ $OSTYPE == "darwin"* ]]; then
+  export INKSCAPE=/Applications/Inkscape.app/Contents/MacOS/inkscape
 else
   export INKSCAPE=/usr/bin/inkscape
+fi
+
+if [ ! -f $INKSCAKE ]; then
+  echo "Inkscape executable is invalid"
+  echo "Was expected at $INKSCAPE"
+  exit 1
+fi
+
+if [ ! -x "$(command -v epstopdf)" ]; then
+  echo "epstopdf is not installed"
+  exit 1
 fi
 
 epsToPDF () {	
