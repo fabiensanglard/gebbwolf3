@@ -1,12 +1,14 @@
 xcshareddata
 DerivedData
 xcuserdata
-output\*
 .texpadtmp
 .DS_Store
+
+# IDE configuration
+/.idea/
+*.iml
+
+# Compilation product and byproducts
+/build/
+/output/
 *.pdf
-*.aux
-*.log
-*.lot
-*.out
-*.toc
