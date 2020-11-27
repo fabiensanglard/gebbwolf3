@@ -4,7 +4,7 @@ BackDoorStrs[5][16] = {
     "bite me!",
     "joshua",
     "pelt",
-    "beta"
+    "beta",
     "snoops"
 }
 
