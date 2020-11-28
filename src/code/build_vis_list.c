@@ -10,7 +10,8 @@ void DrawScaleds (void) {
   int numvisable=0;
   visptr = &vislist[0];
 
-  // Use spotvis[] to add objects to visptr. Increase numvisable
+  // Use spotvis[] to add objects to vislist[]. 
+  // Increase numvisable to keep track of # in vistlist
 
   // draw from back to front
   for (i = 0; i<numvisable; i++){
