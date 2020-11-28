@@ -40,22 +40,19 @@ The PIC's hardware IRQ-0 to IRQ-8 are mapped to the Interrupt Vector starting at
 03h	&	Debug breakpoints \\
 04h	&	Arithmetic overflow \\
 05h	&	BIOS provided Print Screen routine \\
-06h	&	Reserved \\
-07h	&	Reserved \\
-
-		08h & IRQ0, System timer \\
-		09h & IRQ1, Keyboard controller \\
-		0Ah & IRQ2, Bus cascade services for second 8259 \\
-		0Bh & IRQ3, Serial port COM2 \\ 
-		0Ch & IRQ4, Serial port COM1 \\
-		0Dh & IRQ5, LPT2, Parallel port (HDD on XT) \\
-		0Eh & IRQ6, Floppy Disk Controller \\
-		0Fh & IRQ7, LPT1, Parallel port \\
-		10h & Video services (VGA)\\
-		11h & Equipment check \\
-		12h & Memory size determination \\
-		%13h & ATA channel 1 \\
-		%14h & ATA channel 2  \\
+06h	&	Invalid opcode \\
+07h	&	No math chip \\
+08h & IRQ0, System timer \\
+09h & IRQ1, Keyboard controller \\
+0Ah & IRQ2, Bus cascade services for second 8259 \\
+0Bh & IRQ3, Serial port COM2 \\ 
+0Ch & IRQ4, Serial port COM1 \\
+0Dh & IRQ5, LPT2, Parallel port (HDD on XT) \\
+0Eh & IRQ6, Floppy Disk Controller \\
+0Fh & IRQ7, LPT1, Parallel port \\
+10h & Video services (VGA)\\
+11h & Equipment check \\
+12h & Memory size determination \\
 		\bottomrule
 	\end{tabularx}
 	\caption{The Interrupt Vector Table (entries 0 to 18).}
