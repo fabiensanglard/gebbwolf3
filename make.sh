@@ -6,7 +6,7 @@ else
   export INKSCAPE=/usr/bin/inkscape
 fi
 
-if [ ! -f $INKSCAKE ]; then
+if [ ! -f $INKSCAPE ]; then
   echo "Inkscape executable is invalid"
   echo "Was expected at $INKSCAPE"
   exit 1
