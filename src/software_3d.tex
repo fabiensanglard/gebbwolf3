@@ -1500,7 +1500,7 @@ to render.\\
 \subsubsection{Texturing}
 A subtle but extremely efficient trick used to improve the quality of the wall rendering is pre-baked light texturing. Wall texture assets were generated twice by the artists: once lit and once unlit.\\
 \par
-At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (in map space) on the Y axis, the engine uses a lit texture. If the ray hits an horizontal wall (on the X axis), it uses the unlit version of the same texture.\\
+At runtime, upon finding ray-wall intersection, if the ray hits a vertical wall (in map space) on the Y axis, the engine uses a lit texture. If the ray hits a horizontal wall (on the X axis), it uses the unlit version of the same texture.\\
 \par
  The difference is not obvious at first, but with the same scene rendered side by side with and without this effect, the visual difference is striking, giving the scene more realism because of this directional-light effect.\\
  \vspace{10pt}
