@@ -22,10 +22,12 @@ To compile on Debian GNU/Linux and derivatives (Ubuntu):
  - Run:
     - `./make.sh`
 
-To speed up compilation:
- - Use 100 DPI commands in src/mystyle.sty
- - Comment out the part you are not working on in src/book.tex
+To compile on Windows:
+ - Install WSL1 or WSL2.
+ - Follow Linux instructions. 
 
-The PDF version looks nicer when cover.tex is included in src/book.tex.
+To speed up compilation:
+ - Build with `./make.sh debug` (uses 100 DPI assets)
+ - Comment out the part you are not working on in src/book.tex
 
 _Fabien Sanglard_
