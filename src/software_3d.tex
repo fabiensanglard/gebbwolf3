@@ -43,7 +43,7 @@ As we saw when we unrolled the loop, the action scene is made of frames in a loo
  \lstinputlisting[language=C]{code/flawded_game_loop.c}
  \end{minipage}
 \par
-This is a pretty standard design for an engine from the early 90's. However, it has a major flaw: each slice of the game has a different duration depending on how long it takes to render and update. This variability makes the game nondeterministic between two machines, or even between two runs on the same machine. In the next drawing, all three timeslices representing three frames have different durations.\\
+This is a pretty standard design for an engine from the early '90s. However, it has a major flaw: each slice of the game has a different duration depending on how long it takes to render and update. This variability makes the game nondeterministic between two machines, or even between two runs on the same machine. In the next drawing, all three timeslices representing three frames have different durations.\\
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{imgs/drawings/timer/wrong.pdf}
@@ -654,7 +654,7 @@ And much easier when the engine knows two \cw{fixed} are the same sign:\\
  \end{minipage}
 \par
 \vspace{10pt}
- \textbf{\underline{Trivia :}}  Fixed-Point Arithmetic usage was not limited to PC gaming. Many game consoles manufactured in the 90s and later did not feature floating point units in order to reduce production cost and maximize CPU pipeline throughput. Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples.
+ \textbf{\underline{Trivia :}}  Fixed-Point Arithmetic usage was not limited to PC gaming. Many game consoles manufactured in the '90s and later did not feature floating point units in order to reduce production cost and maximize CPU pipeline throughput. Sony's original PlayStation (1994) and Sega's Saturn (1994) are examples.
  
 
  
@@ -704,7 +704,7 @@ In contrast, VSD is an open-ended problem, and there are dozens of approaches cu
 \vspace{-10pt}
 \scaledimage{0.45}{gpbb.png} 
 \end{wrapfigure} 
-\bu{Trivia: } In the early 90s, Michael Abrash's writings were one of the rare sources of high quality information when it came to computer graphics and assembly programming.\\
+\bu{Trivia: } In the early '90s, Michael Abrash's writings were one of the rare sources of high quality information when it came to computer graphics and assembly programming.\\
 \par
 He published two highly regarded books ("Zen of Assembly Language" in 1990 and "Zen of Code Optimization" in 1994) but it is through his column "Ramblings in Realtime" published monthly in \textit{Dr. Dobb's Journal} that he achieved notoriety.
  \\

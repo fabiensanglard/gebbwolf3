@@ -112,7 +112,7 @@ Every system in the engine uses this variable to pace itself. The renderer will 
 
 
 \subsection{Audio System}
-The audio system is complex because of the fragmentation of audio devices it can deal with. The early 90's was a time before Windows 95 harnessed all audio cards under the DirectSound common API. Each development studio had to write their own abstraction layer and id Software was no exception. At a high level, the Sound Manager offers a lean API divided in two categories: one for sounds and one for music.\\
+The audio system is complex because of the fragmentation of audio devices it can deal with. The early '90s was a time before Windows 95 harnessed all audio cards under the DirectSound common API. Each development studio had to write their own abstraction layer and id Software was no exception. At a high level, the Sound Manager offers a lean API divided in two categories: one for sounds and one for music.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/sound1.h}
@@ -129,7 +129,7 @@ But in the implementation lies a maze of functions directly accessing the I/O po
 \subsection{Music}
 Playing music is not too messy since only PCs equipped with a Yamaha YM3812 FM synthesizer could play tracks (a.k.a: with an AdLib or a SoundBlaster inside). As SoundBlaster made its programming interface compatible with AdLib there is only one code path to both cards. There is not a lot of magic here since this uses a piece of well-designed hardware dedicated to this specific task. There are a few cool tricks, though.\\
 \par
-The music system streams data to the sound cards. Music in the 90's was not in digitized formats like today's CD or MP3 formats (that would have taken too much storage space and bandwidth). Instead music was stored as series of notes played on channels simulating instruments. The format used is close to the notorious MIDI but with a few variations and is called IMF\footnote{id Music Format}. It is proprietary to id Software and designed with OPL2 in mind (the raw format is exactly what is sent to the AdLib/SoundBlaster synthesizer with no transformations). IMF has a hardcoded playback rate and music notes are played at 700 Hz.\\
+The music system streams data to the sound cards. Music in the '90s was not in digitized formats like today's CD or MP3 formats (that would have taken too much storage space and bandwidth). Instead music was stored as series of notes played on channels simulating instruments. The format used is close to the notorious MIDI but with a few variations and is called IMF\footnote{id Music Format}. It is proprietary to id Software and designed with OPL2 in mind (the raw format is exactly what is sent to the AdLib/SoundBlaster synthesizer with no transformations). IMF has a hardcoded playback rate and music notes are played at 700 Hz.\\
 \par
 Hardware limitations dictated certain aspects of music design. The FM synthesizer (OPL2) has 9 channels (a.k.a instruments) yet the composer, Bobby Prince, was asked to use only channels 1 to 8. This little trick allows for multiplexing music and sound effects on AdLib cards since it leaves channel 0 available at all times (the SoundBlaster plays sound differently).\\
 
@@ -438,7 +438,7 @@ Even though this method was not used in Wolfenstein 3D, it is worth mentioning a
 \par
 The idea is to manipulate the speaker cone manually and instruct it to move faster than it can, interrupting it "somewhere" between its position up or down.\\
 \par
-The technique was patented (US US5054086 A) by Access Software and called RealSound. Many studios licensed it during the 80s but the advent of dedicated sound cards with FM and PCM capabilities made RealSound obsolete in the early 90's.
+The technique was patented (US US5054086 A) by Access Software and called RealSound. Many studios licensed it during the '80s but the advent of dedicated sound cards with FM and PCM capabilities made RealSound obsolete in the early '90s.
 \par
  \begin{fancyquotes}
   The PC speaker is normally meant to reproduce a square wave via only 2 levels of output (the speaker is driven by only two voltage levels, typically 0 V and 5 V). However, by carefully timing a short pulse (i.e. going from one output level to the other and then back to the first), and by relying on the speaker's physical filtering properties (limited frequency response, self-inductance, etc)., the end result corresponds to intermediate sound levels. This effectively allows the speaker to function as a crude 6 bit DAC, thereby enabling approximate playback of PCM audio.\\
