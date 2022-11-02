@@ -430,7 +430,7 @@ To take full advantage of this optimization, the 3D renderer uploads images to t
 
 \bu{Trick :} Images are stored woven. All bytes for bank 0, then all bytes for bank 1, and so on. This clever way to store data allows a bank to be loaded very fast with one \cw{memcpy} per bank (four \cw{memcpy} per image).\\
 \par
-All these assets account for 48*24*4 (weapons sprites) + 14*8*16 (numeral and key sprites) + 24*24*32 (face sprites) + 224 * 48 (paused + psyched) = 34,816 bytes. There are therefore 35,324 unused bytes in the fourth VGA page.\\
+All these assets account for 48*24*4 (weapons sprites) + 14*8*16 (numeral and key sprites) + 24*24*32 (face sprites) + 224 * 48 (paused + psyched) = 35,584 bytes. There are therefore 29,951 unused bytes in the fourth VGA page.\\
 \par
 For this trick to work, image sources and destinations have to be aligned on four bytes horizontally in screen space. If you take a look at the location of each element on screen you can see that elements are aligned on four pixels horizontally but there is no such constraint vertically.
 \begin{figure}[H]
