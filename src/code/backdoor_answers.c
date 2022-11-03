@@ -1,4 +1,4 @@
-GoodBoyStrs[10][40] = {
+GoodBoyStrs[12][40] = {
     "...is the CORRECT ANSWER!",
     "",
 

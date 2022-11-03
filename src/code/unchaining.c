@@ -14,7 +14,7 @@ void VL_DePlaneVGA() {
   outp(SC_DATA, (inp(SC_DATA)&~8)); 
 
   // Clear all four banks since the bios only cleared 
-  // the first 16K of each banks when setting up mode 13h.
+  // the first 16K of each bank when setting up mode 13h.
   VL_ClearVideo (0);
 
   // Change how VRAM is read by the CRTC

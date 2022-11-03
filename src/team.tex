@@ -73,7 +73,7 @@ In November 1991, the team was free from any obligations to Softdisk. Their next
   \toprule 
    Jay Wilbur & 30 &  Business\\
    Kevin Cloud\protect\footnotemark & 27 &  Computer Artist\\
-   Robert Prince\protect\footnotemark & 37 &  Composer\\
+   Bobby Prince\protect\footnotemark & 37 &  Composer\\
    Jason Blochowiak\protect\footnotemark & 21 &   Programmer\\
      \toprule
 \end{tabularx}
@@ -83,7 +83,7 @@ In November 1991, the team was free from any obligations to Softdisk. Their next
 \addtocounter{footnote}{-2}
 \footnotetext{Jay and Kevin were recruited in April 1992 but were credited anyway.}
 \stepcounter{footnote}
- \footnotetext{Robert had worked with id Software before on Keen 4-6 as a contractor but was never a full-time employee.}
+ \footnotetext{Bobby had worked with id Software before on Keen 4-6 as a contractor but was never a full-time employee.}
  \stepcounter{footnote}
  \footnotetext{Jason wrote part of the page manager and is credited for introducing John Carmack to Unix development, which ultimately led to the purchase of a NeXTstation Color. He left a few months after the creation of id.}
 
@@ -316,6 +316,8 @@ After the graphic assets were generated, a tool (IGRAB) packed all ILBMs togethe
  In the engine code, asset usage is hardcoded via an enum. This enum is an offset into the 
  \cw{HEAD} table which gives an offset in the \cw{DATA} archive. With this indirection layer, assets could be regenerated and reordered at will with no modification in the source code.\\
  \par
+ The \cw{DICT} file contains the Huffman tree to decompress the assets, this is further discussed in the Cache Manager section on page \pageref{cache_manager}.\\
+
  \begin{minipage}{\textwidth}
  \lstinputlisting[language=C]{code/assets_usage.c}\par
  \end{minipage}
@@ -491,7 +493,7 @@ All voices were recorded by John Romero and Tom Hall faking German accents\footn
 
 
 \subsection{Music}
-All music composition was done by Robert Prince.\\
+All music composition was done by Bobby Prince.\\
 \par
  \begin{fancyquotes}
 In the early days of the OPL soundcards, the "gold standard" sequencing software was Sequencer Plus Gold ("SPG") by Voyetra. The reason for this was it had an OPL instrument/instrument bank editor.\\
