@@ -194,5 +194,7 @@ func main() {
 	if err != nil {
 		fmt.Println("%s %s", string(out), err)
 		return
+    } else {
+		os.Rename(outputDirName + "/book.pdf", outputDirName + "/" + mode + ".pdf")
 	}
 }

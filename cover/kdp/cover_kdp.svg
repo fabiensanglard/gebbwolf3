@@ -29,9 +29,9 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      units="in"
-     inkscape:zoom="1.1653671"
-     inkscape:cx="845.22722"
-     inkscape:cy="484.82577"
+     inkscape:zoom="0.82403898"
+     inkscape:cx="765.74048"
+     inkscape:cy="554.58542"
      inkscape:window-width="3840"
      inkscape:window-height="2054"
      inkscape:window-x="-11"
@@ -47,8 +47,8 @@
      style="display:inline">
     <path
        id="rect69287"
-       style="stroke-width:0.765"
-       d="M 4.1894532e-7,-2.8344726e-7 H 406.39999 V 241.3 H 4.1894532e-7 Z" />
+       style="stroke-width:0.807336"
+       d="M -7.3848646,-6.4216221 H 418.60107 V 249.96919 H -7.3848646 Z" />
     <g
        aria-label="WOLFENSTEIN 3D"
        transform="translate(76.372971,-25.441891)"
@@ -2932,10 +2932,6 @@
          style="font-weight:bold;font-family:'Century Gothic';-inkscape-font-specification:'Century Gothic Bold';fill:#fefcfc"
          id="path91789" />
     </g>
-    <path
-       id="rect78970"
-       style="fill:#fefcfc;stroke-width:0.765"
-       d="m 105.42455,186.92964 h 62.8897 v 30.87725 h -62.8897 z" />
     <g
        fill="#000000"
        id="g16269"
