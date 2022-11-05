@@ -7,7 +7,7 @@
    viewBox="0 0 406.39999 241.3"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="cover_bookpatch.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -29,13 +29,13 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      units="in"
-     inkscape:zoom="1.1653671"
-     inkscape:cx="1082.9206"
-     inkscape:cy="536.31169"
-     inkscape:window-width="3840"
-     inkscape:window-height="2054"
-     inkscape:window-x="-11"
-     inkscape:window-y="-11"
+     inkscape:zoom="0.58268355"
+     inkscape:cx="774.00503"
+     inkscape:cy="541.46028"
+     inkscape:window-width="2560"
+     inkscape:window-height="1376"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer2" />
   <defs
@@ -47,8 +47,8 @@
      style="display:inline">
     <path
        id="rect69287"
-       style="stroke-width:0.765"
-       d="M 4.1894532e-7,-2.8344726e-7 H 406.39999 V 241.3 H 4.1894532e-7 Z" />
+       style="opacity:1;stroke-width:0.800706"
+       d="M -7.2315342,-5.8462446 H 415.37866 V 248.3648 H -7.2315342 Z" />
     <g
        aria-label="WOLFENSTEIN 3D"
        transform="translate(76.372971,-25.441891)"
@@ -3218,7 +3218,7 @@
     </g>
     <text
        xml:space="preserve"
-       style="display:inline;font-size:10.0241px;line-height:1.25;font-family:Novarese;-inkscape-font-specification:Novarese;stroke-width:0.250603"
+       style="font-size:10.0241px;line-height:1.25;font-family:Novarese;-inkscape-font-specification:Novarese;display:inline;stroke-width:0.250603"
        x="364.78448"
        y="208.0876"
        id="text14728"
