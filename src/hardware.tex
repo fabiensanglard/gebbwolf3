@@ -205,7 +205,7 @@ From a programming perspective, a 386 CPU can be summarized by the following ele
   
    All that CPU power was not necessarily useful for programming a game. In order to perform trigonometric computations for 3D effects, the engine has to keep track of the fractional part of each operation. This may not appear to be an issue since the C programming language has a type (\codeword{float}) precisely for that purpose. But in practice this was a problem, and to understand it we need to understand how \codeword{float} works.\\
 \par
- As David Goldbert famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{"What every Computer Scientist should know about Floating-Point" by David Goldbert.}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is for programming a 3D engine. In the C language, \codeword{float}s are 32-bit container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
+ As David Goldberg famously wrote, \emph{"Floating-point arithmetic is considered an esoteric subject by many people"}\footnote{"What every Computer Scientist should know about Floating-Point" by David Goldberg.}. I could not agree more. Yet it is important to understand in order to fully grasp how useful it is for programming a 3D engine. In the C language, \codeword{float}s are 32-bit container following the IEEE 754 standard. Their purpose is to store and allow operations on approximation of real numbers. The 32 bits are divided in three sections:\\
 \begin{itemize}
   \item 1 bit S for the sign
   \item 8 bits E for the exponent
