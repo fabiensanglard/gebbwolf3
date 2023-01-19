@@ -201,13 +201,18 @@ func main() {
 	arg0 := "-output-directory"
 	arg1 := outputDirName
 	arg2 := compileOptions + ` \input{src/book.tex}`
-	draft := "-draftmode"
+  draftMode := "-draftmode"
+  
+  var err error 
+  var out []byte
 
-	//Compile in draft mode to generate only necessary files for Table of Contents
-	fmt.Println(bin, draft, arg0, arg1, arg2)
-	out, err := exec.Command(bin, draft, arg0, arg1, arg2).CombinedOutput()
+	// Compile in draft mode to generate only necessary files for Table of Contents
+	if mode != "debug" {
+	  fmt.Println(bin, draftMode, arg0, arg1, arg2)
+	  _, err = exec.Command(bin, draftMode, arg0, arg1, arg2).CombinedOutput()
+  }
 
-	//Compile second time to generate PDF
+	// Full Compile to generate PDF
 	if err == nil {
 		fmt.Println(bin, arg0, arg1, arg2)
 		out, err = exec.Command(bin, arg0, arg1, arg2).CombinedOutput()
