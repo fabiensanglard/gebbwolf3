@@ -15,7 +15,6 @@ var epsToPdfBin = "epstopdf"
 var mode = "release"
 var outputDirName = "out"
 
-
 func run(c string) {
 	println(c)
 	args := strings.Split(c, " ")
@@ -43,7 +42,7 @@ func isOlder(src string, than string) bool {
 
 	statThan, _ := os.Stat(than)
 
-	return stat.ModTime().After(statThan.ModTime()) 
+	return stat.ModTime().After(statThan.ModTime())
 }
 
 func checkExecutable(bin string) {
@@ -124,18 +123,17 @@ func makeCover(src string, dst string) {
 	src = cwd() + src
 	dst = cwd() + dst
 
-
 	if isOlder(dst, src) {
 		return
 	}
 
 	bin := inkscapeBin
 	args := make([]string, 0)
-	args = append(args, "--export-filename=" + dst)
-	args = append(args,"--export-dpi=300")
-	args = append(args,"--export-type=pdf")
-	args = append(args,"--export-text-to-path")
-	args = append(args,src)
+	args = append(args, "--export-filename="+dst)
+	args = append(args, "--export-dpi=300")
+	args = append(args, "--export-type=pdf")
+	args = append(args, "--export-text-to-path")
+	args = append(args, src)
 
 	fmt.Printf("%s %s\n", inkscapeBin, toString(args))
 
@@ -155,11 +153,11 @@ func currentDir() string {
 }
 
 func getMode() string {
-  var args = os.Args
-  if len(args) > 1 {
+	var args = os.Args
+	if len(args) > 1 {
 		return args[1]
-  }
-  return ""
+	}
+	return ""
 }
 
 func main() {
@@ -175,42 +173,37 @@ func main() {
 		return
 	}
 
-	
 	os.MkdirAll(outputDirName, os.ModePerm)
 
 	// Convert SVG to PNG
 	convertSVGtoPNG(cwd() + "src/screenshots_svg/")
-	
+
 	// Convert EPS to PDF
-   convertEPStoPDF(cwd())
+	convertEPStoPDF(cwd())
 
-   
-
-    // Make front and back cover (this is only used in the non-print version)
-     os.MkdirAll(outputDirName + "/cover", os.ModePerm)
-    if (mode != "print") {
-       makeCover("cover/master/front.svg", outputDirName + "/cover/front.pdf")
-       makeCover("cover/master/back.svg", outputDirName + "/cover/back.pdf")
-    }
+	// Make front and back cover (this is only used in the non-print version)
+	os.MkdirAll(outputDirName+"/cover", os.ModePerm)
+	if mode != "print" {
+		makeCover("cover/master/front.svg", outputDirName+"/cover/front.pdf")
+		makeCover("cover/master/back.svg", outputDirName+"/cover/back.pdf")
+	}
 
 	compileOptions := `\def\for` + mode + `{}`
-
-
 
 	bin := "pdflatex"
 	arg0 := "-output-directory"
 	arg1 := outputDirName
 	arg2 := compileOptions + ` \input{src/book.tex}`
-  draftMode := "-draftmode"
-  
-  var err error 
-  var out []byte
+	draftMode := "-draftmode"
+
+	var err error
+	var out []byte
 
 	// Compile in draft mode to generate only necessary files for Table of Contents
 	if mode != "debug" {
-	  fmt.Println(bin, draftMode, arg0, arg1, arg2)
-	  _, err = exec.Command(bin, draftMode, arg0, arg1, arg2).CombinedOutput()
-  }
+		fmt.Println(bin, draftMode, arg0, arg1, arg2)
+		_, err = exec.Command(bin, draftMode, arg0, arg1, arg2).CombinedOutput()
+	}
 
 	// Full Compile to generate PDF
 	if err == nil {
@@ -222,8 +215,8 @@ func main() {
 		fmt.Println("%s %s", string(out), err)
 	}
 
-  // Rename
-  var src = outputDirName + "/book.pdf"
-  var dst =  outputDirName + "/" + currentDir() + "_" + getMode() + ".pdf"
-  os.Rename(src, dst)
+	// Rename
+	var src = outputDirName + "/book.pdf"
+	var dst = outputDirName + "/" + currentDir() + "_" + getMode() + ".pdf"
+	os.Rename(src, dst)
 }
