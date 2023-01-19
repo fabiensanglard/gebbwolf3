@@ -157,16 +157,15 @@ func getMode() string {
 	if len(args) > 1 {
 		return args[1]
 	}
-	return ""
+	return mode
 }
 
 func main() {
-	fmt.Println("Building...")
+	mode = getMode()
+	fmt.Println("Building in", mode, "mode...")
 
 	checkExecutable(inkscapeBin)
 	checkExecutable(epsToPdfBin)
-
-	mode = getMode()
 
 	if mode != "debug" && mode != "release" && mode != "print" {
 		fmt.Println("Mode must be either 'debug' or 'release' or 'print'.")
