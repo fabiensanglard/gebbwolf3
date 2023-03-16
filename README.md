@@ -5,9 +5,12 @@ I am releasing the source code (.tex) under GPL license. I
 retain ownership of all drawings and only provide them so the
 overall thing is compilable.
 
+Note: For all systems, make sure you have Inkscape version v1.0.0 or above.
+If you don't, the conversion from SVG to PNG will fail.
+
 To compile on Mac OS X:
  - Install golang: https://go.dev/
- - Install Inkscape:
+ - Install Inkscape (min v1.0.0):
     - via installer: https://inkscape.org/download/
     - or via Homebrew: `brew cask install xquartz inkscape`
  - Install MacTeX library (for epstopdf and pdflatex):
