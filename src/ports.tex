@@ -80,15 +80,15 @@ The Jaguar port was done within a few weeks of 1994 by John Carmack going "vampi
 The "Jag" hardware was described by John Carmack on \cw{slashdot.org} in March 2000. 
 \par
 \begin{fancyquotes}
-The memory, bus, bliter and video processor were 64 bits wide, but the processors (68k and two custom risc processors) were 32 bit.\\
+The memory, bus, blitter and video processor were 64 bits wide, but the processors (68k and two custom risc processors) were 32 bit.\\
 \\
-The bliter could do basic texture mapping of horizontal and vertical spans, but because there wasn't any caching involved, every pixel caused two ram page misses and only used 1/4 of the 64-bit bus. Two 64-bit buffers would have easily tripled texture mapping performance. Unfortunate.\\
+The blitter could do basic texture mapping of horizontal and vertical spans, but because there wasn't any caching involved, every pixel caused two ram page misses and only used 1/4 of the 64-bit bus. Two 64-bit buffers would have easily tripled texture mapping performance. Unfortunate.\\
 \\
 It could make better use of the 64-bit bus with Z buffered, shaded triangles, but that didn't make for compelling games.\\
 \\
 It offered a usefull color space option that allowed you to do lighting effects based on a single channel, instead of RGB.\\
 \\
-The video compositing engine was the most innovative part of the console. All of the characters in Wolf3D were done with just the back end scalar instead of bliting. Still, the experience with the limitations and hard failure cases of that gave me good ammunition to rail against Microsoft's (thankfully aborted) talisman project.\\
+The video compositing engine was the most innovative part of the console. All of the characters in Wolf3D were done with just the back end scalar instead of blitting. Still, the experience with the limitations and hard failure cases of that gave me good ammunition to rail against Microsoft's (thankfully aborted) talisman project.\\
 \\
 The little risc engines were decent processors. I was surprised that they didn't use off the shelf designs, but they basically worked ok. They had some design hazards (write after write) that didn't get fixed, but the only thing truly wrong with them was that they had scratchpad memory instead of caches, and couldn't execute code from main memory. I had to chunk the DOOM renderer into nine sequentially loaded overlays to get it working (with hindsight, I would have done it differently in about three...).\\
 \\
@@ -96,7 +96,7 @@ The 68k was slow. This was the primary problem of the system. Your options were 
 \\
 That is why playstation kicked so much ass for development -- it was programmed like a single serial processor with a single fast accelerator.\\
 \\
-If the Jaguar had dumped the 68k and offered a dynamic cache on the risc processors and had a tiny bit of buffering on the bliter, it could have put up a reasonable fight against Sony.\\
+If the Jaguar had dumped the 68k and offered a dynamic cache on the risc processors and had a tiny bit of buffering on the blitter, it could have put up a reasonable fight against Sony.\\
 \\
 \textbf{John Carmack - Programmer (March 4th, 2000)}
 \end{fancyquotes}
