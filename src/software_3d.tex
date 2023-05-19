@@ -230,7 +230,7 @@ Before starting to draw frames, the 3D renderer sets up the VRAM with static ele
 This HUD is drawn only once at the beginning of the 3D phase. It has to be drawn in all three pages. For each new frame, the engine draws the 3D view in the reserved white canvas in the center. Small portions at the bottom of the HUD are updated: Level, Score, Lives, Status, Health, Ammo, and Current Weapon receive special treatment via another VGA trick in order to speed up rendition.\\
 \par
 
-The hardware chapter described Mode \cw{12h}, which despite being unfit for games still has an interesting characteristic. Mode \cw{12h} is a 16-color mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operations are one byte wide, it is not hard to imagine the difficulty in plotting a single pixel without changing the others stored in the same byte. One would have to do four read, four xor, and four writes.\\
+The hardware chapter described Mode \cw{12h}, which despite being unfit for games still has an interesting characteristic. Mode \cw{12h} is a 16-color mode where each pixel color index is contained in a nibble. The four bits are spread across the four VGA banks. Since all write operations are one byte wide, it is not hard to imagine the difficulty in plotting a single pixel without changing the others stored in the same byte. One would have to do four read, four ands/ors (to set/unset the appropriate bit), and four writes.\\
 \par
  Since the designers of the VGA were not complete sadists, they added some circuitry to simplify this operation. For each bank, they created a latch placed in front of a configurable ALU.\\
 \par
@@ -239,7 +239,7 @@ The hardware chapter described Mode \cw{12h}, which despite being unfit for game
  \includegraphics[width=\textwidth]{imgs/drawings/latches.pdf}
  \caption{Latches memorize read operations from each bank. The memorized value can be used for later writes.}
  \end{figure}
-With this architecture, each time the VRAM is read \circled{R}, the latch from the corresponding bank is loaded with the read value. Each time a value is written to the VRAM \circled{W}, it can be composited by the ALU using the latched value and the written value. This design allowed mode \cw{12h} programmers to plot a pixel easily with one read, one ALU setup, and one write instead of four reads, 4 xors, and 4 writes.\\
+With this architecture, each time the VRAM is read \circled{R}, the latch from the corresponding bank is loaded with the read value. Each time a value is written to the VRAM \circled{W}, it can be composited by the ALU using the latched value and the written value. This design allowed mode \cw{12h} programmers to plot a pixel easily with one read, one ALU setup, and one write instead of four reads, four ands/ors, and 4 writes.\\
 \par
 Mode Y does not need latches to operate since values are stored in bytes, and banks can be updated individually thanks to the mask. However, tinkerers\footnote{Michael Abrash Graphic Programming Black Book: Chapter 48 -- Mode X Marks the Latch.} found that these latches are still active in  Mode-Y. By getting a little creative, the circuitry can be re-purposed. The ALU in front of each bank can be setup to use only the latch for writing. With such a setup, upon doing one read, four latches are populated at once and four bytes in the bank are written with only one write to the RAM. This system allows transfer from VRAM to VRAM 4 bytes at a time.\\
 \par
