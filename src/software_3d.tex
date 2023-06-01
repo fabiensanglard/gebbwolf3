@@ -90,7 +90,7 @@ This design decouples the renderer from the world updates. Timeslices are always
 Five stages are involved in drawing a 3D scene:\\
 \begin{enumerate}
  \item Clear the framebuffer by drawing the floor and the ceiling (both solid colors).
- \item For each column of pixels on screen, send out a ray that starts at the player location and with a direction that depends on both the player's looking direction and the x-coordinate of the current column of pixel. Let this ray move forward on the 2D map until it hits a map square that contains a wall. Calculate the distance of the collision to the player. Draw a textured column of pixels with height inversely proportional to the distance.
+ \item From the player's perspective, cast rays for each pixel column, ending when they hit a wall. Calculate the collision distance and render a textured pixel column inversely proportional to this distance.
  \item Draw the sprites (enemies, lamps, barrels).
  \item Draw the weapon\footnote{A modern 3D engine would render the weapon first and leverage the depth buffer to save fillrate. In that era, however, memory access was so slow it was faster to accept a bit of overdraw.}.	
  \item Flip buffers: instruct CRT Controller to use the framebuffer just composed on next vsync.
