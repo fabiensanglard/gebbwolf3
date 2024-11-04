@@ -28,7 +28,8 @@ To compile on Debian GNU/Linux and derivatives (Ubuntu):
     - `./make.sh`
 
 To compile on Windows:
- - Install WSL1 or WSL2.
+ - Install WSL1 or WSL2. 
+ - Clone the repository inside the WSL environment. Cloning from Windows directly can cause issues due to CRLF line endings, which can prevent successful compilation.
  - Follow Linux instructions. 
 
 To speed up compilation:
