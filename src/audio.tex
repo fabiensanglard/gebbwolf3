@@ -89,7 +89,7 @@ The PIT chip runs at 1.193182 MHz. This initially seems like an odd choice from 
 
 
 \subsection{Heartbeats}
-Each time the interrupt system triggers, it runs another small (yet paramount) system before taking care of audio requests. The sole goal of this heartbeat system is to maintain a 64-bit variable: \cw{TimeCount}.\\
+Each time the interrupt system triggers, it runs another small (yet paramount) system before taking care of audio requests. The sole goal of this heartbeat system is to maintain a 32-bit variable: \cw{TimeCount}.\\
 \par
 \begin{minipage}{\textwidth}
 \lstinputlisting[language=C,morekeywords={longword}]{code/timecount.c}
