@@ -139,7 +139,7 @@ func makeCover(src string, dst string) {
 
 	output, err := exec.Command(bin, args...).CombinedOutput()
 	if err != nil {
-		fmt.Println("%s %s", string(output), err)
+		fmt.Println(string(output), err)
 		return
 	}
 }
@@ -211,7 +211,7 @@ func main() {
 	}
 
 	if err != nil {
-		fmt.Println("%s %s", string(out), err)
+		fmt.Println(string(out), err)
 	}
 
 	// Rename
