@@ -6,7 +6,7 @@ This section describes random tricks used to speed up rendering. They range from
 
 
 \subsection{Cos/Sin Table Lookup}
-\cw{cos} and \cw{sin} are expensive methods involving floating point calculations. They are extensively used at runtime. To speed things up, the engine generates and caches them in a lookup array (one value per angle) at startup. To save RAM, it exploits a math property ($cos(X) = sin(X + 90)$) to avoid 360 \cw{cos} method calls and 240 bytes of RAM by reusing the \cw{sin} table as follows:\\
+\cw{cos} and \cw{sin} are expensive methods involving floating point calculations. They are extensively used at runtime. To speed things up, the engine generates and caches them in a lookup array (one value per angle) at startup. To save RAM, it exploits a math property ($cos(X) = sin(X + 90)$) to avoid 360 \cw{cos} method calls and 270 bytes of RAM by reusing the \cw{sin} table as follows:\\
 \par
 \label{cossintable}
 \begin{minipage}{\textwidth}
