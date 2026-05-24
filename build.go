@@ -3,12 +3,11 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+  "path"
+  "os"
+  "os/exec"
 	"strings"
 )
-import "os"
-import "os/exec"
-import "path"
 
 var inkscapeBin = "inkscape"
 var epsToPdfBin = "epstopdf"
@@ -61,7 +60,7 @@ func cwd() string {
 }
 
 func convertEPStoPDF(folder string) {
-	items, _ := ioutil.ReadDir(folder)
+	items, _ := os.ReadDir(folder)
 	for _, item := range items {
 		if item.IsDir() {
 			convertEPStoPDF(folder + item.Name() + "/")
@@ -84,7 +83,7 @@ func convertEPStoPDF(folder string) {
 }
 
 func convertSVGtoPNG(folder string) {
-	items, _ := ioutil.ReadDir(folder)
+	items, _ := os.ReadDir(folder)
 	for _, item := range items {
 		if item.IsDir() {
 			println("Directories in ", folder, " are not supported")
