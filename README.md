@@ -32,6 +32,11 @@ To compile on Windows:
  - Clone the repository inside the WSL environment. Cloning from Windows directly can cause issues due to CRLF line endings, which can prevent successful compilation.
  - Follow Linux instructions. 
 
+To compile on Docker:
+ - Run:
+    - `docker build -t gebb .`
+    - `docker run --rm -i -v "$PWD":/book gebb bash ./make.sh`
+
 To speed up compilation:
  - Build with `./make.sh debug` (uses 100 DPI assets)
  - Comment out the part you are not working on in src/book.tex
